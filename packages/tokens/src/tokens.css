@@ -1,0 +1,105 @@
+/*
+ * Quartifex brand tokens. CSS custom properties only.
+ *
+ * Dark is primary; light is a full mirror, not an afterthought. Ganga teal is the
+ * single accent. Sindoor red is a rare accent: one mark per screen, dot-scale,
+ * never a fill or body text. Hairlines instead of shadows. No gradients in site UI.
+ *
+ * Theme resolution: [data-theme] on <html> wins; without it, the OS preference.
+ */
+
+:root {
+  color-scheme: dark;
+
+  /* Surface and ink */
+  --qx-bg: #050505;
+  --qx-bg-raised: #0d0e0e;
+  --qx-fg: #edeae4;
+  --qx-muted: #8b8881;
+  --qx-hairline: rgb(237 234 228 / 0.14);
+  --qx-hairline-strong: rgb(237 234 228 / 0.28);
+
+  /* Accents */
+  --qx-teal: #3fbead;
+  --qx-teal-ink: #04110f;
+  --qx-sindoor: #c8322b;
+
+  /* Type. Clash Display and Satoshi are Fontshare faces (ITF Free Font License);
+     DM Mono is SIL OFL. Font files are not shipped here: see the README. */
+  --qx-font-display:
+    "Clash Display", "Satoshi", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --qx-font-body: "Satoshi", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --qx-font-mono: "DM Mono", ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
+
+  --qx-text-xs: 0.6875rem;
+  --qx-text-sm: 0.8125rem;
+  --qx-text-base: 1rem;
+  --qx-text-lg: 1.25rem;
+  --qx-text-xl: clamp(1.5rem, 1.1rem + 1.6vw, 2.25rem);
+  --qx-text-2xl: clamp(2.25rem, 1.4rem + 3.6vw, 4.5rem);
+  --qx-text-3xl: clamp(3rem, 1.2rem + 7.4vw, 8rem);
+  --qx-leading-tight: 0.95;
+  --qx-leading-body: 1.55;
+  --qx-tracking-label: 0.16em;
+
+  /* Space (4px base) */
+  --qx-space-1: 0.25rem;
+  --qx-space-2: 0.5rem;
+  --qx-space-3: 0.75rem;
+  --qx-space-4: 1rem;
+  --qx-space-6: 1.5rem;
+  --qx-space-8: 2rem;
+  --qx-space-12: 3rem;
+  --qx-space-16: 4rem;
+  --qx-space-24: 6rem;
+  --qx-gutter: clamp(1rem, 3vw, 2.5rem);
+
+  /* Shape and line */
+  --qx-radius-sm: 4px;
+  --qx-radius-md: 10px;
+  --qx-radius-pill: 999px;
+  --qx-line: 1px;
+
+  /* Motion */
+  --qx-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --qx-ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --qx-duration-fast: 160ms;
+  --qx-duration: 320ms;
+  --qx-duration-slow: 700ms;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) {
+    color-scheme: light;
+    --qx-bg: #f4f2ee;
+    --qx-bg-raised: #ebe8e2;
+    --qx-fg: #111110;
+    --qx-muted: #6b6862;
+    --qx-hairline: rgb(17 17 16 / 0.14);
+    --qx-hairline-strong: rgb(17 17 16 / 0.3);
+    --qx-teal: #0b6f65;
+    --qx-teal-ink: #f4f2ee;
+    --qx-sindoor: #a3241e;
+  }
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --qx-bg: #f4f2ee;
+  --qx-bg-raised: #ebe8e2;
+  --qx-fg: #111110;
+  --qx-muted: #6b6862;
+  --qx-hairline: rgb(17 17 16 / 0.14);
+  --qx-hairline-strong: rgb(17 17 16 / 0.3);
+  --qx-teal: #0b6f65;
+  --qx-teal-ink: #f4f2ee;
+  --qx-sindoor: #a3241e;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --qx-duration-fast: 0ms;
+    --qx-duration: 0ms;
+    --qx-duration-slow: 0ms;
+  }
+}
