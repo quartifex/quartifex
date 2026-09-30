@@ -13,6 +13,10 @@
     "e2e:install": "playwright install chromium"
   },
   "dependencies": {
+    "@quartifex/contactsheet": "workspace:*",
+    "@quartifex/dailies": "workspace:*",
+    "@quartifex/plumb": "workspace:*",
+    "@quartifex/safeframe": "workspace:*",
     "@quartifex/tokens": "workspace:*",
     "next": "^16.3.7",
     "react": "^19.3.0",

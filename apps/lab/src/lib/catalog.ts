@@ -111,6 +111,11 @@ export function byKind(kind: Kind): CatalogItem[] {
     .sort((a, b) => a.order - b.order);
 }
 
+/** The item's page: Lab seeds under /lab, everything else at the root. */
+export function hrefFor(item: Pick<CatalogItem, "kind" | "name">): string {
+  return item.kind === "lab" ? `/lab/${item.name}` : `/${item.name}`;
+}
+
 export function isBuilt(item: CatalogItem): boolean {
   return item.state === "built" || item.state === "reviewed";
 }

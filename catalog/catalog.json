@@ -280,7 +280,7 @@
   "libs": null,
   "label": null,
   "prompt": "P1",
-  "state": "not started",
+  "state": "built",
   "icon": "icons/svg/L17"
  },
  {
@@ -428,7 +428,7 @@
   "libs": null,
   "label": null,
   "prompt": "P1",
-  "state": "not started",
+  "state": "built",
   "icon": "icons/svg/L26"
  },
  {
@@ -446,7 +446,7 @@
   "libs": null,
   "label": null,
   "prompt": "P1",
-  "state": "not started",
+  "state": "built",
   "icon": "icons/svg/L27"
  },
  {
@@ -461,7 +461,7 @@
   "libs": null,
   "label": null,
   "prompt": "P1",
-  "state": "not started",
+  "state": "built",
   "icon": "icons/svg/L28"
  },
  {
@@ -880,7 +880,7 @@
   "name": "frameguide",
   "description": "A debug overlay drawing safe frames, focal points and text zones over any scene",
   "order": 1,
-  "state": "not started",
+  "state": "built",
   "prompt": "P1"
  },
  {
@@ -889,7 +889,7 @@
   "name": "aspect-morph",
   "description": "A slider that morphs one scene between 9:16, 1:1, 16:9 and 32:9",
   "order": 2,
-  "state": "not started",
+  "state": "built",
   "prompt": "P1"
  }
 ]

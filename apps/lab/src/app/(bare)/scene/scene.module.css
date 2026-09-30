@@ -1,0 +1,55 @@
+/* Phones have no layout scrollbar; hide it so every profile gets its full width. */
+:global(html):has(.page) {
+  scrollbar-width: none;
+}
+
+.page {
+  background: #050505;
+  color: #edeae4;
+}
+
+.hero {
+  height: var(--plumb-height, 100lvh);
+  overflow: hidden;
+}
+
+.specs {
+  display: grid;
+  align-content: center;
+  gap: var(--qx-space-4);
+  min-height: 100svh;
+  padding: var(--qx-space-8) var(--qx-gutter);
+  border-top: 1px solid rgb(237 234 228 / 0.14);
+}
+
+.specs h1 {
+  margin: 0;
+  font-family: var(--qx-font-display);
+  font-size: var(--qx-text-2xl);
+  font-weight: 500;
+}
+
+.specs p {
+  margin: 0;
+  max-width: 48ch;
+  color: #b9b6b0;
+}
+
+.kicker {
+  font-family: var(--font-dm-mono), var(--qx-font-mono);
+  font-size: var(--qx-text-xs);
+  letter-spacing: var(--qx-tracking-label);
+  text-transform: uppercase;
+}
+
+.link {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 18px;
+  border: 1px solid #3fbead;
+  border-radius: 999px;
+  color: #edeae4;
+  text-decoration: none;
+}

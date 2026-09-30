@@ -1,12 +1,12 @@
 import Link from "next/link";
-import { type CatalogItem, getIconSvg, isBuilt } from "@/lib/catalog";
+import { type CatalogItem, getIconSvg, hrefFor, isBuilt } from "@/lib/catalog";
 import styles from "./ItemCard.module.css";
 
 /** One catalog item. The icon is inlined so its own animation and hover palette work. */
 export function ItemCard({ item }: { item: CatalogItem }) {
   const built = isBuilt(item);
   return (
-    <Link href={`/${item.name}`} className={styles.card} data-testid="item-card">
+    <Link href={hrefFor(item)} className={styles.card} data-testid="item-card">
       <div
         className={styles.icon}
         aria-hidden="true"

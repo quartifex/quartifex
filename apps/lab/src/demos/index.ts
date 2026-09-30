@@ -3,6 +3,10 @@ import { type ComponentType, type LazyExoticComponent, lazy } from "react";
 // Live demos, keyed by catalog name. `pnpm new:lib <name>` adds an entry above the
 // marker; an item without an entry shows its catalog facts only.
 export const demos: Record<string, LazyExoticComponent<ComponentType> | undefined> = {
+  plumb: lazy(() => import("./plumb")),
+  safeframe: lazy(() => import("./safeframe")),
+  dailies: lazy(() => import("./dailies")),
+  contactsheet: lazy(() => import("./contactsheet")),
   // demos:end
 };
 

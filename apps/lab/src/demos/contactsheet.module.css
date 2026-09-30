@@ -1,0 +1,54 @@
+.sheet {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--qx-space-6);
+  align-items: flex-start;
+}
+
+.tile {
+  display: grid;
+  gap: var(--qx-space-2);
+  margin: 0;
+  max-width: 420px;
+}
+
+.window {
+  position: relative;
+  overflow: hidden;
+  border: var(--qx-line) solid var(--qx-hairline-strong);
+  border-radius: var(--qx-radius-sm);
+  background: #050505;
+}
+
+.frame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border: 0;
+  transform-origin: 0 0;
+}
+
+.tile figcaption {
+  display: grid;
+  gap: var(--qx-space-1);
+  font-size: var(--qx-text-sm);
+}
+
+.name {
+  font-weight: 500;
+}
+
+.meta {
+  font-family: var(--font-dm-mono), var(--qx-font-mono);
+  font-size: var(--qx-text-xs);
+  color: var(--qx-muted);
+}
+
+.summary {
+  margin: 0;
+  font-family: var(--font-dm-mono), var(--qx-font-mono);
+  font-size: var(--qx-text-xs);
+  letter-spacing: var(--qx-tracking-label);
+  text-transform: uppercase;
+  color: var(--qx-muted);
+}

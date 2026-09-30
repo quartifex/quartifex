@@ -25,7 +25,9 @@ test.describe("hub", () => {
 
     await page.getByRole("searchbox", { name: "Search the catalog" }).fill("");
     await page.getByRole("button", { name: "Built" }).click();
-    // Nothing is built yet; the empty state must say so rather than show a blank page.
+    await expect(cards).toHaveCount(6);
+    await page.getByRole("searchbox", { name: "Search the catalog" }).fill("rushes");
+    // Nothing matches; the empty state must say so rather than show a blank page.
     await expect(cards).toHaveCount(0);
     await expect(page.getByText("Nothing matches those filters.")).toBeVisible();
   });
@@ -37,7 +39,12 @@ test.describe("hub", () => {
     await page.getByRole("link", { name: /plumb/ }).click();
     await expect(page).toHaveURL(/\/plumb$/);
     await expect(page.getByRole("heading", { level: 1, name: "plumb" })).toBeVisible();
+    await expect(page.getByText("pnpm add @quartifex/plumb")).toBeVisible();
+    await page.goto("/rushes");
     await expect(page.getByText("Not built yet.")).toBeVisible();
+    await page.goto("/");
+    await page.getByRole("link", { name: /frameguide/ }).click();
+    await expect(page).toHaveURL(/\/lab\/frameguide$/);
   });
 
   test("is operable by keyboard", async ({ page }) => {
@@ -76,8 +83,9 @@ test.describe("hub", () => {
     expect(running).toBe(0);
   });
 
-  test("unknown items are a 404", async ({ page }) => {
-    const response = await page.goto("/not-a-real-item");
-    expect(response?.status()).toBe(404);
+  test("unknown items are a 404, and Lab seeds live only under /lab", async ({ page }) => {
+    expect((await page.goto("/not-a-real-item"))?.status()).toBe(404);
+    expect((await page.goto("/frameguide"))?.status()).toBe(404);
+    expect((await page.goto("/lab/plumb"))?.status()).toBe(404);
   });
 });

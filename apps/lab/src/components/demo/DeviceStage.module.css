@@ -1,0 +1,33 @@
+.frame {
+  display: grid;
+  justify-items: center;
+  gap: var(--qx-space-2);
+  width: 100%;
+  min-width: 0;
+}
+
+.screen {
+  position: relative;
+  overflow: hidden;
+  border: var(--qx-line) solid var(--qx-hairline-strong);
+  border-radius: var(--qx-radius-sm);
+  background: #050505;
+  transition:
+    width var(--qx-duration) var(--qx-ease-out),
+    height var(--qx-duration) var(--qx-ease-out);
+}
+
+.inner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: 0 0;
+  overflow: hidden;
+}
+
+.caption {
+  margin: 0;
+  font-family: var(--font-dm-mono), var(--qx-font-mono);
+  font-size: var(--qx-text-xs);
+  color: var(--qx-muted);
+}
