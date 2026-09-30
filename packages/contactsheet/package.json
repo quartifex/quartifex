@@ -1,0 +1,86 @@
+{
+  "name": "@quartifex/contactsheet",
+  "version": "0.0.0",
+  "description": "Runs a scroll scene across 30+ device profiles and writes one contact sheet with flags: subject outside the frame, overlapping text, small tap targets, canvas over budget, layout shift.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./checks": {
+      "types": "./dist/checks.d.ts",
+      "import": "./dist/checks.js"
+    },
+    "./profiles": {
+      "types": "./dist/profiles.d.ts",
+      "import": "./dist/profiles.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/quartifex/quartifex.git",
+    "directory": "packages/contactsheet"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "size": "size-limit",
+    "e2e": "playwright test"
+  },
+  "peerDependencies": {
+    "@playwright/test": "^1.40.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.63.0",
+    "@size-limit/file": "^14.1.0",
+    "@types/node": "^22.20.4",
+    "size-limit": "^14.1.0",
+    "typescript": "^7.0.2"
+  },
+  "size-limit": [
+    {
+      "name": "runner",
+      "path": [
+        "dist/index.js",
+        "dist/report.js",
+        "dist/checks.js",
+        "dist/profiles.js"
+      ],
+      "limit": "8 kB"
+    },
+    {
+      "name": "checks (browser)",
+      "path": [
+        "dist/checks.js"
+      ],
+      "limit": "2.5 kB"
+    }
+  ],
+  "keywords": [
+    "playwright",
+    "responsive",
+    "device-matrix",
+    "visual-qa",
+    "scrollytelling",
+    "contact-sheet",
+    "accessibility"
+  ],
+  "bin": {
+    "contactsheet": "./dist/cli.js"
+  },
+  "dependencies": {
+    "@quartifex/dailies": "workspace:^",
+    "@quartifex/safeframe": "workspace:^"
+  }
+}
