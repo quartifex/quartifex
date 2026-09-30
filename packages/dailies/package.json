@@ -1,0 +1,81 @@
+{
+  "name": "@quartifex/dailies",
+  "version": "0.0.0",
+  "description": "Playwright helpers for scroll-driven pages: scroll to progress, screenshot per chapter, canvas-tolerant visual diffs, jank capture, reduced-motion and slow-network emulation.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./browser": {
+      "types": "./dist/browser.d.ts",
+      "import": "./dist/browser.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/quartifex/quartifex.git",
+    "directory": "packages/dailies"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "size": "size-limit",
+    "e2e": "playwright test"
+  },
+  "peerDependencies": {
+    "@playwright/test": "^1.40.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.63.0",
+    "@size-limit/file": "^14.1.0",
+    "@types/node": "^22.20.4",
+    "@types/pngjs": "^6.0.5",
+    "size-limit": "^14.1.0",
+    "typescript": "^7.0.2"
+  },
+  "size-limit": [
+    {
+      "name": "helpers",
+      "path": [
+        "dist/index.js",
+        "dist/math.js",
+        "dist/pixels.js"
+      ],
+      "limit": "6 kB"
+    },
+    {
+      "name": "browser",
+      "path": [
+        "dist/browser.js",
+        "dist/math.js",
+        "dist/pixels.js"
+      ],
+      "limit": "2 kB"
+    }
+  ],
+  "keywords": [
+    "playwright",
+    "visual-regression",
+    "scroll",
+    "scrollytelling",
+    "testing",
+    "pixelmatch",
+    "jank"
+  ],
+  "dependencies": {
+    "pixelmatch": "^7.2.0",
+    "pngjs": "^7.0.0"
+  }
+}
