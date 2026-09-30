@@ -1,0 +1,21 @@
+.intro {
+  display: grid;
+  gap: var(--qx-space-4);
+  margin-bottom: var(--qx-space-12);
+}
+
+.title {
+  margin: 0;
+  font-family: var(--qx-font-display);
+  font-size: var(--qx-text-3xl);
+  font-weight: 500;
+  line-height: var(--qx-leading-tight);
+  letter-spacing: -0.02em;
+}
+
+.lede {
+  max-width: 56ch;
+  margin: 0;
+  font-size: var(--qx-text-lg);
+  color: var(--qx-muted);
+}

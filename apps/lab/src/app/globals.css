@@ -1,0 +1,61 @@
+@import "@quartifex/tokens/tokens.css";
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--qx-bg);
+  color: var(--qx-fg);
+  font-family: var(--qx-font-body);
+  font-size: 100%;
+  line-height: var(--qx-leading-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  margin: 0;
+  min-height: 100svh;
+}
+
+a {
+  color: inherit;
+}
+
+:focus-visible {
+  outline: var(--qx-line) solid var(--qx-teal);
+  outline-offset: 3px;
+}
+
+::selection {
+  background: var(--qx-teal);
+  color: var(--qx-teal-ink);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.skip-link {
+  position: absolute;
+  left: var(--qx-gutter);
+  top: -4rem;
+  z-index: 10;
+  padding: var(--qx-space-2) var(--qx-space-4);
+  background: var(--qx-fg);
+  color: var(--qx-bg);
+  font-family: var(--qx-font-mono);
+  font-size: var(--qx-text-sm);
+  text-decoration: none;
+}
+
+.skip-link:focus {
+  top: var(--qx-space-3);
+}
