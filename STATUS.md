@@ -184,7 +184,7 @@ Commands run and results:
 | hub e2e `--repeat-each 3` | pass: 72 of 72 (after fixing a missed iframe load event in the contactsheet demo) |
 | `contactsheet` CLI against `/scene` (6 profiles) | pass: sheet, PNG and JSON written in 3 s; flags matched the centred-crop faults |
 | `git push -u origin main` | pass (six P1 commits and this update) |
-| CI on GitHub | pass for the pushed P0 commits; P1 run triggered by this push |
+| CI on GitHub | pass on the P1 head (`7629e78`): check job and all three Playwright suites on the bundled Chromium |
 
 Deviations from the P1 brief:
 
