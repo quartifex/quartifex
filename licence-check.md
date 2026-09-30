@@ -85,3 +85,27 @@ visual interface, the page says to contact them if unsure whether it is a Prohib
 - Whether to ask GSAP directly to confirm that open-source libraries with GSAP as an
   optional peer dependency are fine, before the first publish. The text does not address
   it either way.
+
+## Fonts
+
+Decided 1 Oct 2026. This section records how we use the brand faces; it is not a reading
+of the font licences.
+
+| Face | Source | Licence | In git |
+| --- | --- | --- | --- |
+| Clash Display | Fontshare (Indian Type Foundry) | ITF Free Font License | never |
+| Satoshi | Fontshare (Indian Type Foundry) | ITF Free Font License | never |
+| DM Mono | Google Fonts | SIL Open Font License 1.1 | never (fetched at build by `next/font`) |
+
+- Clash Display and Satoshi files are **not committed** to this public repo, in any
+  format (`.woff2`, `.woff`, `.ttf`, `.otf` are git-ignored repo-wide).
+- They are **self-hosted**, not loaded from a third-party font CDN:
+  `@quartifex/tokens/fonts.css` declares each face with `@font-face` and
+  `font-display: swap`, pointing at `/fonts/<file>.woff2` on the app's own origin.
+- The files reach an app one of two ways: `pnpm fonts` copies them from the private
+  assets folder (`C:\dev\assets-private\fonts`) into the app's git-ignored
+  `public/fonts/` before `dev` and `build`, so a Vercel build from a machine that has them
+  serves them as static assets; or the app proxies `/fonts/*` to a private CDN path given
+  in `QX_FONT_ORIGIN` (for example a path under `assets.quartifex.com`).
+- The system-font fallbacks stay in `tokens.css`, so a page without the files still renders
+  in the right roles (display, body, mono).

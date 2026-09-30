@@ -19,6 +19,7 @@
     "new:lib": "node scripts/new-lib.mjs",
     "new:site": "node scripts/new-site.mjs",
     "status": "node scripts/status-table.mjs",
+    "fonts": "node scripts/sync-fonts.mjs",
     "changeset": "changeset",
     "version-packages": "changeset version",
     "release": "turbo run build && changeset publish"

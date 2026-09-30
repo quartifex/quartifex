@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
 const css = readFileSync(new URL("../src/tokens.css", import.meta.url), "utf8");
+const fonts = readFileSync(new URL("../src/fonts.css", import.meta.url), "utf8");
 
 /** Custom properties declared inside the first block that follows `selector`. */
 function declared(selector: string): Set<string> {
@@ -52,5 +53,26 @@ describe("tokens.css", () => {
     expect(css).toMatch(/--qx-font-display:\s*"Clash Display".*system-ui/);
     expect(css).toMatch(/--qx-font-body:\s*"Satoshi".*system-ui/);
     expect(css).toMatch(/--qx-font-mono:\s*"DM Mono".*monospace/);
+  });
+
+  it("uses the confirmed Sindoor red in every theme", () => {
+    const values = css.match(/--qx-sindoor:\s*(#[0-9a-f]{6})/g) ?? [];
+    expect(values.length).toBe(3);
+    for (const value of values) expect(value).toMatch(/#c1440e$/);
+  });
+});
+
+describe("fonts.css", () => {
+  it("self-hosts every face under /fonts/ with font-display: swap", () => {
+    const faces = fonts.match(/@font-face\s*{[^}]*}/g) ?? [];
+    expect(faces.length).toBeGreaterThanOrEqual(2);
+    for (const face of faces) {
+      expect(face).toMatch(/src:\s*url\("\/fonts\/[\w-]+\.woff2"\)/);
+      expect(face).toMatch(/font-display:\s*swap/);
+    }
+  });
+
+  it("loads nothing from a third-party host", () => {
+    expect(fonts).not.toMatch(/https?:\/\//);
   });
 });

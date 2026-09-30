@@ -1,6 +1,7 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "agentGuidance": false,
+  "globalEnv": ["QX_FONT_DIR", "QX_FONT_ORIGIN"],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],

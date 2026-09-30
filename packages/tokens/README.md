@@ -36,8 +36,18 @@ The tokens name the faces and fall back to system fonts. We do not ship font fil
 | Satoshi | Body | https://www.fontshare.com/fonts/satoshi | ITF Free Font License |
 | DM Mono | Metadata | https://fonts.google.com/specimen/DM+Mono | SIL Open Font License 1.1 |
 
-Read the ITF licence before committing Clash Display or Satoshi files to a public repo.
-Until that is settled, apps load them from Fontshare or fall back to system fonts.
+Font files are never committed. `fonts.css` declares the self-hosted faces
+(`font-display: swap`), all served from `/fonts/` on the app's own origin:
+
+```css
+@import "@quartifex/tokens/tokens.css";
+@import "@quartifex/tokens/fonts.css";
+```
+
+Each app gets the files one of two ways: `pnpm fonts` copies them from the private assets
+folder into `apps/<app>/public/fonts/` (git-ignored), or the app proxies `/fonts/*` to a
+private CDN path set in `QX_FONT_ORIGIN`. Without either, the stacks in `tokens.css` fall
+back to system fonts. DM Mono is self-hosted at build time by `next/font`.
 
 ## Size
 

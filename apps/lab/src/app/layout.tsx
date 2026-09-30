@@ -22,13 +22,6 @@ const themeScript = `try{var t=localStorage.getItem("qx-theme");if(t==="light"||
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className={dmMono.variable} suppressHydrationWarning>
-      <head>
-        <link rel="preconnect" href="https://api.fontshare.com" crossOrigin="" />
-        <link
-          rel="stylesheet"
-          href="https://api.fontshare.com/v2/css?f[]=clash-display@500,600&f[]=satoshi@400,500&display=swap"
-        />
-      </head>
       <body>
         <Script id="qx-theme" strategy="beforeInteractive">
           {themeScript}

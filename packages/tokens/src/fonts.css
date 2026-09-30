@@ -1,0 +1,34 @@
+/*
+ * Self-hosted brand faces. The files are never committed to this repo.
+ *
+ * Each app serves them at /fonts/ from one of two places:
+ *   1. its own public/fonts/ folder, filled at build time by `pnpm fonts` from the
+ *      private assets folder (git-ignored), or
+ *   2. a private CDN path, proxied by the app when QX_FONT_ORIGIN is set.
+ * If neither is present the requests fail quietly and the stacks in tokens.css fall
+ * back to system fonts. font-display: swap keeps text visible while a face loads.
+ */
+
+@font-face {
+  font-family: "Clash Display";
+  src: url("/fonts/ClashDisplay-Variable.woff2") format("woff2");
+  font-weight: 200 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Satoshi";
+  src: url("/fonts/Satoshi-Variable.woff2") format("woff2");
+  font-weight: 300 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Satoshi";
+  src: url("/fonts/Satoshi-VariableItalic.woff2") format("woff2");
+  font-weight: 300 900;
+  font-style: italic;
+  font-display: swap;
+}

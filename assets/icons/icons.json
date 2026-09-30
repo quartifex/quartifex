@@ -179,7 +179,7 @@
   "id": "L23",
   "name": "quartifex-skills",
   "kind": "lib",
-  "category": "Claude skills",
+  "category": "process templates",
   "svg": "svg/L23-quartifex-skills.svg",
   "png": "png/L23-quartifex-skills.png"
  },
@@ -371,7 +371,7 @@
   "id": "S18",
   "name": "lumeo",
   "kind": "site",
-  "category": "AI product page",
+  "category": "product launch page",
   "svg": "svg/S18-lumeo.svg",
   "png": "png/S18-lumeo.png"
  },

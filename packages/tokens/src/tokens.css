@@ -22,10 +22,11 @@
   /* Accents */
   --qx-teal: #3fbead;
   --qx-teal-ink: #04110f;
-  --qx-sindoor: #c8322b;
+  --qx-sindoor: #c1440e;
 
   /* Type. Clash Display and Satoshi are Fontshare faces (ITF Free Font License);
-     DM Mono is SIL OFL. Font files are not shipped here: see the README. */
+     DM Mono is SIL OFL. Font files are never committed: fonts.css declares the
+     self-hosted faces, and these stacks fall back to system fonts without them. */
   --qx-font-display:
     "Clash Display", "Satoshi", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   --qx-font-body: "Satoshi", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -79,7 +80,7 @@
     --qx-hairline-strong: rgb(17 17 16 / 0.3);
     --qx-teal: #0b6f65;
     --qx-teal-ink: #f4f2ee;
-    --qx-sindoor: #a3241e;
+    --qx-sindoor: #c1440e;
   }
 }
 
@@ -93,7 +94,7 @@
   --qx-hairline-strong: rgb(17 17 16 / 0.3);
   --qx-teal: #0b6f65;
   --qx-teal-ink: #f4f2ee;
-  --qx-sindoor: #a3241e;
+  --qx-sindoor: #c1440e;
 }
 
 @media (prefers-reduced-motion: reduce) {

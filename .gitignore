@@ -26,3 +26,10 @@ next-env.d.ts
 *.gltf
 *.psd
 *.blend
+
+# Font files are self-hosted, never committed (see licence-check.md, Fonts).
+*.woff
+*.woff2
+*.ttf
+*.otf
+apps/*/public/fonts/
