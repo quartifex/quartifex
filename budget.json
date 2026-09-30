@@ -1,0 +1,26 @@
+{
+  "$comment": "Performance budgets per app, measured on a mid-range mobile profile (Lighthouse mobile preset). Copy the template block for each new site.",
+  "targets": {
+    "lcpMs": 2500,
+    "cls": 0.1,
+    "inpMs": 200
+  },
+  "template": {
+    "app": "<name>",
+    "initialJsKb": 170,
+    "initialCssKb": 30,
+    "totalInitialKb": 1000,
+    "heroMediaKb": 600,
+    "fontsKb": 120
+  },
+  "apps": [
+    {
+      "app": "lab",
+      "initialJsKb": 170,
+      "initialCssKb": 30,
+      "totalInitialKb": 1000,
+      "heroMediaKb": 0,
+      "fontsKb": 0
+    }
+  ]
+}
