@@ -1,0 +1,498 @@
+[
+ {
+  "id": "L01",
+  "name": "reel",
+  "kind": "lib",
+  "category": "Scroll & sequence",
+  "svg": "svg/L01-reel.svg",
+  "png": "png/L01-reel.png"
+ },
+ {
+  "id": "L02",
+  "name": "rushes",
+  "kind": "lib",
+  "category": "Scroll & sequence",
+  "svg": "svg/L02-rushes.svg",
+  "png": "png/L02-rushes.png"
+ },
+ {
+  "id": "L03",
+  "name": "heft",
+  "kind": "lib",
+  "category": "Quality & testing",
+  "svg": "svg/L03-heft.svg",
+  "png": "png/L03-heft.png"
+ },
+ {
+  "id": "L04",
+  "name": "spine",
+  "kind": "lib",
+  "category": "Scroll & sequence",
+  "svg": "svg/L04-spine.svg",
+  "png": "png/L04-spine.png"
+ },
+ {
+  "id": "L05",
+  "name": "viewfinder",
+  "kind": "lib",
+  "category": "Quality & testing",
+  "svg": "svg/L05-viewfinder.svg",
+  "png": "png/L05-viewfinder.png"
+ },
+ {
+  "id": "L06",
+  "name": "stillness",
+  "kind": "lib",
+  "category": "Accessibility",
+  "svg": "svg/L06-stillness.svg",
+  "png": "png/L06-stillness.png"
+ },
+ {
+  "id": "L07",
+  "name": "dolly",
+  "kind": "lib",
+  "category": "3D / R3F",
+  "svg": "svg/L07-dolly.svg",
+  "png": "png/L07-dolly.png"
+ },
+ {
+  "id": "L08",
+  "name": "telecine",
+  "kind": "lib",
+  "category": "Pipeline",
+  "svg": "svg/L08-telecine.svg",
+  "png": "png/L08-telecine.png"
+ },
+ {
+  "id": "L09",
+  "name": "freight",
+  "kind": "lib",
+  "category": "Pipeline",
+  "svg": "svg/L09-freight.svg",
+  "png": "png/L09-freight.png"
+ },
+ {
+  "id": "L10",
+  "name": "bespoke",
+  "kind": "lib",
+  "category": "3D / R3F",
+  "svg": "svg/L10-bespoke.svg",
+  "png": "png/L10-bespoke.png"
+ },
+ {
+  "id": "L11",
+  "name": "sleeve",
+  "kind": "lib",
+  "category": "3D / R3F",
+  "svg": "svg/L11-sleeve.svg",
+  "png": "png/L11-sleeve.png"
+ },
+ {
+  "id": "L12",
+  "name": "understudy",
+  "kind": "lib",
+  "category": "Quality & testing",
+  "svg": "svg/L12-understudy.svg",
+  "png": "png/L12-understudy.png"
+ },
+ {
+  "id": "L13",
+  "name": "emulsion",
+  "kind": "lib",
+  "category": "Shaders",
+  "svg": "svg/L13-emulsion.svg",
+  "png": "png/L13-emulsion.png"
+ },
+ {
+  "id": "L14",
+  "name": "playhead",
+  "kind": "lib",
+  "category": "Scroll & sequence",
+  "svg": "svg/L14-playhead.svg",
+  "png": "png/L14-playhead.png"
+ },
+ {
+  "id": "L15",
+  "name": "preroll",
+  "kind": "lib",
+  "category": "UX primitives",
+  "svg": "svg/L15-preroll.svg",
+  "png": "png/L15-preroll.png"
+ },
+ {
+  "id": "L16",
+  "name": "foley",
+  "kind": "lib",
+  "category": "UX primitives",
+  "svg": "svg/L16-foley.svg",
+  "png": "png/L16-foley.png"
+ },
+ {
+  "id": "L17",
+  "name": "dailies",
+  "kind": "lib",
+  "category": "Quality & testing",
+  "svg": "svg/L17-dailies.svg",
+  "png": "png/L17-dailies.png"
+ },
+ {
+  "id": "L18",
+  "name": "relief",
+  "kind": "lib",
+  "category": "3D / R3F",
+  "svg": "svg/L18-relief.svg",
+  "png": "png/L18-relief.png"
+ },
+ {
+  "id": "L19",
+  "name": "steadicam",
+  "kind": "lib",
+  "category": "3D / R3F",
+  "svg": "svg/L19-steadicam.svg",
+  "png": "png/L19-steadicam.png"
+ },
+ {
+  "id": "L20",
+  "name": "restraint",
+  "kind": "lib",
+  "category": "Design system",
+  "svg": "svg/L20-restraint.svg",
+  "png": "png/L20-restraint.png"
+ },
+ {
+  "id": "L21",
+  "name": "matchcut",
+  "kind": "lib",
+  "category": "UX primitives",
+  "svg": "svg/L21-matchcut.svg",
+  "png": "png/L21-matchcut.png"
+ },
+ {
+  "id": "L22",
+  "name": "storyboard",
+  "kind": "lib",
+  "category": "Pipeline",
+  "svg": "svg/L22-storyboard.svg",
+  "png": "png/L22-storyboard.png"
+ },
+ {
+  "id": "L23",
+  "name": "quartifex-skills",
+  "kind": "lib",
+  "category": "Claude skills",
+  "svg": "svg/L23-quartifex-skills.svg",
+  "png": "png/L23-quartifex-skills.png"
+ },
+ {
+  "id": "L24",
+  "name": "anatomy",
+  "kind": "lib",
+  "category": "3D / R3F",
+  "svg": "svg/L24-anatomy.svg",
+  "png": "png/L24-anatomy.png"
+ },
+ {
+  "id": "L25",
+  "name": "inbetween",
+  "kind": "lib",
+  "category": "Scroll & sequence",
+  "svg": "svg/L25-inbetween.svg",
+  "png": "png/L25-inbetween.png"
+ },
+ {
+  "id": "L26",
+  "name": "safeframe",
+  "kind": "lib",
+  "category": "Responsive scenes",
+  "svg": "svg/L26-safeframe.svg",
+  "png": "png/L26-safeframe.png"
+ },
+ {
+  "id": "L27",
+  "name": "contactsheet",
+  "kind": "lib",
+  "category": "Quality & testing",
+  "svg": "svg/L27-contactsheet.svg",
+  "png": "png/L27-contactsheet.png"
+ },
+ {
+  "id": "L28",
+  "name": "plumb",
+  "kind": "lib",
+  "category": "Responsive scenes",
+  "svg": "svg/L28-plumb.svg",
+  "png": "png/L28-plumb.png"
+ },
+ {
+  "id": "L29",
+  "name": "resolve",
+  "kind": "lib",
+  "category": "Responsive scenes",
+  "svg": "svg/L29-resolve.svg",
+  "png": "png/L29-resolve.png"
+ },
+ {
+  "id": "S01",
+  "name": "quasar",
+  "kind": "site",
+  "category": "Product reveal",
+  "svg": "svg/S01-quasar.svg",
+  "png": "png/S01-quasar.png"
+ },
+ {
+  "id": "S02",
+  "name": "kanista",
+  "kind": "site",
+  "category": "Configurator",
+  "svg": "svg/S02-kanista.svg",
+  "png": "png/S02-kanista.png"
+ },
+ {
+  "id": "S03",
+  "name": "reelhouse",
+  "kind": "site",
+  "category": "Docs & playground",
+  "svg": "svg/S03-reelhouse.svg",
+  "png": "png/S03-reelhouse.png"
+ },
+ {
+  "id": "S04",
+  "name": "heftmark",
+  "kind": "site",
+  "category": "Lead-gen tool",
+  "svg": "svg/S04-heftmark.svg",
+  "png": "png/S04-heftmark.png"
+ },
+ {
+  "id": "S05",
+  "name": "tiltshift",
+  "kind": "site",
+  "category": "WebGL journey",
+  "svg": "svg/S05-tiltshift.svg",
+  "png": "png/S05-tiltshift.png"
+ },
+ {
+  "id": "S06",
+  "name": "meridian",
+  "kind": "site",
+  "category": "Data story",
+  "svg": "svg/S06-meridian.svg",
+  "png": "png/S06-meridian.png"
+ },
+ {
+  "id": "S07",
+  "name": "anatomica",
+  "kind": "site",
+  "category": "Product reveal",
+  "svg": "svg/S07-anatomica.svg",
+  "png": "png/S07-anatomica.png"
+ },
+ {
+  "id": "S08",
+  "name": "halcyon",
+  "kind": "site",
+  "category": "Accessibility proof",
+  "svg": "svg/S08-halcyon.svg",
+  "png": "png/S08-halcyon.png"
+ },
+ {
+  "id": "S09",
+  "name": "cadenza",
+  "kind": "site",
+  "category": "Audio film",
+  "svg": "svg/S09-cadenza.svg",
+  "png": "png/S09-cadenza.png"
+ },
+ {
+  "id": "S10",
+  "name": "deepfield",
+  "kind": "site",
+  "category": "Gallery",
+  "svg": "svg/S10-deepfield.svg",
+  "png": "png/S10-deepfield.png"
+ },
+ {
+  "id": "S11",
+  "name": "apogee",
+  "kind": "site",
+  "category": "Full launch page",
+  "svg": "svg/S11-apogee.svg",
+  "png": "png/S11-apogee.png"
+ },
+ {
+  "id": "S12",
+  "name": "gaussia",
+  "kind": "site",
+  "category": "Frontier",
+  "svg": "svg/S12-gaussia.svg",
+  "png": "png/S12-gaussia.png"
+ },
+ {
+  "id": "S13",
+  "name": "anyframe",
+  "kind": "site",
+  "category": "Responsive proof",
+  "svg": "svg/S13-anyframe.svg",
+  "png": "png/S13-anyframe.png"
+ },
+ {
+  "id": "S14",
+  "name": "caret",
+  "kind": "site",
+  "category": "Dev-tool launch",
+  "svg": "svg/S14-caret.svg",
+  "png": "png/S14-caret.png"
+ },
+ {
+  "id": "S15",
+  "name": "abacus",
+  "kind": "site",
+  "category": "Fintech dashboard reveal",
+  "svg": "svg/S15-abacus.svg",
+  "png": "png/S15-abacus.png"
+ },
+ {
+  "id": "S16",
+  "name": "orbis",
+  "kind": "site",
+  "category": "Data globe",
+  "svg": "svg/S16-orbis.svg",
+  "png": "png/S16-orbis.png"
+ },
+ {
+  "id": "S17",
+  "name": "thumbly",
+  "kind": "site",
+  "category": "Consumer app launch",
+  "svg": "svg/S17-thumbly.svg",
+  "png": "png/S17-thumbly.png"
+ },
+ {
+  "id": "S18",
+  "name": "lumeo",
+  "kind": "site",
+  "category": "AI product page",
+  "svg": "svg/S18-lumeo.svg",
+  "png": "png/S18-lumeo.png"
+ },
+ {
+  "id": "S19",
+  "name": "lattice",
+  "kind": "site",
+  "category": "Portfolio wall",
+  "svg": "svg/S19-lattice.svg",
+  "png": "png/S19-lattice.png"
+ },
+ {
+  "id": "LB01",
+  "name": "glint",
+  "kind": "lab",
+  "category": "Lab",
+  "svg": "svg/LB01-glint.svg",
+  "png": "png/LB01-glint.png"
+ },
+ {
+  "id": "LB02",
+  "name": "halftone",
+  "kind": "lab",
+  "category": "Lab",
+  "svg": "svg/LB02-halftone.svg",
+  "png": "png/LB02-halftone.png"
+ },
+ {
+  "id": "LB03",
+  "name": "ink-dissolve",
+  "kind": "lab",
+  "category": "Lab",
+  "svg": "svg/LB03-ink-dissolve.svg",
+  "png": "png/LB03-ink-dissolve.png"
+ },
+ {
+  "id": "LB04",
+  "name": "label-peel",
+  "kind": "lab",
+  "category": "Lab",
+  "svg": "svg/LB04-label-peel.svg",
+  "png": "png/LB04-label-peel.png"
+ },
+ {
+  "id": "LB05",
+  "name": "grain",
+  "kind": "lab",
+  "category": "Lab",
+  "svg": "svg/LB05-grain.svg",
+  "png": "png/LB05-grain.png"
+ },
+ {
+  "id": "LB06",
+  "name": "velocity",
+  "kind": "lab",
+  "category": "Lab",
+  "svg": "svg/LB06-velocity.svg",
+  "png": "png/LB06-velocity.png"
+ },
+ {
+  "id": "LB07",
+  "name": "lit-grid",
+  "kind": "lab",
+  "category": "Lab",
+  "svg": "svg/LB07-lit-grid.svg",
+  "png": "png/LB07-lit-grid.png"
+ },
+ {
+  "id": "LB08",
+  "name": "blendframes",
+  "kind": "lab",
+  "category": "Lab",
+  "svg": "svg/LB08-blendframes.svg",
+  "png": "png/LB08-blendframes.png"
+ },
+ {
+  "id": "LB09",
+  "name": "odometer",
+  "kind": "lab",
+  "category": "Lab",
+  "svg": "svg/LB09-odometer.svg",
+  "png": "png/LB09-odometer.png"
+ },
+ {
+  "id": "LB10",
+  "name": "logo-extrude",
+  "kind": "lab",
+  "category": "Lab",
+  "svg": "svg/LB10-logo-extrude.svg",
+  "png": "png/LB10-logo-extrude.png"
+ },
+ {
+  "id": "LB11",
+  "name": "draw-path",
+  "kind": "lab",
+  "category": "Lab",
+  "svg": "svg/LB11-draw-path.svg",
+  "png": "png/LB11-draw-path.png"
+ },
+ {
+  "id": "LB12",
+  "name": "mini-explode",
+  "kind": "lab",
+  "category": "Lab",
+  "svg": "svg/LB12-mini-explode.svg",
+  "png": "png/LB12-mini-explode.png"
+ },
+ {
+  "id": "LB13",
+  "name": "frameguide",
+  "kind": "lab",
+  "category": "Lab",
+  "svg": "svg/LB13-frameguide.svg",
+  "png": "png/LB13-frameguide.png"
+ },
+ {
+  "id": "LB14",
+  "name": "aspect-morph",
+  "kind": "lab",
+  "category": "Lab",
+  "svg": "svg/LB14-aspect-morph.svg",
+  "png": "png/LB14-aspect-morph.png"
+ }
+]
