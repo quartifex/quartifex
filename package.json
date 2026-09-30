@@ -15,7 +15,7 @@
     "format": "biome check --write .",
     "size": "turbo run size",
     "check": "pnpm typecheck && pnpm lint && pnpm test && pnpm size",
-    "e2e": "pnpm --filter @quartifex/lab e2e",
+    "e2e": "turbo run e2e --concurrency=1",
     "new:lib": "node scripts/new-lib.mjs",
     "new:site": "node scripts/new-site.mjs",
     "status": "node scripts/status-table.mjs",

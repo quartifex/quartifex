@@ -47,10 +47,13 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
       - run: pnpm --filter @quartifex/lab exec playwright install --with-deps chromium
+      # Behaviour tests: the hub and its demos, plus dailies and contactsheet against synthetic pages.
       - run: pnpm e2e
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: playwright-report
-          path: apps/lab/test-results
+          path: |
+            apps/lab/test-results
+            packages/*/test-results
           retention-days: 7

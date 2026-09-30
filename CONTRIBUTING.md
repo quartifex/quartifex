@@ -27,6 +27,7 @@ taken along the way.
 ```
 packages/*        libraries, published as @quartifex/<name> (tokens is internal)
 apps/lab          the hub for lab.quartifex.com (Next.js App Router)
+                  /<name> libraries and sites, /lab/<name> Lab seeds, /scene the bare test scene
 apps/<site>       proof sites, one per catalog site
 assets/icons      62 animated SVG icons + icons.json (do not restyle)
 catalog/          catalog.json: the source of truth for what exists and its state
@@ -44,7 +45,8 @@ budget.json       performance budgets per app
 | `pnpm build` | Build every package and app |
 | `pnpm test` | Vitest, whole repo |
 | `pnpm check` | typecheck + lint + test + size. Must be green before anything is `built` |
-| `pnpm e2e` | Playwright behaviour tests against the hub's production build (`pnpm build` first) |
+| `pnpm e2e` | Playwright behaviour tests: the hub and its demos (against the production build, so `pnpm build` first), plus `dailies` and `contactsheet` against synthetic pages |
+| `pnpm fonts` | Copy the self-hosted brand fonts from `assets-private/fonts` into each app's git-ignored `public/fonts/` (runs before `dev` and `build`) |
 | `pnpm lint` / `pnpm format` | Biome check / Biome check with fixes |
 | `pnpm new:lib <name>` | Scaffold `packages/<name>` from the catalog entry, with a hub demo and a changeset |
 | `pnpm new:site <name>` | Scaffold `apps/<name>` with its honest label and a budget entry |

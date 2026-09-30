@@ -10,13 +10,19 @@
     },
     "dev": {
       "cache": false,
-      "persistent": true
+      "persistent": true,
+      "dependsOn": ["^build"]
     },
     "typecheck": {
       "dependsOn": ["^build"]
     },
     "size": {
       "dependsOn": ["build"]
+    },
+    "e2e": {
+      "dependsOn": ["build"],
+      "cache": false
     }
-  }
+  },
+  "globalPassThroughEnv": ["PW_CHANNEL", "CI"]
 }
