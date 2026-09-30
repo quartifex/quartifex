@@ -110,7 +110,7 @@ Things only Nitesh can supply or decide. None of them blocks P1.
 
 | # | Input | Needed for |
 | --- | --- | --- |
-| 1 | **GitHub sign-in for the first push.** See the log below for the exact result of the push attempt. | Backup of the repo, CI |
+| 1 | **Push access to `quartifex/quartifex`.** `git push -u origin main` was refused on 30 Sep 2026: "Permission to quartifex/quartifex.git denied to niteshaggarwal" (HTTP 403). Git Credential Manager is signed in as `niteshaggarwal`, which has no write access to the `quartifex` organisation repo. Either give that account write access (add it to the org or the repo), or sign Git Credential Manager in with the account that owns the org, then run `git push -u origin main`. `origin` is already set. | Backup of the repo, CI |
 | 2 | **Commit identity.** Commits are authored as `Nitesh <lab@quartifex.com>`. If GitHub should link them to your account, add that address to your GitHub account, or tell us the address to use. | Commit attribution |
 | 3 | **Sindoor red value.** `--qx-sindoor` is provisional (`#c8322b` dark, `#a3241e` light); no source file defines it. | `tokens`, later `restraint` |
 | 4 | **Font licence call.** Clash Display and Satoshi are loaded from Fontshare, not committed. Decide whether the ITF Free Font License allows committing the files to a public repo; until then they stay out. | Self-hosting fonts |
@@ -141,6 +141,7 @@ Commands run and results:
 | `pnpm check` | green |
 | `pnpm build` | pass: hub builds 65 static pages (home, 62 items, not-found) |
 | `pnpm e2e` (Playwright, installed Chrome) | pass: 7 tests (listing, filters, icons and navigation, keyboard, theme persistence, reduced motion, 404) |
+| `git push -u origin main` | **failed**: 403, permission denied to `niteshaggarwal` (see Inputs needed 1). Nothing was pushed |
 | Library template, built in a scratch workspace | pass: typecheck, build (ESM + types), size (core 317 B, React adapter 310 B), 3 tests |
 
 Deviations from the P0 brief:
