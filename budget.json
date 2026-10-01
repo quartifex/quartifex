@@ -20,7 +20,15 @@
       "initialCssKb": 30,
       "totalInitialKb": 1000,
       "heroMediaKb": 0,
-      "fontsKb": 0
+      "fontsKb": 0,
+      "freight": {
+        "bytes": 512000,
+        "triangles": 50000,
+        "drawCalls": 20,
+        "materials": 10,
+        "textureBytes": 409600,
+        "maxTextureSize": 2048
+      }
     },
     {
       "app": "anyframe",

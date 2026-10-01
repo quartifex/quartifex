@@ -54,3 +54,40 @@ test.describe("sleeve", () => {
     await expect(page.getByText("Reduced motion is on")).toBeVisible();
   });
 });
+
+test.describe("freight", () => {
+  test("optimises the careless jar, judges it, and flips the verdict when meshes are joined", async ({
+    page,
+  }) => {
+    await page.goto("/freight");
+    const status = page.getByTestId("fr-status");
+    await expect(status).toContainText("Done", { timeout: 20_000 });
+    const verdict = page.getByTestId("fr-verdict");
+    await expect(verdict).toHaveAttribute("data-pass", "false");
+    const table = page.getByTestId("fr-table");
+    await expect(table.locator('tr[data-metric="drawCalls"]')).toHaveAttribute(
+      "data-pass",
+      "false",
+    );
+    await expect(table.locator('tr[data-metric="bytes"]')).toHaveAttribute("data-pass", "true");
+    await expect(table.locator('tr[data-metric="maxTextureSize"]')).toContainText(
+      "1024 px, image/webp",
+    );
+    await expect(page.getByTestId("fr-names")).toContainText("renamed");
+    await expect(page.getByTestId("fr-tsx")).toContainText("export function Jar(");
+    await expect(page.getByTestId("fr-download")).toHaveAttribute("download", "jar.freight.glb");
+    await expect
+      .poll(() => litPixels(page, '[data-demo="freight"] canvas'), { timeout: 15_000 })
+      .toBeGreaterThan(200);
+
+    await page.getByRole("checkbox", { name: "Join meshes that share a material" }).check();
+    await expect(verdict).toHaveAttribute("data-pass", "true", { timeout: 20_000 });
+    await expect(table.locator('tr[data-metric="drawCalls"] td').nth(1)).toHaveText("2");
+  });
+
+  test("holds the preview still under reduced motion", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto("/freight");
+    await expect(page.getByText("Reduced motion is on: the preview holds still.")).toBeVisible();
+  });
+});

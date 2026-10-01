@@ -1,7 +1,7 @@
 {
   "name": "@quartifex/freight",
   "version": "0.0.0",
-  "description": "TODO: one sentence on what freight does.",
+  "description": "An opinionated glTF-Transform preset with a verdict: dedupe, prune, weld, texture caps and re-encoding (WebP, AVIF, KTX2), Meshopt or Draco, naming rules, a budget pass or fail, a Markdown report and a typed React Three Fiber module.",
   "license": "MIT",
   "type": "module",
   "sideEffects": false,
@@ -13,9 +13,13 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
-    "./react": {
-      "types": "./dist/react.d.ts",
-      "import": "./dist/react.js"
+    "./node": {
+      "types": "./dist/node.d.ts",
+      "import": "./dist/node.js"
+    },
+    "./browser": {
+      "types": "./dist/browser.d.ts",
+      "import": "./dist/browser.js"
     },
     "./package.json": "./package.json"
   },
@@ -34,34 +38,64 @@
     "size": "size-limit"
   },
   "peerDependencies": {
-    "gsap": "^3.12.0",
-    "react": "^18.0.0 || ^19.0.0"
+    "meshoptimizer": ">=0.20.0",
+    "draco3dgltf": "^1.5.7",
+    "sharp": ">=0.33.0"
   },
   "peerDependenciesMeta": {
-    "gsap": {
+    "meshoptimizer": {
       "optional": true
     },
-    "react": {
+    "draco3dgltf": {
+      "optional": true
+    },
+    "sharp": {
       "optional": true
     }
   },
   "devDependencies": {
     "@size-limit/file": "^14.1.0",
-    "@types/react": "^19.3.0",
-    "react": "^19.3.0",
     "size-limit": "^14.1.0",
-    "typescript": "^7.0.2"
+    "typescript": "^7.0.2",
+    "meshoptimizer": "^1.3.0",
+    "draco3dgltf": "^1.5.7",
+    "sharp": "^0.35.5",
+    "@types/node": "^22.20.4"
   },
   "size-limit": [
     {
       "name": "core",
       "path": "dist/index.js",
+      "limit": "6 kB"
+    },
+    {
+      "name": "node runner",
+      "path": "dist/node.js",
       "limit": "3 kB"
     },
     {
-      "name": "react adapter",
-      "path": "dist/react.js",
-      "limit": "1 kB"
+      "name": "browser runner",
+      "path": "dist/browser.js",
+      "limit": "1.5 kB"
     }
+  ],
+  "dependencies": {
+    "@gltf-transform/core": "^4.5.1",
+    "@gltf-transform/extensions": "^4.5.1",
+    "@gltf-transform/functions": "^4.5.1"
+  },
+  "bin": {
+    "freight": "./dist/cli.js"
+  },
+  "keywords": [
+    "gltf",
+    "glb",
+    "gltf-transform",
+    "meshopt",
+    "draco",
+    "ktx2",
+    "three",
+    "react-three-fiber",
+    "budget"
   ]
 }
