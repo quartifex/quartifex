@@ -1,0 +1,101 @@
+{
+  "name": "@quartifex/anatomy",
+  "version": "0.0.0",
+  "description": "Exploded views for three.js and React Three Fiber: explosion vectors from the node hierarchy, staggered scroll scrubbing, and annotations that appear once parts are apart.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./three": {
+      "types": "./dist/three.d.ts",
+      "import": "./dist/three.js"
+    },
+    "./react": {
+      "types": "./dist/react.d.ts",
+      "import": "./dist/react.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/quartifex/quartifex.git",
+    "directory": "packages/anatomy"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "size": "size-limit"
+  },
+  "peerDependencies": {
+    "@react-three/drei": "^10.0.0",
+    "@react-three/fiber": "^9.0.0",
+    "react": "^19.0.0",
+    "three": ">=0.156.0"
+  },
+  "peerDependenciesMeta": {
+    "@react-three/drei": {
+      "optional": true
+    },
+    "@react-three/fiber": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    },
+    "three": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@size-limit/file": "^14.1.0",
+    "@types/react": "^19.3.0",
+    "react": "^19.3.0",
+    "size-limit": "^14.1.0",
+    "typescript": "^7.0.2",
+    "@react-three/drei": "^10.7.9",
+    "@react-three/fiber": "^9.8.1",
+    "three": "^0.186.1",
+    "@types/three": "^0.186.0"
+  },
+  "size-limit": [
+    {
+      "name": "core",
+      "path": "dist/index.js",
+      "limit": "2 kB"
+    },
+    {
+      "name": "three binding",
+      "path": "dist/three.js",
+      "limit": "1.5 kB"
+    },
+    {
+      "name": "r3f component",
+      "path": "dist/react.js",
+      "limit": "1.5 kB"
+    }
+  ],
+  "keywords": [
+    "three",
+    "react-three-fiber",
+    "r3f",
+    "exploded-view",
+    "annotations",
+    "scroll",
+    "product",
+    "scrollytelling"
+  ],
+  "dependencies": {
+    "@quartifex/dolly": "workspace:^"
+  }
+}
