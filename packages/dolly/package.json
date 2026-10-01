@@ -1,0 +1,101 @@
+{
+  "name": "@quartifex/dolly",
+  "version": "0.0.0",
+  "description": "A scroll camera rig for three.js and React Three Fiber: keyframes and splines from JSON, easing per segment, chapters, damping, portrait FOV compensation, and a Blender camera-path exporter.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "exporters"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./three": {
+      "types": "./dist/three.d.ts",
+      "import": "./dist/three.js"
+    },
+    "./react": {
+      "types": "./dist/react.d.ts",
+      "import": "./dist/react.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/quartifex/quartifex.git",
+    "directory": "packages/dolly"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "size": "size-limit"
+  },
+  "peerDependencies": {
+    "@react-three/fiber": "^9.0.0",
+    "react": "^19.0.0",
+    "three": ">=0.156.0"
+  },
+  "peerDependenciesMeta": {
+    "@react-three/fiber": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    },
+    "three": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@size-limit/file": "^14.1.0",
+    "@types/react": "^19.3.0",
+    "react": "^19.3.0",
+    "size-limit": "^14.1.0",
+    "typescript": "^7.0.2",
+    "@react-three/fiber": "^9.8.1",
+    "three": "^0.186.1",
+    "@types/three": "^0.186.0",
+    "@types/node": "^22.20.4"
+  },
+  "size-limit": [
+    {
+      "name": "core",
+      "path": [
+        "dist/index.js",
+        "dist/math.js"
+      ],
+      "limit": "3.5 kB"
+    },
+    {
+      "name": "three glue",
+      "path": "dist/three.js",
+      "limit": "0.5 kB"
+    },
+    {
+      "name": "r3f adapter",
+      "path": "dist/react.js",
+      "limit": "1 kB"
+    }
+  ],
+  "keywords": [
+    "three",
+    "react-three-fiber",
+    "r3f",
+    "camera",
+    "scroll",
+    "spline",
+    "blender",
+    "scrollytelling"
+  ],
+  "dependencies": {
+    "@quartifex/safeframe": "workspace:^"
+  }
+}

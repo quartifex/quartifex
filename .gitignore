@@ -36,3 +36,6 @@ apps/*/public/fonts/
 
 # Sequences are generated at build time by rushes, never committed.
 apps/*/public/sequences/
+
+# Python bytecode from the Blender exporter tests.
+__pycache__/
