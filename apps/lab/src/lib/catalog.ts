@@ -19,6 +19,8 @@ export type CatalogItem = {
   effort: string | null;
   host: string | null;
   label: string | null;
+  /** True once a site is deployed at its host; set by hand on launch. */
+  live: boolean;
   /** Ids of items this one depends on. */
   deps: string[];
   /** Ids of libraries a site is built with. */
@@ -83,6 +85,7 @@ export function parseCatalog(raw: unknown): CatalogItem[] {
       effort: text(entry.effort),
       host: text(entry.host),
       label: text(entry.label),
+      live: entry.live === true,
       deps: idList(entry.deps),
       libs: idList(entry.libs),
     };

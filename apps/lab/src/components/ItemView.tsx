@@ -87,8 +87,17 @@ export function ItemView({ item, Demo }: { item: CatalogItem; Demo: ComponentTyp
         {item.host && (
           <div>
             <dt>Address</dt>
-            {/* Linked only once the site is actually live. */}
-            <dd>{built ? <a href={`https://${item.host}`}>{item.host}</a> : item.host}</dd>
+            {/* Linked only once the site is deployed (catalog "live": true), not merely built. */}
+            <dd>
+              {item.live ? (
+                <a href={`https://${item.host}`}>{item.host}</a>
+              ) : (
+                <>
+                  {item.host}
+                  {built ? " (built, not deployed yet)" : ""}
+                </>
+              )}
+            </dd>
           </div>
         )}
         {item.deps.length > 0 && (

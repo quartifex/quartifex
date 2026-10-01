@@ -25,7 +25,7 @@ test.describe("hub", () => {
 
     await page.getByRole("searchbox", { name: "Search the catalog" }).fill("");
     await page.getByRole("button", { name: "Built" }).click();
-    await expect(cards).toHaveCount(15);
+    await expect(cards).toHaveCount(16);
     await page.getByRole("searchbox", { name: "Search the catalog" }).fill("sleeve");
     // Nothing matches; the empty state must say so rather than show a blank page.
     await expect(cards).toHaveCount(0);
@@ -87,5 +87,11 @@ test.describe("hub", () => {
     expect((await page.goto("/not-a-real-item"))?.status()).toBe(404);
     expect((await page.goto("/frameguide"))?.status()).toBe(404);
     expect((await page.goto("/lab/plumb"))?.status()).toBe(404);
+  });
+
+  test("a built site is not linked until it is deployed", async ({ page }) => {
+    await page.goto("/anyframe");
+    await expect(page.getByText("anyframe.quartifex.com (built, not deployed yet)")).toBeVisible();
+    await expect(page.getByRole("link", { name: "anyframe.quartifex.com" })).toHaveCount(0);
   });
 });
