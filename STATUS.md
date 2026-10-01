@@ -259,7 +259,8 @@ Commands run and results:
 | `pnpm build` | pass: 13 packages and the hub (67 pages plus the `/sample` test route) |
 | `pnpm e2e` (installed Chrome) | pass: hub 44, dailies 4, heft 1, contactsheet 1 |
 | hub e2e `--repeat-each 3` | pass: 132 of 132 (`--repeat-each 2` after the last fix: 88 of 88) |
-| `git push` | see below |
+| `git push` | pass |
+| CI on GitHub | pass on `c40db20`: check job (incl. the Python exporter tests on Linux) and all four Playwright suites |
 
 Fixed on the way, found through the demos:
 
