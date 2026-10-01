@@ -147,7 +147,7 @@
   "libs": null,
   "label": null,
   "prompt": "P5",
-  "state": "not started",
+  "state": "in progress",
   "icon": "icons/svg/L09"
  },
  {
@@ -182,7 +182,7 @@
   "libs": null,
   "label": null,
   "prompt": "P5",
-  "state": "not started",
+  "state": "built",
   "icon": "icons/svg/L11"
  },
  {
@@ -199,7 +199,7 @@
   "libs": null,
   "label": null,
   "prompt": "P5",
-  "state": "not started",
+  "state": "in progress",
   "icon": "icons/svg/L12"
  },
  {

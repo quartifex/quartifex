@@ -23,6 +23,7 @@
     "@quartifex/resolve": "workspace:*",
     "@quartifex/rushes": "workspace:*",
     "@quartifex/safeframe": "workspace:*",
+    "@quartifex/sleeve": "workspace:*",
     "@quartifex/spine": "workspace:*",
     "@quartifex/stillness": "workspace:*",
     "@quartifex/tokens": "workspace:*",

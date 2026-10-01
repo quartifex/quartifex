@@ -16,6 +16,9 @@ export const demos: Record<string, LazyExoticComponent<ComponentType> | undefine
   heft: lazy(() => import("./heft")),
   spine: lazy(() => import("./spine")),
   viewfinder: lazy(() => import("./viewfinder")),
+  sleeve: lazy(() => import("./sleeve")),
+  freight: lazy(() => import("./freight")),
+  understudy: lazy(() => import("./understudy")),
   // demos:end
 };
 

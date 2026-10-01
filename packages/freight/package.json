@@ -1,0 +1,67 @@
+{
+  "name": "@quartifex/freight",
+  "version": "0.0.0",
+  "description": "TODO: one sentence on what freight does.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./react": {
+      "types": "./dist/react.d.ts",
+      "import": "./dist/react.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/quartifex/quartifex.git",
+    "directory": "packages/freight"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "size": "size-limit"
+  },
+  "peerDependencies": {
+    "gsap": "^3.12.0",
+    "react": "^18.0.0 || ^19.0.0"
+  },
+  "peerDependenciesMeta": {
+    "gsap": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@size-limit/file": "^14.1.0",
+    "@types/react": "^19.3.0",
+    "react": "^19.3.0",
+    "size-limit": "^14.1.0",
+    "typescript": "^7.0.2"
+  },
+  "size-limit": [
+    {
+      "name": "core",
+      "path": "dist/index.js",
+      "limit": "3 kB"
+    },
+    {
+      "name": "react adapter",
+      "path": "dist/react.js",
+      "limit": "1 kB"
+    }
+  ]
+}

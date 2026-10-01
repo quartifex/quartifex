@@ -70,6 +70,29 @@
   font-size: var(--qx-text-sm);
 }
 
+.caption {
+  margin: var(--qx-space-2) 0 0;
+  font-size: var(--qx-text-xs);
+  color: var(--qx-muted);
+}
+
+.flat {
+  display: grid;
+  gap: var(--qx-space-2);
+  margin: 0;
+  font-size: var(--qx-text-xs);
+  color: var(--qx-muted);
+}
+
+.flat svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 14rem;
+  overflow: visible;
+  color: var(--qx-fg);
+}
+
 @media (max-width: 56rem) {
   .split,
   .cameraRow {
