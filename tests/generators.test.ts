@@ -50,10 +50,10 @@ const stateOf = (name: string): unknown => {
 
 describe("new:lib", () => {
   it("creates a package that matches the definition of done", () => {
-    const { dir } = newLib(root, "rushes");
+    const { dir } = newLib(root, "dolly");
     const pkg = JSON.parse(readFileSync(path.join(dir, "package.json"), "utf8"));
 
-    expect(pkg.name).toBe("@quartifex/rushes");
+    expect(pkg.name).toBe("@quartifex/dolly");
     expect(pkg.type).toBe("module");
     expect(pkg.license).toBe("MIT");
     expect(Object.keys(pkg.exports)).toEqual([".", "./react", "./package.json"]);
@@ -65,30 +65,30 @@ describe("new:lib", () => {
   });
 
   it("fills every placeholder", () => {
-    const { dir } = newLib(root, "rushes");
+    const { dir } = newLib(root, "dolly");
     for (const file of files(dir))
       expect(readFileSync(file, "utf8"), file).not.toMatch(/__[A-Z]+__/);
   });
 
   it("adds a hub demo, a changeset, and marks the item in progress", () => {
-    newLib(root, "rushes");
+    newLib(root, "dolly");
     const demos = path.join(root, "apps", "lab", "src", "demos");
-    expect(existsSync(path.join(demos, "rushes.tsx"))).toBe(true);
+    expect(existsSync(path.join(demos, "dolly.tsx"))).toBe(true);
     expect(readFileSync(path.join(demos, "index.ts"), "utf8")).toContain(
-      '"rushes": lazy(() => import("./rushes")),',
+      '"dolly": lazy(() => import("./dolly")),',
     );
-    expect(readFileSync(path.join(root, ".changeset", "rushes-initial.md"), "utf8")).toContain(
-      '"@quartifex/rushes": minor',
+    expect(readFileSync(path.join(root, ".changeset", "dolly-initial.md"), "utf8")).toContain(
+      '"@quartifex/dolly": minor',
     );
-    expect(stateOf("rushes")).toBe("in progress");
+    expect(stateOf("dolly")).toBe("in progress");
   });
 
   it("refuses names that are not libraries in the catalog, and never overwrites", () => {
     expect(() => newLib(root, "not-in-catalog")).toThrow(/not in catalog/);
     expect(() => newLib(root, "anyframe")).toThrow(/is a site/);
     expect(() => newLib(root, "Bad Name")).toThrow(/not a valid name/);
-    newLib(root, "rushes");
-    expect(() => newLib(root, "rushes")).toThrow(/already exists/);
+    newLib(root, "dolly");
+    expect(() => newLib(root, "dolly")).toThrow(/already exists/);
   });
 });
 
@@ -112,6 +112,6 @@ describe("new:site", () => {
   });
 
   it("refuses libraries", () => {
-    expect(() => newSite(root, "rushes")).toThrow(/is a lib/);
+    expect(() => newSite(root, "dolly")).toThrow(/is a lib/);
   });
 });

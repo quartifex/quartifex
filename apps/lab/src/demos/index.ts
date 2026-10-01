@@ -7,6 +7,10 @@ export const demos: Record<string, LazyExoticComponent<ComponentType> | undefine
   safeframe: lazy(() => import("./safeframe")),
   dailies: lazy(() => import("./dailies")),
   contactsheet: lazy(() => import("./contactsheet")),
+  rushes: lazy(() => import("./rushes")),
+  resolve: lazy(() => import("./resolve")),
+  reel: lazy(() => import("./reel")),
+  stillness: lazy(() => import("./stillness")),
   // demos:end
 };
 

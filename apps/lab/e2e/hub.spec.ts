@@ -25,8 +25,8 @@ test.describe("hub", () => {
 
     await page.getByRole("searchbox", { name: "Search the catalog" }).fill("");
     await page.getByRole("button", { name: "Built" }).click();
-    await expect(cards).toHaveCount(6);
-    await page.getByRole("searchbox", { name: "Search the catalog" }).fill("rushes");
+    await expect(cards).toHaveCount(10);
+    await page.getByRole("searchbox", { name: "Search the catalog" }).fill("dolly");
     // Nothing matches; the empty state must say so rather than show a blank page.
     await expect(cards).toHaveCount(0);
     await expect(page.getByText("Nothing matches those filters.")).toBeVisible();
@@ -40,7 +40,7 @@ test.describe("hub", () => {
     await expect(page).toHaveURL(/\/plumb$/);
     await expect(page.getByRole("heading", { level: 1, name: "plumb" })).toBeVisible();
     await expect(page.getByText("pnpm add @quartifex/plumb")).toBeVisible();
-    await page.goto("/rushes");
+    await page.goto("/dolly");
     await expect(page.getByText("Not built yet.")).toBeVisible();
     await page.goto("/");
     await page.getByRole("link", { name: /frameguide/ }).click();

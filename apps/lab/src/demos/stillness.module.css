@@ -1,0 +1,133 @@
+.layout {
+  display: grid;
+  grid-template-columns: minmax(9rem, 12rem) minmax(0, 1fr);
+  gap: var(--qx-space-6);
+  align-items: start;
+}
+
+.rail ol {
+  display: grid;
+  gap: var(--qx-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: chapter;
+}
+
+.rail li {
+  counter-increment: chapter;
+}
+
+.rail a {
+  display: flex;
+  align-items: center;
+  gap: var(--qx-space-2);
+  min-height: 2.25rem;
+  color: var(--qx-muted);
+  font-family: var(--font-dm-mono), var(--qx-font-mono);
+  font-size: var(--qx-text-xs);
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.rail a::before {
+  content: counter(chapter, decimal-leading-zero);
+}
+
+.rail a[aria-current="step"] {
+  color: var(--qx-fg);
+}
+
+.rail a[aria-current="step"]::after {
+  content: "";
+  flex: 1;
+  border-top: var(--qx-line) solid var(--qx-teal);
+}
+
+.page {
+  position: relative;
+  height: 420px;
+  overflow-y: auto;
+  border: var(--qx-line) solid var(--qx-hairline-strong);
+  border-radius: var(--qx-radius-sm);
+  background: #050505;
+  color: #edeae4;
+  overscroll-behavior: contain;
+}
+
+.page > a[data-stillness="skip"] {
+  position: absolute;
+  left: 12px;
+  margin-top: 12px;
+  z-index: 2;
+  padding: 6px 12px;
+  border: 1px solid #3fbead;
+  border-radius: 999px;
+  background: #050505;
+  color: #edeae4;
+  font-size: 12px;
+  clip-path: inset(50%);
+}
+
+.page > a[data-stillness="skip"]:focus {
+  clip-path: none;
+}
+
+.chapter {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: center;
+  min-height: 420px;
+  padding: var(--qx-space-8);
+  overflow: hidden;
+  border-bottom: 1px solid rgb(237 234 228 / 0.14);
+}
+
+.chapter:focus {
+  outline: 1px solid #3fbead;
+  outline-offset: -4px;
+}
+
+.chapter h3 {
+  position: relative;
+  margin: 0 0 var(--qx-space-2);
+  font-family: var(--qx-font-display);
+  font-size: var(--qx-text-xl);
+  font-weight: 500;
+}
+
+.chapter p {
+  position: relative;
+  margin: 0;
+  max-width: 40ch;
+  color: #b9b6b0;
+}
+
+.title {
+  will-change: transform;
+}
+
+.canvas {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+}
+
+.lines {
+  position: absolute;
+  inset: -40% 0;
+}
+
+.lines svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+@media (max-width: 56rem) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}

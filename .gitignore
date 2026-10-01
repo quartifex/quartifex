@@ -33,3 +33,6 @@ next-env.d.ts
 *.ttf
 *.otf
 apps/*/public/fonts/
+
+# Sequences are generated at build time by rushes, never committed.
+apps/*/public/sequences/

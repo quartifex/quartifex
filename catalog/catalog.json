@@ -14,7 +14,7 @@
   "libs": null,
   "label": null,
   "prompt": "P2",
-  "state": "not started",
+  "state": "built",
   "icon": "icons/svg/L01"
  },
  {
@@ -29,7 +29,7 @@
   "libs": null,
   "label": null,
   "prompt": "P2",
-  "state": "not started",
+  "state": "built",
   "icon": "icons/svg/L02"
  },
  {
@@ -96,7 +96,7 @@
   "libs": null,
   "label": null,
   "prompt": "P2",
-  "state": "not started",
+  "state": "built",
   "icon": "icons/svg/L06"
  },
  {
@@ -478,7 +478,7 @@
   "libs": null,
   "label": null,
   "prompt": "P2",
-  "state": "not started",
+  "state": "built",
   "icon": "icons/svg/L29"
  },
  {
