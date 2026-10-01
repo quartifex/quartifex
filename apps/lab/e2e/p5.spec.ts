@@ -91,3 +91,45 @@ test.describe("freight", () => {
     await expect(page.getByText("Reduced motion is on: the preview holds still.")).toBeVisible();
   });
 });
+
+test.describe("understudy", () => {
+  test("steps quality down on slow frames, then hands off to the sequence; retries and context loss", async ({
+    page,
+  }) => {
+    test.setTimeout(90_000);
+    await page.goto("/understudy");
+    // CI renders WebGL in software, so the device is set rather than detected.
+    await page.getByRole("radio", { name: "Capable GPU" }).check();
+    const rung = page.getByTestId("ud-rung");
+    await expect(rung).toHaveText("WebGL", { timeout: 15_000 });
+    await expect
+      .poll(() => litPixels(page, '[data-demo="understudy"] canvas'), { timeout: 15_000 })
+      .toBeGreaterThan(200);
+
+    await page.getByRole("slider", { name: "Simulated frame time" }).fill("45");
+    await expect(page.getByTestId("ud-shadows")).toHaveText("off", { timeout: 20_000 });
+    await expect(page.getByTestId("ud-log")).toContainText(/fps of \d+ Hz: "No shadows"/);
+    await expect(rung).toHaveText("Image sequence", { timeout: 30_000 });
+    await expect(page.getByTestId("ud-log")).toContainText("handing off to the image sequence");
+    await expect(page.getByTestId("ud-reel")).toBeVisible();
+
+    await page.getByRole("radio", { name: "Measured" }).check();
+    await page.getByRole("button", { name: "Try WebGL again" }).click();
+    await expect(rung).toHaveText("WebGL");
+    await page.getByRole("button", { name: "Lose the WebGL context" }).click();
+    await expect(rung).toHaveText("Image sequence");
+    await expect(page.getByTestId("ud-log")).toContainText("The WebGL context was lost");
+  });
+
+  test("starts on the sequence without WebGL, and on the poster under reduced motion", async ({
+    page,
+  }) => {
+    await page.goto("/understudy");
+    await page.getByRole("radio", { name: "No WebGL" }).check();
+    await expect(page.getByTestId("ud-rung")).toHaveText("Image sequence");
+    await expect(page.getByTestId("ud-log")).toContainText("WebGL is not available");
+    await page.getByRole("checkbox", { name: "Reduced motion" }).check();
+    await expect(page.getByTestId("ud-rung")).toHaveText("Poster");
+    await expect(page.getByRole("img", { name: /as a still poster/ })).toBeVisible();
+  });
+});

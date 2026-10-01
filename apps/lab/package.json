@@ -28,6 +28,7 @@
     "@quartifex/spine": "workspace:*",
     "@quartifex/stillness": "workspace:*",
     "@quartifex/tokens": "workspace:*",
+    "@quartifex/understudy": "workspace:*",
     "@quartifex/viewfinder": "workspace:*",
     "@react-three/drei": "^10.7.9",
     "@react-three/fiber": "^9.8.1",

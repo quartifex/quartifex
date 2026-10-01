@@ -1,18 +1,51 @@
 // React adapter for @quartifex/understudy, published as `@quartifex/understudy/react`.
-import { type RefObject, useEffect, useRef } from "react";
-import { create, type Instance, type Options } from "./index.js";
+import { createElement, Fragment, type ReactNode, useEffect, useState } from "react";
+import {
+  type Contract,
+  createUnderstudy,
+  type Environment,
+  readEnvironment,
+  type State,
+  type Understudy,
+} from "./index.js";
 
-/** Attach understudy to an element for the lifetime of the component. */
-export function useInstance<T extends Element>(options: Options = {}): RefObject<T | null> {
-  const ref = useRef<T | null>(null);
-  const { reducedMotion } = options;
-
+/**
+ * A governor for this component's lifetime, created in the browser once mounted (state is
+ * null before). It is rebuilt when `environment` overrides change, e.g. a GPU tier arriving.
+ */
+export function useUnderstudy(
+  contract: Contract = {},
+  environment: Partial<Environment> = {},
+): [State | null, Understudy | null] {
+  const [understudy, setUnderstudy] = useState<Understudy | null>(null);
+  const [state, setState] = useState<State | null>(null);
+  const key = JSON.stringify(environment);
+  // biome-ignore lint/correctness/useExhaustiveDependencies: rebuilt on the overrides' content, not identity; the contract is read once
   useEffect(() => {
-    const target = ref.current;
-    if (!target) return;
-    const instance: Instance = create(target, reducedMotion === undefined ? {} : { reducedMotion });
-    return () => instance.destroy();
-  }, [reducedMotion]);
+    const created = createUnderstudy({ ...readEnvironment(), ...environment }, contract);
+    setUnderstudy(created);
+    setState(created.state);
+    return created.subscribe(setState);
+  }, [key]);
+  return [state, understudy];
+}
 
-  return ref;
+/** Render the stand-in for the current rung. Nothing renders before the governor exists. */
+export function Ladder({
+  state,
+  webgl,
+  sequence,
+  poster,
+}: {
+  state: State | null;
+  webgl: ReactNode;
+  sequence: ReactNode;
+  poster: ReactNode;
+}) {
+  if (!state) return null;
+  return createElement(
+    Fragment,
+    null,
+    state.rung === "webgl" ? webgl : state.rung === "sequence" ? sequence : poster,
+  );
 }

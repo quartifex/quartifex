@@ -1,4 +1,11 @@
+import { readFileSync } from "node:fs";
 import { expect, test } from "@playwright/test";
+
+// The built count comes from the catalog, so marking an item built never breaks this test.
+const catalog = JSON.parse(
+  readFileSync(new URL("../../../catalog/catalog.json", import.meta.url), "utf8"),
+) as Array<{ state: string }>;
+const built = catalog.filter((entry) => entry.state === "built").length;
 
 test.describe("hub", () => {
   test("lists every catalog item, grouped", async ({ page }) => {
@@ -25,8 +32,8 @@ test.describe("hub", () => {
 
     await page.getByRole("searchbox", { name: "Search the catalog" }).fill("");
     await page.getByRole("button", { name: "Built" }).click();
-    await expect(cards).toHaveCount(16);
-    await page.getByRole("searchbox", { name: "Search the catalog" }).fill("sleeve");
+    await expect(cards).toHaveCount(built);
+    await page.getByRole("searchbox", { name: "Search the catalog" }).fill("bespoke");
     // Nothing matches; the empty state must say so rather than show a blank page.
     await expect(cards).toHaveCount(0);
     await expect(page.getByText("Nothing matches those filters.")).toBeVisible();
@@ -40,7 +47,7 @@ test.describe("hub", () => {
     await expect(page).toHaveURL(/\/plumb$/);
     await expect(page.getByRole("heading", { level: 1, name: "plumb" })).toBeVisible();
     await expect(page.getByText("pnpm add @quartifex/plumb")).toBeVisible();
-    await page.goto("/sleeve");
+    await page.goto("/bespoke");
     await expect(page.getByText("Not built yet.")).toBeVisible();
     await page.goto("/");
     await page.getByRole("link", { name: /frameguide/ }).click();
