@@ -1,0 +1,75 @@
+{
+  "name": "@quartifex/rushes",
+  "version": "0.0.0",
+  "description": "One command turns a video or a frame folder into tiered AVIF and WebP sets, a manifest.json, posters and a page-weight report against a budget.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./manifest": {
+      "types": "./dist/manifest.d.ts",
+      "import": "./dist/manifest.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/quartifex/quartifex.git",
+    "directory": "packages/rushes"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "size": "size-limit"
+  },
+  "devDependencies": {
+    "@size-limit/file": "^14.1.0",
+    "@types/node": "^22.20.4",
+    "size-limit": "^14.1.0",
+    "typescript": "^7.0.2"
+  },
+  "size-limit": [
+    {
+      "name": "encoder",
+      "path": [
+        "dist/index.js",
+        "dist/manifest.js",
+        "dist/report.js",
+        "dist/synthetic.js"
+      ],
+      "limit": "7 kB"
+    },
+    {
+      "name": "manifest (browser)",
+      "path": "dist/manifest.js",
+      "limit": "1.5 kB"
+    }
+  ],
+  "dependencies": {
+    "sharp": "^0.35.5"
+  },
+  "keywords": [
+    "image-sequence",
+    "avif",
+    "webp",
+    "scrollytelling",
+    "sharp",
+    "ffmpeg",
+    "manifest",
+    "page-weight"
+  ],
+  "bin": {
+    "rushes": "./dist/cli.js"
+  }
+}
