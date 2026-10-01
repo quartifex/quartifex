@@ -31,8 +31,11 @@ export {
 export { type SyntheticOptions, syntheticFrame } from "./synthetic.js";
 
 export type RushOptions = {
-  /** A frame folder, a video file, or `{ synthetic: {...} }` for a generated test sequence. */
-  input: string | { synthetic: SyntheticOptions };
+  /**
+   * A frame folder, a video file, `{ synthetic: {...} }` for the built-in test sequence, or
+   * `{ render, frames }` for frames drawn in code (SVG markup or an encoded image per frame).
+   */
+  input: string | { synthetic: SyntheticOptions } | RenderedInput;
   /** Output folder: manifest.json, report.md, report.json, posters, tier folders. */
   out: string;
   name?: string;
@@ -52,6 +55,12 @@ export type RushOptions = {
   ffmpeg?: string;
   concurrency?: number;
   onProgress?: (done: number, total: number) => void;
+};
+
+export type RenderedInput = {
+  frames: number;
+  /** Frame `index` as SVG markup, or as an encoded image (PNG, JPEG, WebP...). */
+  render: (index: number) => string | Buffer | Promise<string | Buffer>;
 };
 
 export type RushResult = {
@@ -119,6 +128,18 @@ type Source = { count: number; read(index: number): Promise<Buffer>; cleanup(): 
 
 async function openSource(options: RushOptions): Promise<Source> {
   const input = options.input;
+  if (typeof input !== "string" && "render" in input) {
+    return {
+      count: input.frames,
+      read: async (i) => {
+        const frame = await input.render(i);
+        return sharp(typeof frame === "string" ? Buffer.from(frame) : frame)
+          .png()
+          .toBuffer();
+      },
+      cleanup: async () => {},
+    };
+  }
   if (typeof input !== "string") {
     const frames = input.synthetic.frames ?? 72;
     return {
@@ -197,7 +218,9 @@ export async function rush(options: RushOptions): Promise<RushResult> {
       options.name ??
       (typeof options.input === "string"
         ? path.basename(options.input).replace(/\.[^.]+$/, "")
-        : "synthetic");
+        : "render" in options.input
+          ? "sequence"
+          : "synthetic");
     const pad = Math.max(4, String(source.count).length);
     const pattern = "{tier}/{format}/{index}.{format}";
     const draft: Manifest = {

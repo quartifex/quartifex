@@ -19,7 +19,14 @@ import {
   parseManifest,
   type Tier,
 } from "@quartifex/rushes/manifest";
-import { type BufferOptions, evictable, fitRect, nearestLoaded, planLoads } from "./buffer.js";
+import {
+  type BufferOptions,
+  evictable,
+  fitRect,
+  nearestLoaded,
+  planLoads,
+  type Rect,
+} from "./buffer.js";
 
 export {
   type BufferOptions,
@@ -38,6 +45,12 @@ export type ReelOptions = {
   /** "auto" (default) uses AVIF when the browser decodes it, else WebP. */
   format?: Format | "auto";
   fit?: "cover" | "contain";
+  /**
+   * Art-directed drawing instead of `fit`, e.g. safeframe's `frame(scene, box)`: which part
+   * of the source (in the manifest's source pixels) lands where on the canvas (CSS pixels).
+   * Called with the canvas size in CSS pixels on every draw.
+   */
+  stage?: (box: { width: number; height: number }) => { source: Rect; dest: Rect };
   /** GPU tier for resolve, e.g. from `@quartifex/resolve/gpu`. */
   gpuTier?: GpuTier;
   /** Override the environment resolve sees (testing, previews). */
@@ -221,8 +234,27 @@ export function createReel(
 
   function paint(image: ImageBitmap) {
     if (!ctx) return;
-    const rect = fitRect(image, { width: canvas.width, height: canvas.height }, fit);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (options.stage) {
+      // Source rects are in manifest source pixels; frames are tier-sized.
+      const { source, dest } = options.stage(box());
+      const k = image.width / manifest.source.width;
+      const d = canvas.width / Math.max(box().width, 1);
+      if (source.width <= 0 || source.height <= 0) return;
+      ctx.drawImage(
+        image,
+        source.x * k,
+        source.y * k,
+        source.width * k,
+        source.height * k,
+        dest.x * d,
+        dest.y * d,
+        dest.width * d,
+        dest.height * d,
+      );
+      return;
+    }
+    const rect = fitRect(image, { width: canvas.width, height: canvas.height }, fit);
     ctx.drawImage(image, rect.x, rect.y, rect.width, rect.height);
   }
 

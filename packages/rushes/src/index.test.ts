@@ -148,6 +148,32 @@ describe("rush", () => {
     expect(result.manifest.tiers[0]).toMatchObject({ width: 160, frames: 2 });
   }, 60_000);
 
+  it("encodes frames rendered in code (SVG or image buffers)", async () => {
+    const out = await mkdtemp(path.join(tmpdir(), "rushes-render-"));
+    const svg = (i: number) =>
+      `<svg xmlns="http://www.w3.org/2000/svg" width="320" height="180"><rect width="320" height="180" fill="#050505"/><circle cx="${40 + i * 60}" cy="90" r="30" fill="#3fbead"/></svg>`;
+    const result = await rush({
+      input: {
+        frames: 4,
+        render: (i) =>
+          i < 2
+            ? svg(i)
+            : sharp(Buffer.from(svg(i)))
+                .png()
+                .toBuffer(),
+      },
+      out,
+      widths: [320],
+      step: () => 1,
+    });
+    expect(result.manifest).toMatchObject({
+      name: "sequence",
+      frames: 4,
+      source: { width: 320, height: 180 },
+    });
+    expect(result.manifest.tiers[0]?.frames).toBe(4);
+  }, 60_000);
+
   it("explains a missing ffmpeg instead of failing obscurely", async () => {
     const dir = await mkdtemp(path.join(tmpdir(), "rushes-vid-"));
     const video = path.join(dir, "clip.mp4");

@@ -9,6 +9,7 @@ import {
   formatValue,
   githubAnnotations,
   parseGlb,
+  readBudget,
   weighAssets,
 } from "./index.js";
 
@@ -112,9 +113,24 @@ describe("weighAssets", () => {
       { file: "jar.glb", bytes: makeModel(500, 2000).byteLength, triangles: 500 },
     ]);
     expect(assets.textureBytes).toBe(3000);
-    expect(assets.sequences).toEqual([
-      { file: path.join("seq", "manifest.json"), largestTierBytes: 4000 },
-    ]);
+    expect(assets.sequences).toEqual([{ file: "seq/manifest.json", largestTierBytes: 4000 }]);
     expect(assets.totalBytes).toBe(makeModel(500, 2000).byteLength + 3000 + 4000);
+  });
+});
+
+describe("readBudget", () => {
+  it("reads a plain budget, a heft key, or one app's block", async () => {
+    const dir = await mkdtemp(path.join(tmpdir(), "heft-budget-"));
+    const file = path.join(dir, "budget.json");
+    await writeFile(
+      file,
+      JSON.stringify({
+        apps: [{ app: "site", heft: { scroll: { cls: 0.1 } } }],
+        heft: { page: { transferBytes: 1 } },
+      }),
+    );
+    expect(await readBudget(file)).toEqual({ page: { transferBytes: 1 } });
+    expect(await readBudget(file, "site")).toEqual({ scroll: { cls: 0.1 } });
+    await expect(readBudget(file, "missing")).rejects.toThrow(/no "heft" budget/);
   });
 });

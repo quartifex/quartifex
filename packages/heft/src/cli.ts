@@ -6,6 +6,7 @@ import { formatValue, readBudget, runHeft } from "./index.js";
 const { values } = parseArgs({
   options: {
     budget: { type: "string", default: "budget.json" },
+    app: { type: "string" },
     url: { type: "string" },
     dir: { type: "string" },
     out: { type: "string" },
@@ -19,6 +20,7 @@ const { values } = parseArgs({
 if (values.help || (!values.url && !values.dir)) {
   console.log(`Usage: heft --budget budget.json [--url <page>] [--dir <build output>]
 
+  --app <name>     use that app's "heft" block from budget.json's apps list
   --url <page>     load, scroll through and interact with this page
   --dir <folder>   weigh GLBs, textures and rushes sequences in this folder
   --out <folder>   write heft.json and heft.md
@@ -31,7 +33,7 @@ annotations and a step summary.`);
 }
 
 const result = await runHeft({
-  budget: await readBudget(values.budget),
+  budget: await readBudget(values.budget, values.app),
   ...(values.url ? { url: values.url } : {}),
   ...(values.dir ? { dir: values.dir } : {}),
   ...(values.out ? { out: values.out } : {}),

@@ -161,10 +161,15 @@ export async function runSheet(options: SheetOptions): Promise<SheetResult> {
       const context = await browser.newContext({ viewport: { width: 1600, height: 900 } });
       const page = await context.newPage();
       await page.goto(pathToFileURL(html).href, { waitUntil: "load" });
+      // Wait for the frames to decode, but never forever: a missing or broken image must not
+      // hang the run.
       await page.evaluate(() =>
-        Promise.all(Array.from(document.images, (img) => img.decode().catch(() => null))),
+        Promise.race([
+          Promise.all(Array.from(document.images, (img) => img.decode().catch(() => null))),
+          new Promise((resolve) => setTimeout(resolve, 15_000)),
+        ]),
       );
-      await page.screenshot({ path: target, fullPage: true });
+      await page.screenshot({ path: target, fullPage: true, timeout: 120_000 });
       await context.close();
     }
     return { sheet, counts: summarise(sheet), html, json, ...(png ? { png } : {}) };

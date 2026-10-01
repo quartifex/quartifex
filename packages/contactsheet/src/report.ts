@@ -59,7 +59,7 @@ export function renderHtml(sheet: Sheet, thumbHeight = 220): string {
             ? `<ul class="flags">${cell.flags.map((f) => `<li data-kind="${escapeHtml(f.kind)}">${escapeHtml(f.message)}</li>`).join("")}</ul>`
             : `<p class="ok">No flags</p>`;
           const w = Math.round((thumbHeight * p.width) / p.height);
-          return `<td><figure><img src="${escapeHtml(cell.image)}" width="${w}" height="${thumbHeight}" alt="${escapeHtml(`${p.name}, ${cell.chapter}`)}" loading="lazy"><figcaption>${escapeHtml(cell.chapter)}</figcaption></figure>${flags}</td>`;
+          return `<td><figure><img src="${escapeHtml(cell.image)}" width="${w}" height="${thumbHeight}" alt="${escapeHtml(`${p.name}, ${cell.chapter}`)}"><figcaption>${escapeHtml(cell.chapter)}</figcaption></figure>${flags}</td>`;
         })
         .join("");
       return `<tr>${head}${cells}</tr>`;

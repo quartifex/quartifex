@@ -31,6 +31,9 @@ export { type GlbInfo, parseGlb } from "./glb.js";
 
 const TEXTURE = /\.(png|jpe?g|webp|avif|ktx2|basis|hdr|exr)$/i;
 
+/** A path relative to `dir`, with forward slashes on every platform (reports are shared). */
+const relative = (dir: string, file: string) => path.relative(dir, file).split(path.sep).join("/");
+
 async function walk(dir: string): Promise<string[]> {
   const out: string[] = [];
   for (const entry of await readdir(dir, { withFileTypes: true })) {
@@ -60,7 +63,7 @@ export async function weighAssets(dir: string): Promise<NonNullable<Measurements
         ...Object.values(largest?.bytes ?? {}).filter((n): n is number => typeof n === "number"),
         0,
       );
-      sequences.push({ file: path.relative(dir, file), largestTierBytes: bytes });
+      sequences.push({ file: relative(dir, file), largestTierBytes: bytes });
       sequenceDirs.push(path.dirname(file) + path.sep);
     } catch {
       // Not a rushes manifest.
@@ -73,7 +76,7 @@ export async function weighAssets(dir: string): Promise<NonNullable<Measurements
     const { size } = await stat(file);
     if (/\.glb$/i.test(file)) {
       const info = parseGlb(await readFile(file));
-      glbs.push({ file: path.relative(dir, file), bytes: size, triangles: info.triangles });
+      glbs.push({ file: relative(dir, file), bytes: size, triangles: info.triangles });
       totalBytes += size;
     } else if (TEXTURE.test(file)) {
       totalBytes += size;
@@ -163,8 +166,16 @@ export async function runHeft(options: HeftOptions): Promise<HeftResult> {
   return { measurements, findings, pass, markdown };
 }
 
-/** Read a budget file: a heft budget, or a budget.json with a `heft` key. */
-export async function readBudget(file: string): Promise<Budget> {
-  const raw = JSON.parse(await readFile(file, "utf8")) as Budget & { heft?: Budget };
+/** Read a budget file: a heft budget, a budget.json with a `heft` key, or one app's `heft` block in its `apps` list. */
+export async function readBudget(file: string, app?: string): Promise<Budget> {
+  const raw = JSON.parse(await readFile(file, "utf8")) as Budget & {
+    heft?: Budget;
+    apps?: Array<{ app: string; heft?: Budget }>;
+  };
+  if (app) {
+    const entry = raw.apps?.find((a) => a.app === app);
+    if (!entry?.heft) throw new Error(`heft: no "heft" budget for app "${app}" in ${file}`);
+    return entry.heft;
+  }
   return raw.heft ?? raw;
 }
