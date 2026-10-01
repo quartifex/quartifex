@@ -1,0 +1,30 @@
+name: heft
+description: Fail the build when page weight or scroll performance is over budget.
+inputs:
+  budget:
+    description: Budget file (a heft budget, or budget.json with a "heft" key).
+    default: budget.json
+  url:
+    description: Page to load and scroll through (start your server in an earlier step).
+    required: false
+  dir:
+    description: Build output to weigh (GLBs, textures, rushes sequences).
+    required: false
+  out:
+    description: Folder for heft.json and heft.md.
+    default: reports
+runs:
+  using: composite
+  steps:
+    - name: Browser for heft
+      if: inputs.url != ''
+      shell: bash
+      run: npx playwright install --with-deps chromium
+    - name: heft
+      shell: bash
+      run: |
+        mkdir -p "${{ inputs.out }}"
+        args=(--budget "${{ inputs.budget }}" --out "${{ inputs.out }}")
+        if [ -n "${{ inputs.url }}" ]; then args+=(--url "${{ inputs.url }}"); fi
+        if [ -n "${{ inputs.dir }}" ]; then args+=(--dir "${{ inputs.dir }}"); fi
+        npx heft "${args[@]}"

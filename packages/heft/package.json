@@ -1,0 +1,86 @@
+{
+  "name": "@quartifex/heft",
+  "version": "0.0.0",
+  "description": "Page-weight and scroll-performance budgets as a CI check and GitHub Action: weighs manifests, GLBs and textures, scrolls the page in Playwright, and fails on over-budget bytes, long frames, CLS or slow interactions.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "action.yml"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./browser": {
+      "types": "./dist/browser.d.ts",
+      "import": "./dist/browser.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/quartifex/quartifex.git",
+    "directory": "packages/heft"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "size": "size-limit",
+    "e2e": "playwright test"
+  },
+  "peerDependencies": {
+    "@playwright/test": "^1.40.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.63.0",
+    "@size-limit/file": "^14.1.0",
+    "@types/node": "^22.20.4",
+    "size-limit": "^14.1.0",
+    "typescript": "^7.0.2"
+  },
+  "size-limit": [
+    {
+      "name": "runner",
+      "path": [
+        "dist/index.js",
+        "dist/budget.js",
+        "dist/collect.js",
+        "dist/glb.js"
+      ],
+      "limit": "6 kB"
+    },
+    {
+      "name": "browser",
+      "path": [
+        "dist/browser.js",
+        "dist/budget.js",
+        "dist/collect.js",
+        "dist/glb.js"
+      ],
+      "limit": "4 kB"
+    }
+  ],
+  "keywords": [
+    "performance",
+    "budget",
+    "ci",
+    "github-action",
+    "playwright",
+    "glb",
+    "core-web-vitals",
+    "scrollytelling"
+  ],
+  "bin": {
+    "heft": "./dist/cli.js"
+  },
+  "dependencies": {
+    "@quartifex/rushes": "workspace:^"
+  }
+}
