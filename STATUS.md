@@ -218,7 +218,8 @@ Commands run and results:
 | `pnpm build` | pass: 8 packages; the hub generates its sequence with rushes (72 frames, 3 tiers, 2 formats, 7.6 s cold) and builds 67 static pages |
 | `pnpm e2e` (installed Chrome) | pass: hub 35, dailies 4, contactsheet 1 |
 | hub e2e `--repeat-each 2` | pass: 70 of 70 |
-| `git push` | see below |
+| `git push` | pass |
+| CI on GitHub | pass on `5f25c25`: check job, sequence generated with sharp on Linux, all three Playwright suites on the bundled Chromium |
 
 Fixed on the way, found through the demos:
 
