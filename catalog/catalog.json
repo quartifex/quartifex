@@ -46,7 +46,7 @@
   "libs": null,
   "label": null,
   "prompt": "P3",
-  "state": "not started",
+  "state": "built",
   "icon": "icons/svg/L03"
  },
  {
@@ -63,7 +63,7 @@
   "libs": null,
   "label": null,
   "prompt": "P3",
-  "state": "not started",
+  "state": "built",
   "icon": "icons/svg/L04"
  },
  {
@@ -81,7 +81,7 @@
   "libs": null,
   "label": null,
   "prompt": "P3",
-  "state": "not started",
+  "state": "built",
   "icon": "icons/svg/L05"
  },
  {
@@ -113,7 +113,7 @@
   "libs": null,
   "label": null,
   "prompt": "P3",
-  "state": "not started",
+  "state": "built",
   "icon": "icons/svg/L07"
  },
  {
@@ -394,7 +394,7 @@
   "libs": null,
   "label": null,
   "prompt": "P3",
-  "state": "not started",
+  "state": "built",
   "icon": "icons/svg/L24"
  },
  {

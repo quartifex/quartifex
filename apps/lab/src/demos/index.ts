@@ -11,6 +11,11 @@ export const demos: Record<string, LazyExoticComponent<ComponentType> | undefine
   resolve: lazy(() => import("./resolve")),
   reel: lazy(() => import("./reel")),
   stillness: lazy(() => import("./stillness")),
+  dolly: lazy(() => import("./dolly")),
+  anatomy: lazy(() => import("./anatomy")),
+  heft: lazy(() => import("./heft")),
+  spine: lazy(() => import("./spine")),
+  viewfinder: lazy(() => import("./viewfinder")),
   // demos:end
 };
 

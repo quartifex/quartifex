@@ -1,0 +1,35 @@
+.scene {
+  position: relative;
+  height: 250vh;
+  border: var(--qx-line) solid var(--qx-hairline);
+  border-radius: var(--qx-radius-sm);
+}
+
+.panel {
+  display: grid;
+  align-content: center;
+  gap: var(--qx-space-3);
+  height: 100vh;
+  padding: var(--qx-space-8);
+}
+
+.panel p {
+  margin: 0;
+  max-width: 40ch;
+  color: var(--qx-muted);
+}
+
+.kicker {
+  font-family: var(--font-dm-mono), var(--qx-font-mono);
+  font-size: var(--qx-text-xs);
+  letter-spacing: var(--qx-tracking-label);
+  text-transform: uppercase;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--qx-font-display);
+  font-size: var(--qx-text-2xl);
+  font-weight: 500;
+  line-height: var(--qx-leading-tight);
+}

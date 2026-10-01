@@ -1,0 +1,49 @@
+.page {
+  background: #050505;
+  color: #edeae4;
+  font-family: var(--qx-font-body);
+}
+
+.banner {
+  height: 240px;
+  display: grid;
+  place-items: center;
+  border-bottom: 1px solid rgb(237 234 228 / 0.2);
+}
+
+.section {
+  display: grid;
+  align-content: center;
+  gap: 16px;
+  min-height: 100vh;
+  padding: 0 8vw;
+  border-bottom: 1px solid rgb(237 234 228 / 0.14);
+}
+
+.section h1 {
+  margin: 0;
+  font-family: var(--qx-font-display);
+  font-weight: 500;
+  font-size: clamp(32px, 6vw, 72px);
+}
+
+.kicker {
+  margin: 0;
+  font-family: var(--font-dm-mono), var(--qx-font-mono);
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #8b8881;
+}
+
+.button {
+  justify-self: start;
+  min-height: 44px;
+  padding: 0 20px;
+  border: 1px solid #3fbead;
+  border-radius: 999px;
+  background: transparent;
+  color: #edeae4;
+  font: inherit;
+  cursor: pointer;
+}
