@@ -358,6 +358,7 @@ Commands run and results:
 | P5 e2e `--repeat-each 3` | pass: 18 of 18 |
 | freight's typed module, compiled inside the lab | pass |
 | `git push` | pass |
+| CI on GitHub | first run on `04fd80d`: check passed, one e2e test failed (the sleeve demo settles slowly on CI's software WebGL, so its reduced-motion state came after the 5 s assertion); the test now waits for the demo's own note. Pass on `5048aeb`: check job and all five Playwright suites |
 
 Fixed on the way, found through the demos:
 
