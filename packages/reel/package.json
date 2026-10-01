@@ -1,0 +1,93 @@
+{
+  "name": "@quartifex/reel",
+  "version": "0.0.0",
+  "description": "An image-sequence scrub engine: manifest-driven tiers, AVIF and WebP, network- and Save-Data-aware buffering, createImageBitmap decode, cover or contain on a DPR-aware canvas, and a poster under reduced motion.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./react": {
+      "types": "./dist/react.d.ts",
+      "import": "./dist/react.js"
+    },
+    "./gsap": {
+      "types": "./dist/gsap.d.ts",
+      "import": "./dist/gsap.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/quartifex/quartifex.git",
+    "directory": "packages/reel"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "size": "size-limit"
+  },
+  "peerDependencies": {
+    "gsap": "^3.12.0",
+    "react": "^18.0.0 || ^19.0.0"
+  },
+  "peerDependenciesMeta": {
+    "gsap": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@size-limit/file": "^14.1.0",
+    "@types/react": "^19.3.0",
+    "react": "^19.3.0",
+    "size-limit": "^14.1.0",
+    "typescript": "^7.0.2"
+  },
+  "size-limit": [
+    {
+      "name": "core",
+      "path": [
+        "dist/index.js",
+        "dist/buffer.js"
+      ],
+      "limit": "5 kB"
+    },
+    {
+      "name": "react adapter",
+      "path": "dist/react.js",
+      "limit": "1 kB"
+    },
+    {
+      "name": "gsap adapter",
+      "path": "dist/gsap.js",
+      "limit": "0.5 kB"
+    }
+  ],
+  "keywords": [
+    "image-sequence",
+    "scrollytelling",
+    "scroll",
+    "canvas",
+    "avif",
+    "webp",
+    "gsap",
+    "scrolltrigger"
+  ],
+  "dependencies": {
+    "@quartifex/resolve": "workspace:^",
+    "@quartifex/rushes": "workspace:^"
+  }
+}
