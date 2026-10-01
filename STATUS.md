@@ -317,7 +317,8 @@ Commands run and results:
 | anyframe e2e `--repeat-each 2` | pass: 16 of 16 |
 | `pnpm --filter @quartifex/site-anyframe sheet` | 36 profiles, no flags (after fixing the four kinds it found) |
 | `pnpm --filter @quartifex/site-anyframe heft` | within budget |
-| `git push` | see below |
+| `git push` | pass |
+| CI on GitHub | pass on `e9877a4`: check job, both apps built on Linux (sequences encoded there), all five Playwright suites incl. the anyframe launch gate |
 
 What contactsheet found on the first run, all fixed: preview canvases rendering up to
 3440 x 1440 for 430 px previews (167 flags), an 18 px checkbox (12), copy brushing the
