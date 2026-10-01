@@ -2,7 +2,14 @@
   "$schema": "https://biomejs.dev/schemas/2.5.14/schema.json",
   "vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
   "files": {
-    "includes": ["**", "!assets/icons", "!catalog/catalog.json", "!templates", "!**/pnpm-lock.yaml"]
+    "includes": [
+      "**",
+      "!assets/icons",
+      "!apps/*/src/app/icon.svg",
+      "!catalog/catalog.json",
+      "!templates",
+      "!**/pnpm-lock.yaml"
+    ]
   },
   "formatter": { "indentStyle": "space", "indentWidth": 2, "lineWidth": 100 },
   "linter": {

@@ -1,0 +1,117 @@
+.hero {
+  position: relative;
+  height: 300vh;
+}
+
+.stage {
+  position: sticky;
+  top: 0;
+  height: var(--plumb-height, 100lvh);
+  overflow: hidden;
+  background: #050505;
+  color: #edeae4;
+}
+
+.canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* First-paint positions that match safeframe's first text zone per bucket, so nothing
+   jumps when staging runs (layout shift). safeframe's variables then take over. */
+.stage {
+  --fb-x: 6%;
+  --fb-y: 30%;
+  --fb-w: 36%;
+  --fb-h: 40%;
+}
+
+@media (max-aspect-ratio: 4 / 5) and (max-width: 599px) {
+  .stage {
+    --fb-x: 7%;
+    --fb-y: 6%;
+    --fb-w: 86%;
+    --fb-h: 24%;
+  }
+}
+
+/* Portrait and square tablets: safeframe moves the copy above the core. */
+@media (max-aspect-ratio: 6 / 5) and (min-width: 600px) {
+  .stage {
+    --fb-x: 7%;
+    --fb-y: 6%;
+    --fb-w: 86%;
+    --fb-h: 22%;
+  }
+}
+
+@media (min-aspect-ratio: 6 / 5) and (max-height: 500px) {
+  .stage {
+    --fb-x: 4%;
+    --fb-y: 12%;
+    --fb-w: 40%;
+    --fb-h: 76%;
+  }
+}
+
+@media (min-aspect-ratio: 21 / 10) and (min-height: 501px) {
+  .stage {
+    --fb-x: 10%;
+    --fb-w: 28%;
+  }
+}
+
+/* The copy sits in safeframe's text zone for this screen. Type scales with the zone's
+   width and height, so it never spills out of the zone onto the subject. */
+.copy {
+  position: absolute;
+  left: var(--sf-text-x, var(--fb-x));
+  top: var(--sf-text-y, var(--fb-y));
+  width: var(--sf-text-width, var(--fb-w));
+  height: var(--sf-text-height, var(--fb-h));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.5em;
+  container-type: size;
+}
+
+.kicker {
+  margin: 0;
+  font-family: var(--qx-font-mono);
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #8b8881;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--qx-font-display);
+  font-size: clamp(22px, min(11cqi, 22cqh), 88px);
+  font-weight: 500;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+}
+
+.lede {
+  margin: 0;
+  max-width: 34ch;
+  font-size: clamp(12px, min(3.4cqi, 7cqh), 19px);
+  line-height: 1.45;
+  color: #b9b6b0;
+}
+
+.caption {
+  position: absolute;
+  right: 16px;
+  bottom: 12px;
+  margin: 0;
+  font-family: var(--qx-font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #8b8881;
+}

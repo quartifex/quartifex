@@ -1,0 +1,222 @@
+.playground {
+  display: grid;
+  gap: var(--qx-space-8);
+  padding: var(--qx-space-24) var(--qx-gutter);
+  border-top: var(--qx-line) solid var(--qx-hairline);
+}
+
+.head {
+  display: grid;
+  gap: var(--qx-space-4);
+  max-width: 60rem;
+}
+
+.h2 {
+  margin: 0;
+  font-family: var(--qx-font-display);
+  font-size: var(--qx-text-2xl);
+  font-weight: 500;
+  line-height: var(--qx-leading-tight);
+  letter-spacing: -0.02em;
+}
+
+.h3 {
+  margin: 0 0 var(--qx-space-3);
+  font-family: var(--qx-font-mono);
+  font-size: var(--qx-text-xs);
+  font-weight: 400;
+  letter-spacing: var(--qx-tracking-label);
+  text-transform: uppercase;
+  color: var(--qx-muted);
+}
+
+.lede {
+  margin: 0;
+  max-width: 62ch;
+  color: var(--qx-muted);
+  font-size: var(--qx-text-lg);
+}
+
+.controls,
+.any {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--qx-space-4) var(--qx-space-8);
+}
+
+.any {
+  align-items: flex-start;
+}
+
+.control {
+  display: grid;
+  grid-template-columns: auto minmax(10rem, 18rem) 6ch;
+  align-items: center;
+  gap: var(--qx-space-3);
+  font-family: var(--qx-font-mono);
+  font-size: var(--qx-text-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.control input {
+  min-height: 24px;
+  accent-color: var(--qx-teal);
+}
+
+.button,
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--qx-space-2);
+  min-height: 2.5rem;
+  padding: 0 var(--qx-space-4);
+  border: var(--qx-line) solid var(--qx-hairline-strong);
+  border-radius: var(--qx-radius-pill);
+  background: transparent;
+  color: var(--qx-fg);
+  font-family: var(--qx-font-mono);
+  font-size: var(--qx-text-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.button[aria-pressed="true"] {
+  border-color: var(--qx-teal);
+}
+
+.toggle input {
+  width: 24px;
+  height: 24px;
+  margin: 0;
+  accent-color: var(--qx-teal);
+}
+
+.segments {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--qx-space-2);
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.segments legend {
+  float: left;
+  margin-right: var(--qx-space-3);
+  padding: 0;
+  font-family: var(--qx-font-mono);
+  font-size: var(--qx-text-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.segment {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.5rem;
+  padding: 0 var(--qx-space-4);
+  border: var(--qx-line) solid var(--qx-hairline-strong);
+  border-radius: var(--qx-radius-pill);
+  font-family: var(--qx-font-mono);
+  font-size: var(--qx-text-xs);
+  cursor: pointer;
+}
+
+.segment input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.segment:has(input:checked) {
+  border-color: var(--qx-teal);
+}
+
+.segment:has(input:focus-visible) {
+  outline: var(--qx-line) solid var(--qx-teal);
+  outline-offset: 3px;
+}
+
+.devices {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--qx-space-6);
+}
+
+.device {
+  display: grid;
+  gap: var(--qx-space-2);
+  margin: 0;
+  max-width: 100%;
+}
+
+.device figcaption {
+  display: grid;
+  font-size: var(--qx-text-sm);
+}
+
+.meta {
+  font-family: var(--qx-font-mono);
+  font-size: var(--qx-text-xs);
+  color: var(--qx-muted);
+}
+
+.window {
+  position: relative;
+  max-width: 100%;
+  overflow: hidden;
+  border: var(--qx-line) solid var(--qx-hairline-strong);
+  border-radius: var(--qx-radius-sm);
+  background: #050505;
+}
+
+.inner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: 0 0;
+}
+
+.plumb dl {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+  gap: var(--qx-space-3) var(--qx-space-6);
+  margin: 0;
+}
+
+.plumb dt {
+  font-family: var(--qx-font-mono);
+  font-size: var(--qx-text-xs);
+  letter-spacing: var(--qx-tracking-label);
+  text-transform: uppercase;
+  color: var(--qx-muted);
+}
+
+.plumb dd {
+  margin: var(--qx-space-1) 0 0;
+  font-family: var(--qx-font-mono);
+}
+
+.note {
+  color: var(--qx-muted);
+  font-size: var(--qx-text-sm);
+}
+
+@media (max-width: 40rem) {
+  .control {
+    grid-template-columns: 1fr;
+  }
+}

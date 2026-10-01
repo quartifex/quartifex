@@ -1,0 +1,20 @@
+{
+  "$comment": "The QUASAR reveal's composition, normalised to the 1600 x 900 source. The subject is the core and its disk; the jets may run off-frame on tall screens. Shared by the frame generator (scripts/quasar.mjs) and the safeframe scene (src/scene/scene.ts).",
+  "width": 1600,
+  "height": 900,
+  "frames": 96,
+  "core": {
+    "x": 0.64,
+    "y": 0.47
+  },
+  "subject": {
+    "x": 0.56,
+    "y": 0.35,
+    "width": 0.16,
+    "height": 0.24
+  },
+  "focal": {
+    "x": 0.64,
+    "y": 0.47
+  }
+}

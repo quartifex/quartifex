@@ -1,0 +1,91 @@
+.matrix {
+  display: grid;
+  gap: var(--qx-space-6);
+  padding: var(--qx-space-24) var(--qx-gutter);
+  border-top: var(--qx-line) solid var(--qx-hairline);
+}
+
+.head {
+  display: grid;
+  gap: var(--qx-space-4);
+  max-width: 60rem;
+}
+
+.h2 {
+  margin: 0;
+  font-family: var(--qx-font-display);
+  font-size: var(--qx-text-2xl);
+  font-weight: 500;
+  line-height: var(--qx-leading-tight);
+  letter-spacing: -0.02em;
+}
+
+.lede {
+  margin: 0;
+  max-width: 62ch;
+  color: var(--qx-muted);
+  font-size: var(--qx-text-lg);
+}
+
+.summary {
+  margin: 0;
+  font-family: var(--qx-font-mono);
+  font-size: var(--qx-text-xs);
+  letter-spacing: var(--qx-tracking-label);
+  text-transform: uppercase;
+}
+
+.tableWrap {
+  overflow-x: auto;
+  border-top: var(--qx-line) solid var(--qx-hairline);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--qx-text-sm);
+}
+
+.table th,
+.table td {
+  padding: var(--qx-space-2) var(--qx-space-3);
+  border-bottom: var(--qx-line) solid var(--qx-hairline);
+  text-align: left;
+  vertical-align: top;
+  font-weight: 400;
+}
+
+.table thead th {
+  font-family: var(--qx-font-mono);
+  font-size: var(--qx-text-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--qx-muted);
+}
+
+.meta {
+  font-family: var(--qx-font-mono);
+  font-size: var(--qx-text-xs);
+  color: var(--qx-muted);
+  white-space: nowrap;
+}
+
+.pass {
+  color: var(--qx-teal);
+}
+
+.flags {
+  margin: 0;
+  padding-left: var(--qx-space-4);
+}
+
+.flags li::marker {
+  color: var(--qx-sindoor);
+}
+
+.note {
+  margin: 0;
+  max-width: 62ch;
+  color: var(--qx-muted);
+  font-size: var(--qx-text-sm);
+}

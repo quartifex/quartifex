@@ -1,0 +1,87 @@
+{
+  "measurements": {
+    "assets": {
+      "totalBytes": 3324602,
+      "glbs": [],
+      "textureBytes": 0,
+      "sequences": [
+        {
+          "file": "sequences/quasar/manifest.json",
+          "largestTierBytes": 1077636
+        }
+      ]
+    },
+    "page": {
+      "transferBytes": 441759,
+      "scriptBytes": 147424,
+      "imageBytes": 281167
+    },
+    "scroll": {
+      "frames": 3565,
+      "longFrames": 2,
+      "p95FrameMs": 3.4,
+      "cls": 0,
+      "inp": 64
+    }
+  },
+  "findings": [
+    {
+      "metric": "assets.totalBytes",
+      "actual": 3324602,
+      "limit": 4500000,
+      "unit": "bytes",
+      "pass": true
+    },
+    {
+      "metric": "assets.sequenceBytes",
+      "actual": 1077636,
+      "limit": 1500000,
+      "unit": "bytes",
+      "pass": true,
+      "file": "sequences/quasar/manifest.json"
+    },
+    {
+      "metric": "page.transferBytes",
+      "actual": 441759,
+      "limit": 1000000,
+      "unit": "bytes",
+      "pass": true
+    },
+    {
+      "metric": "page.scriptBytes",
+      "actual": 147424,
+      "limit": 450000,
+      "unit": "bytes",
+      "pass": true
+    },
+    {
+      "metric": "scroll.longFrames",
+      "actual": 2,
+      "limit": 4,
+      "unit": "count",
+      "pass": true
+    },
+    {
+      "metric": "scroll.p95FrameMs",
+      "actual": 3.4,
+      "limit": 34,
+      "unit": "ms",
+      "pass": true
+    },
+    {
+      "metric": "scroll.cls",
+      "actual": 0,
+      "limit": 0.1,
+      "unit": "score",
+      "pass": true
+    },
+    {
+      "metric": "scroll.inp",
+      "actual": 64,
+      "limit": 200,
+      "unit": "ms",
+      "pass": true
+    }
+  ],
+  "pass": true
+}
