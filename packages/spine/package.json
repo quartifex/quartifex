@@ -1,0 +1,97 @@
+{
+  "name": "@quartifex/spine",
+  "version": "0.0.0",
+  "description": "Lenis, GSAP ScrollTrigger and Next.js App Router wired correctly once: one ticker, refresh on real layout changes, tab-sleep recovery, route-change resets and safe pin teardown.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./react": {
+      "types": "./dist/react.d.ts",
+      "import": "./dist/react.js"
+    },
+    "./next": {
+      "types": "./dist/next.d.ts",
+      "import": "./dist/next.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/quartifex/quartifex.git",
+    "directory": "packages/spine"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "size": "size-limit"
+  },
+  "peerDependencies": {
+    "gsap": "^3.12.0",
+    "lenis": "^1.1.0",
+    "next": ">=14.0.0",
+    "react": "^18.0.0 || ^19.0.0"
+  },
+  "peerDependenciesMeta": {
+    "gsap": {
+      "optional": true
+    },
+    "lenis": {
+      "optional": true
+    },
+    "next": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@size-limit/file": "^14.1.0",
+    "@types/react": "^19.3.0",
+    "react": "^19.3.0",
+    "size-limit": "^14.1.0",
+    "typescript": "^7.0.2",
+    "next": "^16.3.7"
+  },
+  "size-limit": [
+    {
+      "name": "core",
+      "path": "dist/index.js",
+      "limit": "2 kB"
+    },
+    {
+      "name": "react adapter",
+      "path": "dist/react.js",
+      "limit": "1 kB"
+    },
+    {
+      "name": "next adapter",
+      "path": "dist/next.js",
+      "limit": "0.75 kB"
+    }
+  ],
+  "keywords": [
+    "lenis",
+    "gsap",
+    "scrolltrigger",
+    "nextjs",
+    "app-router",
+    "smooth-scroll",
+    "scrollytelling"
+  ],
+  "dependencies": {
+    "@quartifex/plumb": "workspace:^"
+  }
+}
