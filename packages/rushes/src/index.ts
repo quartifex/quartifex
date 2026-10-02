@@ -9,6 +9,7 @@ import path from "node:path";
 import sharp, { type Sharp } from "sharp";
 import { type Format, framePath, MANIFEST_VERSION, type Manifest, type Tier } from "./manifest.js";
 import { type Budget, type Report, reportMarkdown, weigh } from "./report.js";
+import { naturalSort, planTiers } from "./plan.js";
 import { type SyntheticOptions, syntheticFrame } from "./synthetic.js";
 
 export {
@@ -28,6 +29,7 @@ export {
   type TierLine,
   weigh,
 } from "./report.js";
+export { naturalSort, planTiers } from "./plan.js";
 export { type SyntheticOptions, syntheticFrame } from "./synthetic.js";
 
 export type RushOptions = {
@@ -72,35 +74,6 @@ export type RushResult = {
 
 const FRAME_EXT = /\.(png|jpe?g|webp|avif|tiff?)$/i;
 const VIDEO_EXT = /\.(mp4|mov|m4v|webm|mkv|avi)$/i;
-
-/** Sort file names the way people number frames: frame2 before frame10. */
-export function naturalSort(names: string[]): string[] {
-  return [...names].sort((a, b) =>
-    a.localeCompare(b, undefined, { numeric: true, sensitivity: "base" }),
-  );
-}
-
-/** The tier ladder for a source: requested widths up to the source width, smallest first. */
-export function planTiers(
-  source: { width: number; height: number },
-  frames: number,
-  widths: number[] = [480, 960, 1600],
-  step: (width: number) => number = (w) => (w <= 640 ? 2 : 1),
-): Omit<Tier, "bytes">[] {
-  const usable = [...new Set(widths.map((w) => Math.min(Math.round(w), source.width)))].sort(
-    (a, b) => a - b,
-  );
-  return usable.map((width) => {
-    const s = Math.max(1, Math.floor(step(width)));
-    return {
-      name: `w${width}`,
-      width,
-      height: Math.round((width * source.height) / source.width),
-      step: s,
-      frames: Math.ceil(frames / s),
-    };
-  });
-}
 
 function run(command: string, args: string[]): Promise<void> {
   return new Promise((resolve, reject) => {

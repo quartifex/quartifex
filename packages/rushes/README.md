@@ -73,11 +73,21 @@ frames to read as smooth; larger tiers keep every frame.
 | `syntheticFrame(index, options?)` | function | One SVG frame of the test sequence |
 | `naturalSort(names)` | function | frame2 before frame10 |
 | `parseManifest`, `framePath`, `frameAt`, `Manifest`, `Tier`, `Format` (also `/manifest`) | functions, types | The manifest schema, browser-safe |
+| `encodePreview(options)` (`/browser`) | function | Encode a preview in the page: a dropped video or drawn frames to tiered frames, posters, manifest and report, as blobs, with the browser's own encoders |
+| `encodableFormats()` (`/browser`) | function | Which of AVIF and WebP this browser's canvas can encode |
+| `planTiers`, `weigh`, `reportMarkdown`, `formatBytes`, `naturalSort` (also `/browser`) | functions | The plan and the report, browser-safe |
 
 **Options:** `input` (folder, video, or `{ synthetic }`), `out`, `name`, `widths` (default 480,
 960, 1600, capped at the source width), `formats` (default AVIF and WebP), `step(width)`,
 `fps` (default 30), `quality` (AVIF 50, WebP 75, JPEG 80), `poster` (source frame index),
 `budget`, `ffmpeg`, `concurrency`, `onProgress`.
+
+**In the browser** (`@quartifex/rushes/browser`): `encodePreview({ input, widths, formats,
+maxFrames, fps, quality, poster, budget, signal, onProgress })` returns `{ manifest, report,
+files, url(path), dispose() }`; pass `url` to reel's `urlFor` to play it. A longer video is
+sampled evenly down to `maxFrames` (default 96). It uses the browser's canvas encoders, so the
+bytes are close to, not the same as, the CLI's: use it to preview and estimate, and the CLI to
+ship. Browsers that cannot encode AVIF (most, today) get WebP only.
 
 **Budget:** `maxTierBytes`, `tiers` (per-tier overrides), `maxInitialBytes` (poster plus the
 first `initialFrames`, default 12). A `budget.json` with a `sequence` key works directly.

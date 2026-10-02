@@ -17,6 +17,10 @@
       "types": "./dist/manifest.d.ts",
       "import": "./dist/manifest.js"
     },
+    "./browser": {
+      "types": "./dist/browser.d.ts",
+      "import": "./dist/browser.js"
+    },
     "./package.json": "./package.json"
   },
   "repository": {
@@ -46,7 +50,8 @@
         "dist/index.js",
         "dist/manifest.js",
         "dist/report.js",
-        "dist/synthetic.js"
+        "dist/synthetic.js",
+        "dist/plan.js"
       ],
       "limit": "7 kB"
     },
@@ -54,6 +59,16 @@
       "name": "manifest (browser)",
       "path": "dist/manifest.js",
       "limit": "1.5 kB"
+    },
+    {
+      "name": "browser (manifest, plan, report, preview encoder)",
+      "path": [
+        "dist/browser.js",
+        "dist/manifest.js",
+        "dist/plan.js",
+        "dist/report.js"
+      ],
+      "limit": "5 kB"
     }
   ],
   "dependencies": {

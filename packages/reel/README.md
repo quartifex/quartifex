@@ -73,7 +73,8 @@ const [canvasRef, reel] = useReel(manifest, { baseUrl: "/sequences/jar/" });
 **Options:** `baseUrl` (required: the folder of `manifest.json`), `tier` (force one), `format`
 (`"auto"`, `"avif"`, `"webp"`), `fit` (`"cover"` or `"contain"`), `gpuTier`, `environment`
 (override what resolve sees), `buffer` (`ahead` 16, `behind` 6, `sparse` 8, `concurrency` 4),
-`reducedMotion`, `decode` (`"main"` or `"worker"`), `onFrame`, `onLoad`.
+`reducedMotion`, `decode` (`"main"` or `"worker"`), `urlFor` (path to URL, for frames held in
+memory or signed CDN links), `onFrame`, `onLoad`.
 
 ## How it loads
 

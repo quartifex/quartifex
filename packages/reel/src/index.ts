@@ -40,6 +40,12 @@ export {
 export type ReelOptions = {
   /** URL of the folder holding manifest.json (frame paths are relative to it). */
   baseUrl: string;
+  /**
+   * Turn a frame or poster path (relative to the manifest) into the URL to load. Default:
+   * `baseUrl` plus the path. Use it for frames kept in memory, such as object URLs from
+   * `@quartifex/rushes/browser`'s preview encoder, or for signed CDN URLs.
+   */
+  urlFor?: (path: string) => string;
   /** Force a tier by name. Default: chosen by resolve for the canvas size, DPR, GPU tier and connection. */
   tier?: string;
   /** "auto" (default) uses AVIF when the browser decodes it, else WebP. */
@@ -175,6 +181,7 @@ export function createReel(
   const ctx = canvas.getContext("2d");
   if (!ctx) throw new Error("reel: no 2D context");
   const base = options.baseUrl.endsWith("/") ? options.baseUrl : `${options.baseUrl}/`;
+  const urlFor = options.urlFor ?? ((file: string) => base + file);
   const fit = options.fit ?? "cover";
   const decoder =
     options.decode === "worker" && typeof Worker === "function" ? workerDecoder() : mainDecoder();
@@ -295,7 +302,7 @@ export function createReel(
       if (inFlight.size >= concurrency) break;
       inFlight.add(index);
       decoder
-        .load(base + framePath(manifest, tier, format, index))
+        .load(urlFor(framePath(manifest, tier, format, index)))
         .then((bitmap) => {
           inFlight.delete(index);
           if (destroyed || run !== generation) {
@@ -329,7 +336,7 @@ export function createReel(
     const file = manifest.poster[format] ?? manifest.poster.jpg;
     if (!file || poster) return;
     try {
-      poster = await decoder.load(base + file);
+      poster = await decoder.load(urlFor(file));
       queueDraw();
       if (reducedMotion) resolveReady();
     } catch {
