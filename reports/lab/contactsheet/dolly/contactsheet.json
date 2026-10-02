@@ -1,0 +1,1318 @@
+{
+  "url": "http://localhost:3100/dolly",
+  "createdAt": "2026-10-02T05:02:20.308Z",
+  "chapters": ["Front", "Orbit", "Top", "Close"],
+  "rows": [
+    {
+      "profile": {
+        "name": "iPhone SE",
+        "group": "phone",
+        "width": 375,
+        "height": 667,
+        "dpr": 2,
+        "mobile": true,
+        "touch": true,
+        "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1"
+      },
+      "cells": [
+        {
+          "chapter": "Front",
+          "image": "iphone-se/front.png",
+          "flags": []
+        },
+        {
+          "chapter": "Orbit",
+          "image": "iphone-se/orbit.png",
+          "flags": []
+        },
+        {
+          "chapter": "Top",
+          "image": "iphone-se/top.png",
+          "flags": []
+        },
+        {
+          "chapter": "Close",
+          "image": "iphone-se/close.png",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "iPhone 13 mini",
+        "group": "phone",
+        "width": 375,
+        "height": 812,
+        "dpr": 3,
+        "mobile": true,
+        "touch": true,
+        "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1"
+      },
+      "cells": [
+        {
+          "chapter": "Front",
+          "image": "iphone-13-mini/front.png",
+          "flags": []
+        },
+        {
+          "chapter": "Orbit",
+          "image": "iphone-13-mini/orbit.png",
+          "flags": []
+        },
+        {
+          "chapter": "Top",
+          "image": "iphone-13-mini/top.png",
+          "flags": []
+        },
+        {
+          "chapter": "Close",
+          "image": "iphone-13-mini/close.png",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "iPhone 15",
+        "group": "phone",
+        "width": 393,
+        "height": 852,
+        "dpr": 3,
+        "mobile": true,
+        "touch": true,
+        "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1"
+      },
+      "cells": [
+        {
+          "chapter": "Front",
+          "image": "iphone-15/front.png",
+          "flags": []
+        },
+        {
+          "chapter": "Orbit",
+          "image": "iphone-15/orbit.png",
+          "flags": []
+        },
+        {
+          "chapter": "Top",
+          "image": "iphone-15/top.png",
+          "flags": []
+        },
+        {
+          "chapter": "Close",
+          "image": "iphone-15/close.png",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "iPhone 15 Pro Max",
+        "group": "phone",
+        "width": 430,
+        "height": 932,
+        "dpr": 3,
+        "mobile": true,
+        "touch": true,
+        "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1"
+      },
+      "cells": [
+        {
+          "chapter": "Front",
+          "image": "iphone-15-pro-max/front.png",
+          "flags": []
+        },
+        {
+          "chapter": "Orbit",
+          "image": "iphone-15-pro-max/orbit.png",
+          "flags": []
+        },
+        {
+          "chapter": "Top",
+          "image": "iphone-15-pro-max/top.png",
+          "flags": []
+        },
+        {
+          "chapter": "Close",
+          "image": "iphone-15-pro-max/close.png",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "Pixel 8",
+        "group": "phone",
+        "width": 412,
+        "height": 915,
+        "dpr": 2.625,
+        "mobile": true,
+        "touch": true,
+        "userAgent": "Mozilla/5.0 (Linux; Android 15; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Mobile Safari/537.36"
+      },
+      "cells": [
+        {
+          "chapter": "Front",
+          "image": "pixel-8/front.png",
+          "flags": []
+        },
+        {
+          "chapter": "Orbit",
+          "image": "pixel-8/orbit.png",
+          "flags": []
+        },
+        {
+          "chapter": "Top",
+          "image": "pixel-8/top.png",
+          "flags": []
+        },
+        {
+          "chapter": "Close",
+          "image": "pixel-8/close.png",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "Galaxy S24",
+        "group": "phone",
+        "width": 360,
+        "height": 780,
+        "dpr": 3,
+        "mobile": true,
+        "touch": true,
+        "userAgent": "Mozilla/5.0 (Linux; Android 15; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Mobile Safari/537.36"
+      },
+      "cells": [
+        {
+          "chapter": "Front",
+          "image": "galaxy-s24/front.png",
+          "flags": []
+        },
+        {
+          "chapter": "Orbit",
+          "image": "galaxy-s24/orbit.png",
+          "flags": []
+        },
+        {
+          "chapter": "Top",
+          "image": "galaxy-s24/top.png",
+          "flags": []
+        },
+        {
+          "chapter": "Close",
+          "image": "galaxy-s24/close.png",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "Budget Android",
+        "group": "phone",
+        "width": 360,
+        "height": 800,
+        "dpr": 2,
+        "mobile": true,
+        "touch": true,
+        "userAgent": "Mozilla/5.0 (Linux; Android 15; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Mobile Safari/537.36"
+      },
+      "cells": [
+        {
+          "chapter": "Front",
+          "image": "budget-android/front.png",
+          "flags": []
+        },
+        {
+          "chapter": "Orbit",
+          "image": "budget-android/orbit.png",
+          "flags": []
+        },
+        {
+          "chapter": "Top",
+          "image": "budget-android/top.png",
+          "flags": []
+        },
+        {
+          "chapter": "Close",
+          "image": "budget-android/close.png",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "iPhone SE landscape",
+        "group": "phone-landscape",
+        "width": 667,
+        "height": 375,
+        "dpr": 2,
+        "mobile": true,
+        "touch": true,
+        "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1"
+      },
+      "cells": [
+        {
+          "chapter": "Front",
+          "image": "iphone-se-landscape/front.png",
+          "flags": []
+        },
+        {
+          "chapter": "Orbit",
+          "image": "iphone-se-landscape/orbit.png",
+          "flags": []
+        },
+        {
+          "chapter": "Top",
+          "image": "iphone-se-landscape/top.png",
+          "flags": []
+        },
+        {
+          "chapter": "Close",
+          "image": "iphone-se-landscape/close.png",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "iPhone 15 landscape",
+        "group": "phone-landscape",
+        "width": 852,
+        "height": 393,
+        "dpr": 3,
+        "mobile": true,
+        "touch": true,
+        "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1"
+      },
+      "cells": [
+        {
+          "chapter": "Front",
+          "image": "iphone-15-landscape/front.png",
+          "flags": [
+            {
+              "kind": "canvas-budget",
+              "message": "canvas renders 2396x1497 for 799x499 CSS px at DPR 3: more pixels than the screen shows",
+              "rect": {
+                "x": 26.546875,
+                "y": -203.734375,
+                "width": 798.90625,
+                "height": 499.31640625
+              }
+            }
+          ]
+        },
+        {
+          "chapter": "Orbit",
+          "image": "iphone-15-landscape/orbit.png",
+          "flags": []
+        },
+        {
+          "chapter": "Top",
+          "image": "iphone-15-landscape/top.png",
+          "flags": []
+        },
+        {
+          "chapter": "Close",
+          "image": "iphone-15-landscape/close.png",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "Pixel 8 landscape",
+        "group": "phone-landscape",
+        "width": 915,
+        "height": 412,
+        "dpr": 2.625,
+        "mobile": true,
+        "touch": true,
+        "userAgent": "Mozilla/5.0 (Linux; Android 15; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Mobile Safari/537.36"
+      },
+      "cells": [
+        {
+          "chapter": "Front",
+          "image": "pixel-8-landscape/front.png",
+          "flags": [
+            {
+              "kind": "canvas-budget",
+              "message": "canvas renders 2252x1407 for 858x536 CSS px at DPR 2.625: more pixels than the screen shows",
+              "rect": {
+                "x": 28.4375,
+                "y": -193.59375,
+                "width": 858.125,
+                "height": 536.328125
+              }
+            }
+          ]
+        },
+        {
+          "chapter": "Orbit",
+          "image": "pixel-8-landscape/orbit.png",
+          "flags": []
+        },
+        {
+          "chapter": "Top",
+          "image": "pixel-8-landscape/top.png",
+          "flags": []
+        },
+        {
+          "chapter": "Close",
+          "image": "pixel-8-landscape/close.png",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "Galaxy Z Fold closed",
+        "group": "foldable",
+        "width": 344,
+        "height": 882,
+        "dpr": 2.625,
+        "mobile": true,
+        "touch": true,
+        "userAgent": "Mozilla/5.0 (Linux; Android 15; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Mobile Safari/537.36"
+      },
+      "cells": [
+        {
+          "chapter": "Front",
+          "image": "galaxy-z-fold-closed/front.png",
+          "flags": []
+        },
+        {
+          "chapter": "Orbit",
+          "image": "galaxy-z-fold-closed/orbit.png",
+          "flags": []
+        },
+        {
+          "chapter": "Top",
+          "image": "galaxy-z-fold-closed/top.png",
+          "flags": []
+        },
+        {
+          "chapter": "Close",
+          "image": "galaxy-z-fold-closed/close.png",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "Galaxy Z Fold open",
+        "group": "foldable",
+        "width": 690,
+        "height": 829,
+        "dpr": 2.625,
+        "mobile": true,
+        "touch": true,
+        "userAgent": "Mozilla/5.0 (Linux; Android 15; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Mobile Safari/537.36"
+      },
+      "cells": [
+        {
+          "chapter": "Front",
+          "image": "galaxy-z-fold-open/front.png",
+          "flags": []
+        },
+        {
+          "chapter": "Orbit",
+          "image": "galaxy-z-fold-open/orbit.png",
+          "flags": []
+        },
+        {
+          "chapter": "Top",
+          "image": "galaxy-z-fold-open/top.png",
+          "flags": []
+        },
+        {
+          "chapter": "Close",
+          "image": "galaxy-z-fold-open/close.png",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "Galaxy Z Fold open landscape",
+        "group": "foldable",
+        "width": 829,
+        "height": 690,
+        "dpr": 2.625,
+        "mobile": true,
+        "touch": true,
+        "userAgent": "Mozilla/5.0 (Linux; Android 15; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Mobile Safari/537.36"
+      },
+      "cells": [
+        {
+          "chapter": "Front",
+          "image": "galaxy-z-fold-open-landscape/front.png",
+          "flags": []
+        },
+        {
+          "chapter": "Orbit",
+          "image": "galaxy-z-fold-open-landscape/orbit.png",
+          "flags": []
+        },
+        {
+          "chapter": "Top",
+          "image": "galaxy-z-fold-open-landscape/top.png",
+          "flags": []
+        },
+        {
+          "chapter": "Close",
+          "image": "galaxy-z-fold-open-landscape/close.png",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "Galaxy Z Flip open",
+        "group": "foldable",
+        "width": 360,
+        "height": 880,
+        "dpr": 3,
+        "mobile": true,
+        "touch": true,
+        "userAgent": "Mozilla/5.0 (Linux; Android 15; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Mobile Safari/537.36"
+      },
+      "cells": [
+        {
+          "chapter": "Front",
+          "image": "galaxy-z-flip-open/front.png",
+          "flags": []
+        },
+        {
+          "chapter": "Orbit",
+          "image": "galaxy-z-flip-open/orbit.png",
+          "flags": []
+        },
+        {
+          "chapter": "Top",
+          "image": "galaxy-z-flip-open/top.png",
+          "flags": []
+        },
+        {
+          "chapter": "Close",
+          "image": "galaxy-z-flip-open/close.png",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "Pixel Fold open",
+        "group": "foldable",
+        "width": 841,
+        "height": 701,
+        "dpr": 2.625,
+        "mobile": true,
+        "touch": true,
+        "userAgent": "Mozilla/5.0 (Linux; Android 15; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Mobile Safari/537.36"
+      },
+      "cells": [
+        {
+          "chapter": "Front",
+          "image": "pixel-fold-open/front.png",
+          "flags": []
+        },
+        {
+          "chapter": "Orbit",
+          "image": "pixel-fold-open/orbit.png",
+          "flags": []
+        },
+        {
+          "chapter": "Top",
+          "image": "pixel-fold-open/top.png",
+          "flags": []
+        },
+        {
+          "chapter": "Close",
+          "image": "pixel-fold-open/close.png",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "iPad mini",
+        "group": "tablet",
+        "width": 744,
+        "height": 1133,
+        "dpr": 2,
+        "mobile": false,
+        "touch": true,
+        "userAgent": "Mozilla/5.0 (iPad; CPU OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1"
+      },
+      "cells": [
+        {
+          "chapter": "Front",
+          "image": "ipad-mini/front.png",
+          "flags": []
+        },
+        {
+          "chapter": "Orbit",
+          "image": "ipad-mini/orbit.png",
+          "flags": []
+        },
+        {
+          "chapter": "Top",
+          "image": "ipad-mini/top.png",
+          "flags": []
+        },
+        {
+          "chapter": "Close",
+          "image": "ipad-mini/close.png",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "iPad Air",
+        "group": "tablet",
+        "width": 820,
+        "height": 1180,
+        "dpr": 2,
+        "mobile": false,
+        "touch": true,
+        "userAgent": "Mozilla/5.0 (iPad; CPU OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1"
+      },
+      "cells": [
+        {
+          "chapter": "Front",
+          "image": "ipad-air/front.png",
+          "flags": []
+        },
+        {
+          "chapter": "Orbit",
+          "image": "ipad-air/orbit.png",
+          "flags": [
+            {
+              "kind": "layout-shift",
+              "message": "layout shift 0.252, over 0.1"
+            }
+          ]
+        },
+        {
+          "chapter": "Top",
+          "image": "ipad-air/top.png",
+          "flags": [
+            {
+              "kind": "layout-shift",
+              "message": "layout shift 0.252, over 0.1"
+            }
+          ]
+        },
+        {
+          "chapter": "Close",
+          "image": "ipad-air/close.png",
+          "flags": [
+            {
+              "kind": "layout-shift",
+              "message": "layout shift 0.252, over 0.1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "iPad Air landscape",
+        "group": "tablet",
+        "width": 1180,
+        "height": 820,
+        "dpr": 2,
+        "mobile": false,
+        "touch": true,
+        "userAgent": "Mozilla/5.0 (iPad; CPU OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1"
+      },
+      "cells": [
+        {
+          "chapter": "Front",
+          "image": "ipad-air-landscape/front.png",
+          "flags": []
+        },
+        {
+          "chapter": "Orbit",
+          "image": "ipad-air-landscape/orbit.png",
+          "flags": []
+        },
+        {
+          "chapter": "Top",
+          "image": "ipad-air-landscape/top.png",
+          "flags": []
+        },
+        {
+          "chapter": "Close",
+          "image": "ipad-air-landscape/close.png",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "iPad Air split view half",
+        "group": "tablet",
+        "width": 590,
+        "height": 820,
+        "dpr": 2,
+        "mobile": false,
+        "touch": true,
+        "userAgent": "Mozilla/5.0 (iPad; CPU OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1"
+      },
+      "cells": [
+        {
+          "chapter": "Front",
+          "image": "ipad-air-split-view-half/front.png",
+          "flags": []
+        },
+        {
+          "chapter": "Orbit",
+          "image": "ipad-air-split-view-half/orbit.png",
+          "flags": []
+        },
+        {
+          "chapter": "Top",
+          "image": "ipad-air-split-view-half/top.png",
+          "flags": []
+        },
+        {
+          "chapter": "Close",
+          "image": "ipad-air-split-view-half/close.png",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "iPad Air split view third",
+        "group": "tablet",
+        "width": 375,
+        "height": 820,
+        "dpr": 2,
+        "mobile": false,
+        "touch": true,
+        "userAgent": "Mozilla/5.0 (iPad; CPU OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1"
+      },
+      "cells": [
+        {
+          "chapter": "Front",
+          "image": "ipad-air-split-view-third/front.png",
+          "flags": []
+        },
+        {
+          "chapter": "Orbit",
+          "image": "ipad-air-split-view-third/orbit.png",
+          "flags": []
+        },
+        {
+          "chapter": "Top",
+          "image": "ipad-air-split-view-third/top.png",
+          "flags": []
+        },
+        {
+          "chapter": "Close",
+          "image": "ipad-air-split-view-third/close.png",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "iPad Pro 12.9",
+        "group": "tablet",
+        "width": 1024,
+        "height": 1366,
+        "dpr": 2,
+        "mobile": false,
+        "touch": true,
+        "userAgent": "Mozilla/5.0 (iPad; CPU OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1"
+      },
+      "cells": [
+        {
+          "chapter": "Front",
+          "image": "ipad-pro-12-9/front.png",
+          "flags": []
+        },
+        {
+          "chapter": "Orbit",
+          "image": "ipad-pro-12-9/orbit.png",
+          "flags": [
+            {
+              "kind": "layout-shift",
+              "message": "layout shift 0.188, over 0.1"
+            }
+          ]
+        },
+        {
+          "chapter": "Top",
+          "image": "ipad-pro-12-9/top.png",
+          "flags": [
+            {
+              "kind": "layout-shift",
+              "message": "layout shift 0.188, over 0.1"
+            }
+          ]
+        },
+        {
+          "chapter": "Close",
+          "image": "ipad-pro-12-9/close.png",
+          "flags": [
+            {
+              "kind": "layout-shift",
+              "message": "layout shift 0.188, over 0.1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "iPad Pro 12.9 landscape",
+        "group": "tablet",
+        "width": 1366,
+        "height": 1024,
+        "dpr": 2,
+        "mobile": false,
+        "touch": true,
+        "userAgent": "Mozilla/5.0 (iPad; CPU OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1"
+      },
+      "cells": [
+        {
+          "chapter": "Front",
+          "image": "ipad-pro-12-9-landscape/front.png",
+          "flags": []
+        },
+        {
+          "chapter": "Orbit",
+          "image": "ipad-pro-12-9-landscape/orbit.png",
+          "flags": [
+            {
+              "kind": "layout-shift",
+              "message": "layout shift 0.552, over 0.1"
+            }
+          ]
+        },
+        {
+          "chapter": "Top",
+          "image": "ipad-pro-12-9-landscape/top.png",
+          "flags": [
+            {
+              "kind": "layout-shift",
+              "message": "layout shift 0.552, over 0.1"
+            }
+          ]
+        },
+        {
+          "chapter": "Close",
+          "image": "ipad-pro-12-9-landscape/close.png",
+          "flags": [
+            {
+              "kind": "layout-shift",
+              "message": "layout shift 0.552, over 0.1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "Android tablet",
+        "group": "tablet",
+        "width": 800,
+        "height": 1280,
+        "dpr": 1.5,
+        "mobile": false,
+        "touch": true,
+        "userAgent": "Mozilla/5.0 (Linux; Android 15; Tablet) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+      },
+      "cells": [
+        {
+          "chapter": "Front",
+          "image": "android-tablet/front.png",
+          "flags": []
+        },
+        {
+          "chapter": "Orbit",
+          "image": "android-tablet/orbit.png",
+          "flags": []
+        },
+        {
+          "chapter": "Top",
+          "image": "android-tablet/top.png",
+          "flags": []
+        },
+        {
+          "chapter": "Close",
+          "image": "android-tablet/close.png",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "Laptop 13in",
+        "group": "laptop",
+        "width": 1280,
+        "height": 800,
+        "dpr": 2,
+        "mobile": false,
+        "touch": false
+      },
+      "cells": [
+        {
+          "chapter": "Front",
+          "image": "laptop-13in/front.png",
+          "flags": []
+        },
+        {
+          "chapter": "Orbit",
+          "image": "laptop-13in/orbit.png",
+          "flags": []
+        },
+        {
+          "chapter": "Top",
+          "image": "laptop-13in/top.png",
+          "flags": []
+        },
+        {
+          "chapter": "Close",
+          "image": "laptop-13in/close.png",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "MacBook Air 13",
+        "group": "laptop",
+        "width": 1470,
+        "height": 956,
+        "dpr": 2,
+        "mobile": false,
+        "touch": false
+      },
+      "cells": [
+        {
+          "chapter": "Front",
+          "image": "macbook-air-13/front.png",
+          "flags": []
+        },
+        {
+          "chapter": "Orbit",
+          "image": "macbook-air-13/orbit.png",
+          "flags": [
+            {
+              "kind": "layout-shift",
+              "message": "layout shift 0.584, over 0.1"
+            }
+          ]
+        },
+        {
+          "chapter": "Top",
+          "image": "macbook-air-13/top.png",
+          "flags": [
+            {
+              "kind": "layout-shift",
+              "message": "layout shift 0.584, over 0.1"
+            }
+          ]
+        },
+        {
+          "chapter": "Close",
+          "image": "macbook-air-13/close.png",
+          "flags": [
+            {
+              "kind": "layout-shift",
+              "message": "layout shift 0.584, over 0.1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "Windows laptop",
+        "group": "laptop",
+        "width": 1366,
+        "height": 768,
+        "dpr": 1,
+        "mobile": false,
+        "touch": false
+      },
+      "cells": [
+        {
+          "chapter": "Front",
+          "image": "windows-laptop/front.png",
+          "flags": []
+        },
+        {
+          "chapter": "Orbit",
+          "image": "windows-laptop/orbit.png",
+          "flags": []
+        },
+        {
+          "chapter": "Top",
+          "image": "windows-laptop/top.png",
+          "flags": []
+        },
+        {
+          "chapter": "Close",
+          "image": "windows-laptop/close.png",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "Laptop 15in at 125%",
+        "group": "laptop",
+        "width": 1536,
+        "height": 864,
+        "dpr": 1.25,
+        "mobile": false,
+        "touch": false
+      },
+      "cells": [
+        {
+          "chapter": "Front",
+          "image": "laptop-15in-at-125/front.png",
+          "flags": []
+        },
+        {
+          "chapter": "Orbit",
+          "image": "laptop-15in-at-125/orbit.png",
+          "flags": []
+        },
+        {
+          "chapter": "Top",
+          "image": "laptop-15in-at-125/top.png",
+          "flags": []
+        },
+        {
+          "chapter": "Close",
+          "image": "laptop-15in-at-125/close.png",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "Desktop 1080p",
+        "group": "desktop",
+        "width": 1920,
+        "height": 1080,
+        "dpr": 1,
+        "mobile": false,
+        "touch": false
+      },
+      "cells": [
+        {
+          "chapter": "Front",
+          "image": "desktop-1080p/front.png",
+          "flags": []
+        },
+        {
+          "chapter": "Orbit",
+          "image": "desktop-1080p/orbit.png",
+          "flags": []
+        },
+        {
+          "chapter": "Top",
+          "image": "desktop-1080p/top.png",
+          "flags": []
+        },
+        {
+          "chapter": "Close",
+          "image": "desktop-1080p/close.png",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "Desktop 1440p",
+        "group": "desktop",
+        "width": 2560,
+        "height": 1440,
+        "dpr": 1,
+        "mobile": false,
+        "touch": false
+      },
+      "cells": [
+        {
+          "chapter": "Front",
+          "image": "desktop-1440p/front.png",
+          "flags": []
+        },
+        {
+          "chapter": "Orbit",
+          "image": "desktop-1440p/orbit.png",
+          "flags": []
+        },
+        {
+          "chapter": "Top",
+          "image": "desktop-1440p/top.png",
+          "flags": []
+        },
+        {
+          "chapter": "Close",
+          "image": "desktop-1440p/close.png",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "Desktop 4K",
+        "group": "desktop",
+        "width": 3840,
+        "height": 2160,
+        "dpr": 1,
+        "mobile": false,
+        "touch": false
+      },
+      "cells": [
+        {
+          "chapter": "Front",
+          "image": "desktop-4k/front.png",
+          "flags": []
+        },
+        {
+          "chapter": "Orbit",
+          "image": "desktop-4k/orbit.png",
+          "flags": [
+            {
+              "kind": "layout-shift",
+              "message": "layout shift 0.187, over 0.1"
+            }
+          ]
+        },
+        {
+          "chapter": "Top",
+          "image": "desktop-4k/top.png",
+          "flags": [
+            {
+              "kind": "layout-shift",
+              "message": "layout shift 0.187, over 0.1"
+            }
+          ]
+        },
+        {
+          "chapter": "Close",
+          "image": "desktop-4k/close.png",
+          "flags": [
+            {
+              "kind": "layout-shift",
+              "message": "layout shift 0.187, over 0.1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "Desktop 4K at 200%",
+        "group": "desktop",
+        "width": 1920,
+        "height": 1080,
+        "dpr": 2,
+        "mobile": false,
+        "touch": false
+      },
+      "cells": [
+        {
+          "chapter": "Front",
+          "image": "desktop-4k-at-200/front.png",
+          "flags": []
+        },
+        {
+          "chapter": "Orbit",
+          "image": "desktop-4k-at-200/orbit.png",
+          "flags": []
+        },
+        {
+          "chapter": "Top",
+          "image": "desktop-4k-at-200/top.png",
+          "flags": []
+        },
+        {
+          "chapter": "Close",
+          "image": "desktop-4k-at-200/close.png",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "Ultrawide 21:9",
+        "group": "ultrawide",
+        "width": 3440,
+        "height": 1440,
+        "dpr": 1,
+        "mobile": false,
+        "touch": false
+      },
+      "cells": [
+        {
+          "chapter": "Front",
+          "image": "ultrawide-21-9/front.png",
+          "flags": []
+        },
+        {
+          "chapter": "Orbit",
+          "image": "ultrawide-21-9/orbit.png",
+          "flags": []
+        },
+        {
+          "chapter": "Top",
+          "image": "ultrawide-21-9/top.png",
+          "flags": []
+        },
+        {
+          "chapter": "Close",
+          "image": "ultrawide-21-9/close.png",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "Super ultrawide 32:9",
+        "group": "ultrawide",
+        "width": 5120,
+        "height": 1440,
+        "dpr": 1,
+        "mobile": false,
+        "touch": false
+      },
+      "cells": [
+        {
+          "chapter": "Front",
+          "image": "super-ultrawide-32-9/front.png",
+          "flags": []
+        },
+        {
+          "chapter": "Orbit",
+          "image": "super-ultrawide-32-9/orbit.png",
+          "flags": []
+        },
+        {
+          "chapter": "Top",
+          "image": "super-ultrawide-32-9/top.png",
+          "flags": []
+        },
+        {
+          "chapter": "Close",
+          "image": "super-ultrawide-32-9/close.png",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "Instagram in-app iOS",
+        "group": "in-app",
+        "width": 390,
+        "height": 664,
+        "dpr": 3,
+        "mobile": true,
+        "touch": true,
+        "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1 Instagram 350.0.0"
+      },
+      "cells": [
+        {
+          "chapter": "Front",
+          "image": "instagram-in-app-ios/front.png",
+          "flags": []
+        },
+        {
+          "chapter": "Orbit",
+          "image": "instagram-in-app-ios/orbit.png",
+          "flags": []
+        },
+        {
+          "chapter": "Top",
+          "image": "instagram-in-app-ios/top.png",
+          "flags": []
+        },
+        {
+          "chapter": "Close",
+          "image": "instagram-in-app-ios/close.png",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "Facebook in-app Android",
+        "group": "in-app",
+        "width": 412,
+        "height": 760,
+        "dpr": 2.625,
+        "mobile": true,
+        "touch": true,
+        "userAgent": "Mozilla/5.0 (Linux; Android 15; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Mobile Safari/537.36 [FBAN/EMA;FBAV/480.0]"
+      },
+      "cells": [
+        {
+          "chapter": "Front",
+          "image": "facebook-in-app-android/front.png",
+          "flags": []
+        },
+        {
+          "chapter": "Orbit",
+          "image": "facebook-in-app-android/orbit.png",
+          "flags": []
+        },
+        {
+          "chapter": "Top",
+          "image": "facebook-in-app-android/top.png",
+          "flags": []
+        },
+        {
+          "chapter": "Close",
+          "image": "facebook-in-app-android/close.png",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "LinkedIn in-app iOS",
+        "group": "in-app",
+        "width": 390,
+        "height": 700,
+        "dpr": 3,
+        "mobile": true,
+        "touch": true,
+        "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1 LinkedInApp"
+      },
+      "cells": [
+        {
+          "chapter": "Front",
+          "image": "linkedin-in-app-ios/front.png",
+          "flags": []
+        },
+        {
+          "chapter": "Orbit",
+          "image": "linkedin-in-app-ios/orbit.png",
+          "flags": []
+        },
+        {
+          "chapter": "Top",
+          "image": "linkedin-in-app-ios/top.png",
+          "flags": []
+        },
+        {
+          "chapter": "Close",
+          "image": "linkedin-in-app-ios/close.png",
+          "flags": []
+        }
+      ]
+    }
+  ]
+}

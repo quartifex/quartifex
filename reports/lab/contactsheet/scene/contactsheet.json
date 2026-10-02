@@ -1,0 +1,861 @@
+{
+  "url": "http://localhost:3100/scene",
+  "createdAt": "2026-10-02T04:55:18.135Z",
+  "chapters": ["hero", "specs"],
+  "rows": [
+    {
+      "profile": {
+        "name": "iPhone SE",
+        "group": "phone",
+        "width": 375,
+        "height": 667,
+        "dpr": 2,
+        "mobile": true,
+        "touch": true,
+        "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1"
+      },
+      "cells": [
+        {
+          "chapter": "hero",
+          "image": "iphone-se/hero.png",
+          "flags": []
+        },
+        {
+          "chapter": "specs",
+          "image": "iphone-se/specs.png",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "iPhone 13 mini",
+        "group": "phone",
+        "width": 375,
+        "height": 812,
+        "dpr": 3,
+        "mobile": true,
+        "touch": true,
+        "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1"
+      },
+      "cells": [
+        {
+          "chapter": "hero",
+          "image": "iphone-13-mini/hero.png",
+          "flags": []
+        },
+        {
+          "chapter": "specs",
+          "image": "iphone-13-mini/specs.png",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "iPhone 15",
+        "group": "phone",
+        "width": 393,
+        "height": 852,
+        "dpr": 3,
+        "mobile": true,
+        "touch": true,
+        "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1"
+      },
+      "cells": [
+        {
+          "chapter": "hero",
+          "image": "iphone-15/hero.png",
+          "flags": []
+        },
+        {
+          "chapter": "specs",
+          "image": "iphone-15/specs.png",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "iPhone 15 Pro Max",
+        "group": "phone",
+        "width": 430,
+        "height": 932,
+        "dpr": 3,
+        "mobile": true,
+        "touch": true,
+        "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1"
+      },
+      "cells": [
+        {
+          "chapter": "hero",
+          "image": "iphone-15-pro-max/hero.png",
+          "flags": []
+        },
+        {
+          "chapter": "specs",
+          "image": "iphone-15-pro-max/specs.png",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "Pixel 8",
+        "group": "phone",
+        "width": 412,
+        "height": 915,
+        "dpr": 2.625,
+        "mobile": true,
+        "touch": true,
+        "userAgent": "Mozilla/5.0 (Linux; Android 15; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Mobile Safari/537.36"
+      },
+      "cells": [
+        {
+          "chapter": "hero",
+          "image": "pixel-8/hero.png",
+          "flags": []
+        },
+        {
+          "chapter": "specs",
+          "image": "pixel-8/specs.png",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "Galaxy S24",
+        "group": "phone",
+        "width": 360,
+        "height": 780,
+        "dpr": 3,
+        "mobile": true,
+        "touch": true,
+        "userAgent": "Mozilla/5.0 (Linux; Android 15; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Mobile Safari/537.36"
+      },
+      "cells": [
+        {
+          "chapter": "hero",
+          "image": "galaxy-s24/hero.png",
+          "flags": []
+        },
+        {
+          "chapter": "specs",
+          "image": "galaxy-s24/specs.png",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "Budget Android",
+        "group": "phone",
+        "width": 360,
+        "height": 800,
+        "dpr": 2,
+        "mobile": true,
+        "touch": true,
+        "userAgent": "Mozilla/5.0 (Linux; Android 15; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Mobile Safari/537.36"
+      },
+      "cells": [
+        {
+          "chapter": "hero",
+          "image": "budget-android/hero.png",
+          "flags": []
+        },
+        {
+          "chapter": "specs",
+          "image": "budget-android/specs.png",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "iPhone SE landscape",
+        "group": "phone-landscape",
+        "width": 667,
+        "height": 375,
+        "dpr": 2,
+        "mobile": true,
+        "touch": true,
+        "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1"
+      },
+      "cells": [
+        {
+          "chapter": "hero",
+          "image": "iphone-se-landscape/hero.png",
+          "flags": []
+        },
+        {
+          "chapter": "specs",
+          "image": "iphone-se-landscape/specs.png",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "iPhone 15 landscape",
+        "group": "phone-landscape",
+        "width": 852,
+        "height": 393,
+        "dpr": 3,
+        "mobile": true,
+        "touch": true,
+        "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1"
+      },
+      "cells": [
+        {
+          "chapter": "hero",
+          "image": "iphone-15-landscape/hero.png",
+          "flags": []
+        },
+        {
+          "chapter": "specs",
+          "image": "iphone-15-landscape/specs.png",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "Pixel 8 landscape",
+        "group": "phone-landscape",
+        "width": 915,
+        "height": 412,
+        "dpr": 2.625,
+        "mobile": true,
+        "touch": true,
+        "userAgent": "Mozilla/5.0 (Linux; Android 15; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Mobile Safari/537.36"
+      },
+      "cells": [
+        {
+          "chapter": "hero",
+          "image": "pixel-8-landscape/hero.png",
+          "flags": []
+        },
+        {
+          "chapter": "specs",
+          "image": "pixel-8-landscape/specs.png",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "Galaxy Z Fold closed",
+        "group": "foldable",
+        "width": 344,
+        "height": 882,
+        "dpr": 2.625,
+        "mobile": true,
+        "touch": true,
+        "userAgent": "Mozilla/5.0 (Linux; Android 15; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Mobile Safari/537.36"
+      },
+      "cells": [
+        {
+          "chapter": "hero",
+          "image": "galaxy-z-fold-closed/hero.png",
+          "flags": []
+        },
+        {
+          "chapter": "specs",
+          "image": "galaxy-z-fold-closed/specs.png",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "Galaxy Z Fold open",
+        "group": "foldable",
+        "width": 690,
+        "height": 829,
+        "dpr": 2.625,
+        "mobile": true,
+        "touch": true,
+        "userAgent": "Mozilla/5.0 (Linux; Android 15; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Mobile Safari/537.36"
+      },
+      "cells": [
+        {
+          "chapter": "hero",
+          "image": "galaxy-z-fold-open/hero.png",
+          "flags": []
+        },
+        {
+          "chapter": "specs",
+          "image": "galaxy-z-fold-open/specs.png",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "Galaxy Z Fold open landscape",
+        "group": "foldable",
+        "width": 829,
+        "height": 690,
+        "dpr": 2.625,
+        "mobile": true,
+        "touch": true,
+        "userAgent": "Mozilla/5.0 (Linux; Android 15; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Mobile Safari/537.36"
+      },
+      "cells": [
+        {
+          "chapter": "hero",
+          "image": "galaxy-z-fold-open-landscape/hero.png",
+          "flags": []
+        },
+        {
+          "chapter": "specs",
+          "image": "galaxy-z-fold-open-landscape/specs.png",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "Galaxy Z Flip open",
+        "group": "foldable",
+        "width": 360,
+        "height": 880,
+        "dpr": 3,
+        "mobile": true,
+        "touch": true,
+        "userAgent": "Mozilla/5.0 (Linux; Android 15; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Mobile Safari/537.36"
+      },
+      "cells": [
+        {
+          "chapter": "hero",
+          "image": "galaxy-z-flip-open/hero.png",
+          "flags": []
+        },
+        {
+          "chapter": "specs",
+          "image": "galaxy-z-flip-open/specs.png",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "Pixel Fold open",
+        "group": "foldable",
+        "width": 841,
+        "height": 701,
+        "dpr": 2.625,
+        "mobile": true,
+        "touch": true,
+        "userAgent": "Mozilla/5.0 (Linux; Android 15; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Mobile Safari/537.36"
+      },
+      "cells": [
+        {
+          "chapter": "hero",
+          "image": "pixel-fold-open/hero.png",
+          "flags": []
+        },
+        {
+          "chapter": "specs",
+          "image": "pixel-fold-open/specs.png",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "iPad mini",
+        "group": "tablet",
+        "width": 744,
+        "height": 1133,
+        "dpr": 2,
+        "mobile": false,
+        "touch": true,
+        "userAgent": "Mozilla/5.0 (iPad; CPU OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1"
+      },
+      "cells": [
+        {
+          "chapter": "hero",
+          "image": "ipad-mini/hero.png",
+          "flags": []
+        },
+        {
+          "chapter": "specs",
+          "image": "ipad-mini/specs.png",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "iPad Air",
+        "group": "tablet",
+        "width": 820,
+        "height": 1180,
+        "dpr": 2,
+        "mobile": false,
+        "touch": true,
+        "userAgent": "Mozilla/5.0 (iPad; CPU OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1"
+      },
+      "cells": [
+        {
+          "chapter": "hero",
+          "image": "ipad-air/hero.png",
+          "flags": []
+        },
+        {
+          "chapter": "specs",
+          "image": "ipad-air/specs.png",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "iPad Air landscape",
+        "group": "tablet",
+        "width": 1180,
+        "height": 820,
+        "dpr": 2,
+        "mobile": false,
+        "touch": true,
+        "userAgent": "Mozilla/5.0 (iPad; CPU OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1"
+      },
+      "cells": [
+        {
+          "chapter": "hero",
+          "image": "ipad-air-landscape/hero.png",
+          "flags": []
+        },
+        {
+          "chapter": "specs",
+          "image": "ipad-air-landscape/specs.png",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "iPad Air split view half",
+        "group": "tablet",
+        "width": 590,
+        "height": 820,
+        "dpr": 2,
+        "mobile": false,
+        "touch": true,
+        "userAgent": "Mozilla/5.0 (iPad; CPU OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1"
+      },
+      "cells": [
+        {
+          "chapter": "hero",
+          "image": "ipad-air-split-view-half/hero.png",
+          "flags": []
+        },
+        {
+          "chapter": "specs",
+          "image": "ipad-air-split-view-half/specs.png",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "iPad Air split view third",
+        "group": "tablet",
+        "width": 375,
+        "height": 820,
+        "dpr": 2,
+        "mobile": false,
+        "touch": true,
+        "userAgent": "Mozilla/5.0 (iPad; CPU OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1"
+      },
+      "cells": [
+        {
+          "chapter": "hero",
+          "image": "ipad-air-split-view-third/hero.png",
+          "flags": []
+        },
+        {
+          "chapter": "specs",
+          "image": "ipad-air-split-view-third/specs.png",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "iPad Pro 12.9",
+        "group": "tablet",
+        "width": 1024,
+        "height": 1366,
+        "dpr": 2,
+        "mobile": false,
+        "touch": true,
+        "userAgent": "Mozilla/5.0 (iPad; CPU OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1"
+      },
+      "cells": [
+        {
+          "chapter": "hero",
+          "image": "ipad-pro-12-9/hero.png",
+          "flags": []
+        },
+        {
+          "chapter": "specs",
+          "image": "ipad-pro-12-9/specs.png",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "iPad Pro 12.9 landscape",
+        "group": "tablet",
+        "width": 1366,
+        "height": 1024,
+        "dpr": 2,
+        "mobile": false,
+        "touch": true,
+        "userAgent": "Mozilla/5.0 (iPad; CPU OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1"
+      },
+      "cells": [
+        {
+          "chapter": "hero",
+          "image": "ipad-pro-12-9-landscape/hero.png",
+          "flags": []
+        },
+        {
+          "chapter": "specs",
+          "image": "ipad-pro-12-9-landscape/specs.png",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "Android tablet",
+        "group": "tablet",
+        "width": 800,
+        "height": 1280,
+        "dpr": 1.5,
+        "mobile": false,
+        "touch": true,
+        "userAgent": "Mozilla/5.0 (Linux; Android 15; Tablet) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+      },
+      "cells": [
+        {
+          "chapter": "hero",
+          "image": "android-tablet/hero.png",
+          "flags": []
+        },
+        {
+          "chapter": "specs",
+          "image": "android-tablet/specs.png",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "Laptop 13in",
+        "group": "laptop",
+        "width": 1280,
+        "height": 800,
+        "dpr": 2,
+        "mobile": false,
+        "touch": false
+      },
+      "cells": [
+        {
+          "chapter": "hero",
+          "image": "laptop-13in/hero.png",
+          "flags": []
+        },
+        {
+          "chapter": "specs",
+          "image": "laptop-13in/specs.png",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "MacBook Air 13",
+        "group": "laptop",
+        "width": 1470,
+        "height": 956,
+        "dpr": 2,
+        "mobile": false,
+        "touch": false
+      },
+      "cells": [
+        {
+          "chapter": "hero",
+          "image": "macbook-air-13/hero.png",
+          "flags": []
+        },
+        {
+          "chapter": "specs",
+          "image": "macbook-air-13/specs.png",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "Windows laptop",
+        "group": "laptop",
+        "width": 1366,
+        "height": 768,
+        "dpr": 1,
+        "mobile": false,
+        "touch": false
+      },
+      "cells": [
+        {
+          "chapter": "hero",
+          "image": "windows-laptop/hero.png",
+          "flags": []
+        },
+        {
+          "chapter": "specs",
+          "image": "windows-laptop/specs.png",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "Laptop 15in at 125%",
+        "group": "laptop",
+        "width": 1536,
+        "height": 864,
+        "dpr": 1.25,
+        "mobile": false,
+        "touch": false
+      },
+      "cells": [
+        {
+          "chapter": "hero",
+          "image": "laptop-15in-at-125/hero.png",
+          "flags": []
+        },
+        {
+          "chapter": "specs",
+          "image": "laptop-15in-at-125/specs.png",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "Desktop 1080p",
+        "group": "desktop",
+        "width": 1920,
+        "height": 1080,
+        "dpr": 1,
+        "mobile": false,
+        "touch": false
+      },
+      "cells": [
+        {
+          "chapter": "hero",
+          "image": "desktop-1080p/hero.png",
+          "flags": []
+        },
+        {
+          "chapter": "specs",
+          "image": "desktop-1080p/specs.png",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "Desktop 1440p",
+        "group": "desktop",
+        "width": 2560,
+        "height": 1440,
+        "dpr": 1,
+        "mobile": false,
+        "touch": false
+      },
+      "cells": [
+        {
+          "chapter": "hero",
+          "image": "desktop-1440p/hero.png",
+          "flags": []
+        },
+        {
+          "chapter": "specs",
+          "image": "desktop-1440p/specs.png",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "Desktop 4K",
+        "group": "desktop",
+        "width": 3840,
+        "height": 2160,
+        "dpr": 1,
+        "mobile": false,
+        "touch": false
+      },
+      "cells": [
+        {
+          "chapter": "hero",
+          "image": "desktop-4k/hero.png",
+          "flags": []
+        },
+        {
+          "chapter": "specs",
+          "image": "desktop-4k/specs.png",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "Desktop 4K at 200%",
+        "group": "desktop",
+        "width": 1920,
+        "height": 1080,
+        "dpr": 2,
+        "mobile": false,
+        "touch": false
+      },
+      "cells": [
+        {
+          "chapter": "hero",
+          "image": "desktop-4k-at-200/hero.png",
+          "flags": []
+        },
+        {
+          "chapter": "specs",
+          "image": "desktop-4k-at-200/specs.png",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "Ultrawide 21:9",
+        "group": "ultrawide",
+        "width": 3440,
+        "height": 1440,
+        "dpr": 1,
+        "mobile": false,
+        "touch": false
+      },
+      "cells": [
+        {
+          "chapter": "hero",
+          "image": "ultrawide-21-9/hero.png",
+          "flags": []
+        },
+        {
+          "chapter": "specs",
+          "image": "ultrawide-21-9/specs.png",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "Super ultrawide 32:9",
+        "group": "ultrawide",
+        "width": 5120,
+        "height": 1440,
+        "dpr": 1,
+        "mobile": false,
+        "touch": false
+      },
+      "cells": [
+        {
+          "chapter": "hero",
+          "image": "super-ultrawide-32-9/hero.png",
+          "flags": []
+        },
+        {
+          "chapter": "specs",
+          "image": "super-ultrawide-32-9/specs.png",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "Instagram in-app iOS",
+        "group": "in-app",
+        "width": 390,
+        "height": 664,
+        "dpr": 3,
+        "mobile": true,
+        "touch": true,
+        "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1 Instagram 350.0.0"
+      },
+      "cells": [
+        {
+          "chapter": "hero",
+          "image": "instagram-in-app-ios/hero.png",
+          "flags": []
+        },
+        {
+          "chapter": "specs",
+          "image": "instagram-in-app-ios/specs.png",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "Facebook in-app Android",
+        "group": "in-app",
+        "width": 412,
+        "height": 760,
+        "dpr": 2.625,
+        "mobile": true,
+        "touch": true,
+        "userAgent": "Mozilla/5.0 (Linux; Android 15; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Mobile Safari/537.36 [FBAN/EMA;FBAV/480.0]"
+      },
+      "cells": [
+        {
+          "chapter": "hero",
+          "image": "facebook-in-app-android/hero.png",
+          "flags": []
+        },
+        {
+          "chapter": "specs",
+          "image": "facebook-in-app-android/specs.png",
+          "flags": []
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "LinkedIn in-app iOS",
+        "group": "in-app",
+        "width": 390,
+        "height": 700,
+        "dpr": 3,
+        "mobile": true,
+        "touch": true,
+        "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1 LinkedInApp"
+      },
+      "cells": [
+        {
+          "chapter": "hero",
+          "image": "linkedin-in-app-ios/hero.png",
+          "flags": []
+        },
+        {
+          "chapter": "specs",
+          "image": "linkedin-in-app-ios/specs.png",
+          "flags": []
+        }
+      ]
+    }
+  ]
+}

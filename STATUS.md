@@ -91,6 +91,61 @@ Nitesh's step (Inputs needed 8).
 
 M5: every P5 item is `built` and `pnpm check` is green. Waiting for review (M1 to M4 too).
 
+## Hub pass (2 Oct 2026): lead with the item, GitHub links, distinct props
+
+After review of the 18 built demos: every item page opened on the same metadata block, most
+demos shared one aspect/DPR/stage-plus-controls template, and five of them staged the same jar.
+
+**Template change (applies to every item, and to everything built from now on):** the shared
+`ItemView` now opens with a compact identity strip (icon, name, one-line description, status,
+"Source on GitHub", "README"), then the demo above the fold, then "About" (the facts table and
+the install line). The hub header links the repository ("View on GitHub"), every built card
+has a "Source" link, and the footer credits Three.js, GSAP and Poimandres' react-three-fiber,
+drei and detect-gpu.
+
+| Item | What changed |
+| --- | --- |
+| `plumb`, `resolve`, `contactsheet`, `reel`, `frameguide`, `aspect-morph` | Template only: the aspect and pixel-ratio composition stays, because screens are their subject |
+| `safeframe` | Its own prop: a wristwatch sequence (the camera-fit panel draws a watch too). Near-square layout fixed (below) |
+| `dailies`, `rushes`, `stillness` | Template only: already content-led (page under test, data table, chapter rail) |
+| `heft` | Leads with a scoreboard (measured values against the budget, pass or over) and a verdict line; run controls in a row; test page and budget sliders secondary; the test page shows from the start instead of an empty frame |
+| `viewfinder` | The scene is the demo: full-height chapters beside a sticky chapter list (jump links, current chapter marked); the overlay opens as the scene arrives |
+| `spine` | Live stats in a sticky line over the page scrolling beneath; the pinned scene shows its own progress; no boxed stage |
+| `dolly` | The 3D stage takes the width, controls in columns below; draws only the pixels its preview shows |
+| `anatomy` | Its own prop: a fountain pen exploding along its axis into six labelled parts; stage takes the width; aspect/DPR controls removed (not about screens) |
+| `sleeve` | Its own prop: a tall amber bottle for a fictional olive oil; the 3D bottle and the flat die-line lead side by side, controls below |
+| `freight` | Its own prop: a carelessly exported desk fan; leads with a before-and-after board and the verdict |
+| `understudy` | Its own prop: a brass gyroscope in WebGL and as a pre-rendered sequence from the same angles; the ladder (rungs and steps, current marked) leads beside the stage |
+
+Also: the demo kit's sliders and checkboxes are 24 x 24 px (WCAG 2.2 target size), and the
+Screen preview no longer shifts on load. Acknowledgments added to the READMEs of `anatomy`,
+`dolly`, `sleeve`, `understudy` and `resolve`, naming the pmndrs projects each actually uses;
+the library template has an Acknowledgments section.
+
+**safeframe near 1:1: fixed.** At 1:1 the copy (sized by width only) spilled out of the short
+band safeframe chose and over the subject. The copy is now sized by its zone's height too and
+drops kicker and body in short bands, and tablets and 4:3 laptops get a narrow column left of
+the subject. Checked by behaviour tests at nine sizes, 720 x 900 to 1366 x 1024, for both the
+watch and the jar.
+
+| Check | Result |
+| --- | --- |
+| `pnpm check` | green: typecheck (35 tasks), lint (0 errors), test (21 files, 220 tests), size (all budgets met) |
+| `pnpm build` | pass (the gyroscope sequence encodes in about 5 s) |
+| `pnpm e2e` (installed Chrome) | pass: hub 90 (incl. 35 new layout tests), anyframe 8, dailies 4, heft 1, contactsheet 1 |
+| hub e2e `--repeat-each 3` | pass: 264 of 264 (before the last fixes); 90 of 90 after |
+| contactsheet over the restructured pages (36 profiles each), reports in `reports/lab/contactsheet/` | no flags: the watch scene, the jar scene, `heft`, `anatomy`, `sleeve`, `understudy`, `plumb`. Remaining flags listed under Known issues |
+
+## Known issues
+
+- contactsheet flags on hub pages it had not been pointed at before this pass (36 profiles):
+  layout shift on tablets for `dolly` (15), `resolve` (14), `spine` (18, ScrollTrigger's pin
+  spacer arriving after hydration), `freight` (3) and `viewfinder` (2, split view); canvas over
+  budget for `reel` (12, its preview renders the simulated device's full resolution, the fault
+  fixed in `dolly` here and in anyframe in P4) and `viewfinder` (3, a 32:9 window at 2x). The
+  safeframe page's own flags come from its scaled preview of other devices and are expected.
+  None affects a launch site; they are queued as a follow-up.
+
 ## Items
 
 <!-- items:start -->
@@ -378,5 +433,10 @@ Deviations from the P5 brief:
 - understudy's frame-rate tests use simulated frame times; on real hardware the thresholds were
   only exercised through the Lab demo on this machine.
 
-Next prompt: **PF** (the flagship quartifex.com, parallel track) or **P6** (gate M6): the proof sites
-`reelhouse` and `halcyon`.
+### 2026-10-02, hub pass
+
+See "Hub pass" above for what changed per item, the checks and the known issues.
+
+Next prompt: **P5V** (`volumetric`) if scheduled, otherwise **PF** (the flagship quartifex.com)
+or **P6** (gate M6): the proof sites `reelhouse` and `halcyon`. From P8 on, see the positioning
+note in `DECISIONS.md` (general-purpose libraries built to stand on their own).
