@@ -1,5 +1,7 @@
 .card {
+  position: relative;
   display: grid;
+  align-content: start;
   gap: var(--qx-space-2);
   padding: var(--qx-space-3);
   border: var(--qx-line) solid var(--qx-hairline);
@@ -12,8 +14,51 @@
 }
 
 .card:hover,
-.card:focus-visible {
+.card:has(.link:focus-visible) {
   border-color: var(--qx-hairline-strong);
+}
+
+/* The name's link covers the whole card. */
+.link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+.link:focus-visible {
+  outline: none;
+}
+
+.card:has(.link:focus-visible) {
+  outline: var(--qx-line) solid var(--qx-teal);
+  outline-offset: 2px;
+}
+
+/* Above the covering link, so it stays its own target. */
+.source {
+  position: relative;
+  z-index: 1;
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  font-family: var(--font-dm-mono), var(--qx-font-mono);
+  font-size: var(--qx-text-xs);
+  letter-spacing: var(--qx-tracking-label);
+  text-transform: uppercase;
+  color: var(--qx-muted);
+  text-underline-offset: 3px;
+}
+
+.source:hover,
+.source:focus-visible {
+  color: var(--qx-fg);
 }
 
 .icon {

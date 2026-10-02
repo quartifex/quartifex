@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parseCatalog } from "./catalog";
+import { githubLinks, parseCatalog } from "./catalog";
 
 const lib = {
   id: "L01",
@@ -58,5 +58,26 @@ describe("parseCatalog", () => {
     expect(() => parseCatalog([{ ...lib, kind: "tool" }])).toThrow(/unknown kind/);
     expect(() => parseCatalog([{ ...lib, name: "" }])).toThrow(/missing "name"/);
     expect(() => parseCatalog([{ ...lib, order: "7" }])).toThrow(/missing "order"/);
+  });
+});
+
+describe("githubLinks", () => {
+  const [built] = parseCatalog([{ ...lib, state: "built" }]);
+  const [soon] = parseCatalog([lib]);
+  const [seed] = parseCatalog([
+    { id: "LB13", kind: "lab", name: "frameguide", order: 1, state: "built", prompt: "P1" },
+  ]);
+
+  it("links a built library's source and README, and nothing before it is built", () => {
+    if (!built || !soon || !seed) throw new Error("fixture");
+    expect(githubLinks(built)).toEqual({
+      source: "https://github.com/quartifex/quartifex/tree/main/packages/reel",
+      readme: "https://github.com/quartifex/quartifex/tree/main/packages/reel#readme",
+    });
+    expect(githubLinks(soon)).toBeNull();
+    expect(githubLinks(seed)).toEqual({
+      source: "https://github.com/quartifex/quartifex/tree/main/apps/lab/src/seeds/frameguide",
+      readme: null,
+    });
   });
 });

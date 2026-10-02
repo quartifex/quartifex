@@ -127,3 +127,44 @@ export function isBuilt(item: CatalogItem): boolean {
 export function getIconSvg(item: CatalogItem): string {
   return readFileSync(path.join(ICON_DIR, `${item.id}-${item.name}.svg`), "utf8");
 }
+
+export const REPO = "https://github.com/quartifex/quartifex";
+
+/** Where an item's source lives in the repo. Null until it is built. */
+export function sourcePath(item: CatalogItem): string | null {
+  if (!isBuilt(item)) return null;
+  if (item.kind === "lib") return `packages/${item.name}`;
+  if (item.kind === "site") return `apps/${item.name}`;
+  return `apps/lab/src/seeds/${item.name}`;
+}
+
+/** The item's source on GitHub, and its README where it has one (libraries and sites). */
+export function githubLinks(item: CatalogItem): { source: string; readme: string | null } | null {
+  const at = sourcePath(item);
+  if (!at) return null;
+  const source = `${REPO}/tree/main/${at}`;
+  return { source, readme: item.kind === "lab" ? null : `${source}#readme` };
+}
+
+/**
+ * One line on what the item does. Built libraries and sites carry it in their own
+ * package.json (the first clause of its description); everything else uses the catalog.
+ */
+export function taglineFor(item: CatalogItem): string | null {
+  const at = sourcePath(item);
+  if (at && item.kind !== "lab") {
+    try {
+      const pkg = JSON.parse(readFileSync(path.join(REPO_ROOT, at, "package.json"), "utf8")) as {
+        description?: unknown;
+      };
+      if (typeof pkg.description === "string" && !pkg.description.startsWith(item.name)) {
+        let line = pkg.description.split(/: |\. /)[0] ?? "";
+        if (line.length > 90) line = line.slice(0, line.lastIndexOf(", ", 90));
+        if (line) return line.replace(/\.$/, "");
+      }
+    } catch {
+      // No package.json: fall back to the catalog.
+    }
+  }
+  return item.description ?? item.category;
+}

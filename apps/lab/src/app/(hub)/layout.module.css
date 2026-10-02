@@ -35,3 +35,51 @@
 .main {
   padding: var(--qx-space-12) var(--qx-gutter) var(--qx-space-24);
 }
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: var(--qx-space-4);
+}
+
+.repo {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  color: var(--qx-fg);
+  text-underline-offset: 3px;
+}
+
+.repo::after {
+  content: "\2009↗";
+  color: var(--qx-teal);
+}
+
+.footer {
+  flex-wrap: wrap;
+}
+
+.credits,
+.legal {
+  margin: 0;
+}
+
+.credits {
+  text-transform: none;
+  letter-spacing: 0.02em;
+  max-width: 64rem;
+}
+
+.credits a,
+.legal a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  color: var(--qx-fg);
+  text-underline-offset: 3px;
+}
+
+.legal {
+  display: flex;
+  gap: var(--qx-space-4);
+}

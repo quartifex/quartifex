@@ -43,14 +43,14 @@ test.describe("hub", () => {
     await page.goto("/");
     // Root SVGs only: some icons nest a second <svg> inside.
     await expect(page.locator('[data-testid="item-card"] > div > svg')).toHaveCount(62);
-    await page.getByRole("link", { name: /plumb/ }).click();
+    await page.getByRole("link", { name: "plumb", exact: true }).click();
     await expect(page).toHaveURL(/\/plumb$/);
     await expect(page.getByRole("heading", { level: 1, name: "plumb" })).toBeVisible();
     await expect(page.getByText("pnpm add @quartifex/plumb")).toBeVisible();
     await page.goto("/bespoke");
     await expect(page.getByText("Not built yet.")).toBeVisible();
     await page.goto("/");
-    await page.getByRole("link", { name: /frameguide/ }).click();
+    await page.getByRole("link", { name: "frameguide", exact: true }).click();
     await expect(page).toHaveURL(/\/lab\/frameguide$/);
   });
 
@@ -59,6 +59,8 @@ test.describe("hub", () => {
     await page.keyboard.press("Tab");
     await expect(page.getByRole("link", { name: "Skip to content" })).toBeFocused();
     await page.keyboard.press("Tab");
+    await page.keyboard.press("Tab");
+    await expect(page.getByRole("link", { name: "View on GitHub" })).toBeFocused();
     await page.keyboard.press("Tab");
     await expect(page.getByRole("button", { name: "Light theme" })).toBeFocused();
   });
