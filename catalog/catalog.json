@@ -482,6 +482,26 @@
   "icon": "icons/svg/L29"
  },
  {
+  "id": "L30",
+  "kind": "lib",
+  "name": "volumetric",
+  "host": null,
+  "category": "Shaders & lighting",
+  "effort": "M",
+  "order": 30,
+  "deps": [
+   "L29",
+   "L12",
+   "L07",
+   "L01"
+  ],
+  "libs": null,
+  "label": null,
+  "prompt": "P5V",
+  "state": "built",
+  "icon": "icons/svg/L30"
+ },
+ {
   "id": "S01",
   "kind": "site",
   "name": "quasar",

@@ -494,5 +494,13 @@
   "category": "Lab",
   "svg": "svg/LB14-aspect-morph.svg",
   "png": "png/LB14-aspect-morph.png"
+ },
+ {
+  "id": "L30",
+  "name": "volumetric",
+  "kind": "lib",
+  "category": "Shaders & lighting",
+  "svg": "svg/L30-volumetric.svg",
+  "png": "png/L30-volumetric.png"
  }
 ]

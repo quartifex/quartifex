@@ -10,8 +10,8 @@ const built = catalog.filter((entry) => entry.state === "built").length;
 test.describe("hub", () => {
   test("lists every catalog item, grouped", async ({ page }) => {
     await page.goto("/");
-    await expect(page.getByTestId("item-card")).toHaveCount(62);
-    await expect(page.getByRole("heading", { name: /Libraries\s*29/ })).toBeVisible();
+    await expect(page.getByTestId("item-card")).toHaveCount(63);
+    await expect(page.getByRole("heading", { name: /Libraries\s*30/ })).toBeVisible();
     await expect(page.getByRole("heading", { name: /Sites\s*19/ })).toBeVisible();
     await expect(page.getByRole("heading", { name: /Lab\s*14/ })).toBeVisible();
   });
@@ -42,7 +42,7 @@ test.describe("hub", () => {
   test("every card has an inline icon and reaches its item page", async ({ page }) => {
     await page.goto("/");
     // Root SVGs only: some icons nest a second <svg> inside.
-    await expect(page.locator('[data-testid="item-card"] > div > svg')).toHaveCount(62);
+    await expect(page.locator('[data-testid="item-card"] > div > svg')).toHaveCount(63);
     await page.getByRole("link", { name: "plumb", exact: true }).click();
     await expect(page).toHaveURL(/\/plumb$/);
     await expect(page.getByRole("heading", { level: 1, name: "plumb" })).toBeVisible();

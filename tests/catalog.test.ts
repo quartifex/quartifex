@@ -28,10 +28,10 @@ const ids = new Set(catalog.map((e) => e.id));
 const wave = (prompt: string) => Number(prompt.replace(/\D/g, ""));
 
 describe("catalog", () => {
-  it("holds 29 libraries, 19 sites and 14 Lab seeds", () => {
+  it("holds 30 libraries, 19 sites and 14 Lab seeds", () => {
     const count = (kind: string) => catalog.filter((e) => e.kind === kind).length;
-    expect(catalog).toHaveLength(62);
-    expect([count("lib"), count("site"), count("lab")]).toEqual([29, 19, 14]);
+    expect(catalog).toHaveLength(63);
+    expect([count("lib"), count("site"), count("lab")]).toEqual([30, 19, 14]);
   });
 
   it("has unique ids and unique names (names are routes and package names)", () => {
@@ -64,7 +64,7 @@ describe("catalog", () => {
 
 describe("icons", () => {
   it("has one SVG for every catalog item", () => {
-    expect(icons).toHaveLength(62);
+    expect(icons).toHaveLength(63);
     for (const entry of catalog) {
       const file = new URL(`assets/icons/svg/${entry.id}-${entry.name}.svg`, root);
       expect(existsSync(file), `${entry.id}-${entry.name}.svg`).toBe(true);
