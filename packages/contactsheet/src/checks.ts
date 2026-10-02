@@ -51,6 +51,29 @@ export function collectSnapshot(options: CollectOptions = {}, win: Window = wind
     const r = el.getBoundingClientRect();
     return { x: r.x, y: r.y, width: r.width, height: r.height };
   };
+  // The part of an element that can be seen: clipped by every ancestor that hides or
+  // scrolls its overflow (text scrolled out of a nested scroller is not on screen).
+  const shownRect = (el: Element) => {
+    const r = el.getBoundingClientRect();
+    let left = r.left;
+    let top = r.top;
+    let right = r.right;
+    let bottom = r.bottom;
+    for (let a = el.parentElement; a && a !== doc.body; a = a.parentElement) {
+      const style = win.getComputedStyle(a);
+      if (style.overflowX === "visible" && style.overflowY === "visible") continue;
+      const c = a.getBoundingClientRect();
+      if (style.overflowX !== "visible") {
+        left = Math.max(left, c.left);
+        right = Math.min(right, c.right);
+      }
+      if (style.overflowY !== "visible") {
+        top = Math.max(top, c.top);
+        bottom = Math.min(bottom, c.bottom);
+      }
+    }
+    return { x: left, y: top, width: Math.max(0, right - left), height: Math.max(0, bottom - top) };
+  };
   const onScreen = (r: { x: number; y: number; width: number; height: number }) =>
     r.width > 0 && r.height > 0 && r.x < vw && r.y < vh && r.x + r.width > 0 && r.y + r.height > 0;
   const visible = (el: Element) => {
@@ -87,7 +110,7 @@ export function collectSnapshot(options: CollectOptions = {}, win: Window = wind
   const texts: Snapshot["texts"] = [];
   for (const el of textEls) {
     if (textEls.some((other) => other !== el && el.contains(other))) continue; // leaves only
-    const rect = rectOf(el);
+    const rect = shownRect(el);
     if (onScreen(rect) && visible(el) && (el.textContent ?? "").trim())
       texts.push({ label: label(el), rect });
   }
@@ -97,6 +120,8 @@ export function collectSnapshot(options: CollectOptions = {}, win: Window = wind
     'a[href], button, input:not([type="hidden"]), select, textarea, summary, [role="button"], [role="link"]';
   const targets: Snapshot["targets"] = [];
   for (const el of Array.from(doc.querySelectorAll(targetSelector))) {
+    // A target cut by a scroller is judged by its full size, but only if any of it shows.
+    if (!onScreen(shownRect(el))) continue;
     const rect = rectOf(el);
     if (!onScreen(rect) || !visible(el)) continue;
     // Links inside running text are exempt from target size (WCAG 2.2, 2.5.8).
@@ -108,7 +133,7 @@ export function collectSnapshot(options: CollectOptions = {}, win: Window = wind
   const canvases: Snapshot["canvases"] = [];
   for (const el of Array.from(doc.querySelectorAll("canvas"))) {
     const rect = rectOf(el);
-    if (!onScreen(rect) || !visible(el)) continue;
+    if (!onScreen(shownRect(el)) || !visible(el)) continue;
     canvases.push({
       label: el.id ? `canvas#${el.id}` : "canvas",
       width: el.width,

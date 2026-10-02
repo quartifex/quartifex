@@ -69,3 +69,34 @@ test("runs profiles, flags the faults and writes the sheet", async () => {
   const shot = phone?.cells[0]?.image ?? "";
   expect((await stat(path.join(dir, "out", shot))).size).toBeGreaterThan(0);
 });
+
+// Text scrolled out of a nested scroller is not on screen, so it cannot overlap anything.
+const SCROLLER = `<!doctype html>
+<html><head><meta name="viewport" content="width=device-width, initial-scale=1"><style>
+  body { margin: 0; font: 16px system-ui; }
+  .scroller { height: 120px; overflow: auto; }
+  .inner { position: relative; height: 600px; }
+  .inner p { position: absolute; top: 126px; margin: 0; }
+  h2 { margin: 0; font-size: 24px; }
+</style></head><body>
+  <section data-chapter="page">
+    <div class="scroller"><div class="inner"><p>Scrolled out of view</p></div></div>
+    <h2>Below the scroller</h2>
+  </section>
+</body></html>`;
+
+test("ignores text clipped away by a scroller", async () => {
+  test.setTimeout(60_000);
+  const dir = await mkdtemp(path.join(tmpdir(), "contactsheet-"));
+  const file = path.join(dir, "scroller.html");
+  await writeFile(file, SCROLLER);
+  const result = await runSheet({
+    url: pathToFileURL(file).href,
+    out: path.join(dir, "out"),
+    profiles: ["Desktop 1440p"],
+    png: false,
+    ...(process.env.PW_CHANNEL ? { channel: process.env.PW_CHANNEL } : {}),
+  });
+  const flags = result.sheet.rows[0]?.cells.flatMap((cell) => cell.flags) ?? [];
+  expect(flags.filter((f) => f.kind === "text-overlap")).toEqual([]);
+});
