@@ -1,0 +1,87 @@
+@import "@quartifex/tokens/tokens.css";
+@import "@quartifex/tokens/fonts.css";
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--qx-bg);
+  color: var(--qx-fg);
+  font-family: var(--qx-font-body);
+  line-height: var(--qx-leading-body);
+}
+
+body {
+  margin: 0;
+  min-height: 100svh;
+}
+
+a {
+  color: inherit;
+}
+
+:focus-visible {
+  outline: var(--qx-line) solid var(--qx-teal);
+  outline-offset: 3px;
+}
+
+/* The honest label: always visible, never styled away. */
+.label {
+  justify-self: start;
+  display: inline-block;
+  margin: 0;
+  padding: 2px var(--qx-space-2);
+  border: var(--qx-line) solid var(--qx-hairline-strong);
+  border-radius: var(--qx-radius-pill);
+  font-family: var(--qx-font-mono);
+  font-size: var(--qx-text-xs);
+  letter-spacing: var(--qx-tracking-label);
+  text-transform: uppercase;
+}
+
+.skip-link {
+  position: absolute;
+  left: var(--qx-gutter);
+  top: -4rem;
+  z-index: 10;
+  padding: var(--qx-space-2) var(--qx-space-4);
+  background: var(--qx-fg);
+  color: var(--qx-bg);
+  font-family: var(--qx-font-mono);
+  font-size: var(--qx-text-sm);
+}
+
+.skip-link:focus {
+  top: var(--qx-space-3);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Mono metadata: labels, readouts, figures. */
+.mono {
+  font-family: var(--qx-font-mono);
+  font-size: var(--qx-text-xs);
+  letter-spacing: var(--qx-tracking-label);
+  text-transform: uppercase;
+}
+
+/* Smooth jumps only at the full level; the rail scrolls instantly otherwise (stillness). */
+:root[data-motion="full"] {
+  scroll-behavior: smooth;
+}
+
+/* Switching levels with the switch cross-fades the page (a View Transition), briefly. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 450ms;
+}

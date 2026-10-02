@@ -1,0 +1,306 @@
+/*
+ * Three designs, one story. The level is on <html data-motion>; without it (no JavaScript)
+ * the static design applies.
+ *   static  : an editorial page. Paper, one column, the still as a framed figure.
+ *   reduced : a framed, held picture on paper beside the copy. Nothing travels; text fades.
+ *   full    : cinema. The dawn pinned full-bleed above a dark letterbox that holds the copy.
+ */
+
+/* ---------- static (the default) ---------- */
+
+.hero {
+  position: relative;
+  padding: var(--qx-space-16) var(--qx-gutter) var(--qx-space-12);
+}
+
+.stage {
+  display: grid;
+  gap: var(--qx-space-8);
+  max-width: 44rem;
+}
+
+.scene,
+.caption {
+  display: none;
+}
+
+.copy {
+  display: grid;
+  gap: var(--qx-space-4);
+}
+
+.copy > :first-child {
+  margin: 0;
+  color: var(--qx-muted);
+}
+
+.title {
+  margin: 0;
+  font-family: var(--qx-font-display);
+  font-size: clamp(2.5rem, 1.4rem + 4.4vw, 5rem);
+  font-weight: 500;
+  line-height: var(--qx-leading-tight);
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.lede {
+  margin: 0;
+  max-width: 46ch;
+  font-size: var(--qx-text-lg);
+  line-height: 1.5;
+  color: var(--qx-muted);
+  text-wrap: pretty;
+}
+
+.moments {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: var(--qx-line) solid var(--qx-hairline);
+}
+
+.moments li {
+  display: grid;
+  grid-template-columns: 4.5rem 1fr;
+  gap: var(--qx-space-4);
+  padding: var(--qx-space-3) 0;
+  border-bottom: var(--qx-line) solid var(--qx-hairline);
+}
+
+.moments .mono {
+  color: var(--qx-muted);
+  font-variant-numeric: tabular-nums;
+  padding-top: 0.2em;
+}
+
+.figure {
+  display: grid;
+  gap: var(--qx-space-2);
+  max-width: 56rem;
+  margin: var(--qx-space-12) 0 0;
+}
+
+.figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: var(--qx-line) solid var(--qx-hairline);
+  border-radius: var(--qx-radius-md);
+  background: #2a1d17;
+}
+
+.figure figcaption {
+  color: var(--qx-muted);
+}
+
+@media (min-width: 1100px) {
+  .hero {
+    padding-left: max(var(--qx-gutter), 14rem);
+  }
+}
+
+/* ---------- reduced ---------- */
+
+:root[data-motion="reduced"] .hero,
+:root[data-motion="full"] .hero {
+  padding: 0;
+}
+
+:root[data-motion="reduced"] .figure,
+:root[data-motion="full"] .figure {
+  display: none;
+}
+
+:root[data-motion="reduced"] .stage {
+  max-width: none;
+  min-height: calc(100svh - 7rem);
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: "scene" "copy" "moments";
+  align-content: center;
+  gap: var(--qx-space-8);
+  padding: var(--qx-space-12) var(--qx-gutter);
+}
+
+@media (min-width: 900px) {
+  :root[data-motion="reduced"] .stage {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    grid-template-areas: "copy scene" "moments scene";
+    column-gap: clamp(2rem, 5vw, 5rem);
+  }
+}
+
+@media (min-width: 1100px) {
+  :root[data-motion="reduced"] .stage {
+    padding-left: max(var(--qx-gutter), 14rem);
+  }
+}
+
+:root[data-motion="reduced"] .scene {
+  grid-area: scene;
+  display: block;
+  position: relative;
+  aspect-ratio: 16 / 10;
+  align-self: center;
+  overflow: hidden;
+  border: var(--qx-line) solid var(--qx-hairline);
+  border-radius: var(--qx-radius-md);
+  background: #2a1d17;
+}
+
+:root[data-motion="reduced"] .copy {
+  grid-area: copy;
+  align-self: end;
+}
+
+:root[data-motion="reduced"] .moments {
+  grid-area: moments;
+  align-self: start;
+}
+
+:root[data-motion="reduced"] .title {
+  font-size: clamp(2.25rem, 1.3rem + 3.4vw, 4.25rem);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :root[data-motion="reduced"] .copy,
+  :root[data-motion="reduced"] .moments {
+    animation: fade 700ms var(--qx-ease-out) both;
+  }
+  :root[data-motion="reduced"] .moments {
+    animation-delay: 200ms;
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+
+/* ---------- full ---------- */
+
+:root[data-motion="full"] .hero {
+  height: 320vh;
+}
+
+:root[data-motion="full"] .stage {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  max-width: none;
+  grid-template-columns: minmax(0, 1fr);
+  /* The title first, so it is on the first screen under the header; the picture fills the rest. */
+  grid-template-rows: auto minmax(0, 1fr);
+  grid-template-areas: "band" "scene";
+  gap: 0;
+  /* The letterbox is the room's own dark, whatever the page theme. */
+  background: #0d0b0a;
+  color: #edeae4;
+  --qx-muted: #a8a49c;
+  --qx-hairline: rgb(237 234 228 / 0.16);
+}
+
+:root[data-motion="full"] .scene {
+  grid-area: scene;
+  display: block;
+  position: relative;
+  overflow: hidden;
+}
+
+:root[data-motion="full"] .copy,
+:root[data-motion="full"] .moments {
+  grid-area: band;
+}
+
+:root[data-motion="full"] .copy {
+  align-self: start;
+  padding: var(--qx-space-6) var(--qx-gutter);
+  max-width: 48rem;
+}
+
+:root[data-motion="full"] .title {
+  font-size: clamp(1.9rem, min(1.1rem + 2.6vw, 0.5rem + 5vh), 4rem);
+}
+
+:root[data-motion="full"] .lede {
+  display: none;
+}
+
+:root[data-motion="full"] .moments {
+  display: none;
+}
+
+@media (min-width: 900px) {
+  :root[data-motion="full"] .stage {
+    grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+    grid-template-rows: auto minmax(0, 1fr);
+    grid-template-areas: "copy moments" "scene scene";
+  }
+  :root[data-motion="full"] .copy {
+    grid-area: copy;
+    padding-left: max(var(--qx-gutter), 14rem);
+  }
+  :root[data-motion="full"] .moments {
+    grid-area: moments;
+    display: grid;
+    align-self: start;
+    margin: var(--qx-space-6) var(--qx-gutter) var(--qx-space-6) 0;
+  }
+}
+
+/* The current moment of the story lights up; the others wait. */
+:root[data-motion="full"] .moments li {
+  color: var(--qx-muted);
+  transition: color var(--qx-duration-slow) var(--qx-ease-out);
+}
+
+:root[data-motion="full"] .moments li .mono::before {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin-right: var(--qx-space-2);
+  border-radius: 50%;
+  background: var(--qx-hairline);
+  vertical-align: 2px;
+  transition: background var(--qx-duration-slow) var(--qx-ease-out);
+}
+
+:root[data-motion="full"] .hero[data-moment="0"] .moments li[data-index="0"],
+:root[data-motion="full"] .hero[data-moment="1"] .moments li[data-index="1"],
+:root[data-motion="full"] .hero[data-moment="2"] .moments li[data-index="2"] {
+  color: #edeae4;
+}
+
+:root[data-motion="full"] .hero[data-moment="0"] li[data-index="0"] .mono::before,
+:root[data-motion="full"] .hero[data-moment="1"] li[data-index="1"] .mono::before,
+:root[data-motion="full"] .hero[data-moment="2"] li[data-index="2"] .mono::before {
+  background: var(--dawn, #ffb46b);
+}
+
+:root[data-motion="full"] .caption {
+  display: block;
+  position: absolute;
+  right: var(--qx-gutter);
+  bottom: var(--qx-space-4);
+  margin: 0;
+  color: #a8a49c;
+}
+
+/* ---------- shared by the picture levels ---------- */
+
+.canvas,
+.light {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.light {
+  mix-blend-mode: screen;
+  pointer-events: none;
+}

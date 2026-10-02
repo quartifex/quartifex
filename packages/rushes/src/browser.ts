@@ -151,7 +151,8 @@ async function videoSource(
       await seek(video, 0);
     }
     const duration = Number.isFinite(video.duration) && video.duration > 0 ? video.duration : 1;
-    if (!video.videoWidth || !video.videoHeight) throw new Error("rushes: the video has no picture");
+    if (!video.videoWidth || !video.videoHeight)
+      throw new Error("rushes: the video has no picture");
     const frames = Math.max(1, Math.min(maxFrames, Math.floor(duration * fps)));
     return {
       source: {

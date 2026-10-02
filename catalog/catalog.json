@@ -615,10 +615,10 @@
   "effort": "M",
   "order": 5,
   "deps": [],
-  "libs": "L06, L01, L03",
+  "libs": "L06, L01, L03, L30",
   "label": "Open-source demo",
   "prompt": "P6",
-  "state": "not started",
+  "state": "built",
   "icon": "icons/svg/S08"
  },
  {

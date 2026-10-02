@@ -1,0 +1,60 @@
+{
+  "createdAt": "2026-10-02T21:38:51.721Z",
+  "commit": "f4025b398a2fb7efb1fb3f3f05587a0928e526c9",
+  "environment": {
+    "kind": "local",
+    "name": "a local machine (CI has not published a run yet)"
+  },
+  "tools": {
+    "axe": "4.13.0",
+    "lighthouse": "13.5.0"
+  },
+  "tags": [
+    "wcag2a",
+    "wcag2aa",
+    "wcag21a",
+    "wcag21aa",
+    "wcag22aa"
+  ],
+  "modes": {
+    "full": {
+      "axe": {
+        "violations": [],
+        "passes": 32,
+        "incomplete": 1
+      },
+      "lighthouse": {
+        "accessibility": 1,
+        "best-practices": 1,
+        "seo": 1,
+        "performance": 0.98
+      }
+    },
+    "reduced": {
+      "axe": {
+        "violations": [],
+        "passes": 32,
+        "incomplete": 0
+      },
+      "lighthouse": {
+        "accessibility": 1,
+        "best-practices": 1,
+        "seo": 1,
+        "performance": 0.97
+      }
+    },
+    "static": {
+      "axe": {
+        "violations": [],
+        "passes": 32,
+        "incomplete": 0
+      },
+      "lighthouse": {
+        "accessibility": 1,
+        "best-practices": 1,
+        "seo": 1,
+        "performance": 0.99
+      }
+    }
+  }
+}

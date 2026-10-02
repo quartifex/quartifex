@@ -1,0 +1,183 @@
+.section {
+  padding: var(--qx-space-24) var(--qx-gutter);
+  border-top: var(--qx-line) solid var(--qx-hairline);
+}
+
+@media (min-width: 1100px) {
+  .section {
+    padding-left: max(var(--qx-gutter), 14rem);
+  }
+}
+
+.pin {
+  display: grid;
+  gap: var(--qx-space-8);
+  max-width: 64rem;
+}
+
+.copy {
+  display: grid;
+  gap: var(--qx-space-4);
+  max-width: 40rem;
+}
+
+.copy > :first-child {
+  margin: 0;
+  color: var(--qx-muted);
+}
+
+.h2 {
+  margin: 0;
+  font-family: var(--qx-font-display);
+  font-size: var(--qx-text-2xl);
+  font-weight: 500;
+  line-height: var(--qx-leading-tight);
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+.text {
+  margin: 0;
+  max-width: 52ch;
+  color: var(--qx-muted);
+}
+
+.reading,
+.disc {
+  display: none;
+}
+
+.scale {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: var(--qx-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.scale li {
+  display: grid;
+  gap: var(--qx-space-1);
+  align-content: start;
+  font-size: var(--qx-text-sm);
+}
+
+.scale .mono {
+  color: var(--qx-muted);
+}
+
+.swatch {
+  display: block;
+  height: 3rem;
+  border: var(--qx-line) solid var(--qx-hairline);
+  border-radius: var(--qx-radius-sm);
+}
+
+.k {
+  display: block;
+  color: var(--qx-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 640px) {
+  .scale {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .scale li {
+    grid-template-columns: 2.5rem 4rem 1fr;
+    align-items: center;
+    gap: var(--qx-space-3);
+  }
+  .swatch {
+    height: 2.5rem;
+  }
+  .k {
+    display: inline;
+    margin-left: var(--qx-space-2);
+  }
+}
+
+/* Reduced: the steps fade in once, in order, when the chapter arrives. No travel. */
+@media (prefers-reduced-motion: no-preference) {
+  :root[data-motion="reduced"] .scale li {
+    opacity: 0;
+    transition: opacity 600ms var(--qx-ease-out);
+    transition-delay: calc(var(--i) * 90ms);
+  }
+  :root[data-motion="reduced"] .section[data-arrived] .scale li {
+    opacity: 1;
+  }
+}
+
+/* Full: pinned, and the scroll walks the light along the scale. */
+:root[data-motion="full"] .section {
+  height: 260vh;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+:root[data-motion="full"] .pin {
+  position: sticky;
+  top: 0;
+  min-height: 100svh;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: center;
+  padding: var(--qx-space-12) 0;
+}
+
+@media (min-width: 900px) {
+  :root[data-motion="full"] .pin {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas: "copy disc" "scale scale";
+  }
+  :root[data-motion="full"] .copy {
+    grid-area: copy;
+  }
+  :root[data-motion="full"] .disc {
+    grid-area: disc;
+  }
+  :root[data-motion="full"] .scale {
+    grid-area: scale;
+  }
+}
+
+:root[data-motion="full"] .reading {
+  display: block;
+  margin: 0;
+  color: var(--qx-fg);
+  font-size: var(--qx-text-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+:root[data-motion="full"] .disc {
+  display: block;
+  justify-self: center;
+  width: clamp(7rem, 22vw, 15rem);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--k, rgb(255 131 0));
+  border: var(--qx-line) solid var(--qx-hairline);
+}
+
+:root[data-motion="full"] .scale {
+  position: relative;
+  padding-top: var(--qx-space-6);
+}
+
+/* The marker: a hairline that walks the scale with the scroll. */
+:root[data-motion="full"] .scale::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: calc(var(--p, 0) * (100% - 1px));
+  width: 1px;
+  height: var(--qx-space-4);
+  background: var(--qx-fg);
+}
+
+@media (max-width: 640px) {
+  :root[data-motion="full"] .scale::before {
+    display: none;
+  }
+}

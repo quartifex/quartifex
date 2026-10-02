@@ -1,0 +1,141 @@
+.section {
+  display: grid;
+  gap: var(--qx-space-12);
+  padding: var(--qx-space-24) var(--qx-gutter);
+  border-top: var(--qx-line) solid var(--qx-hairline);
+}
+
+@media (min-width: 1100px) {
+  .section {
+    padding-left: max(var(--qx-gutter), 14rem);
+  }
+}
+
+.copy {
+  display: grid;
+  gap: var(--qx-space-4);
+  max-width: 44rem;
+}
+
+.copy > :first-child {
+  margin: 0;
+  color: var(--qx-muted);
+}
+
+.h2 {
+  margin: 0;
+  font-family: var(--qx-font-display);
+  font-size: var(--qx-text-2xl);
+  font-weight: 500;
+  line-height: var(--qx-leading-tight);
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+.text {
+  margin: 0;
+  max-width: 56ch;
+  color: var(--qx-muted);
+}
+
+.levels {
+  display: grid;
+  gap: var(--qx-space-6);
+  max-width: 72rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: var(--qx-line) solid var(--qx-hairline-strong);
+}
+
+@media (min-width: 800px) {
+  .levels {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(1.5rem, 4vw, 3rem);
+  }
+}
+
+.levels li {
+  display: grid;
+  gap: var(--qx-space-2);
+  align-content: start;
+  padding-top: var(--qx-space-4);
+}
+
+.levels p {
+  margin: 0;
+  color: var(--qx-muted);
+  font-size: var(--qx-text-sm);
+}
+
+.h3 {
+  margin: 0;
+  font-family: var(--qx-font-display);
+  font-size: var(--qx-text-lg);
+  font-weight: 500;
+}
+
+.results {
+  display: grid;
+  gap: var(--qx-space-4);
+  max-width: 72rem;
+}
+
+.tableWrap {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+.caption {
+  padding-bottom: var(--qx-space-3);
+  text-align: left;
+  font-family: var(--qx-font-mono);
+  font-size: var(--qx-text-xs);
+  letter-spacing: var(--qx-tracking-label);
+  text-transform: uppercase;
+  color: var(--qx-muted);
+}
+
+.table th,
+.table td {
+  padding: var(--qx-space-3) var(--qx-space-4) var(--qx-space-3) 0;
+  border-bottom: var(--qx-line) solid var(--qx-hairline);
+  text-align: left;
+  white-space: nowrap;
+}
+
+.table thead th {
+  font-family: var(--qx-font-mono);
+  font-size: var(--qx-text-xs);
+  font-weight: 400;
+  letter-spacing: var(--qx-tracking-label);
+  text-transform: uppercase;
+  color: var(--qx-muted);
+}
+
+.table tbody th {
+  font-weight: 500;
+}
+
+.table td {
+  font-family: var(--qx-font-display);
+  font-size: var(--qx-text-lg);
+}
+
+.violations {
+  margin: 0;
+  padding-left: var(--qx-space-4);
+  font-size: var(--qx-text-sm);
+}
+
+.method {
+  margin: 0;
+  max-width: 72ch;
+  color: var(--qx-muted);
+  font-size: var(--qx-text-sm);
+}

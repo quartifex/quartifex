@@ -94,21 +94,21 @@ describe("new:lib", () => {
 
 describe("new:site", () => {
   it("creates an app carrying its honest label from the catalog", () => {
-    const { dir } = newSite(root, "halcyon");
+    const { dir } = newSite(root, "heftmark");
     const page = readFileSync(path.join(dir, "src", "app", "page.tsx"), "utf8");
     const pkg = JSON.parse(readFileSync(path.join(dir, "package.json"), "utf8"));
 
-    expect(pkg.name).toBe("@quartifex/site-halcyon");
+    expect(pkg.name).toBe("@quartifex/site-heftmark");
     expect(page).toContain('data-testid="honest-label"');
     expect(page).not.toMatch(/__[A-Z]+__/);
     expect(readFileSync(path.join(dir, "README.md"), "utf8")).toContain("Launch gate");
-    expect(stateOf("halcyon")).toBe("in progress");
+    expect(stateOf("heftmark")).toBe("in progress");
   });
 
   it("adds a budget entry once", () => {
-    newSite(root, "halcyon");
+    newSite(root, "heftmark");
     const budget = JSON.parse(readFileSync(path.join(root, "budget.json"), "utf8"));
-    expect(budget.apps.filter((app: { app: string }) => app.app === "halcyon")).toHaveLength(1);
+    expect(budget.apps.filter((app: { app: string }) => app.app === "heftmark")).toHaveLength(1);
   });
 
   it("refuses libraries", () => {

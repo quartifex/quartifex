@@ -79,6 +79,31 @@
           "inp": 200
         }
       }
+    },
+    {
+      "app": "halcyon",
+      "initialJsKb": 170,
+      "initialCssKb": 30,
+      "totalInitialKb": 1000,
+      "heroMediaKb": 600,
+      "fontsKb": 120,
+      "heft": {
+        "assets": {
+          "totalBytes": 4500000,
+          "sequenceBytes": 1200000
+        },
+        "page": {
+          "transferBytes": 1000000,
+          "scriptBytes": 450000
+        },
+        "scroll": {
+          "durationMs": 12000,
+          "longFrames": 4,
+          "p95FrameMs": 34,
+          "cls": 0.1,
+          "inp": 200
+        }
+      }
     }
   ]
 }

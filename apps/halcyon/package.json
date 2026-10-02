@@ -1,0 +1,39 @@
+{
+  "name": "@quartifex/site-halcyon",
+  "version": "0.0.0",
+  "private": true,
+  "description": "halcyon (S08): Accessibility proof. Open-source demo.",
+  "type": "module",
+  "scripts": {
+    "dev": "node ../../scripts/sync-fonts.mjs && node scripts/sequence.mjs && next dev --port 3400",
+    "build": "node ../../scripts/sync-fonts.mjs && node scripts/sequence.mjs && next build",
+    "start": "next start --port 3400",
+    "typecheck": "next typegen && tsc -p tsconfig.json --noEmit",
+    "e2e": "playwright test",
+    "sheet": "node scripts/sheet.mjs",
+    "heft": "node scripts/heft.mjs",
+    "a11y": "node scripts/audit.mjs"
+  },
+  "dependencies": {
+    "@quartifex/heft": "workspace:*",
+    "@quartifex/reel": "workspace:*",
+    "@quartifex/rushes": "workspace:*",
+    "@quartifex/stillness": "workspace:*",
+    "@quartifex/tokens": "workspace:*",
+    "@quartifex/volumetric": "workspace:*",
+    "next": "^16.3.7",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
+    "@playwright/test": "^1.63.0",
+    "@quartifex/contactsheet": "workspace:*",
+    "@types/node": "^22.20.4",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "chrome-launcher": "^1.2.2",
+    "lighthouse": "^13.5.0",
+    "typescript": "^7.0.2"
+  }
+}

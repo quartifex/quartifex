@@ -8,8 +8,8 @@ import { availableParallelism, tmpdir } from "node:os";
 import path from "node:path";
 import sharp, { type Sharp } from "sharp";
 import { type Format, framePath, MANIFEST_VERSION, type Manifest, type Tier } from "./manifest.js";
-import { type Budget, type Report, reportMarkdown, weigh } from "./report.js";
 import { naturalSort, planTiers } from "./plan.js";
+import { type Budget, type Report, reportMarkdown, weigh } from "./report.js";
 import { type SyntheticOptions, syntheticFrame } from "./synthetic.js";
 
 export {
@@ -21,6 +21,7 @@ export {
   parseManifest,
   type Tier,
 } from "./manifest.js";
+export { naturalSort, planTiers } from "./plan.js";
 export {
   type Budget,
   formatBytes,
@@ -29,7 +30,6 @@ export {
   type TierLine,
   weigh,
 } from "./report.js";
-export { naturalSort, planTiers } from "./plan.js";
 export { type SyntheticOptions, syntheticFrame } from "./synthetic.js";
 
 export type RushOptions = {
