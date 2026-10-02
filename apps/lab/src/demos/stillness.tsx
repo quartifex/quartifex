@@ -14,6 +14,7 @@ import {
 import { chapterRail, skipLink } from "@quartifex/stillness/dom";
 import { useEffect, useRef, useState } from "react";
 import { Controls, Note, Readout, Segmented, Toggle } from "@/components/demo/kit";
+import { budgetPixelRatio } from "@/components/demo/pixels";
 import { drawArt } from "@/scene/art";
 import shared from "./demos.module.css";
 import styles from "./stillness.module.css";
@@ -85,8 +86,13 @@ export default function Demo() {
     const ctx = canvas.getContext("2d");
     const paint = (t: number) => {
       if (!ctx) return;
-      canvas.width = canvas.clientWidth * devicePixelRatio;
-      canvas.height = canvas.clientHeight * devicePixelRatio;
+      // Within the 8 MP canvas budget on very wide, dense windows.
+      const ratio = Math.min(
+        devicePixelRatio,
+        budgetPixelRatio(canvas.clientWidth, canvas.clientHeight),
+      );
+      canvas.width = Math.round(canvas.clientWidth * ratio);
+      canvas.height = Math.round(canvas.clientHeight * ratio);
       drawArt(ctx, canvas.width, canvas.height, t);
     };
     const spin = s.effect({

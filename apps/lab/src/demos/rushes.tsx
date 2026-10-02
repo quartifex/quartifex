@@ -43,28 +43,43 @@ export default function Demo() {
     };
   }, [src]);
 
-  if (!manifest || !data || !tier) return <Note>Loading the sequence manifest.</Note>;
-
-  const largest = manifest.tiers[manifest.tiers.length - 1] as Tier;
-  const decision = decide(
-    { width: device.width, height: device.height, dpr: device.dpr, gpuTier: 2 },
-    targetFromManifest(manifest, { fit: "contain" }),
-  );
-  const picked = manifest.tiers[decision.tier.index] as Tier;
-  const naive = largest.bytes.webp ?? 0;
-  const laddered = picked.bytes.avif ?? picked.bytes.webp ?? 0;
-  const tiers = manifest.tiers.map((t) => ({ value: t.name, label: `${t.width} px` }));
+  // Everything renders from the first paint with "–" placeholders (the manifest is fetched),
+  // so nothing below moves when it arrives.
+  const largest = manifest?.tiers[manifest.tiers.length - 1] as Tier | undefined;
+  const decision = manifest
+    ? decide(
+        { width: device.width, height: device.height, dpr: device.dpr, gpuTier: 2 },
+        targetFromManifest(manifest, { fit: "contain" }),
+      )
+    : null;
+  const picked = decision ? (manifest?.tiers[decision.tier.index] as Tier) : undefined;
+  const naive = largest?.bytes.webp ?? 0;
+  const laddered = picked ? (picked.bytes.avif ?? picked.bytes.webp ?? 0) : 0;
+  const tiers = manifest?.tiers.map((t) => ({ value: t.name, label: `${t.width} px` })) ?? [
+    { value: "w480", label: "480 px" },
+    { value: "w960", label: "960 px" },
+    { value: "w1600", label: "1600 px" },
+  ];
+  const DASH = "–";
 
   return (
     <div className={shared.demo} data-demo="rushes">
       <Readout
         label="Sequence"
         rows={[
-          ["Source frames", `${manifest.frames} at ${manifest.fps} fps`, "rs-frames"],
-          ["Source size", `${manifest.source.width} x ${manifest.source.height}`],
-          ["Tiers", manifest.tiers.map((t) => t.width).join(" / "), "rs-tiers"],
-          ["Formats", manifest.formats.join(", ")],
-          ["Budget", data.report.pass ? "Within budget" : "Over budget", "rs-budget"],
+          [
+            "Source frames",
+            manifest ? `${manifest.frames} at ${manifest.fps} fps` : DASH,
+            "rs-frames",
+          ],
+          ["Source size", manifest ? `${manifest.source.width} x ${manifest.source.height}` : DASH],
+          ["Tiers", manifest ? manifest.tiers.map((t) => t.width).join(" / ") : DASH, "rs-tiers"],
+          ["Formats", manifest ? manifest.formats.join(", ") : DASH],
+          [
+            "Budget",
+            data ? (data.report.pass ? "Within budget" : "Over budget") : DASH,
+            "rs-budget",
+          ],
         ]}
       />
 
@@ -83,7 +98,16 @@ export default function Demo() {
             </tr>
           </thead>
           <tbody>
-            {data.report.lines.map((line) => (
+            {!data &&
+              ["a", "b", "c", "d", "e", "f"].map((k) => (
+                <tr key={k}>
+                  <th scope="row">{DASH}</th>
+                  {[1, 2, 3, 4, 5, 6].map((c) => (
+                    <td key={c}>{DASH}</td>
+                  ))}
+                </tr>
+              ))}
+            {data?.report.lines.map((line) => (
               <tr key={`${line.tier}-${line.format}`}>
                 <th scope="row">{line.tier}</th>
                 <td>{line.frames}</td>
@@ -103,20 +127,26 @@ export default function Demo() {
       <div className={shared.panel}>
         <h3 className={shared.panelTitle}>Any frame, any tier</h3>
         <Controls label="Frame">
-          <Segmented legend="Tier" value={tier.name} choices={tiers} onChange={setTierName} />
+          <Segmented
+            legend="Tier"
+            value={tier?.name ?? tierName}
+            choices={tiers}
+            onChange={setTierName}
+          />
           <Segmented legend="Format" value={format} choices={FORMATS} onChange={setFormat} />
           <Slider
             label="Frame"
             value={index}
             min={0}
-            max={tier.frames - 1}
+            max={(tier?.frames ?? 72) - 1}
             step={1}
             onChange={setIndex}
-            format={(v) => `${v + 1} / ${tier.frames}`}
+            format={(v) => `${v + 1} / ${tier?.frames ?? DASH}`}
           />
         </Controls>
         <div className={styles.viewer}>
-          {src && (
+          {!(src && tier) && <div className={styles.frame} style={{ aspectRatio: "16 / 9" }} />}
+          {src && tier && (
             // biome-ignore lint/performance/noImgElement: shows the exact encoded file, not an optimised copy
             <img
               src={src}
@@ -132,10 +162,14 @@ export default function Demo() {
             rows={[
               ["File", src?.replace(SEQUENCE_URL, "") ?? ""],
               ["Size", bytes === null ? "" : formatBytes(bytes), "rs-bytes"],
-              ["Pixels", `${tier.width} x ${tier.height}`],
+              ["Pixels", tier ? `${tier.width} x ${tier.height}` : DASH],
               [
                 "Frame step",
-                tier.step === 1 ? "every source frame" : `1 in ${tier.step} source frames`,
+                !tier
+                  ? DASH
+                  : tier.step === 1
+                    ? "every source frame"
+                    : `1 in ${tier.step} source frames`,
               ],
             ]}
           />
@@ -148,14 +182,20 @@ export default function Demo() {
         <Readout
           label="Download"
           rows={[
-            ["Without a ladder", `${largest.name} WebP: ${formatBytes(naive)}`],
+            ["Without a ladder", largest ? `${largest.name} WebP: ${formatBytes(naive)}` : DASH],
             [
               "With rushes + resolve",
-              `${picked.name} ${picked.bytes.avif ? "AVIF" : "WebP"}: ${formatBytes(laddered)}`,
+              picked
+                ? `${picked.name} ${picked.bytes.avif ? "AVIF" : "WebP"}: ${formatBytes(laddered)}`
+                : DASH,
               "rs-laddered",
             ],
-            ["Saved", `${Math.max(0, Math.round((1 - laddered / naive) * 100))}%`, "rs-saved"],
-            ["Why", decision.reasons.tier.join("; ")],
+            [
+              "Saved",
+              naive ? `${Math.max(0, Math.round((1 - laddered / naive) * 100))}%` : DASH,
+              "rs-saved",
+            ],
+            ["Why", decision ? decision.reasons.tier.join("; ") : DASH],
           ]}
         />
       </div>
