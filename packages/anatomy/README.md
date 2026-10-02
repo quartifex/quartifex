@@ -75,6 +75,10 @@ component under 1.5 kB. It uses `@quartifex/dolly`'s easing.
 - Parts move in straight lines; curved or rotating explosions are keyframe work.
 - Labels show as plain text in the canvas; leader lines are not drawn.
 
+## Acknowledgments
+
+The `/react` component builds on [react-three-fiber](https://github.com/pmndrs/react-three-fiber) and [drei](https://github.com/pmndrs/drei) (its `Html` labels), both by [Poimandres (pmndrs)](https://github.com/pmndrs), optional peers. Thank you.
+
 ## Licence
 
 MIT.

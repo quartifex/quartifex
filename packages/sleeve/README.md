@@ -115,6 +115,10 @@ component under 1 kB.
 - Overlap past 360 degrees is a single step of stock thickness; it does not model glue or a
   visible lap edge.
 
+## Acknowledgments
+
+The `/react` component builds on [react-three-fiber](https://github.com/pmndrs/react-three-fiber) by [Poimandres (pmndrs)](https://github.com/pmndrs), an optional peer. Thank you.
+
 ## Licence
 
 MIT.

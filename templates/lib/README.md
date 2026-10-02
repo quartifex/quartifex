@@ -58,6 +58,12 @@ Budgets are enforced in CI by `size-limit`: core under 3 kB, React adapter under
 
 TODO: what it does not do. Be specific and honest.
 
+## Acknowledgments
+
+TODO: the open-source projects this builds on (its peers and dependencies), each linked, e.g.
+"The `/react` adapter builds on react-three-fiber by Poimandres (pmndrs)." Delete this section
+if it builds on nothing beyond the platform.
+
 ## Licence
 
 MIT.

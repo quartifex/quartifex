@@ -134,6 +134,10 @@ hand-off under 1 kB each, GPU entry under 0.5 kB.
 - It never returns to WebGL by itself after a hand-off, by design: flipping between a 3D scene
   and a sequence mid-scroll is worse than staying on the sequence.
 
+## Acknowledgments
+
+The `/r3f` governor builds on [react-three-fiber](https://github.com/pmndrs/react-three-fiber), and `/gpu` reads the GPU tier with [detect-gpu](https://github.com/pmndrs/detect-gpu), both by [Poimandres (pmndrs)](https://github.com/pmndrs), optional peers. Thank you.
+
 ## Licence
 
 MIT.

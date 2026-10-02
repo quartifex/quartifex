@@ -109,6 +109,10 @@ under 1 kB. It uses `@quartifex/safeframe` for FOV compensation.
 - The Blender exporter samples the evaluated camera; it does not read F-curve handles, so use
   a small `--step` for fast moves.
 
+## Acknowledgments
+
+The `/react` adapter builds on [react-three-fiber](https://github.com/pmndrs/react-three-fiber) by [Poimandres (pmndrs)](https://github.com/pmndrs), an optional peer. Thank you.
+
 ## Licence
 
 MIT.

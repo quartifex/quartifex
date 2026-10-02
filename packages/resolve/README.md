@@ -93,6 +93,10 @@ under 0.5 kB, not counting detect-gpu.
 - The connection reading is a hint the browser gives, not a measurement.
 - One sequence per decision; for a page with several, decide per sequence.
 
+## Acknowledgments
+
+`/gpu` reads the GPU tier with [detect-gpu](https://github.com/pmndrs/detect-gpu) by [Poimandres (pmndrs)](https://github.com/pmndrs), an optional peer that fetches its benchmark data from a CDN. Thank you.
+
 ## Licence
 
 MIT.
