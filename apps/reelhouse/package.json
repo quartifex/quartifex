@@ -1,0 +1,34 @@
+{
+  "name": "@quartifex/site-reelhouse",
+  "version": "0.0.0",
+  "private": true,
+  "description": "reelhouse (S03): Docs & playground. Open-source demo.",
+  "type": "module",
+  "scripts": {
+    "dev": "node ../../scripts/sync-fonts.mjs && node scripts/sequence.mjs && next dev --port 3300",
+    "build": "node ../../scripts/sync-fonts.mjs && node scripts/sequence.mjs && next build",
+    "start": "next start --port 3300",
+    "typecheck": "next typegen && tsc -p tsconfig.json --noEmit",
+    "e2e": "playwright test",
+    "sheet": "node scripts/sheet.mjs",
+    "heft": "node scripts/heft.mjs"
+  },
+  "dependencies": {
+    "@quartifex/heft": "workspace:*",
+    "@quartifex/reel": "workspace:*",
+    "@quartifex/rushes": "workspace:*",
+    "@quartifex/tokens": "workspace:*",
+    "@quartifex/viewfinder": "workspace:*",
+    "next": "^16.3.7",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.63.0",
+    "@quartifex/contactsheet": "workspace:*",
+    "@types/node": "^22.20.4",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "typescript": "^7.0.2"
+  }
+}

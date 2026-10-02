@@ -1,0 +1,217 @@
+.hero {
+  position: relative;
+  height: 240vh;
+}
+
+.stage {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: var(--qx-space-6);
+  padding: calc(var(--qx-space-16) + var(--qx-space-4)) var(--qx-gutter) var(--qx-space-6);
+}
+
+@media (min-aspect-ratio: 1 / 1) and (min-width: 600px) {
+  .stage {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    grid-template-rows: minmax(0, 1fr) auto;
+    column-gap: clamp(2rem, 5vw, 6rem);
+    padding-top: calc(var(--qx-space-16) + var(--qx-space-6));
+  }
+  .copy {
+    align-self: center;
+  }
+  .steps {
+    grid-column: 1 / -1;
+  }
+}
+
+.copy {
+  display: grid;
+  gap: var(--qx-space-4);
+  align-content: start;
+  max-width: 34rem;
+}
+
+.copy > :first-child {
+  margin: 0;
+  color: var(--qx-muted);
+}
+
+.title {
+  margin: 0;
+  font-family: var(--qx-font-display);
+  font-size: clamp(1.75rem, min(1.2rem + 3.4vw, 0.5rem + 7.5vh), 4.25rem);
+  font-weight: 500;
+  line-height: var(--qx-leading-tight);
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.lede {
+  margin: 0;
+  max-width: 44ch;
+  color: var(--qx-muted);
+  text-wrap: pretty;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--qx-space-3) var(--qx-space-6);
+  align-items: center;
+  margin: var(--qx-space-2) 0 0;
+}
+
+.actions a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  text-underline-offset: 4px;
+}
+
+.actions .primary {
+  padding: 0 var(--qx-space-6);
+  border: var(--qx-line) solid var(--qx-fg);
+  border-radius: var(--qx-radius-pill);
+  text-decoration: none;
+  transition:
+    background var(--qx-duration-fast) var(--qx-ease-out),
+    color var(--qx-duration-fast) var(--qx-ease-out);
+}
+
+.actions .primary:hover {
+  background: var(--qx-fg);
+  color: var(--qx-bg);
+}
+
+.figure {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: var(--qx-space-2);
+  min-height: 0;
+  margin: 0;
+}
+
+.frame {
+  position: relative;
+  min-height: 0;
+  overflow: hidden;
+  border: var(--qx-line) solid var(--qx-hairline);
+  border-radius: var(--qx-radius-md);
+  /* The booth's own colour, so the frame is never an empty flash before the poster. */
+  background: #0d0c0b;
+}
+
+.canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.caption {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--qx-space-2) var(--qx-space-4);
+  color: var(--qx-muted);
+}
+
+.caption > span {
+  font-variant-numeric: tabular-nums;
+}
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--qx-space-4);
+  margin: 0;
+  padding: var(--qx-space-4) 0 0;
+  border-top: var(--qx-line) solid var(--qx-hairline);
+  list-style: none;
+}
+
+.steps li {
+  display: grid;
+  gap: var(--qx-space-1);
+  align-content: start;
+  color: var(--qx-muted);
+  transition: color var(--qx-duration) var(--qx-ease-out);
+}
+
+.steps li > .mono::before {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin-right: var(--qx-space-2);
+  border-radius: 50%;
+  background: var(--qx-hairline-strong);
+  vertical-align: 1px;
+  transition: background var(--qx-duration) var(--qx-ease-out);
+}
+
+.steps strong {
+  font-family: var(--qx-font-display);
+  font-size: var(--qx-text-lg);
+  font-weight: 500;
+  color: var(--qx-fg);
+}
+
+.what {
+  font-size: var(--qx-text-sm);
+}
+
+.hero[data-step="0"] li[data-index="0"],
+.hero[data-step="1"] li[data-index="1"],
+.hero[data-step="2"] li[data-index="2"] {
+  color: var(--qx-fg);
+}
+
+.hero[data-step="0"] li[data-index="0"] > .mono::before,
+.hero[data-step="1"] li[data-index="1"] > .mono::before,
+.hero[data-step="2"] li[data-index="2"] > .mono::before {
+  background: var(--qx-teal);
+}
+
+/* Small screens: the one-line explanations give way to the picture. */
+@media (max-width: 759px), (max-height: 560px) {
+  .what {
+    display: none;
+  }
+  .stage {
+    gap: var(--qx-space-4);
+  }
+}
+
+@media (max-height: 560px) {
+  .lede {
+    display: none;
+  }
+}
+
+/* Landscape phones: the picture and the headline; the steps repeat in the docs below. */
+@media (max-height: 460px) {
+  .steps {
+    display: none;
+  }
+  .stage {
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+}
+
+@media (max-height: 460px) and (min-aspect-ratio: 1 / 1) and (min-width: 600px) {
+  .stage {
+    grid-template-rows: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 759px) and (max-height: 760px) {
+  .lede {
+    display: none;
+  }
+}

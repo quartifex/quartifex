@@ -543,7 +543,7 @@
   "libs": "L01, L02, L03, L05",
   "label": "Open-source demo",
   "prompt": "P6",
-  "state": "not started",
+  "state": "built",
   "icon": "icons/svg/S03"
  },
  {
