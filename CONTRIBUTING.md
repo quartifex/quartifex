@@ -12,7 +12,7 @@ taken along the way.
 ## Brand and policy rules
 - Voice on the Quartifex sites and READMEs is "we". Studio name Quartifex; founder Nitesh.
 - Everything is showcased with an accurate label: Client Project, Personal Concept, Personal Case Study, Open-source demo, Free tool. Invented brands are labelled fictional. Rendered or generated visuals are "Concept visual" or "Illustrative", never presented as photography. Only Isha Foundation work is under NDA and must not appear.
-- Brand system for site UI: dark primary with a full light mirror, Ganga teal as the single accent, Sindoor red as a rare accent, hairlines instead of shadows, no gradients in site UI. Type: Clash Display (headings), Satoshi (body), DM Mono (metadata). Icons in `assets/icons` use light-and-depth gradients only and stay as they are.
+- Brand system for site UI: light primary with a full dark mirror (flipped from dark-primary 2 Oct 2026, see DECISIONS.md), Ganga teal as the single accent, Sindoor red as a rare accent, hairlines instead of shadows, no gradients in site UI. Type: Clash Display (headings), Satoshi (body), DM Mono (metadata). Icons in `assets/icons` use light-and-depth gradients only and stay as they are.
 - SVG and code live in git. Raster, video and client-owned models live on Cloudinary and are never committed.
 
 ## Engineering rules

@@ -27,16 +27,19 @@ const THEMED = [
 ];
 
 describe("tokens.css", () => {
-  it("defines every themed colour in the dark default", () => {
-    const dark = declared(":root {");
-    for (const name of THEMED) expect(dark.has(name), name).toBe(true);
+  it("defines every themed colour in the light default (the base :root, since 2 Oct 2026)", () => {
+    const light = declared(":root {");
+    for (const name of THEMED) expect(light.has(name), name).toBe(true);
+    expect(css.slice(css.indexOf(":root {"), css.indexOf("}"))).toMatch(/--qx-bg:\s*#f4f2ee/);
   });
 
-  it("mirrors every themed colour in light, for both the explicit and the OS-preference path", () => {
-    const explicit = declared(':root[data-theme="light"]');
+  it("mirrors every themed colour in dark, for both the explicit and the OS-preference path", () => {
+    const explicit = declared(':root[data-theme="dark"]');
     const system = declared(":root:not([data-theme])");
     expect([...explicit].sort()).toEqual([...THEMED].sort());
     expect([...system].sort()).toEqual([...THEMED].sort());
+    // The OS path applies dark only when the OS asks for it.
+    expect(css).toMatch(/@media \(prefers-color-scheme: dark\)\s*\{\s*:root:not\(\[data-theme\]\)/);
   });
 
   it("holds the brand rules: no gradients, no shadows", () => {

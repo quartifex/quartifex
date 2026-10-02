@@ -1,27 +1,28 @@
 /*
  * Quartifex brand tokens. CSS custom properties only.
  *
- * Dark is primary; light is a full mirror, not an afterthought. Ganga teal is the
+ * Light is the default (since 2 Oct 2026); dark is a full mirror. Ganga teal is the
  * single accent. Sindoor red is a rare accent: one mark per screen, dot-scale,
  * never a fill or body text. Hairlines instead of shadows. No gradients in site UI.
  *
- * Theme resolution: [data-theme] on <html> wins; without it, the OS preference.
+ * Theme resolution: [data-theme] on <html> wins; without it, the OS preference; with no
+ * OS signal (or no media query support), light.
  */
 
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 
   /* Surface and ink */
-  --qx-bg: #050505;
-  --qx-bg-raised: #0d0e0e;
-  --qx-fg: #edeae4;
-  --qx-muted: #8b8881;
-  --qx-hairline: rgb(237 234 228 / 0.14);
-  --qx-hairline-strong: rgb(237 234 228 / 0.28);
+  --qx-bg: #f4f2ee;
+  --qx-bg-raised: #ebe8e2;
+  --qx-fg: #111110;
+  --qx-muted: #6b6862;
+  --qx-hairline: rgb(17 17 16 / 0.14);
+  --qx-hairline-strong: rgb(17 17 16 / 0.3);
 
   /* Accents */
-  --qx-teal: #3fbead;
-  --qx-teal-ink: #04110f;
+  --qx-teal: #0b6f65;
+  --qx-teal-ink: #f4f2ee;
   --qx-sindoor: #c1440e;
 
   /* Type. Clash Display and Satoshi are Fontshare faces (ITF Free Font License);
@@ -69,31 +70,31 @@
   --qx-duration-slow: 700ms;
 }
 
-@media (prefers-color-scheme: light) {
+@media (prefers-color-scheme: dark) {
   :root:not([data-theme]) {
-    color-scheme: light;
-    --qx-bg: #f4f2ee;
-    --qx-bg-raised: #ebe8e2;
-    --qx-fg: #111110;
-    --qx-muted: #6b6862;
-    --qx-hairline: rgb(17 17 16 / 0.14);
-    --qx-hairline-strong: rgb(17 17 16 / 0.3);
-    --qx-teal: #0b6f65;
-    --qx-teal-ink: #f4f2ee;
+    color-scheme: dark;
+    --qx-bg: #050505;
+    --qx-bg-raised: #0d0e0e;
+    --qx-fg: #edeae4;
+    --qx-muted: #8b8881;
+    --qx-hairline: rgb(237 234 228 / 0.14);
+    --qx-hairline-strong: rgb(237 234 228 / 0.28);
+    --qx-teal: #3fbead;
+    --qx-teal-ink: #04110f;
     --qx-sindoor: #c1440e;
   }
 }
 
-:root[data-theme="light"] {
-  color-scheme: light;
-  --qx-bg: #f4f2ee;
-  --qx-bg-raised: #ebe8e2;
-  --qx-fg: #111110;
-  --qx-muted: #6b6862;
-  --qx-hairline: rgb(17 17 16 / 0.14);
-  --qx-hairline-strong: rgb(17 17 16 / 0.3);
-  --qx-teal: #0b6f65;
-  --qx-teal-ink: #f4f2ee;
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --qx-bg: #050505;
+  --qx-bg-raised: #0d0e0e;
+  --qx-fg: #edeae4;
+  --qx-muted: #8b8881;
+  --qx-hairline: rgb(237 234 228 / 0.14);
+  --qx-hairline-strong: rgb(237 234 228 / 0.28);
+  --qx-teal: #3fbead;
+  --qx-teal-ink: #04110f;
   --qx-sindoor: #c1440e;
 }
 
