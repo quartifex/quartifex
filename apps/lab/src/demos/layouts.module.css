@@ -242,3 +242,18 @@
   text-transform: uppercase;
   white-space: nowrap;
 }
+
+/* A colour sample beside its value (volumetric's light colour). */
+.swatchRow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--qx-space-2);
+}
+
+.swatch {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: var(--qx-line) solid var(--qx-hairline-strong);
+  border-radius: 50%;
+}
