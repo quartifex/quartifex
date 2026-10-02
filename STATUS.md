@@ -220,6 +220,7 @@ the existing icons' template. M5V: `volumetric` is built and `pnpm check` is gre
 | `pnpm e2e` (installed Chrome) | pass: hub 100 (incl. 4 volumetric tests and the item-page layout test for it), anyframe 8, dailies 4, heft 1, contactsheet 2 |
 | volumetric e2e `--repeat-each 2` | pass: 8 of 8 |
 | contactsheet on `/volumetric`, 36 profiles | no flags |
+| CI on GitHub | first run on `a294487` failed lint (the new contact sheet report was unformatted); Biome now ignores generated `reports/`. Pass on `b61daf1`: check job and all five Playwright suites |
 
 Deviations from the P5V brief:
 
