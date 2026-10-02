@@ -53,7 +53,7 @@ export function ItemView({ item, Demo }: { item: CatalogItem; Demo: ComponentTyp
         />
         <div className={styles.titles}>
           <p className={styles.kicker}>
-            <Link href="/" className={styles.back}>
+            <Link href={item.kind === "lab" ? "/lab" : "/"} className={styles.back}>
               {KIND_LABEL[item.kind]}
             </Link>{" "}
             / {item.id} · {SINGULAR[item.kind]}

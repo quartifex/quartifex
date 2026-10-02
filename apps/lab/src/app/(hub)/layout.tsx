@@ -26,6 +26,9 @@ export default function HubLayout({ children }: { children: ReactNode }) {
           Quartifex <span>Lab</span>
         </Link>
         <nav className={styles.nav} aria-label="Site">
+          <Link href="/lab" className={styles.navLink}>
+            Lab gallery
+          </Link>
           <a href={REPO} className={styles.repo} data-testid="repo-link">
             View on GitHub
           </a>

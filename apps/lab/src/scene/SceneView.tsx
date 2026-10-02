@@ -44,6 +44,11 @@ export type SceneViewProps = {
   copy?: boolean;
   /** Render the call to action as a real button (the bare scene page); otherwise it is a mock. */
   interactive?: boolean;
+  /**
+   * Publish the staging as data-sf-* attributes for contactsheet. Default true; off for
+   * thumbnails (the gallery's posters), which are pictures of a scene, not a staged screen.
+   */
+  report?: boolean;
 };
 
 export function SceneView({
@@ -57,6 +62,7 @@ export function SceneView({
   onFrame,
   copy = true,
   interactive = false,
+  report = true,
 }: SceneViewProps) {
   const canvas = useRef<HTMLCanvasElement>(null);
   const staged = useMemo(
@@ -83,9 +89,9 @@ export function SceneView({
     <div
       className={styles.scene}
       style={{ width, height }}
-      data-sf-subject={subjectAttribute(staged)}
-      data-sf-bucket={staged.bucket}
-      data-sf-clipped={staged.subjectClipped ? "" : undefined}
+      data-sf-subject={report ? subjectAttribute(staged) : undefined}
+      data-sf-bucket={report ? staged.bucket : undefined}
+      data-sf-clipped={report && staged.subjectClipped ? "" : undefined}
       data-testid="scene"
     >
       <canvas

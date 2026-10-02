@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { EscapeToGallery } from "@/components/EscapeToGallery";
 import { ItemView } from "@/components/ItemView";
 import { byKind, getItem } from "@/lib/catalog";
 import { seeds } from "@/seeds";
@@ -22,5 +23,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function LabSeedPage({ params }: Props) {
   const item = getItem((await params).name);
   if (item?.kind !== "lab") notFound();
-  return <ItemView item={item} Demo={seeds[item.name]} />;
+  return (
+    <>
+      <EscapeToGallery />
+      <ItemView item={item} Demo={seeds[item.name]} />
+    </>
+  );
 }

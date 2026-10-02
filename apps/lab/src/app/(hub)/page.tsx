@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Hub, type HubGroup } from "@/components/Hub";
 import { ItemCard } from "@/components/ItemCard";
 import { byKind, isBuilt, KIND_LABEL, KIND_ORDER } from "@/lib/catalog";
@@ -24,7 +25,8 @@ export default function Home() {
         <h1 className={styles.title}>Lab</h1>
         <p className={styles.lede}>
           Everything we are building in the open: libraries for scroll-driven launches, the proof
-          sites that use them, and small experiments. Each one is marked built or soon.
+          sites that use them, and small experiments. Each one is marked built or soon. The
+          experiments also have their own gallery: <Link href="/lab">the Lab</Link>.
         </p>
       </div>
       <Hub groups={groups} />

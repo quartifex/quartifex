@@ -60,9 +60,47 @@ test.describe("hub", () => {
     await expect(page.getByRole("link", { name: "Skip to content" })).toBeFocused();
     await page.keyboard.press("Tab");
     await page.keyboard.press("Tab");
+    await expect(page.getByRole("link", { name: "Lab gallery" })).toBeFocused();
+    await page.keyboard.press("Tab");
     await expect(page.getByRole("link", { name: "View on GitHub" })).toBeFocused();
     await page.keyboard.press("Tab");
     await expect(page.getByRole("button", { name: "Light theme" })).toBeFocused();
+  });
+
+  test("defaults to light without a saved choice or an OS preference, and follows a dark OS", async ({
+    page,
+  }) => {
+    const background = () =>
+      page.evaluate(() => getComputedStyle(document.documentElement).backgroundColor);
+    await page.goto("/");
+    // Chrome reports "no preference" as the machine's own setting, so the fallback is read
+    // from the stylesheet: the base :root rule (outside any media query) is the light palette.
+    const base = await page.evaluate(() => {
+      for (const sheet of Array.from(document.styleSheets)) {
+        let rules: CSSRuleList;
+        try {
+          rules = sheet.cssRules;
+        } catch {
+          continue;
+        }
+        for (const rule of Array.from(rules)) {
+          if (rule instanceof CSSStyleRule && rule.selectorText === ":root") {
+            const bg = rule.style.getPropertyValue("--qx-bg").trim();
+            if (bg) return bg;
+          }
+        }
+      }
+      return null;
+    });
+    expect(base).toBe("#f4f2ee");
+    await page.emulateMedia({ colorScheme: "light" });
+    await expect.poll(background).toBe("rgb(244, 242, 238)");
+    await expect(page.getByRole("button", { name: "Light theme" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    await page.emulateMedia({ colorScheme: "dark" });
+    await expect.poll(background).toBe("rgb(5, 5, 5)");
   });
 
   test("switches theme and remembers it", async ({ page }) => {
@@ -98,9 +136,21 @@ test.describe("hub", () => {
     expect((await page.goto("/lab/plumb"))?.status()).toBe(404);
   });
 
-  test("a built site is not linked until it is deployed", async ({ page }) => {
+  test("a built site is linked only once the catalog says it is live", async ({ page }) => {
+    const anyframe = (
+      JSON.parse(
+        readFileSync(new URL("../../../catalog/catalog.json", import.meta.url), "utf8"),
+      ) as Array<{ name: string; live?: boolean }>
+    ).find((e) => e.name === "anyframe");
     await page.goto("/anyframe");
-    await expect(page.getByText("anyframe.quartifex.com (built, not deployed yet)")).toBeVisible();
-    await expect(page.getByRole("link", { name: "anyframe.quartifex.com" })).toHaveCount(0);
+    const link = page.getByRole("link", { name: "anyframe.quartifex.com" });
+    if (anyframe?.live) {
+      await expect(link).toHaveAttribute("href", "https://anyframe.quartifex.com");
+    } else {
+      await expect(
+        page.getByText("anyframe.quartifex.com (built, not deployed yet)"),
+      ).toBeVisible();
+      await expect(link).toHaveCount(0);
+    }
   });
 });

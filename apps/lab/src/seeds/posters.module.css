@@ -1,0 +1,43 @@
+/* A 16:9 poster area; the design inside is 320 x 180, scaled to fit. */
+.poster {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: var(--qx-radius-sm);
+  background: #050505;
+}
+
+.design {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 320px;
+  height: 180px;
+  transform-origin: 0 0;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: 180px;
+}
+
+.cell {
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+}
+
+.cell > div {
+  border: 1px solid rgba(237, 234, 228, 0.28);
+}
+
+.cell span {
+  font-family: var(--font-dm-mono), var(--qx-font-mono);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  color: #8b8881;
+}

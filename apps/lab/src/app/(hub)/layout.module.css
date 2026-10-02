@@ -83,3 +83,11 @@
   display: flex;
   gap: var(--qx-space-4);
 }
+
+.navLink {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  color: var(--qx-fg);
+  text-underline-offset: 3px;
+}
