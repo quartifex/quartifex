@@ -34,11 +34,11 @@ test.describe("sleeve", () => {
     await expect(dieline).toBeVisible();
 
     // A straight jar: the die-line becomes a rectangle, as wide as the circumference.
-    await page.getByRole("slider", { name: "Top diameter" }).fill("0.6");
+    await page.getByRole("slider", { name: "Top diameter" }).fill("0.42");
     await expect(page.getByTestId("sl-shape")).toHaveText("rectangle");
-    await expect(page.getByTestId("sl-size")).toHaveText("377 x 90 mm");
+    await expect(page.getByTestId("sl-size")).toHaveText("264 x 100 mm");
     await page.getByRole("slider", { name: "Coverage" }).fill("180");
-    await expect(page.getByTestId("sl-size")).toHaveText("188 x 90 mm");
+    await expect(page.getByTestId("sl-size")).toHaveText("132 x 100 mm");
 
     // The turn is keyboard-driven too.
     const turn = page.getByRole("slider", { name: "Turn" });
@@ -58,7 +58,7 @@ test.describe("sleeve", () => {
 });
 
 test.describe("freight", () => {
-  test("optimises the careless jar, judges it, and flips the verdict when meshes are joined", async ({
+  test("optimises the careless fan, judges it, and flips the verdict when meshes are joined", async ({
     page,
   }) => {
     await page.goto("/freight");
@@ -76,15 +76,15 @@ test.describe("freight", () => {
       "1024 px, image/webp",
     );
     await expect(page.getByTestId("fr-names")).toContainText("renamed");
-    await expect(page.getByTestId("fr-tsx")).toContainText("export function Jar(");
-    await expect(page.getByTestId("fr-download")).toHaveAttribute("download", "jar.freight.glb");
+    await expect(page.getByTestId("fr-tsx")).toContainText("export function Fan(");
+    await expect(page.getByTestId("fr-download")).toHaveAttribute("download", "fan.freight.glb");
     await expect
       .poll(() => litPixels(page, '[data-demo="freight"] canvas'), { timeout: 15_000 })
       .toBeGreaterThan(200);
 
     await page.getByRole("checkbox", { name: "Join meshes that share a material" }).check();
     await expect(verdict).toHaveAttribute("data-pass", "true", { timeout: 20_000 });
-    await expect(table.locator('tr[data-metric="drawCalls"] td').nth(1)).toHaveText("2");
+    await expect(table.locator('tr[data-metric="drawCalls"] td').nth(1)).toHaveText("3");
   });
 
   test("holds the preview still under reduced motion", async ({ page }) => {

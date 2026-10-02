@@ -1,32 +1,36 @@
 "use client";
 
-// The jar scene at a given CSS size and pixel ratio: one sequence frame drawn to a
+// A code-built scene (the jar, or the watch) at a given CSS size and pixel ratio: one sequence frame drawn to a
 // canvas through safeframe's crop, with the overlay copy in the staged text zone.
 import { drawFrame, type Frame } from "@quartifex/safeframe";
 import { type ReactNode, useEffect, useMemo, useRef } from "react";
-import { ART, drawArt } from "./art";
+import { ART } from "./art";
 import styles from "./SceneView.module.css";
-import { type StagingMode, stageJar, subjectAttribute } from "./scene";
+import { PROPS, type PropName, type StagingMode, stageProp, subjectAttribute } from "./scene";
 
-let source: HTMLCanvasElement | null = null;
-let sourceT = -1;
+const buffers = new Map<PropName, { canvas: HTMLCanvasElement; t: number }>();
 
-/** One shared 1600 x 900 frame buffer: the "image sequence" frame for progress `t`. */
-function sequenceFrame(t: number): HTMLCanvasElement {
-  if (!source) {
-    source = document.createElement("canvas");
-    source.width = ART.width;
-    source.height = ART.height;
+/** One 1600 x 900 frame buffer per prop: the "image sequence" frame for progress `t`. */
+function sequenceFrame(prop: PropName, t: number): HTMLCanvasElement {
+  let buffer = buffers.get(prop);
+  if (!buffer) {
+    const canvas = document.createElement("canvas");
+    canvas.width = ART.width;
+    canvas.height = ART.height;
+    buffer = { canvas, t: -1 };
+    buffers.set(prop, buffer);
   }
-  if (t !== sourceT) {
-    const ctx = source.getContext("2d");
-    if (ctx) drawArt(ctx, ART.width, ART.height, t);
-    sourceT = t;
+  if (t !== buffer.t) {
+    const ctx = buffer.canvas.getContext("2d");
+    if (ctx) PROPS[prop].draw(ctx, ART.width, ART.height, t);
+    buffer.t = t;
   }
-  return source;
+  return buffer.canvas;
 }
 
 export type SceneViewProps = {
+  /** Which code-built sequence to stage. Default "jar". */
+  prop?: PropName;
   width: number;
   height: number;
   dpr: number;
@@ -43,6 +47,7 @@ export type SceneViewProps = {
 };
 
 export function SceneView({
+  prop = "jar",
   width,
   height,
   dpr,
@@ -54,7 +59,10 @@ export function SceneView({
   interactive = false,
 }: SceneViewProps) {
   const canvas = useRef<HTMLCanvasElement>(null);
-  const staged = useMemo(() => stageJar(mode, { width, height }), [mode, width, height]);
+  const staged = useMemo(
+    () => stageProp(prop, mode, { width, height }),
+    [prop, mode, width, height],
+  );
 
   useEffect(() => {
     onFrame?.(staged);
@@ -66,8 +74,8 @@ export function SceneView({
     if (!el || !ctx) return;
     // Snap to a real frame of the sequence, as an image-sequence player would.
     const t = Math.round(progress * (ART.frames - 1)) / (ART.frames - 1);
-    drawFrame(ctx, sequenceFrame(t), staged, dpr);
-  }, [staged, progress, dpr]);
+    drawFrame(ctx, sequenceFrame(prop, t), staged, dpr);
+  }, [prop, staged, progress, dpr]);
 
   const text = staged.text;
   const naive = mode === "center";
@@ -93,7 +101,7 @@ export function SceneView({
           style={{ left: text.x, top: text.y, width: text.width, height: text.height }}
         >
           <p className={styles.kicker}>Concept visual</p>
-          <h2 className={styles.title}>A jar, staged for every screen.</h2>
+          <h2 className={styles.title}>{PROPS[prop].title}</h2>
           <p className={styles.body}>The subject stays whole and the copy stays clear.</p>
           {interactive ? (
             <button

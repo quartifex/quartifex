@@ -53,7 +53,7 @@ test.describe("dolly", () => {
 });
 
 test.describe("anatomy", () => {
-  test("explodes the jar and lists labels as parts come apart", async ({ page }) => {
+  test("explodes the pen and lists labels as parts come apart", async ({ page }) => {
     await page.goto("/anatomy");
     await expect
       .poll(() => litPixels(page, '[data-demo="anatomy"] canvas'), { timeout: 15_000 })
@@ -61,9 +61,9 @@ test.describe("anatomy", () => {
     await page.getByRole("button", { name: "Assembled" }).click();
     await expect(page.getByTestId("an-visible")).toHaveText("0");
     await page.getByRole("button", { name: "Exploded" }).click();
-    await expect(page.getByTestId("an-visible")).toHaveText("5");
-    await expect(page.getByTestId("an-list")).toContainText("Label band");
-    await expect(page.locator("[data-anatomy-label]")).toHaveCount(5);
+    await expect(page.getByTestId("an-visible")).toHaveText("6");
+    await expect(page.getByTestId("an-list")).toContainText("Nib");
+    await expect(page.locator("[data-anatomy-label]")).toHaveCount(6);
   });
 
   test("turns Play off under reduced motion", async ({ page }) => {
@@ -159,6 +159,12 @@ test.describe("viewfinder", () => {
   }) => {
     await page.goto("/viewfinder");
     const panel = page.getByRole("region", { name: "Viewfinder", exact: true });
+    // Closed on arrival (it would cover the page's links); it opens as the scene comes up.
+    await expect(page.getByTestId("item-source")).toBeInViewport();
+    await expect(page.getByRole("button", { name: /Show viewfinder/ })).toBeVisible({
+      timeout: 10_000,
+    });
+    await page.mouse.wheel(0, 500);
     await expect(panel).toBeVisible({ timeout: 10_000 });
     await expect(panel.locator("[data-vf-chapter]")).toHaveCount(3);
     await expect(panel.locator('[data-vf-scene="jar sequence"]')).toBeVisible();
@@ -171,8 +177,13 @@ test.describe("viewfinder", () => {
     });
 
     await page.getByRole("button", { name: "Record a scroll" }).click();
-    await page.mouse.wheel(0, -600);
-    await page.waitForTimeout(400);
+    // Wheel over the page, not over the overlay's own scrolling panel.
+    // A headless wheel jumps instantly, so scroll in steps to give the path some shape.
+    await page.mouse.move(400, 500);
+    for (const dy of [200, 200, 200, 200]) {
+      await page.mouse.wheel(0, dy);
+      await page.waitForTimeout(200);
+    }
     await page.getByRole("button", { name: "Stop recording" }).click();
     expect(Number(await page.getByTestId("vf-samples").textContent())).toBeGreaterThan(2);
 

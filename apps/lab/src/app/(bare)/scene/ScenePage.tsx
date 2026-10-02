@@ -9,6 +9,7 @@ export function ScenePage() {
   const params = useSearchParams();
   const viewport = usePlumb();
   const mode = params.get("mode") === "center" ? "center" : "safeframe";
+  const prop = params.get("prop") === "watch" ? "watch" : "jar";
   const t = Number(params.get("t") ?? 0.1);
   const dprParam = Number(params.get("dpr"));
 
@@ -17,6 +18,7 @@ export function ScenePage() {
       <section data-chapter="hero" className={styles.hero}>
         {viewport && (
           <SceneView
+            prop={prop}
             width={viewport.width}
             height={viewport.height}
             dpr={dprParam > 0 ? dprParam : viewport.dpr}
@@ -30,8 +32,8 @@ export function ScenePage() {
         <p className={styles.kicker}>Concept visual · invented product</p>
         <h1>Specs</h1>
         <p>
-          A procedural test scene. The jar, its label and the floor are drawn in code; nothing here
-          is a real product.
+          A procedural test scene. The {prop} and its ground are drawn in code; nothing here is a
+          real product.
         </p>
         <a href="/safeframe" className={styles.link}>
           How it is staged

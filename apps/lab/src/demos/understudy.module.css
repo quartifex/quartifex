@@ -1,0 +1,60 @@
+/* The fallback ladder, with the governor's current rung and step marked. */
+.rungs,
+.steps {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rungs {
+  border-top: var(--qx-line) solid var(--qx-hairline);
+}
+
+.rungs > li {
+  display: grid;
+  gap: var(--qx-space-2);
+  padding: var(--qx-space-3) 0 var(--qx-space-3) var(--qx-space-3);
+  border-bottom: var(--qx-line) solid var(--qx-hairline);
+  border-left: 2px solid transparent;
+  color: var(--qx-muted);
+}
+
+.rungs > li[aria-current] {
+  border-left-color: var(--qx-teal);
+  color: var(--qx-fg);
+}
+
+.rung {
+  font-family: var(--qx-font-display);
+  font-size: var(--qx-text-lg);
+  font-weight: 500;
+}
+
+.hint,
+.steps {
+  font-family: var(--font-dm-mono), var(--qx-font-mono);
+  font-size: var(--qx-text-xs);
+  letter-spacing: var(--qx-tracking-label);
+  text-transform: uppercase;
+  color: var(--qx-muted);
+}
+
+.steps li {
+  padding: 2px 0 2px var(--qx-space-3);
+}
+
+.steps li[aria-current] {
+  color: var(--qx-fg);
+}
+
+.steps li[aria-current]::before {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin: 0 0.6em 0 -0.9em;
+  border-radius: 50%;
+  background: var(--qx-teal);
+  vertical-align: middle;
+}

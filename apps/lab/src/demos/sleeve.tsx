@@ -1,6 +1,6 @@
 "use client";
 
-// Hub demo for @quartifex/sleeve, shown on /sleeve. A jar for a fictional oat brand with a
+// Hub demo for @quartifex/sleeve, shown on /sleeve. A bottle for a fictional olive oil with a
 // wrap-around label: coverage, seam, taper, mapping, art drawn on the die-line or as a
 // plain rectangle, finish, spot varnish and a foil sticker. The flat label (the die-line
 // with the art in it) sits beside the canvas, so nothing depends on seeing the 3D.
@@ -17,8 +17,7 @@ import { Sleeve } from "@quartifex/sleeve/react";
 import type { SleeveDecal, SleeveLayer } from "@quartifex/sleeve/three";
 import { Canvas, useThree } from "@react-three/fiber";
 import { type ReactNode, useEffect, useMemo, useRef, useState } from "react";
-import { CanvasTexture, type Group, LatheGeometry, PMREMGenerator, Vector2 } from "three";
-import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
+import { CanvasTexture, type Group, LatheGeometry, Vector2 } from "three";
 import {
   Button,
   Code,
@@ -31,15 +30,19 @@ import {
   Toggle,
   useReducedMotion,
 } from "@/components/demo/kit";
+import { Studio } from "@/scene/Studio";
 import shared from "./demos.module.css";
+import layouts from "./layouts.module.css";
 import styles from "./sequence.module.css";
 
 const INK = "#141414";
 const PAPER = "#efece4";
-const TEAL = "#0b6f65";
+const OLIVE = "#55602b";
 const SINDOOR = "#c1440e";
-// Scene units to print units: the jar is 120 mm across.
+// Scene units to print units: the bottle is 84 mm across.
 const MM = 100;
+/** Radius of the bottle at the bottom of the label. */
+const RADIUS = 0.42;
 
 const MAPPINGS = [
   { value: "developed", label: "Developed", hint: "UVs follow the flat die-cut" },
@@ -66,10 +69,10 @@ function drawArt(ctx: CanvasRenderingContext2D, w: number, h: number, mask = fal
     // Spot varnish over the wordmark only.
     ctx.fillStyle = "#fff";
     ctx.font = `600 ${h * 0.28}px system-ui, sans-serif`;
-    ctx.fillText("NORTHFIELD", cx, h * 0.42);
+    ctx.fillText("MORROW", cx, h * 0.42);
     return;
   }
-  ctx.fillStyle = TEAL;
+  ctx.fillStyle = OLIVE;
   ctx.fillRect(0, h * 0.74, w, h * 0.08);
   ctx.strokeStyle = INK;
   ctx.lineWidth = Math.max(1, h * 0.004);
@@ -81,9 +84,9 @@ function drawArt(ctx: CanvasRenderingContext2D, w: number, h: number, mask = fal
   }
   ctx.fillStyle = INK;
   ctx.font = `600 ${h * 0.28}px system-ui, sans-serif`;
-  ctx.fillText("NORTHFIELD", cx, h * 0.42);
+  ctx.fillText("MORROW", cx, h * 0.42);
   ctx.font = `${h * 0.07}px ui-monospace, monospace`;
-  ctx.fillText("OAT & WHEY · 500 G · FICTIONAL BRAND", cx, h * 0.64);
+  ctx.fillText("COLD-PRESSED OLIVE OIL · 500 ML · FICTIONAL BRAND", cx, h * 0.64);
   ctx.fillStyle = SINDOOR;
   ctx.beginPath();
   ctx.arc(cx + h * 1.02, h * 0.3, h * 0.025, 0, Math.PI * 2);
@@ -92,7 +95,7 @@ function drawArt(ctx: CanvasRenderingContext2D, w: number, h: number, mask = fal
   ctx.fillStyle = INK;
   ctx.textAlign = "left";
   ctx.font = `${h * 0.05}px ui-monospace, monospace`;
-  ["INGREDIENTS", "Rolled oats 62%", "Whey 30%", "Cocoa 8%"].forEach((line, i) => {
+  ["HARVEST 2026", "Koroneiki 70%", "Arbequina 30%", "Acidity < 0.3%"].forEach((line, i) => {
     ctx.fillText(line, w * 0.06, h * (0.22 + i * 0.1));
   });
   let x = w * 0.84;
@@ -158,7 +161,7 @@ function canvas(width: number, height: number) {
 /** The print (and its varnish mask) as canvases at the right aspect for the chosen mapping and art. */
 function labelCanvases(band: Band, options: SleeveOptions, art: "dieline" | "rectangle") {
   const textureWidth = 2048;
-  // The art as designed for a straight jar: average circumference by slant height.
+  // The art as designed for a straight bottle: average circumference by slant height.
   const plain = labelAspect(band, { ...options, mapping: "stretch" });
   // UVs run 0 to 1 whatever the canvas size, so each art simply fills the texture: plain
   // art fills the die-line's box (developed) or the band (stretch); die-line art is the
@@ -188,9 +191,9 @@ function stickerTexture() {
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.font = "600 64px system-ui, sans-serif";
-    ctx.fillText("NEW", 128, 116);
+    ctx.fillText("FIRST", 128, 116);
     ctx.font = "22px ui-monospace, monospace";
-    ctx.fillText("RECIPE", 128, 170);
+    ctx.fillText("HARVEST", 128, 170);
   }
   const mask = canvas(256, 256);
   const m = mask.getContext("2d");
@@ -209,7 +212,7 @@ const NOTES: Record<string, string> = {
   "developed:dieline":
     "What the printed label looks like: art laid out on the die-line lands straight and undistorted on the taper.",
   "developed:rectangle":
-    "A rectangle printed for a straight jar, wrapped on a taper: the text arcs and the corners are cut off by the die-line.",
+    "A rectangle printed for a straight bottle, wrapped on a taper: the text arcs and the corners are cut off by the die-line.",
   "stretch:rectangle":
     "A plain stretch looks tidy, but no flat label can do this: letters squeeze toward the narrow end, so the render misleads about the print.",
   "stretch:dieline": "Die-line art stretched as a rectangle: wrong both ways.",
@@ -218,7 +221,7 @@ const NOTES: Record<string, string> = {
 export default function Demo() {
   const [coverage, setCoverage] = useState(360);
   const [seam, setSeam] = useState(180);
-  const [top, setTop] = useState(0.5);
+  const [top, setTop] = useState(0.36);
   const [mapping, setMapping] = useState<Mapping>("developed");
   const [art, setArt] = useState<"dieline" | "rectangle">("dieline");
   const [finish, setFinish] = useState<Finish>("satin");
@@ -229,7 +232,10 @@ export default function Demo() {
   const [reduced, setReduced] = useReducedMotion();
   const [flat, setFlat] = useState<string | null>(null);
 
-  const band: Band = useMemo(() => ({ radius: 0.6, radiusTop: top, height: 0.9, y: 0.25 }), [top]);
+  const band: Band = useMemo(
+    () => ({ radius: RADIUS, radiusTop: top, height: 1.0, y: 0.15 }),
+    [top],
+  );
   const options: SleeveOptions = useMemo(
     () => ({ coverage, seam, mapping }),
     [coverage, seam, mapping],
@@ -261,10 +267,10 @@ export default function Demo() {
       sticker && stickerTex
         ? [
             {
-              at: 38,
-              y: 0.95,
-              width: 0.26,
-              height: 0.26,
+              at: 34,
+              y: 0.85,
+              width: 0.22,
+              height: 0.22,
               layers: [{ map: stickerTex.print, mask: stickerTex.mask, finish: "foil" }],
             },
           ]
@@ -272,7 +278,7 @@ export default function Demo() {
     [sticker, stickerTex],
   );
 
-  // Play turns the jar. Off under reduced motion: the slider turns it in steps you control.
+  // Play turns the bottle. Off under reduced motion: the slider turns it in steps you control.
   useEffect(() => {
     if (!playing || reduced) return;
     let raf = 0;
@@ -288,101 +294,40 @@ export default function Demo() {
 
   const die = dieline(band, options);
   const shownDie = dieline(band, { ...options, mapping: "developed" });
-  const straight = Math.abs(top - 0.6) < 0.005;
+  const straight = Math.abs(top - RADIUS) < 0.005;
   const note = straight
-    ? "On a straight jar both mappings agree: the die-line is a rectangle."
+    ? "On a straight bottle both mappings agree: the die-line is a rectangle."
     : NOTES[`${mapping}:${art}`];
 
   return (
     <div className={shared.demo} data-demo="sleeve">
-      <div className={shared.split}>
+      <div className={layouts.lead}>
         <div>
-          <div className={styles.stage} style={{ aspectRatio: "4 / 3", height: "auto" }}>
+          <div className={styles.stage} style={{ height: "min(64vh, 40rem)" }}>
             <Canvas
               gl={{ preserveDrawingBuffer: true }}
               dpr={[1, 2]}
-              camera={{ fov: 30, position: [0, 1.3, 5.2] }}
+              camera={{ fov: 30, position: [0, 1.6, 6.6] }}
               aria-hidden="true"
             >
-              <color attach="background" args={["#050505"]} />
+              <color attach="background" args={["#0b0a08"]} />
               <Studio />
               <ambientLight intensity={0.15} />
               <directionalLight position={[3, 4, 5]} intensity={1.6} />
-              <directionalLight position={[-4, 2, -2]} intensity={0.8} color="#3fbead" />
+              <directionalLight position={[-4, 2, -2]} intensity={0.9} color="#ffd9a8" />
               <LookAt />
-              <Jar band={band} turn={turn}>
+              <Bottle band={band} turn={turn}>
                 {layers.length > 0 && (
                   <Sleeve band={band} layers={layers} decals={decals} {...options} />
                 )}
-              </Jar>
+              </Bottle>
             </Canvas>
           </div>
           <p className={shared.caption}>
-            Concept visual. Northfield is a fictional brand, drawn in code for this demo.
+            Concept visual. Morrow is a fictional brand, drawn in code for this demo.
           </p>
         </div>
         <div className={shared.side}>
-          <Controls label="Label">
-            <Slider
-              label="Coverage"
-              value={coverage}
-              min={60}
-              max={370}
-              step={5}
-              onChange={setCoverage}
-              format={(v) => `${v}°`}
-            />
-            <Slider
-              label="Seam"
-              value={seam}
-              min={0}
-              max={355}
-              step={5}
-              onChange={setSeam}
-              format={(v) => `${v}°`}
-            />
-            <Slider
-              label="Top diameter"
-              value={top}
-              min={0.42}
-              max={0.78}
-              step={0.02}
-              onChange={setTop}
-              format={(v) => `${Math.round(v * 2 * MM)} mm`}
-            />
-            <Segmented legend="Mapping" value={mapping} choices={MAPPINGS} onChange={setMapping} />
-            <Segmented legend="Art" value={art} choices={ARTS} onChange={setArt} />
-            <Segmented
-              legend="Finish"
-              value={finish}
-              choices={FINISH_CHOICES}
-              onChange={setFinish}
-            />
-            <Toggle label="Spot varnish on the wordmark" checked={varnish} onChange={setVarnish} />
-            <Toggle label="Foil sticker" checked={sticker} onChange={setSticker} />
-          </Controls>
-          <Controls label="View">
-            <Slider
-              label="Turn"
-              value={Math.round(turn)}
-              min={0}
-              max={359}
-              step={1}
-              onChange={(v) => {
-                setPlaying(false);
-                setTurn(v);
-              }}
-              format={(v) => `${v}°`}
-            />
-            <Button
-              onClick={() => setPlaying((p) => !p)}
-              disabled={reduced}
-              pressed={playing && !reduced}
-            >
-              {playing && !reduced ? "Pause" : "Play"}
-            </Button>
-            <ReducedMotionToggle value={reduced} onChange={setReduced} />
-          </Controls>
           <Readout
             label="Die-line"
             rows={[
@@ -435,38 +380,101 @@ export default function Demo() {
             </figcaption>
           </figure>
           <Note>{note}</Note>
-          {reduced && <Note>Reduced motion is on: Play is off. Turn the jar with the slider.</Note>}
+          {reduced && (
+            <Note>Reduced motion is on: Play is off. Turn the bottle with the slider.</Note>
+          )}
         </div>
       </div>
+      <div className={layouts.controlGrid}>
+        <Controls label="Label">
+          <Slider
+            label="Coverage"
+            value={coverage}
+            min={60}
+            max={370}
+            step={5}
+            onChange={setCoverage}
+            format={(v) => `${v}°`}
+          />
+          <Slider
+            label="Seam"
+            value={seam}
+            min={0}
+            max={355}
+            step={5}
+            onChange={setSeam}
+            format={(v) => `${v}°`}
+          />
+          <Slider
+            label="Top diameter"
+            value={top}
+            min={0.3}
+            max={0.54}
+            step={0.02}
+            onChange={setTop}
+            format={(v) => `${Math.round(v * 2 * MM)} mm`}
+          />
+          <Segmented legend="Mapping" value={mapping} choices={MAPPINGS} onChange={setMapping} />
+          <Segmented legend="Art" value={art} choices={ARTS} onChange={setArt} />
+          <Segmented legend="Finish" value={finish} choices={FINISH_CHOICES} onChange={setFinish} />
+          <Toggle label="Spot varnish on the wordmark" checked={varnish} onChange={setVarnish} />
+          <Toggle label="Foil sticker" checked={sticker} onChange={setSticker} />
+        </Controls>
+        <Controls label="View">
+          <Slider
+            label="Turn"
+            value={Math.round(turn)}
+            min={0}
+            max={359}
+            step={1}
+            onChange={(v) => {
+              setPlaying(false);
+              setTurn(v);
+            }}
+            format={(v) => `${v}°`}
+          />
+          <Button
+            onClick={() => setPlaying((p) => !p)}
+            disabled={reduced}
+            pressed={playing && !reduced}
+          >
+            {playing && !reduced ? "Pause" : "Play"}
+          </Button>
+          <ReducedMotionToggle value={reduced} onChange={setReduced} />
+        </Controls>
+      </div>
       <Code>{`<Sleeve
-  band={{ radius: 0.6, radiusTop: 0.5, height: 0.9, y: 0.25 }}
+  band={{ radius: 0.42, radiusTop: 0.36, height: 1, y: 0.15 }}
   coverage={360} seam={180} mapping="developed"
   layers={[{ map: print, finish: "satin" }, { mask: wordmark, finish: "varnish" }]}
-  decals={[{ at: 38, y: 0.95, width: 0.26, height: 0.26, layers: [{ map: sticker, mask: round, finish: "foil" }] }]}
+  decals={[{ at: 34, y: 0.9, width: 0.22, height: 0.22, layers: [{ map: sticker, mask: round, finish: "foil" }] }]}
 />
 // Author the print on dielineSvg(band) at labelAspect(band): it lands undistorted.`}</Code>
     </div>
   );
 }
 
-/** The vessel: a lathe-turned jar whose label band matches `band`, and a lid. */
-function Jar({ band, turn, children }: { band: Band; turn: number; children: ReactNode }) {
+/** The vessel: a lathe-turned amber bottle whose label band matches `band`, with a neck and cap. */
+function Bottle({ band, turn, children }: { band: Band; turn: number; children: ReactNode }) {
   const group = useRef<Group>(null);
   const r1 = band.radiusTop ?? band.radius;
   const top = (band.y ?? 0) + band.height;
+  const neck = 0.12;
   const body = useMemo(
     () =>
       new LatheGeometry(
         [
           new Vector2(0, 0),
           new Vector2(band.radius - 0.03, 0),
-          new Vector2(band.radius, 0.04),
+          new Vector2(band.radius, 0.03),
           new Vector2(band.radius, band.y ?? 0),
           new Vector2(r1, top),
-          new Vector2(r1, top + 0.08),
-          new Vector2(r1 * 0.86, top + 0.16),
-          new Vector2(r1 * 0.86, top + 0.2),
-          new Vector2(0, top + 0.2),
+          new Vector2(r1, top + 0.06),
+          new Vector2(r1 * 0.8, top + 0.28),
+          new Vector2(neck * 1.4, top + 0.5),
+          new Vector2(neck, top + 0.62),
+          new Vector2(neck, top + 0.92),
+          new Vector2(0, top + 0.92),
         ],
         96,
       ),
@@ -476,41 +484,26 @@ function Jar({ band, turn, children }: { band: Band; turn: number; children: Rea
   return (
     <group ref={group} rotation={[0, (-turn * Math.PI) / 180, 0]}>
       <mesh geometry={body}>
-        <meshPhysicalMaterial color="#0d0e0e" roughness={0.35} clearcoat={0.6} />
+        <meshPhysicalMaterial
+          color="#2a1405"
+          roughness={0.12}
+          clearcoat={1}
+          clearcoatRoughness={0.05}
+        />
       </mesh>
-      <mesh position={[0, top + 0.31, 0]}>
-        <cylinderGeometry args={[r1 * 0.92, r1 * 0.92, 0.22, 96]} />
-        <meshPhysicalMaterial color="#1b1c1c" roughness={0.6} />
+      <mesh position={[0, top + 1.02, 0]}>
+        <cylinderGeometry args={[neck * 1.12, neck * 1.12, 0.22, 64]} />
+        <meshPhysicalMaterial color="#c9a45c" metalness={1} roughness={0.3} />
       </mesh>
       {children}
     </group>
   );
 }
 
-/** Reflections for gloss, varnish and foil: three's room environment, built locally (no download). */
-function Studio() {
-  const gl = useThree((s) => s.gl);
-  const scene = useThree((s) => s.scene);
-  useEffect(() => {
-    const pmrem = new PMREMGenerator(gl);
-    const room = new RoomEnvironment();
-    const env = pmrem.fromScene(room, 0.04).texture;
-    scene.environment = env;
-    scene.environmentIntensity = 0.5;
-    return () => {
-      scene.environment = null;
-      env.dispose();
-      room.dispose();
-      pmrem.dispose();
-    };
-  }, [gl, scene]);
-  return null;
-}
-
 function LookAt() {
   const camera = useThree((s) => s.camera);
   useEffect(() => {
-    camera.lookAt(0, 0.75, 0);
+    camera.lookAt(0, 1.15, 0);
   }, [camera]);
   return null;
 }

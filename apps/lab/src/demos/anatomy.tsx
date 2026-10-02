@@ -1,13 +1,13 @@
 "use client";
 
-// Hub demo for @quartifex/anatomy, shown on /anatomy. The jar explodes into its five parts
-// as you scrub; labels appear once each part is apart, and the same labels are listed
-// beside the canvas so nothing depends on seeing the 3D.
+// Hub demo for @quartifex/anatomy, shown on /anatomy. A fountain pen exploding along its
+// own axis into six parts: the cap comes off first, then the nib, section, converter, barrel
+// and end cap spread out. Labels appear once each part is clear, and the same labels are
+// listed beside the stage so nothing depends on seeing the 3D. The stage takes the width.
 import type { Exploded } from "@quartifex/anatomy";
 import { Anatomy } from "@quartifex/anatomy/react";
 import { Canvas, useThree } from "@react-three/fiber";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Screen, useDevice } from "@/components/demo/DeviceStage";
 import {
   Button,
   Code,
@@ -19,20 +19,22 @@ import {
   Slider,
   useReducedMotion,
 } from "@/components/demo/kit";
-import { Jar3D, Stage } from "@/scene/Jar3D";
+import { Pen3D, PenStage } from "@/scene/props/Pen3D";
+import { Studio } from "@/scene/Studio";
 import shared from "./demos.module.css";
+import layouts from "./layouts.module.css";
 import styles from "./sequence.module.css";
 
 const MODES = [
-  { value: "axis", label: "Along an axis" },
+  { value: "axis", label: "Along the pen" },
   { value: "radial", label: "Radial" },
 ] as const;
+const PARTS = 6;
 
 export default function Demo() {
-  const { device, controls } = useDevice("laptop", 2);
   const [progress, setProgress] = useState(0.6);
   const [mode, setMode] = useState<"axis" | "radial">("axis");
-  const [distance, setDistance] = useState(1.6);
+  const [distance, setDistance] = useState(1.1);
   const [stagger, setStagger] = useState(0.5);
   const [playing, setPlaying] = useState(false);
   const [reduced, setReduced] = useReducedMotion();
@@ -58,79 +60,34 @@ export default function Demo() {
   const visible = labels.filter((l) => l.visible);
   return (
     <div className={shared.demo} data-demo="anatomy">
-      <Controls label="Screen">{controls}</Controls>
-      <div className={shared.split}>
-        <Screen device={device} label="An exploded view of a jar">
-          <div className={styles.stage}>
-            <Canvas
-              resize={{ offsetSize: true }}
-              gl={{ preserveDrawingBuffer: true }}
-              dpr={device.dpr}
-              camera={{ fov: 34, position: [4.5, 3.2, 6.5] }}
-              aria-hidden="true"
+      <div className={layouts.lead}>
+        <div className={layouts.stage3d} role="img" aria-label="An exploded view of a fountain pen">
+          <Canvas
+            gl={{ preserveDrawingBuffer: true }}
+            dpr={[1, 2]}
+            camera={{ fov: 30, position: [0.4, 3.4, 9.6] }}
+            aria-hidden="true"
+          >
+            <Studio intensity={0.6} />
+            <PenStage />
+            <LookAt />
+            <Anatomy
+              progress={() => ref.current}
+              mode={mode}
+              axis={[1, 0, 0]}
+              distance={distance}
+              stagger={stagger}
+              onAnnotations={onAnnotations}
             >
-              <Stage />
-              <LookAt />
-              <Anatomy
-                progress={() => ref.current}
-                mode={mode}
-                distance={distance}
-                stagger={stagger}
-                onAnnotations={onAnnotations}
-              >
-                <Jar3D />
-              </Anatomy>
-            </Canvas>
-          </div>
-        </Screen>
+              <Pen3D />
+            </Anatomy>
+          </Canvas>
+        </div>
         <div className={shared.side}>
-          <Controls label="Explosion">
-            <Slider
-              label="Explode"
-              value={progress}
-              min={0}
-              max={1}
-              step={0.01}
-              onChange={(v) => {
-                setPlaying(false);
-                setProgress(v);
-              }}
-              format={(v) => `${Math.round(v * 100)}%`}
-            />
-            <div className={styles.chapterButtons}>
-              <Button onClick={() => setProgress(0)}>Assembled</Button>
-              <Button onClick={() => setProgress(1)}>Exploded</Button>
-              <Button
-                onClick={() => setPlaying((p) => !p)}
-                disabled={reduced}
-                pressed={playing && !reduced}
-              >
-                {playing && !reduced ? "Pause" : "Play"}
-              </Button>
-            </div>
-            <Segmented legend="Direction" value={mode} choices={MODES} onChange={setMode} />
-            <Slider
-              label="Distance"
-              value={distance}
-              min={0.5}
-              max={3}
-              step={0.1}
-              onChange={setDistance}
-            />
-            <Slider
-              label="Stagger"
-              value={stagger}
-              min={0}
-              max={1}
-              step={0.05}
-              onChange={setStagger}
-            />
-            <ReducedMotionToggle value={reduced} onChange={setReduced} />
-          </Controls>
           <Readout
             label="Parts"
             rows={[
-              ["Parts", 5],
+              ["Parts", PARTS],
               ["Labels showing", visible.length, "an-visible"],
             ]}
           />
@@ -148,22 +105,69 @@ export default function Demo() {
           <Note>
             {reduced
               ? "Reduced motion is on: Play is off. The slider and the two buttons move the parts in steps you control."
-              : "Parts separate one after another, outer parts first; each label appears once its part is clear."}
+              : "The cap comes off first, then the rest spread along the pen; each label appears once its part is clear. Concept visual: a pen built in code."}
           </Note>
         </div>
       </div>
-      <Code>{`<Anatomy progress={() => scrollProgress} mode="axis" distance={1.6} stagger={0.5}>
+      <div className={layouts.controlGrid}>
+        <Controls label="Explosion">
+          <Slider
+            label="Explode"
+            value={progress}
+            min={0}
+            max={1}
+            step={0.01}
+            onChange={(v) => {
+              setPlaying(false);
+              setProgress(v);
+            }}
+            format={(v) => `${Math.round(v * 100)}%`}
+          />
+          <div className={styles.chapterButtons}>
+            <Button onClick={() => setProgress(0)}>Assembled</Button>
+            <Button onClick={() => setProgress(1)}>Exploded</Button>
+            <Button
+              onClick={() => setPlaying((p) => !p)}
+              disabled={reduced}
+              pressed={playing && !reduced}
+            >
+              {playing && !reduced ? "Pause" : "Play"}
+            </Button>
+          </div>
+        </Controls>
+        <Controls label="Direction">
+          <Segmented legend="Direction" value={mode} choices={MODES} onChange={setMode} />
+          <Slider
+            label="Distance"
+            value={distance}
+            min={0.5}
+            max={3}
+            step={0.1}
+            onChange={setDistance}
+          />
+          <Slider
+            label="Stagger"
+            value={stagger}
+            min={0}
+            max={1}
+            step={0.05}
+            onChange={setStagger}
+          />
+          <ReducedMotionToggle value={reduced} onChange={setReduced} />
+        </Controls>
+      </div>
+      <Code>{`<Anatomy progress={() => scrollProgress} mode="axis" axis={[1, 0, 0]} distance={1.4} stagger={0.5}>
   <primitive object={gltf.scene} />  {/* children named, labels in userData.label */}
 </Anatomy>`}</Code>
     </div>
   );
 }
 
-/** Aim the default camera at the middle of the jar. */
+/** Aim the default camera at the middle of the pen. */
 function LookAt() {
   const camera = useThree((s) => s.camera);
   useEffect(() => {
-    camera.lookAt(0, 1.4, 0);
+    camera.lookAt(0, 0.6, 0);
   }, [camera]);
   return null;
 }

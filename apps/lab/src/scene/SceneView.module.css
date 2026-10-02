@@ -13,13 +13,16 @@
   height: 100%;
 }
 
+/* The copy is sized by its zone's width and height (container query units), so it always
+   fits the zone safeframe chose and can never spill onto the subject. */
 .copy {
   position: absolute;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 0.5em;
-  container-type: inline-size;
+  gap: min(0.5em, 4cqh);
+  container-type: size;
+  overflow: hidden;
   font-family: var(--qx-font-body);
 }
 
@@ -35,7 +38,7 @@
 .title {
   margin: 0;
   font-family: var(--qx-font-display);
-  font-size: clamp(20px, 9cqi, 72px);
+  font-size: clamp(14px, min(9cqi, 22cqh), 72px);
   font-weight: 500;
   line-height: 0.98;
   letter-spacing: -0.02em;
@@ -44,7 +47,7 @@
 .body {
   margin: 0;
   max-width: 34ch;
-  font-size: clamp(13px, 3.6cqi, 20px);
+  font-size: clamp(11px, min(3.6cqi, 8cqh), 20px);
   line-height: 1.4;
   color: #b9b6b0;
 }
@@ -71,4 +74,15 @@
   padding: 0;
   justify-content: center;
   font-size: 12px;
+}
+
+/* Short zones (a band above or below the subject): title and button only. */
+@container (max-height: 150px) {
+  .kicker,
+  .body {
+    display: none;
+  }
+  .cta {
+    min-height: 32px;
+  }
 }

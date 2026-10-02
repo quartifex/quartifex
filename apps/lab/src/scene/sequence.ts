@@ -7,31 +7,37 @@ import { type Manifest, parseManifest } from "@quartifex/rushes/manifest";
 import { useEffect, useState } from "react";
 
 export const SEQUENCE_URL = "/sequences/jar/";
+/** The understudy demo's gyroscope, pre-rendered (scripts/gyro.mjs). */
+export const GYRO_SEQUENCE_URL = "/sequences/gyro/";
 
-let cache: Promise<{ manifest: Manifest; report: Report }> | null = null;
+const cache = new Map<string, Promise<{ manifest: Manifest; report: Report }>>();
 
-function load() {
-  cache ??= Promise.all([
-    fetch(`${SEQUENCE_URL}manifest.json`).then((r) => r.json()),
-    fetch(`${SEQUENCE_URL}report.json`).then((r) => r.json()),
-  ]).then(([manifest, report]) => ({
-    manifest: parseManifest(manifest),
-    report: report as Report,
-  }));
-  return cache;
+function load(url: string) {
+  let entry = cache.get(url);
+  if (!entry) {
+    entry = Promise.all([
+      fetch(`${url}manifest.json`).then((r) => r.json()),
+      fetch(`${url}report.json`).then((r) => r.json()),
+    ]).then(([manifest, report]) => ({
+      manifest: parseManifest(manifest),
+      report: report as Report,
+    }));
+    cache.set(url, entry);
+  }
+  return entry;
 }
 
-export function useSequence(): { manifest: Manifest; report: Report } | null {
+export function useSequence(url = SEQUENCE_URL): { manifest: Manifest; report: Report } | null {
   const [data, setData] = useState<{ manifest: Manifest; report: Report } | null>(null);
   useEffect(() => {
     let live = true;
-    load().then((d) => {
+    load(url).then((d) => {
       if (live) setData(d);
     });
     return () => {
       live = false;
     };
-  }, []);
+  }, [url]);
   return data;
 }
 

@@ -1,11 +1,11 @@
 "use client";
 
-// Hub demo for @quartifex/understudy, shown on /understudy. The jar in WebGL with shadows,
+// Hub demo for @quartifex/understudy, shown on /understudy. A gyroscope in WebGL with shadows,
 // a vignette pass and a particle ring, governed by understudy: slow frames (measured, or
 // simulated with the slider) step quality down, a lost context or the bottom of the ladder
 // hands off to the image sequence through reel, reduced motion goes to the poster. Every
 // change is written to a log, so nothing depends on watching the scene.
-import type { Environment, State, Understudy } from "@quartifex/understudy";
+import { defaultSteps, type Environment, type State, type Understudy } from "@quartifex/understudy";
 import { Governor, useQuality } from "@quartifex/understudy/r3f";
 import { Ladder, useUnderstudy } from "@quartifex/understudy/react";
 import { createStandIn, type StandIn } from "@quartifex/understudy/reel";
@@ -28,10 +28,13 @@ import {
   Slider,
   useReducedMotion,
 } from "@/components/demo/kit";
-import { Jar3D } from "@/scene/Jar3D";
-import { SEQUENCE_URL, useSequence } from "@/scene/sequence";
+import { GYRO_CAMERA, Gyro3D } from "@/scene/props/Gyro3D";
+import { Studio } from "@/scene/Studio";
+import { GYRO_SEQUENCE_URL, useSequence } from "@/scene/sequence";
 import shared from "./demos.module.css";
+import layouts from "./layouts.module.css";
 import styles from "./sequence.module.css";
+import ladder from "./understudy.module.css";
 
 const PARTICLES = 6000;
 const RUNG_NAMES: Record<State["rung"], string> = {
@@ -80,8 +83,19 @@ export default function Demo() {
     [device, tier],
   );
   // A short window so the demo reacts in seconds rather than tens of seconds.
-  const [state, understudy] = useUnderstudy({ fps: { window: 500 } }, environment);
-  const sequence = useSequence();
+  // The stage is about three quarters of the window at 16:10; keep its canvas within
+  // contactsheet's 8.3 MP budget on very wide screens.
+  const [maxDpr] = useState(() => {
+    if (typeof window === "undefined") return 2;
+    const width = window.innerWidth * 0.75;
+    return Math.min(
+      2,
+      window.devicePixelRatio || 1,
+      Math.sqrt(8_000_000 / (width * width * 0.625)),
+    );
+  });
+  const [state, understudy] = useUnderstudy({ fps: { window: 500 }, maxDpr }, environment);
+  const sequence = useSequence(GYRO_SEQUENCE_URL);
   const progressRef = useRef(progress);
   progressRef.current = progress;
   const frameTime = useRef<number | undefined>(undefined);
@@ -102,7 +116,7 @@ export default function Demo() {
     const canvas = reelCanvas.current;
     if (!understudy || !sequence || !canvas) return;
     const created = createStandIn(canvas, sequence.manifest, {
-      baseUrl: SEQUENCE_URL,
+      baseUrl: GYRO_SEQUENCE_URL,
       understudy,
       progress: () => progressRef.current,
       fit: "cover",
@@ -127,9 +141,10 @@ export default function Demo() {
       setGlReady(false);
     }
   }, [rung]);
+  const steps = defaultSteps(2).map((step) => step.name);
   return (
     <div className={shared.demo} data-demo="understudy">
-      <div className={shared.split}>
+      <div className={layouts.lead}>
         <div>
           <div className={styles.stage} style={{ aspectRatio: "16 / 10", height: "auto" }}>
             {understudy && (
@@ -138,8 +153,9 @@ export default function Demo() {
                 webgl={
                   <Canvas
                     shadows="percentage"
+                    dpr={maxDpr}
                     gl={{ preserveDrawingBuffer: true }}
-                    camera={{ fov: 32, position: [4.2, 3, 6.2] }}
+                    camera={{ fov: GYRO_CAMERA.fov, position: GYRO_CAMERA.position }}
                     onCreated={(s) => {
                       gl.current = s.gl;
                       setGlReady(true);
@@ -163,84 +179,107 @@ export default function Demo() {
               ref={reelCanvas}
               data-testid="ud-reel"
               role="img"
-              aria-label={`The jar, ${rung === "poster" ? "as a still poster" : "as an image sequence"}: the stand-in for the 3D scene`}
+              aria-label={`The gyroscope, ${rung === "poster" ? "as a still poster" : "as an image sequence"}: the stand-in for the 3D scene`}
               style={{ display: rung && rung !== "webgl" ? "block" : "none" }}
             />
           </div>
           <p className={shared.caption}>
-            Concept visual: a jar drawn in code. The sequence is the same jar, pre-rendered.
+            Concept visual: a gyroscope built in code. The sequence is the same gyroscope,
+            pre-rendered from the same angles.
           </p>
         </div>
         <div className={shared.side}>
-          <Readout
-            label="Governor"
-            rows={[
-              ["Rung", rung ? RUNG_NAMES[rung] : "starting", "ud-rung"],
-              ["Quality", state?.stepName ?? "", "ud-step"],
-              ["Pixel ratio", quality ? `${quality.dpr}x` : "", "ud-dpr"],
-              ["Shadows", quality?.shadows ? "on" : "off", "ud-shadows"],
-              ["Post-processing", quality?.post ? "on" : "off", "ud-post"],
-              [
-                "Particles",
-                quality ? Math.round(PARTICLES * quality.particles) : "",
-                "ud-particles",
-              ],
-              ["Frame rate", state?.fps ? `${Math.round(state.fps)} fps` : "measuring", "ud-fps"],
-              ["Display", state ? `${state.refresh} Hz` : "", "ud-refresh"],
-            ]}
-          />
-          <Controls label="Load">
-            <Segmented legend="Frame time" value={source} choices={SOURCES} onChange={setSource} />
-            <Slider
-              label="Simulated frame time"
-              value={simulated}
-              min={8}
-              max={60}
-              step={1}
-              onChange={(v) => {
-                setSource("simulated");
-                setSimulated(v);
-              }}
-              format={(v) => `${v} ms (${Math.round(1000 / v)} fps)`}
-            />
-            <Slider
-              label="Extra work per frame"
-              value={work}
-              min={0}
-              max={40}
-              step={1}
-              onChange={setWork}
-              format={(v) => `${v} ms`}
-            />
-          </Controls>
-          <Controls label="Device">
-            <Segmented legend="Device" value={device} choices={DEVICES} onChange={setDevice} />
-            <Segmented legend="GPU tier" value={tier} choices={TIERS} onChange={setTier} />
-            <div className={styles.chapterButtons}>
-              <Button
-                onClick={() =>
-                  gl.current?.getContext().getExtension("WEBGL_lose_context")?.loseContext()
-                }
-                disabled={rung !== "webgl" || !glReady}
-              >
-                Lose the WebGL context
-              </Button>
-              <Button onClick={() => understudy?.retry()} disabled={rung === "webgl"}>
-                Try WebGL again
-              </Button>
-            </div>
-            <ReducedMotionToggle value={reduced} onChange={setReduced} />
-          </Controls>
-          <Slider
-            label="Scene position"
-            value={progress}
-            min={0}
-            max={1}
-            step={0.01}
-            onChange={setProgress}
-            format={(v) => `${Math.round(v * 100)}%`}
-          />
+          <h3 className={shared.panelTitle}>The ladder</h3>
+          <ol className={ladder.rungs} data-testid="ud-ladder">
+            <li aria-current={rung === "webgl" ? "step" : undefined}>
+              <span className={ladder.rung}>WebGL</span>
+              <ol className={ladder.steps}>
+                {steps.map((name, i) => (
+                  <li
+                    key={name}
+                    aria-current={rung === "webgl" && state?.step === i ? "step" : undefined}
+                  >
+                    {name}
+                  </li>
+                ))}
+              </ol>
+            </li>
+            <li aria-current={rung === "sequence" ? "step" : undefined}>
+              <span className={ladder.rung}>Image sequence</span>
+              <span className={ladder.hint}>reel, same position</span>
+            </li>
+            <li aria-current={rung === "poster" ? "step" : undefined}>
+              <span className={ladder.rung}>Poster</span>
+              <span className={ladder.hint}>reel's poster, no motion</span>
+            </li>
+          </ol>
         </div>
+      </div>
+      <Readout
+        label="Governor"
+        rows={[
+          ["Rung", rung ? RUNG_NAMES[rung] : "starting", "ud-rung"],
+          ["Quality", state?.stepName ?? "", "ud-step"],
+          ["Pixel ratio", quality ? `${quality.dpr}x` : "", "ud-dpr"],
+          ["Shadows", quality?.shadows ? "on" : "off", "ud-shadows"],
+          ["Post-processing", quality?.post ? "on" : "off", "ud-post"],
+          ["Particles", quality ? Math.round(PARTICLES * quality.particles) : "", "ud-particles"],
+          ["Frame rate", state?.fps ? `${Math.round(state.fps)} fps` : "measuring", "ud-fps"],
+          ["Display", state ? `${state.refresh} Hz` : "", "ud-refresh"],
+        ]}
+      />
+      <div className={layouts.controlGrid}>
+        <Controls label="Load">
+          <Segmented legend="Frame time" value={source} choices={SOURCES} onChange={setSource} />
+          <Slider
+            label="Simulated frame time"
+            value={simulated}
+            min={8}
+            max={60}
+            step={1}
+            onChange={(v) => {
+              setSource("simulated");
+              setSimulated(v);
+            }}
+            format={(v) => `${v} ms (${Math.round(1000 / v)} fps)`}
+          />
+          <Slider
+            label="Extra work per frame"
+            value={work}
+            min={0}
+            max={40}
+            step={1}
+            onChange={setWork}
+            format={(v) => `${v} ms`}
+          />
+        </Controls>
+        <Controls label="Device">
+          <Segmented legend="Device" value={device} choices={DEVICES} onChange={setDevice} />
+          <Segmented legend="GPU tier" value={tier} choices={TIERS} onChange={setTier} />
+          <div className={styles.chapterButtons}>
+            <Button
+              onClick={() =>
+                gl.current?.getContext().getExtension("WEBGL_lose_context")?.loseContext()
+              }
+              disabled={rung !== "webgl" || !glReady}
+            >
+              Lose the WebGL context
+            </Button>
+            <Button onClick={() => understudy?.retry()} disabled={rung === "webgl"}>
+              Try WebGL again
+            </Button>
+          </div>
+          <ReducedMotionToggle value={reduced} onChange={setReduced} />
+        </Controls>
+        <Slider
+          label="Scene position"
+          value={progress}
+          min={0}
+          max={1}
+          step={0.01}
+          onChange={setProgress}
+          format={(v) => `${Math.round(v * 100)}%`}
+        />
       </div>
       <div className={shared.panel}>
         <h3 className={shared.panelTitle}>What changed, and why</h3>
@@ -270,7 +309,7 @@ createStandIn(reelCanvas, manifest, { baseUrl, understudy, progress: () => scrol
   );
 }
 
-/** The jar, a hairline floor that takes shadows, a particle ring and an optional vignette pass. */
+/** The gyroscope, a floor that takes shadows, a particle ring and an optional vignette pass. */
 function Scene({
   understudy,
   progress,
@@ -287,7 +326,7 @@ function Scene({
   const ring = useRef<Group>(null);
   const camera = useThree((s) => s.camera);
   useEffect(() => {
-    camera.lookAt(0, 0.9, 0);
+    camera.lookAt(...GYRO_CAMERA.target);
   }, [camera]);
   useEffect(() => {
     group.current?.traverse((o) => {
@@ -318,14 +357,14 @@ function Scene({
     while (performance.now() < until) {
       /* busy */
     }
-    if (group.current) group.current.rotation.y = progress.current * Math.PI * 2;
     if (ring.current && spin) ring.current.rotation.y += delta * 0.1;
   });
 
   return (
     <>
-      <color attach="background" args={["#050505"]} />
-      <ambientLight intensity={0.4} />
+      <color attach="background" args={["#08090a"]} />
+      <Studio intensity={0.45} />
+      <ambientLight intensity={0.2} />
       <directionalLight
         position={[3, 6, 3]}
         intensity={1.6}
@@ -335,15 +374,14 @@ function Scene({
       />
       <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
         <planeGeometry args={[12, 12]} />
-        <meshStandardMaterial color="#0b0c0c" roughness={0.9} />
+        <meshStandardMaterial color="#0c0d0e" roughness={1} envMapIntensity={0.2} />
       </mesh>
-      <gridHelper args={[12, 24, "#3fbead", "#123a35"]} position={[0, 0.002, 0]} />
       <group ref={group}>
-        <Jar3D />
+        <Gyro3D progress={() => progress.current} />
       </group>
       <group ref={ring}>
         <points geometry={geometry}>
-          <pointsMaterial color="#3fbead" size={0.025} sizeAttenuation />
+          <pointsMaterial color="#d8c29a" size={0.02} sizeAttenuation transparent opacity={0.7} />
         </points>
       </group>
       {quality.post && <Vignette />}

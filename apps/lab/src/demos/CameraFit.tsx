@@ -7,7 +7,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Controls, Readout, Slider, Toggle } from "@/components/demo/kit";
 import styles from "./demos.module.css";
 
-// A jar-shaped subject: 1 unit wide, 1.8 tall.
+// A watch standing on its edge: a dial 1 unit across, the strap 1.8 tall.
 const BOUNDS: Bounds = { min: { x: -0.5, y: -0.9, z: -0.5 }, max: { x: 0.5, y: 0.9, z: 0.5 } };
 const PADDING = 0.1;
 
@@ -88,27 +88,37 @@ function draw(canvas: HTMLCanvasElement, fit: CameraFit, aspect: number) {
     ctx.stroke();
   }
 
-  // The jar inside it: two rims and four walls.
+  // The watch inside it: the dial (case and crystal) and the strap above and below.
   ctx.strokeStyle = "#3fbead";
   ctx.lineWidth = 1.5 * scale;
-  for (const y of [min.y, max.y * 0.72, max.y]) {
+  const loop = (points: Vec3[]) => {
     ctx.beginPath();
-    const r = y === max.y ? 0.4 : 0.5;
-    for (let i = 0; i <= 48; i++) {
-      const a = (i / 48) * Math.PI * 2;
-      const p = toPx(project({ x: Math.cos(a) * r, y, z: Math.sin(a) * r }));
+    points.forEach((v, i) => {
+      const p = toPx(project(v));
       if (i === 0) ctx.moveTo(p.x, p.y);
       else ctx.lineTo(p.x, p.y);
-    }
+    });
     ctx.stroke();
+  };
+  for (const [r, z] of [
+    [0.5, 0.12],
+    [0.42, 0.16],
+    [0.5, -0.12],
+  ] as const) {
+    loop(
+      Array.from({ length: 49 }, (_, i) => {
+        const a = (i / 48) * Math.PI * 2;
+        return { x: Math.cos(a) * r, y: Math.sin(a) * r, z };
+      }),
+    );
   }
-  for (const a of [0, Math.PI / 2, Math.PI, (3 * Math.PI) / 2]) {
-    const p1 = toPx(project({ x: Math.cos(a) * 0.5, y: min.y, z: Math.sin(a) * 0.5 }));
-    const p2 = toPx(project({ x: Math.cos(a) * 0.5, y: max.y * 0.72, z: Math.sin(a) * 0.5 }));
-    ctx.beginPath();
-    ctx.moveTo(p1.x, p1.y);
-    ctx.lineTo(p2.x, p2.y);
-    ctx.stroke();
+  for (const sign of [1, -1]) {
+    loop([
+      { x: -0.26, y: sign * 0.46, z: 0 },
+      { x: -0.26, y: sign * 0.9, z: 0 },
+      { x: 0.26, y: sign * 0.9, z: 0 },
+      { x: 0.26, y: sign * 0.46, z: 0 },
+    ]);
   }
 }
 
@@ -164,7 +174,7 @@ export function CameraFitPanel({ aspect }: { aspect: number }) {
           className={styles.cameraCanvas}
           style={{ width: displayWidth, height: shownHeight }}
           role="img"
-          aria-label={`A jar-shaped subject framed by the camera at aspect ${aspect.toFixed(2)}, with the padded safe frame dashed.`}
+          aria-label={`A watch framed by the camera at aspect ${aspect.toFixed(2)}, with the padded safe frame dashed.`}
         />
         <Readout
           label="Camera"

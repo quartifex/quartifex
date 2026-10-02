@@ -68,6 +68,7 @@ export default function Demo() {
       <div className={styles.split}>
         <Screen device={device}>
           <SceneView
+            prop="watch"
             {...device}
             mode={mode}
             progress={progress}
@@ -125,8 +126,8 @@ export default function Demo() {
           )}
           <Note>
             The frames are a 1600 x 900 image sequence drawn in code. The centred crop is what
-            object-fit: cover does with a desktop composition: on a tall phone the jar leaves the
-            frame, and on a 32:9 screen its base is cut off. safeframe keeps the subject whole,
+            object-fit: cover does with a desktop composition: on a tall phone the watch leaves the
+            frame, and on a 32:9 screen its strap is cut off. safeframe keeps the subject whole,
             moves the copy to a clear zone for the bucket, and draws at the device pixel ratio.
             {reduced
               ? " Reduced motion is on: Play is off; step through frames with the slider."

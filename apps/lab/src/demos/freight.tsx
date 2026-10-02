@@ -1,6 +1,6 @@
 "use client";
 
-// Hub demo for @quartifex/freight, shown on /freight. A jar exported the careless way (one
+// Hub demo for @quartifex/freight, shown on /freight. A desk fan exported the careless way (one
 // material per part, exporter default names, unwelded geometry, a 4096 px PNG label) goes
 // through the preset in this tab: before and after, the budget verdict, the naming report,
 // the typed R3F module, and the optimised GLB loaded back to prove it still renders.
@@ -10,13 +10,17 @@ import { Canvas, useThree } from "@react-three/fiber";
 import * as meshoptimizer from "meshoptimizer";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
+  BoxGeometry,
+  type BufferGeometry,
   CanvasTexture,
   CylinderGeometry,
   type Group,
   Mesh,
   MeshStandardMaterial,
+  PlaneGeometry,
   Scene,
   SRGBColorSpace,
+  TorusGeometry,
 } from "three";
 import { GLTFExporter } from "three/examples/jsm/exporters/GLTFExporter.js";
 import { MeshoptDecoder } from "three/examples/jsm/libs/meshopt_decoder.module.js";
@@ -32,47 +36,84 @@ import {
   useReducedMotion,
 } from "@/components/demo/kit";
 import shared from "./demos.module.css";
+import layouts from "./layouts.module.css";
 import styles from "./sequence.module.css";
 
-/** The jar as a hurried export: every part its own (identical) material, default names, a huge label. */
+/**
+ * A desk fan as a hurried export: every part its own (identical) material, exporter default
+ * names, unwelded geometry, and a 4096 px PNG for a badge the size of a coin.
+ */
 async function carelessGlb(): Promise<ArrayBuffer> {
   const scene = new Scene();
-  const label = document.createElement("canvas");
-  label.width = 4096;
-  label.height = 1024;
-  const ctx = label.getContext("2d");
+  const badge = document.createElement("canvas");
+  badge.width = 4096;
+  badge.height = 1024;
+  const ctx = badge.getContext("2d");
   if (ctx) {
-    ctx.fillStyle = "#efece4";
+    ctx.fillStyle = "#e9e4d8";
     ctx.fillRect(0, 0, 4096, 1024);
-    ctx.fillStyle = "#0b6f65";
-    ctx.fillRect(0, 740, 4096, 80);
-    ctx.fillStyle = "#141414";
-    ctx.font = "600 280px system-ui, sans-serif";
+    ctx.fillStyle = "#1a1a1a";
+    ctx.font = "600 360px system-ui, sans-serif";
     ctx.textAlign = "center";
-    ctx.fillText("NORTHFIELD", 2048, 520);
+    ctx.fillText("GALE", 2048, 560);
+    ctx.font = "120px ui-monospace, monospace";
+    ctx.fillText("FICTIONAL BRAND", 2048, 800);
   }
-  const map = new CanvasTexture(label);
+  const map = new CanvasTexture(badge);
   map.colorSpace = SRGBColorSpace;
   map.name = "Image.001";
-  const parts: Array<[string, number, number, number, boolean]> = [
-    ["Cylinder", 0.62, 0.12, 0.06, false],
-    ["Cylinder.001", 0.6, 1.26, 0.75, false],
-    ["Cylinder.002", 0.615, 0.42, 0.8, true],
-    ["Cylinder.003", 0.5, 0.08, 1.42, false],
-    ["lid", 0.52, 0.32, 1.62, false],
-  ];
-  parts.forEach(([name, r, h, y, labelled], i) => {
+  let n = 0;
+  const part = (
+    name: string,
+    geometry: BufferGeometry,
+    color: string,
+    place: (m: Mesh) => void,
+  ) => {
     // toNonIndexed(): every triangle carries its own three vertices, as many exporters write them.
-    const geometry = new CylinderGeometry(r, r, h, 64, 4).toNonIndexed();
-    const material = new MeshStandardMaterial(
-      labelled ? { map, roughness: 0.5 } : { color: "#0d0e0e", roughness: 0.6 },
-    );
-    material.name = `Material.00${i + 1}`;
-    const mesh = new Mesh(geometry, material);
+    const material = new MeshStandardMaterial({ color, roughness: 0.5, metalness: 0.2 });
+    material.name = `Material.${String(++n).padStart(3, "0")}`;
+    const mesh = new Mesh(geometry.toNonIndexed(), material);
     mesh.name = name;
-    mesh.position.y = y;
+    place(mesh);
     scene.add(mesh);
+  };
+  const graphite = "#2b2d2f";
+  const cream = "#d9d2c3";
+  part("Cylinder", new CylinderGeometry(0.62, 0.66, 0.08, 64), graphite, (m) => {
+    m.position.y = 0.04;
   });
+  part("Cylinder.001", new CylinderGeometry(0.045, 0.045, 1.1, 24), graphite, (m) => {
+    m.position.y = 0.6;
+  });
+  part("Cylinder.002", new CylinderGeometry(0.2, 0.24, 0.42, 48), graphite, (m) => {
+    m.rotation.x = Math.PI / 2;
+    m.position.set(0, 1.25, -0.12);
+  });
+  for (let i = 0; i < 3; i++) {
+    part(`Cube.00${i}`, new BoxGeometry(0.2, 0.62, 0.02, 4, 8, 1), cream, (m) => {
+      m.position.set(0, 1.25, 0.14);
+      m.rotation.z = (i * Math.PI * 2) / 3;
+      m.translateY(0.36);
+    });
+  }
+  for (const [i, z] of [0.2, 0.06].entries()) {
+    part(`Torus.00${i}`, new TorusGeometry(0.76, 0.012, 8, 96), graphite, (m) => {
+      m.position.set(0, 1.25, z);
+    });
+  }
+  for (let i = 0; i < 12; i++) {
+    part(`Cylinder.0${10 + i}`, new CylinderGeometry(0.006, 0.006, 1.52, 6), graphite, (m) => {
+      m.position.set(0, 1.25, 0.21);
+      m.rotation.z = (i * Math.PI) / 12;
+    });
+  }
+  const badgeMaterial = new MeshStandardMaterial({ map, roughness: 0.4 });
+  badgeMaterial.name = "Material.099";
+  const plate = new Mesh(new PlaneGeometry(0.24, 0.06).toNonIndexed(), badgeMaterial);
+  plate.name = "Plane";
+  plate.position.set(0, 0.09, 0.6);
+  plate.rotation.x = -Math.PI / 2.4;
+  scene.add(plate);
   return (await new GLTFExporter().parseAsync(scene, { binary: true })) as ArrayBuffer;
 }
 
@@ -134,7 +175,7 @@ export default function Demo() {
   const [reduced, setReduced] = useReducedMotion();
   const [source, setSource] = useState<ArrayBuffer | null>(null);
   const [out, setOut] = useState<BufferResult | null>(null);
-  const [status, setStatus] = useState("Exporting the jar…");
+  const [status, setStatus] = useState("Exporting the fan…");
   const [download, setDownload] = useState<string | null>(null);
 
   useEffect(() => {
@@ -161,8 +202,8 @@ export default function Demo() {
       join: joined,
       names: { fix },
       budget,
-      file: "jar.glb",
-      types: { url: "/models/jar.glb", component: "Jar" },
+      file: "fan.glb",
+      types: { url: "/models/fan.glb", component: "Fan" },
       ...(compress === "meshopt" ? { meshopt: meshoptimizer } : {}),
     })
       .then((result) => {
@@ -194,24 +235,82 @@ export default function Demo() {
 
   return (
     <div className={shared.demo} data-demo="freight">
+      <div className={layouts.verdictRow}>
+        {out ? (
+          <p
+            className={layouts.headline}
+            data-testid="fr-verdict"
+            data-pass={String(out.verdict?.pass)}
+          >
+            <strong className={out.verdict?.pass ? shared.pass : shared.fail}>
+              {out.verdict?.pass ? "PASS" : "FAIL"}
+            </strong>{" "}
+            {out.verdict?.pass
+              ? "The optimised fan is within the budget."
+              : `${out.verdict?.checks.filter((c) => !c.pass).length} metric(s) over budget.`}
+          </p>
+        ) : (
+          <p className={layouts.headline}>A careless export, about to be shipped.</p>
+        )}
+        <p className={layouts.verdict} aria-live="polite" data-testid="fr-status">
+          {status}
+        </p>
+      </div>
+      {/* Always rendered, with placeholders until the first run, so nothing shifts. */}
+      <div className={layouts.scoreboard} data-testid="fr-scoreboard">
+        {(
+          [
+            [
+              "File size",
+              out ? kb(out.result.before.bytes) : "–",
+              out ? kb(out.result.after.bytes) : "–",
+              "bytes",
+            ],
+            [
+              "Vertices",
+              out?.result.before.vertices ?? "–",
+              out?.result.after.vertices ?? "–",
+              null,
+            ],
+            [
+              "Materials",
+              out?.result.before.materials ?? "–",
+              out?.result.after.materials ?? "–",
+              null,
+            ],
+            [
+              "Draw calls",
+              out?.result.before.drawCalls ?? "–",
+              out?.result.after.drawCalls ?? "–",
+              "drawCalls",
+            ],
+          ] as const
+        ).map(([label, before, after, metric]) => (
+          <div
+            key={label}
+            className={layouts.score}
+            // Budgeted metrics follow the verdict; the rest are teal only when they went down.
+            data-pass={
+              !out
+                ? "none"
+                : metric
+                  ? String(out.verdict?.checks.find((c) => c.metric === metric)?.pass ?? "none")
+                  : before === after
+                    ? "none"
+                    : "true"
+            }
+          >
+            <p className={layouts.scoreLabel}>{label}</p>
+            <p className={layouts.scoreValue}>{after}</p>
+            <p className={layouts.scoreLimit}>from {before}</p>
+          </div>
+        ))}
+      </div>
       <div className={shared.split}>
         <div className={shared.side}>
-          <p className={shared.panelTitle} aria-live="polite" data-testid="fr-status">
-            {status}
-          </p>
-          {out && (
-            <p data-testid="fr-verdict" data-pass={String(out.verdict?.pass)}>
-              <strong className={out.verdict?.pass ? shared.pass : shared.fail}>
-                {out.verdict?.pass ? "PASS" : "FAIL"}
-              </strong>{" "}
-              {out.verdict?.pass
-                ? "The optimised jar is within the budget."
-                : `${out.verdict?.checks.filter((c) => !c.pass).length} metric(s) over budget.`}
-            </p>
-          )}
           <div className={styles.tableWrap}>
             <table className={styles.table} data-testid="fr-table">
-              <caption>jar.glb before and after freight</caption>
+              <caption>fan.glb before and after freight</caption>
               <thead>
                 <tr>
                   <th scope="col">Metric</th>
@@ -223,49 +322,48 @@ export default function Demo() {
                   </th>
                 </tr>
               </thead>
-              {a && b && (
-                <tbody>
-                  <Row
-                    name="File size"
-                    metric="bytes"
-                    before={kb(b.bytes)}
-                    after={kb(a.bytes)}
-                    budget={check("bytes", kb)}
-                  />
-                  <Row
-                    name="Triangles"
-                    metric="triangles"
-                    before={String(b.triangles)}
-                    after={String(a.triangles)}
-                    budget={check("triangles", String)}
-                  />
-                  <Row
-                    name="Vertices"
-                    metric="vertices"
-                    before={String(b.vertices)}
-                    after={String(a.vertices)}
-                  />
-                  <Row
-                    name="Draw calls"
-                    metric="drawCalls"
-                    before={String(b.drawCalls)}
-                    after={String(a.drawCalls)}
-                    budget={check("drawCalls", String)}
-                  />
-                  <Row
-                    name="Materials"
-                    metric="materials"
-                    before={String(b.materials)}
-                    after={String(a.materials)}
-                  />
-                  <Row
-                    name="Largest texture"
-                    metric="maxTextureSize"
-                    before={`${b.maxTextureSize} px, ${b.textures[0]?.mimeType ?? ""}`}
-                    after={`${a.maxTextureSize} px, ${a.textures[0]?.mimeType ?? ""}`}
-                  />
-                </tbody>
-              )}
+              {/* Rows render before the first run too, so the table does not grow. */}
+              <tbody>
+                <Row
+                  name="File size"
+                  metric="bytes"
+                  before={b ? kb(b.bytes) : "–"}
+                  after={a ? kb(a.bytes) : "–"}
+                  budget={check("bytes", kb)}
+                />
+                <Row
+                  name="Triangles"
+                  metric="triangles"
+                  before={b ? String(b.triangles) : "–"}
+                  after={a ? String(a.triangles) : "–"}
+                  budget={check("triangles", String)}
+                />
+                <Row
+                  name="Vertices"
+                  metric="vertices"
+                  before={b ? String(b.vertices) : "–"}
+                  after={a ? String(a.vertices) : "–"}
+                />
+                <Row
+                  name="Draw calls"
+                  metric="drawCalls"
+                  before={b ? String(b.drawCalls) : "–"}
+                  after={a ? String(a.drawCalls) : "–"}
+                  budget={check("drawCalls", String)}
+                />
+                <Row
+                  name="Materials"
+                  metric="materials"
+                  before={b ? String(b.materials) : "–"}
+                  after={a ? String(a.materials) : "–"}
+                />
+                <Row
+                  name="Largest texture"
+                  metric="maxTextureSize"
+                  before={b ? `${b.maxTextureSize} px, ${b.textures[0]?.mimeType ?? ""}` : "–"}
+                  after={a ? `${a.maxTextureSize} px, ${a.textures[0]?.mimeType ?? ""}` : "–"}
+                />
+              </tbody>
             </table>
           </div>
         </div>
@@ -336,7 +434,7 @@ export default function Demo() {
               <Canvas
                 gl={{ preserveDrawingBuffer: true }}
                 dpr={[1, 2]}
-                camera={{ fov: 30, position: [3.6, 2.6, 5.4] }}
+                camera={{ fov: 30, position: [2.8, 2.2, 4.6] }}
                 aria-hidden="true"
               >
                 <color attach="background" args={["#050505"]} />
@@ -352,23 +450,26 @@ export default function Demo() {
               : "The preview turns slowly. Everything it shows is also in the table."}
           </Note>
           <ReducedMotionToggle value={reduced} onChange={setReduced} />
-          {download && (
-            <p>
-              <a href={download} download="jar.freight.glb" data-testid="fr-download">
+          {/* Rendered from the start so the lists below do not move when it is ready. */}
+          <p>
+            {download ? (
+              <a href={download} download="fan.freight.glb" data-testid="fr-download">
                 Download the optimised GLB ({kb(out?.glb.byteLength)})
               </a>
-            </p>
-          )}
+            ) : (
+              <span className={shared.caption}>The optimised GLB, once it is ready.</span>
+            )}
+          </p>
         </div>
         <div className={shared.side}>
           <h3 className={shared.panelTitle}>Steps</h3>
-          <ul className={shared.list} data-testid="fr-steps">
+          <ul className={shared.list} data-testid="fr-steps" style={{ minHeight: "9rem" }}>
             {out?.result.steps.map((s) => (
               <li key={s}>{s}</li>
             ))}
           </ul>
           <h3 className={shared.panelTitle}>Names</h3>
-          <ul className={shared.list} data-testid="fr-names">
+          <ul className={shared.list} data-testid="fr-names" style={{ minHeight: "22rem" }}>
             {out?.result.names.map((n) => (
               <li key={`${n.kind}-${n.name}-${n.fixed ?? ""}`}>
                 {n.kind} “{n.name}”: {n.problem}
@@ -393,8 +494,8 @@ export default function Demo() {
         <Code>{out?.tsx ?? ""}</Code>
       </div>
       <Code>{`# Node: the whole preset, KTX2 when toktx is installed, a report and typed R3F output
-freight jar.glb public/models/jar.glb --textures ktx2 --max 2048 \\
-  --budget budget.json --app lab --report reports/lab --types src/Jar.tsx --url /models/jar.glb
+freight fan.glb public/models/fan.glb --textures ktx2 --max 2048 \\
+  --budget budget.json --app lab --report reports/lab --types src/Fan.tsx --url /models/fan.glb
 
 // Browser
 import { freightBuffer } from "@quartifex/freight/browser";
@@ -410,7 +511,7 @@ function Loaded({ glb, spin }: { glb: Uint8Array; spin: boolean }) {
   const [scene, setScene] = useState<Group | null>(null);
   const camera = useThree((s) => s.camera);
   useEffect(() => {
-    camera.lookAt(0, 0.85, 0);
+    camera.lookAt(0, 0.8, 0);
   }, [camera]);
   useEffect(() => {
     let live = true;
