@@ -28,11 +28,18 @@ const REPO_ROOT = path.join(process.cwd(), "..", "..");
 
 /**
  * When a seed's folder first appeared in git (its first commit), or null when git or the
- * history is not available, e.g. a shallow clone on a build server: then nothing is marked
- * new rather than everything.
+ * full history is not available. A shallow clone (CI and Vercel by default) starts at a
+ * recent commit where every file looks newly added, so it counts as no history: nothing is
+ * marked new rather than everything. On Vercel, set VERCEL_DEEP_CLONE=true to get the marks.
  */
 export function addedAt(name: string): Date | null {
   try {
+    const shallow = execFileSync("git", ["rev-parse", "--is-shallow-repository"], {
+      cwd: REPO_ROOT,
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"],
+    }).trim();
+    if (shallow !== "false") return null;
     const out = execFileSync(
       "git",
       ["log", "--diff-filter=A", "--format=%cI", "--", `apps/lab/src/seeds/${name}`],

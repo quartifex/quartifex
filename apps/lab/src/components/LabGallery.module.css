@@ -109,18 +109,6 @@
   border-bottom: var(--qx-line) solid var(--qx-hairline);
 }
 
-.list .meta {
-  order: 3;
-}
-
-.list .name {
-  order: 1;
-}
-
-.list .note {
-  order: 2;
-}
-
 .card:has(.link:focus-visible) {
   outline: var(--qx-line) solid var(--qx-teal);
   outline-offset: 2px;
@@ -217,6 +205,19 @@
   margin: 0;
   font-size: var(--qx-text-sm);
   color: var(--qx-muted);
+}
+
+/* List view: name, then description, then tag and status. */
+.list .meta {
+  order: 3;
+}
+
+.list .name {
+  order: 1;
+}
+
+.list .note {
+  order: 2;
 }
 
 @media (max-width: 40rem) {

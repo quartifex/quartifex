@@ -1,3 +1,4 @@
+import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { expect, test } from "@playwright/test";
 
@@ -27,8 +28,28 @@ test.describe("Lab gallery", () => {
     await expect(frameguide).toContainText("Responsive scenes");
     await expect(frameguide.locator("canvas")).toHaveCount(1);
     await expect(gallery.locator("li", { hasText: "glint" })).toContainText("Shaders");
-    // Seeds added in the last two weekly drops (from git history) are marked new.
-    await expect(page.getByTestId("lab-new").first()).toBeVisible();
+    // Seeds added in the last two weekly drops are marked new: the expected count comes from
+    // git here, as it does for the page (none on a shallow clone, which has no history).
+    const git = (args: string[]) =>
+      execFileSync("git", args, { cwd: new URL("../../../", import.meta.url) })
+        .toString()
+        .trim();
+    const shallow = git(["rev-parse", "--is-shallow-repository"]) !== "false";
+    const recent = shallow
+      ? 0
+      : seeds.filter((s) => {
+          if (s.state !== "built") return false;
+          const dates = git([
+            "log",
+            "--diff-filter=A",
+            "--format=%cI",
+            "--",
+            `apps/lab/src/seeds/${s.name}`,
+          ]);
+          const first = dates.split(/\r?\n/).filter(Boolean).at(-1);
+          return first ? (Date.now() - new Date(first).getTime()) / 86_400_000 <= 14 : false;
+        }).length;
+    await expect(page.getByTestId("lab-new")).toHaveCount(recent);
   });
 
   test("arrow keys move between cards, Enter opens one, Escape comes back", async ({ page }) => {
