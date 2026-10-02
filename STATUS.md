@@ -201,6 +201,7 @@ away inside a demo's simulated page is no longer flagged.
 | `pnpm build` | pass (fonts: 3 files synced into each app) |
 | `pnpm e2e` (installed Chrome) | pass: hub 95 (incl. 4 gallery and 1 light-default test), anyframe 8, dailies 4, heft 1, contactsheet 2 |
 | hub e2e `--repeat-each 2` | pass: 190 of 190 |
+| CI on GitHub | pass on `ce7f673`: check job and all five Playwright suites (the e2e job now checks out the full history) |
 | contactsheet after the switch, 36 profiles, every built page plus home and `/lab` | no flags on home, `/lab`, plumb, contactsheet, rushes, resolve, reel, dolly, anatomy, heft, spine, viewfinder, sleeve, freight, understudy, dailies. Remaining: see Known issues |
 
 ## Known issues
