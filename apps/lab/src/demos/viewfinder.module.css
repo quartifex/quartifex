@@ -1,10 +1,88 @@
+/* The scene is the demo: chapters run full height beside a sticky chapter list. */
+.layout {
+  display: grid;
+  grid-template-columns: minmax(13rem, 17rem) minmax(0, 1fr);
+  gap: var(--qx-space-8);
+  align-items: start;
+}
+
+.rail {
+  position: sticky;
+  top: var(--qx-space-6);
+  display: grid;
+  gap: var(--qx-space-4);
+}
+
+.chapters {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: var(--qx-line) solid var(--qx-hairline);
+}
+
+.chapters a {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--qx-space-3);
+  min-height: 44px;
+  align-items: center;
+  border-bottom: var(--qx-line) solid var(--qx-hairline);
+  text-decoration: none;
+  color: var(--qx-muted);
+}
+
+.chapters a[aria-current] {
+  color: var(--qx-fg);
+  border-left: 2px solid var(--qx-teal);
+  padding-left: var(--qx-space-3);
+}
+
+.hint {
+  font-family: var(--font-dm-mono), var(--qx-font-mono);
+  font-size: var(--qx-text-xs);
+  letter-spacing: var(--qx-tracking-label);
+  text-transform: uppercase;
+}
+
+.film {
+  display: grid;
+  min-width: 0;
+}
+
+/* Chapters are footage too: dark, like the scene between them. */
 .chapter {
   display: grid;
-  place-items: center;
-  min-height: 60vh;
-  border: var(--qx-line) solid var(--qx-hairline);
-  border-radius: var(--qx-radius-sm);
-  color: var(--qx-muted);
+  align-content: center;
+  gap: var(--qx-space-3);
+  min-height: 70vh;
+  padding: var(--qx-space-12);
+  background: #050505;
+  color: #edeae4;
+  border-bottom: 1px solid rgba(237, 234, 228, 0.12);
+}
+
+.chapterKicker {
+  margin: 0;
+  font-family: var(--font-dm-mono), var(--qx-font-mono);
+  font-size: var(--qx-text-xs);
+  letter-spacing: var(--qx-tracking-label);
+  text-transform: uppercase;
+  color: #8b8881;
+}
+
+.chapterTitle {
+  margin: 0;
+  font-family: var(--qx-font-display);
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.chapterBody {
+  margin: 0;
+  color: #b9b6b0;
 }
 
 .scene {
@@ -25,4 +103,16 @@
   display: block;
   width: 100%;
   height: 100%;
+}
+
+@media (max-width: 56rem) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+  .rail {
+    position: static;
+  }
+  .chapter {
+    padding: var(--qx-space-8);
+  }
 }

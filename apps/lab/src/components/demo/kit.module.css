@@ -77,9 +77,10 @@
   outline-offset: 3px;
 }
 
+/* 24 x 24 CSS px: the WCAG 2.2 target-size minimum, as contactsheet checks. */
 .toggle input {
-  width: 0.875rem;
-  height: 0.875rem;
+  width: 24px;
+  height: 24px;
   margin: 0;
   accent-color: var(--qx-teal);
 }
@@ -116,6 +117,7 @@
 
 .slider input {
   width: 100%;
+  height: 24px;
   accent-color: var(--qx-teal);
 }
 

@@ -67,36 +67,53 @@ export function Screen({
   children,
   maxHeight = 560,
   label,
+  onScale,
 }: {
   device: { width: number; height: number };
   children: ReactNode;
   maxHeight?: number;
   label?: string;
+  /** Told the preview's scale, e.g. to render a canvas at the pixels the preview shows. */
+  onScale?: (scale: number) => void;
 }) {
-  const frame = useRef<HTMLDivElement>(null);
-  const [available, setAvailable] = useState(720);
+  const screen = useRef<HTMLDivElement>(null);
+  // The frame's size is pure CSS (the device's aspect, capped by the column and by
+  // maxHeight), so nothing moves when the script runs; only the inner scale waits for it.
+  const [shown, setShown] = useState<number | null>(null);
   useEffect(() => {
-    const el = frame.current;
+    const el = screen.current;
     if (!el) return;
     const observer = new ResizeObserver(([entry]) => {
-      if (entry) setAvailable(entry.contentRect.width);
+      if (entry) setShown(entry.contentRect.width);
     });
     observer.observe(el);
     return () => observer.disconnect();
   }, []);
 
-  const scale = Math.min(available / device.width, maxHeight / device.height, 1);
+  const scale = Math.min((shown ?? device.width) / device.width, 1);
+  useEffect(() => {
+    if (shown !== null) onScale?.(scale);
+  }, [shown, scale, onScale]);
   return (
-    <div ref={frame} className={styles.frame}>
+    <div className={styles.frame}>
       <div
+        ref={screen}
         className={styles.screen}
-        style={{ width: device.width * scale, height: device.height * scale }}
+        style={{
+          width: `min(100%, ${(maxHeight * device.width) / device.height}px, ${device.width}px)`,
+          aspectRatio: `${device.width} / ${device.height}`,
+        }}
         role="img"
         aria-label={label ?? `Simulated screen, ${device.width} by ${device.height} CSS pixels`}
       >
         <div
           className={styles.inner}
-          style={{ width: device.width, height: device.height, transform: `scale(${scale})` }}
+          style={{
+            width: device.width,
+            height: device.height,
+            transform: `scale(${scale})`,
+            visibility: shown === null ? "hidden" : undefined,
+          }}
         >
           {children}
         </div>

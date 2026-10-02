@@ -98,15 +98,17 @@ test.describe("reel", () => {
       timeout: 10_000,
     });
     await expect(page.getByTestId("rl-loaded")).toHaveText("0 / 72");
-    const painted = await page.getByTestId("reel-canvas").evaluate((c: HTMLCanvasElement) => {
-      const ctx = c.getContext("2d");
-      if (!ctx) return 0;
-      const { data } = ctx.getImageData(0, 0, c.width, c.height);
-      let lit = 0;
-      for (let i = 0; i < data.length; i += 4) if ((data[i + 1] ?? 0) > 60) lit++;
-      return lit;
-    });
-    expect(painted).toBeGreaterThan(100);
+    // The poster decodes after the mode is reported: wait for it to be painted.
+    const painted = () =>
+      page.getByTestId("reel-canvas").evaluate((c: HTMLCanvasElement) => {
+        const ctx = c.getContext("2d");
+        if (!ctx) return 0;
+        const { data } = ctx.getImageData(0, 0, c.width, c.height);
+        let lit = 0;
+        for (let i = 0; i < data.length; i += 4) if ((data[i + 1] ?? 0) > 60) lit++;
+        return lit;
+      });
+    await expect.poll(painted, { timeout: 10_000 }).toBeGreaterThan(100);
   });
 });
 

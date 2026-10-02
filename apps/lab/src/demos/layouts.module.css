@@ -1,0 +1,237 @@
+/* Compositions for demos that are not about responsive staging. Each demo picks the one
+   its content calls for; the brand (hairlines, one accent, no gradients) stays the same. */
+
+/* heft: the numbers lead. */
+.scoreboard {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  border-top: var(--qx-line) solid var(--qx-hairline-strong);
+  border-bottom: var(--qx-line) solid var(--qx-hairline-strong);
+}
+
+.score {
+  display: grid;
+  gap: var(--qx-space-1);
+  align-content: start;
+  padding: var(--qx-space-5, 1.25rem) var(--qx-space-4);
+  border-left: var(--qx-line) solid var(--qx-hairline);
+}
+
+.score:first-child {
+  border-left: 0;
+  padding-left: 0;
+}
+
+.scoreLabel,
+.scoreLimit,
+.verdict {
+  margin: 0;
+  font-family: var(--font-dm-mono), var(--qx-font-mono);
+  font-size: var(--qx-text-xs);
+  letter-spacing: var(--qx-tracking-label);
+  text-transform: uppercase;
+  color: var(--qx-muted);
+}
+
+.scoreValue {
+  margin: 0;
+  font-family: var(--qx-font-display);
+  font-size: clamp(2rem, 4vw, 3.25rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.score[data-pass="false"] .scoreValue {
+  color: var(--qx-fg);
+}
+
+.score[data-pass="true"] .scoreValue {
+  color: var(--qx-teal);
+}
+
+.score[data-pass="none"] .scoreValue {
+  color: var(--qx-muted);
+}
+
+/* Sindoor stays dot-scale: the "over" marker, never the text. */
+.over::before {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin-right: 0.5em;
+  border-radius: 50%;
+  background: var(--qx-sindoor);
+  vertical-align: middle;
+}
+
+.verdictRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--qx-space-4);
+}
+
+.headline {
+  margin: 0;
+  font-family: var(--qx-font-display);
+  font-size: var(--qx-text-xl);
+  font-weight: 500;
+}
+
+/* A row of controls under the lead content, not a side column. */
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: var(--qx-space-3) var(--qx-space-6);
+}
+
+.toolbar > section {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: var(--qx-space-3) var(--qx-space-6);
+}
+
+/* Lead content and a narrower secondary column. */
+.lead {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(15rem, 1fr);
+  gap: var(--qx-space-8);
+  align-items: start;
+}
+
+.leadReverse {
+  display: grid;
+  grid-template-columns: minmax(15rem, 1fr) minmax(0, 2fr);
+  gap: var(--qx-space-8);
+  align-items: start;
+}
+
+/* 3D stages: the stage is the point, so it takes the width and the height. */
+.stage3d {
+  position: relative;
+  width: 100%;
+  height: min(64vh, 44rem);
+  min-height: 22rem;
+  overflow: hidden;
+  border-radius: var(--qx-radius-sm);
+  background: #050505;
+}
+
+.stage3d canvas {
+  display: block;
+}
+
+/* Readouts laid over the bottom of a stage, on its own dark ground. */
+.hud {
+  position: absolute;
+  inset: auto 0 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--qx-space-2) var(--qx-space-8);
+  padding: var(--qx-space-4) var(--qx-space-5, 1.25rem);
+  border-top: 1px solid rgba(237, 234, 228, 0.12);
+  background: rgba(5, 5, 5, 0.82);
+  color: #edeae4;
+  font-family: var(--font-dm-mono), var(--qx-font-mono);
+  font-size: var(--qx-text-xs);
+  letter-spacing: var(--qx-tracking-label);
+  text-transform: uppercase;
+}
+
+.hud dl {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--qx-space-2) var(--qx-space-8);
+  margin: 0;
+}
+
+.hud dt {
+  color: #8b8881;
+}
+
+.hud dd {
+  margin: 0;
+  color: #edeae4;
+}
+
+/* Inline stats that stay on screen while the page scrolls under them (spine). */
+.sticky {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  padding: var(--qx-space-3) 0;
+  border-bottom: var(--qx-line) solid var(--qx-hairline-strong);
+  background: var(--qx-bg);
+}
+
+.statline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--qx-space-2) var(--qx-space-8);
+  margin: 0;
+  font-family: var(--font-dm-mono), var(--qx-font-mono);
+  font-size: var(--qx-text-xs);
+  letter-spacing: var(--qx-tracking-label);
+  text-transform: uppercase;
+}
+
+.statline > div {
+  display: flex;
+  gap: var(--qx-space-2);
+}
+
+.statline dt {
+  color: var(--qx-muted);
+}
+
+.statline dd {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.stack {
+  display: grid;
+  gap: var(--qx-space-6);
+  min-width: 0;
+}
+
+@media (max-width: 56rem) {
+  .lead,
+  .leadReverse {
+    grid-template-columns: 1fr;
+  }
+  .score {
+    border-left: 0;
+    padding-left: 0;
+    border-top: var(--qx-line) solid var(--qx-hairline);
+  }
+}
+
+/* Controls under a full-width stage, in columns rather than one tall stack. */
+.controlGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+  gap: var(--qx-space-6) var(--qx-space-8);
+  align-items: start;
+}
+
+/* Labels drei places over a 3D stage (anatomy): readable on the dark ground in both themes. */
+.stage3d :global([data-anatomy-label]) {
+  display: inline-block;
+  padding: 2px 8px;
+  border: 1px solid rgba(237, 234, 228, 0.35);
+  border-radius: 999px;
+  background: rgba(5, 5, 5, 0.78);
+  color: #edeae4;
+  font-family: var(--font-dm-mono), var(--qx-font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}

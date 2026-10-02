@@ -12,9 +12,6 @@
   border: var(--qx-line) solid var(--qx-hairline-strong);
   border-radius: var(--qx-radius-sm);
   background: #050505;
-  transition:
-    width var(--qx-duration) var(--qx-ease-out),
-    height var(--qx-duration) var(--qx-ease-out);
 }
 
 .inner {

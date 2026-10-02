@@ -1,16 +1,18 @@
+/* The page itself scrolls under the stats; the scene is a band of it, not a box. */
 .scene {
   position: relative;
   height: 250vh;
-  border: var(--qx-line) solid var(--qx-hairline);
-  border-radius: var(--qx-radius-sm);
+  border-top: var(--qx-line) solid var(--qx-hairline);
+  border-bottom: var(--qx-line) solid var(--qx-hairline);
 }
 
 .panel {
   display: grid;
-  align-content: center;
-  gap: var(--qx-space-3);
+  align-content: start;
+  gap: var(--qx-space-4);
   height: 100vh;
-  padding: var(--qx-space-8);
+  /* Clear of the sticky stats line above it. */
+  padding: var(--qx-space-24, 6rem) 0 var(--qx-space-8);
 }
 
 .panel p {
@@ -32,4 +34,31 @@
   font-size: var(--qx-text-2xl);
   font-weight: 500;
   line-height: var(--qx-leading-tight);
+}
+
+.panel .big {
+  font-family: var(--qx-font-display);
+  font-size: clamp(5rem, 16vw, 13rem);
+  font-weight: 500;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  color: var(--qx-fg);
+  font-variant-numeric: tabular-nums;
+  max-width: none;
+}
+
+.big span {
+  font-size: 0.4em;
+  color: var(--qx-teal);
+}
+
+.track {
+  height: 2px;
+  background: var(--qx-hairline);
+}
+
+.track > div {
+  height: 100%;
+  background: var(--qx-teal);
+  transform-origin: 0 50%;
 }

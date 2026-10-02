@@ -23,12 +23,37 @@ import {
 } from "@/components/demo/kit";
 import { SEQUENCE_URL, useSequence } from "@/scene/sequence";
 import shared from "./demos.module.css";
+import layouts from "./layouts.module.css";
 import styles from "./viewfinder.module.css";
 
 if (typeof window !== "undefined") gsap.registerPlugin(ScrollTrigger);
 
+const CHAPTERS = [
+  { id: "before", name: "Before", hint: "page" },
+  { id: "sequence", name: "Sequence", hint: "pinned, 72 frames" },
+  { id: "after", name: "After", hint: "page" },
+] as const;
+
 export default function Demo() {
   const data = useSequence();
+  const [current, setCurrent] = useState<string>("before");
+
+  // Mark the chapter in view, so the list beside the scene says where you are.
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) setCurrent(entry.target.id.replace("vf-", ""));
+        }
+      },
+      { rootMargin: "-45% 0px -45% 0px" },
+    );
+    for (const c of CHAPTERS) {
+      const el = document.getElementById(`vf-${c.id}`);
+      if (el) observer.observe(el);
+    }
+    return () => observer.disconnect();
+  }, []);
   const [reduced, setReduced] = useReducedMotion();
   const [open, setOpen] = useState(true);
   const [markers, setMarkers] = useState(false);
@@ -53,11 +78,25 @@ export default function Demo() {
     });
     const vf = createViewfinder({
       sources: [gsapSource(ScrollTrigger), reelSource(reel, "jar")],
-      open: true,
+      open: false,
     });
     viewfinder.current = vf;
-    setOpen(true);
+    setOpen(false);
+    // The overlay opens itself as the scene reaches the upper part of the window, so on
+    // arrival it does not cover the page's own header and links.
+    const film = section.current.parentElement;
+    const arrive = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry?.isIntersecting) return;
+        vf.toggle(true);
+        setOpen(true);
+        arrive.disconnect();
+      },
+      { rootMargin: "0px 0px -70% 0px" },
+    );
+    if (film) arrive.observe(film);
     return () => {
+      arrive.disconnect();
       vf.destroy();
       viewfinder.current = null;
       trigger.kill();
@@ -79,57 +118,82 @@ export default function Demo() {
 
   return (
     <div className={shared.demo} data-demo="viewfinder">
-      <Controls label="Viewfinder demo controls">
-        <Button
-          onClick={() => {
-            viewfinder.current?.toggle();
-            setOpen(viewfinder.current?.open ?? false);
-          }}
-          pressed={open}
-        >
-          {open ? "Hide viewfinder" : "Show viewfinder"} (Alt+V)
-        </Button>
-        <Button onClick={() => setMarkers((m) => !m)} pressed={markers}>
-          Markers
-        </Button>
-        <Button onClick={toggleRecording} pressed={recording}>
-          {recording ? "Stop recording" : "Record a scroll"}
-        </Button>
-        <Button onClick={() => void viewfinder.current?.replay()} disabled={!path || reduced}>
-          Replay
-        </Button>
-        <ReducedMotionToggle value={reduced} onChange={setReduced} />
-      </Controls>
-      <Readout
-        label="Recorded path"
-        rows={[
-          ["Samples", path?.samples.length ?? 0, "vf-samples"],
-          ["Length", path ? `${((path.samples.at(-1)?.t ?? 0) / 1000).toFixed(1)} s` : "none"],
-        ]}
-      />
-      <Note>
-        The overlay sits in a Shadow DOM at the side of the window: open it, then scroll through the
-        scene below. Replay re-runs a recorded scroll exactly, for comparing builds and for clean
-        screen recordings.
-        {reduced ? " Reduced motion is on: the scene shows its poster and Replay is off." : ""}
-      </Note>
+      <div className={layouts.toolbar}>
+        <Controls label="Viewfinder demo controls">
+          <Button
+            onClick={() => {
+              viewfinder.current?.toggle();
+              setOpen(viewfinder.current?.open ?? false);
+            }}
+            pressed={open}
+          >
+            {open ? "Hide viewfinder" : "Show viewfinder"} (Alt+V)
+          </Button>
+          <Button onClick={() => setMarkers((m) => !m)} pressed={markers}>
+            Markers
+          </Button>
+          <Button onClick={toggleRecording} pressed={recording}>
+            {recording ? "Stop recording" : "Record a scroll"}
+          </Button>
+          <Button onClick={() => void viewfinder.current?.replay()} disabled={!path || reduced}>
+            Replay
+          </Button>
+          <ReducedMotionToggle value={reduced} onChange={setReduced} />
+        </Controls>
+      </div>
 
-      <section className={styles.chapter} data-chapter="Before">
-        <p>Scroll down into the scene.</p>
-      </section>
-      <section
-        ref={section}
-        className={styles.scene}
-        data-chapter="Sequence"
-        data-testid="vf-scene"
-      >
-        <div className={styles.sticky}>
-          <canvas ref={canvas} role="img" aria-label="A jar turning (concept visual)" />
+      <div className={styles.layout}>
+        <nav className={styles.rail} aria-label="Chapters in this scene">
+          <p className={shared.panelTitle}>Chapters</p>
+          <ol className={styles.chapters}>
+            {CHAPTERS.map((c) => (
+              <li key={c.id}>
+                <a href={`#vf-${c.id}`} aria-current={current === c.id ? "step" : undefined}>
+                  <span>{c.name}</span>
+                  <span className={styles.hint}>{c.hint}</span>
+                </a>
+              </li>
+            ))}
+          </ol>
+          <Readout
+            label="Recorded path"
+            rows={[
+              ["Samples", path?.samples.length ?? 0, "vf-samples"],
+              ["Length", path ? `${((path.samples.at(-1)?.t ?? 0) / 1000).toFixed(1)} s` : "none"],
+            ]}
+          />
+          <Note>
+            The viewfinder overlay sits in a Shadow DOM at the side of the window and reads this
+            scene as you scroll: chapters, scene progress, the sequence frame and its buffer, frame
+            times. Replay re-runs a recorded scroll exactly.
+            {reduced ? " Reduced motion is on: the scene shows its poster and Replay is off." : ""}
+          </Note>
+        </nav>
+
+        <div className={styles.film}>
+          <section id="vf-before" className={styles.chapter} data-chapter="Before">
+            <p className={styles.chapterKicker}>Chapter 1 · Before</p>
+            <p className={styles.chapterTitle}>A launch page opens.</p>
+            <p className={styles.chapterBody}>Scroll on: the pinned sequence starts below.</p>
+          </section>
+          <section
+            id="vf-sequence"
+            ref={section}
+            className={styles.scene}
+            data-chapter="Sequence"
+            data-testid="vf-scene"
+          >
+            <div className={styles.sticky}>
+              <canvas ref={canvas} role="img" aria-label="A jar turning (concept visual)" />
+            </div>
+          </section>
+          <section id="vf-after" className={styles.chapter} data-chapter="After">
+            <p className={styles.chapterKicker}>Chapter 3 · After</p>
+            <p className={styles.chapterTitle}>The scene hands back to the page.</p>
+            <p className={styles.chapterBody}>Scroll up to run it again, or record and replay.</p>
+          </section>
         </div>
-      </section>
-      <section className={styles.chapter} data-chapter="After">
-        <p>The end of the scene.</p>
-      </section>
+      </div>
 
       <Code>{`import { createViewfinder } from "@quartifex/viewfinder";
 import { gsapSource } from "@quartifex/viewfinder/gsap";

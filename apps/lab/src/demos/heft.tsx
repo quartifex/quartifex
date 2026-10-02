@@ -33,6 +33,7 @@ import {
 } from "@/components/demo/kit";
 import { SEQUENCE_URL } from "@/scene/sequence";
 import shared from "./demos.module.css";
+import layouts from "./layouts.module.css";
 import styles from "./sequence.module.css";
 
 const TARGETS = [
@@ -174,86 +175,133 @@ export default function Demo() {
     });
   };
 
+  const lead = [
+    {
+      metric: "page.transferBytes",
+      label: "Transfer on load",
+      unit: "bytes" as const,
+      limit: transferKb * 1024,
+    },
+    {
+      metric: "scroll.longFrames",
+      label: "Long frames",
+      unit: "count" as const,
+      limit: longFrames,
+    },
+    { metric: "scroll.cls", label: "Layout shift", unit: "score" as const, limit: cls },
+    { metric: "scroll.inp", label: "Interaction", unit: "ms" as const, limit: inp },
+  ];
+  const measuredPage = pageFindings.length > 0;
+  const over = pageFindings.filter((f) => !f.pass).length;
+
   return (
     <div className={shared.demo} data-demo="heft">
-      <Controls label="Budget">
-        <Slider
-          label="Transfer on load"
-          value={transferKb}
-          min={100}
-          max={3000}
-          step={50}
-          onChange={setTransferKb}
-          format={(v) => `${v} kB`}
-        />
-        <Slider
-          label="Long frames"
-          value={longFrames}
-          min={0}
-          max={20}
-          step={1}
-          onChange={setLongFrames}
-        />
-        <Slider
-          label="Layout shift"
-          value={cls}
-          min={0}
-          max={0.5}
-          step={0.01}
-          onChange={setCls}
-          format={(v) => v.toFixed(2)}
-        />
-        <Slider
-          label="Interaction"
-          value={inp}
-          min={50}
-          max={500}
-          step={10}
-          onChange={setInp}
-          format={(v) => `${v} ms`}
-        />
-        <Slider
-          label="Scroll duration"
-          value={seconds}
-          min={2}
-          max={12}
-          step={1}
-          onChange={setSeconds}
-          format={(v) => `${v} s`}
-        />
-      </Controls>
+      <div className={layouts.verdictRow}>
+        <p className={layouts.headline} data-testid="hf-verdict">
+          {measuredPage
+            ? over === 0
+              ? `The ${target} page is within budget.`
+              : `The ${target} page is over budget on ${over} metric${over === 1 ? "" : "s"}.`
+            : `Budget set. Run heft on the ${target} test page to measure it.`}
+        </p>
+        <p className={layouts.verdict} aria-live="polite" data-testid="hf-status">
+          {status}
+        </p>
+      </div>
 
-      <div className={shared.split}>
-        <div className={styles.frameWrap}>
-          <iframe
-            ref={frame}
-            title="Test page under measurement"
-            className={styles.testFrame}
-            src="about:blank"
+      <div className={layouts.scoreboard} data-testid="hf-scoreboard">
+        {lead.map((m) => {
+          const f = pageFindings.find((x) => x.metric === m.metric);
+          return (
+            <div key={m.metric} className={layouts.score} data-pass={f ? String(f.pass) : "none"}>
+              <p className={layouts.scoreLabel}>{m.label}</p>
+              <p className={layouts.scoreValue}>{f ? formatValue(f.actual, f.unit) : "–"}</p>
+              <p className={`${layouts.scoreLimit} ${f && !f.pass ? layouts.over : ""}`}>
+                {f ? (f.pass ? "within " : "over ") : "budget "}
+                {formatValue(m.limit, m.unit)}
+              </p>
+            </div>
+          );
+        })}
+      </div>
+
+      <div className={layouts.toolbar}>
+        <Controls label="Run">
+          <Segmented legend="Test page" value={target} choices={TARGETS} onChange={setTarget} />
+          <Button onClick={() => void run(!reduced)}>
+            {reduced ? "Measure load" : "Run heft"}
+          </Button>
+          <Button onClick={reread}>Read again</Button>
+          <ReducedMotionToggle value={reduced} onChange={setReduced} />
+        </Controls>
+        {measured.scroll && (
+          <Readout
+            label="Measured"
+            rows={[
+              ["Frames", measured.scroll.frames, "hf-frames"],
+              ["p95 frame", `${measured.scroll.p95FrameMs} ms`],
+              ["Interaction", `${measured.scroll.inp} ms`, "hf-inp"],
+            ]}
           />
-        </div>
-        <div className={shared.side}>
-          <Controls label="Run">
-            <Segmented legend="Test page" value={target} choices={TARGETS} onChange={setTarget} />
-            <Button onClick={() => void run(!reduced)}>
-              {reduced ? "Measure load" : "Run heft"}
-            </Button>
-            <Button onClick={reread}>Read again</Button>
-            <ReducedMotionToggle value={reduced} onChange={setReduced} />
-          </Controls>
-          <p className={shared.panelTitle} aria-live="polite" data-testid="hf-status">
-            {status}
-          </p>
-          {measured.scroll && (
-            <Readout
-              label="Measured"
-              rows={[
-                ["Frames", measured.scroll.frames, "hf-frames"],
-                ["p95 frame", `${measured.scroll.p95FrameMs} ms`],
-                ["Interaction", `${measured.scroll.inp} ms`, "hf-inp"],
-              ]}
+        )}
+      </div>
+
+      <div className={layouts.leadReverse}>
+        <Controls label="Budget">
+          <Slider
+            label="Transfer on load"
+            value={transferKb}
+            min={100}
+            max={3000}
+            step={50}
+            onChange={setTransferKb}
+            format={(v) => `${v} kB`}
+          />
+          <Slider
+            label="Long frames"
+            value={longFrames}
+            min={0}
+            max={20}
+            step={1}
+            onChange={setLongFrames}
+          />
+          <Slider
+            label="Layout shift"
+            value={cls}
+            min={0}
+            max={0.5}
+            step={0.01}
+            onChange={setCls}
+            format={(v) => v.toFixed(2)}
+          />
+          <Slider
+            label="Interaction"
+            value={inp}
+            min={50}
+            max={500}
+            step={10}
+            onChange={setInp}
+            format={(v) => `${v} ms`}
+          />
+          <Slider
+            label="Scroll duration"
+            value={seconds}
+            min={2}
+            max={12}
+            step={1}
+            onChange={setSeconds}
+            format={(v) => `${v} s`}
+          />
+        </Controls>
+        <div className={layouts.stack}>
+          <div className={styles.frameWrap}>
+            <iframe
+              ref={frame}
+              title="Test page under measurement"
+              className={styles.testFrame}
+              src={`/sample?heavy=${target === "heavy" ? 1 : 0}`}
             />
-          )}
+          </div>
           <Findings findings={pageFindings} testid="hf-page" />
         </div>
       </div>

@@ -25,6 +25,7 @@ import {
 } from "@/components/demo/kit";
 import { Jar3D, Stage } from "@/scene/Jar3D";
 import shared from "./demos.module.css";
+import layouts from "./layouts.module.css";
 import styles from "./sequence.module.css";
 
 const EASES = [
@@ -112,6 +113,9 @@ export default function Demo() {
   const progress = useRef(0);
 
   const path = useMemo(() => makePath(spline, segmentEase), [spline, segmentEase]);
+  const [previewScale, setPreviewScale] = useState(1);
+  const [windowDpr, setWindowDpr] = useState(1);
+  useEffect(() => setWindowDpr(window.devicePixelRatio || 1), []);
   const points = useMemo(() => pathPoints((p) => sample(path, p), 96), [path]);
   const bucket = bucketFor(device);
 
@@ -134,14 +138,20 @@ export default function Demo() {
 
   return (
     <div className={shared.demo} data-demo="dolly">
-      <Controls label="Screen">{controls}</Controls>
-      <div className={shared.split}>
-        <Screen device={device} label="A camera travelling around a jar as the page scrolls">
+      <div className={layouts.stack}>
+        <Screen
+          device={device}
+          maxHeight={560}
+          onScale={setPreviewScale}
+          label="A camera travelling around a jar as the page scrolls"
+        >
           <div className={styles.stage}>
             <Canvas
               resize={{ offsetSize: true }}
               gl={{ preserveDrawingBuffer: true }}
-              dpr={device.dpr}
+              // Draw only the pixels the scaled preview shows (contactsheet flagged the full
+              // device resolution rendered into a small preview).
+              dpr={Math.min(device.dpr, previewScale * windowDpr)}
               camera={{ fov: 32, position: [0, 1.4, 7] }}
               data-testid="dolly-canvas"
               aria-hidden="true"
@@ -177,7 +187,7 @@ export default function Demo() {
             </div>
           </div>
         </Screen>
-        <div className={shared.side}>
+        <div className={layouts.controlGrid}>
           <Controls label="Rig">
             <Slider
               label="Scroll"
@@ -196,6 +206,8 @@ export default function Demo() {
                 </button>
               ))}
             </fieldset>
+          </Controls>
+          <Controls label="Path">
             <Segmented legend="Path" value={spline} choices={SPLINES} onChange={setSpline} />
             <Segmented
               legend="Segment ease"
@@ -219,6 +231,7 @@ export default function Demo() {
             <Toggle label="Show path" checked={showPath} onChange={setShowPath} />
             <ReducedMotionToggle value={reduced} onChange={setReduced} />
           </Controls>
+          <Controls label="Screen">{controls}</Controls>
           {camera && (
             <Readout
               label="Camera"

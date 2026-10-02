@@ -20,17 +20,25 @@ import {
   Code,
   Controls,
   Note,
-  Readout,
   ReducedMotionToggle,
   Toggle,
   useReducedMotion,
 } from "@/components/demo/kit";
 import shared from "./demos.module.css";
+import layouts from "./layouts.module.css";
 import styles from "./spine.module.css";
 
 if (typeof window !== "undefined") gsap.registerPlugin(ScrollTrigger);
 
-function Scene({ name, onProgress }: { name: string; onProgress: (p: number) => void }) {
+function Scene({
+  name,
+  progress,
+  onProgress,
+}: {
+  name: string;
+  progress: number;
+  onProgress: (p: number) => void;
+}) {
   const section = useRef<HTMLElement>(null);
   const panel = useRef<HTMLDivElement>(null);
   const report = useRef(onProgress);
@@ -54,9 +62,16 @@ function Scene({ name, onProgress }: { name: string; onProgress: (p: number) => 
       data-chapter={`Scene ${name}`}
     >
       <div ref={panel} className={styles.panel}>
-        <p className={styles.kicker}>Pinned scene</p>
+        <p className={styles.kicker}>Pinned scene · route ?scene={name}</p>
         <h3 className={styles.title}>Scene {name.toUpperCase()}</h3>
-        <p>Scroll on: this panel stays pinned while the section passes.</p>
+        <p className={styles.big} aria-hidden="true">
+          {Math.round(progress * 100)}
+          <span>%</span>
+        </p>
+        <div className={styles.track} aria-hidden="true">
+          <div style={{ transform: `scaleX(${progress})` }} />
+        </div>
+        <p>Scroll on: this panel stays pinned while the section passes under it.</p>
       </div>
     </section>
   );
@@ -97,44 +112,53 @@ export default function Demo() {
 
   return (
     <div className={shared.demo} data-demo="spine">
-      <Controls label="Spine">
-        <Toggle
-          label="Lenis smooth scroll"
-          checked={smooth}
-          onChange={setSmooth}
-          disabled={reduced}
-        />
-        <ReducedMotionToggle value={reduced} onChange={setReduced} />
-        <Button onClick={() => go("a")} pressed={scene === "a"}>
-          Scene A
-        </Button>
-        <Button onClick={() => go("b")} pressed={scene === "b"}>
-          Scene B
-        </Button>
-      </Controls>
-
-      {stats && (
-        <Readout
-          label="Spine"
-          rows={[
-            ["Scrolling", stats.lenis ? "Lenis" : "native", "sp-mode"],
-            ["Ticker functions", stats.tickers, "sp-tickers"],
-            ["ScrollTriggers", stats.triggers, "sp-triggers"],
-            [
-              "Pins",
-              `${stats.pins} (${stats.spacers} spacer${stats.spacers === 1 ? "" : "s"} in the page)`,
-              "sp-pins",
-            ],
-            ["Route", stats.route ?? "", "sp-route"],
-            ["Scene progress", `${Math.round(progress * 100)}%`, "sp-progress"],
-            [
-              "Refreshes",
-              stats.refreshes.map((r) => r.reason).join(", ") || "none",
-              "sp-refreshes",
-            ],
-          ]}
-        />
-      )}
+      <div className={layouts.sticky} data-testid="sp-bar">
+        <div className={layouts.toolbar}>
+          <Controls label="Spine">
+            <Toggle
+              label="Lenis smooth scroll"
+              checked={smooth}
+              onChange={setSmooth}
+              disabled={reduced}
+            />
+            <ReducedMotionToggle value={reduced} onChange={setReduced} />
+            <Button onClick={() => go("a")} pressed={scene === "a"}>
+              Scene A
+            </Button>
+            <Button onClick={() => go("b")} pressed={scene === "b"}>
+              Scene B
+            </Button>
+          </Controls>
+        </div>
+        {stats && (
+          <dl className={layouts.statline} aria-label="Spine, live">
+            {(
+              [
+                ["Scrolling", stats.lenis ? "Lenis" : "native", "sp-mode"],
+                ["Tickers", stats.tickers, "sp-tickers"],
+                ["ScrollTriggers", stats.triggers, "sp-triggers"],
+                [
+                  "Pins",
+                  `${stats.pins} (${stats.spacers} spacer${stats.spacers === 1 ? "" : "s"} in the page)`,
+                  "sp-pins",
+                ],
+                ["Route", stats.route ?? "", "sp-route"],
+                ["Scene", `${Math.round(progress * 100)}%`, "sp-progress"],
+                [
+                  "Refreshes",
+                  stats.refreshes.map((r) => r.reason).join(", ") || "none",
+                  "sp-refreshes",
+                ],
+              ] as const
+            ).map(([name, value, id]) => (
+              <div key={name}>
+                <dt>{name}</dt>
+                <dd data-testid={id}>{value}</dd>
+              </div>
+            ))}
+          </dl>
+        )}
+      </div>
       <Note>
         {native
           ? "Native scrolling: reduced motion is on, or Lenis is switched off. ScrollTrigger still refreshes on real layout changes only."
@@ -154,7 +178,7 @@ export default function Demo() {
         >
           <SpineRouteSync search />
           <Stats onStats={setStats} />
-          <Scene key={scene} name={scene} onProgress={setProgress} />
+          <Scene key={scene} name={scene} progress={progress} onProgress={setProgress} />
         </SpineProvider>
       )}
 
