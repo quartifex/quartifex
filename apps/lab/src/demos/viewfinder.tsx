@@ -21,6 +21,7 @@ import {
   ReducedMotionToggle,
   useReducedMotion,
 } from "@/components/demo/kit";
+import { budgetPixelRatio } from "@/components/demo/pixels";
 import { SEQUENCE_URL, useSequence } from "@/scene/sequence";
 import shared from "./demos.module.css";
 import layouts from "./layouts.module.css";
@@ -66,9 +67,18 @@ export default function Demo() {
 
   useEffect(() => {
     if (!manifest || !section.current || !canvas.current) return;
-    const reel: Reel = createReel(canvas.current, manifest, {
+    const el = canvas.current;
+    const reel: Reel = createReel(el, manifest, {
       baseUrl: SEQUENCE_URL,
       reducedMotion: reduced,
+      // Keep the canvas within contactsheet's 8.3 MP budget on very wide, dense windows
+      // (a 32:9 window at 2x). Set when the scene is built.
+      environment: {
+        dpr: Math.min(
+          window.devicePixelRatio || 1,
+          budgetPixelRatio(el.clientWidth, el.clientHeight),
+        ),
+      },
     });
     const trigger = scrubReel(reel, ScrollTrigger, {
       id: "jar sequence",

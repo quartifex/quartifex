@@ -51,21 +51,23 @@ export default function Demo() {
     () => (manifest ? targetFromManifest(manifest, { fit }) : null),
     [manifest, fit],
   );
-  if (!manifest || !target) return <Note>Loading the sequence manifest.</Note>;
-
-  const decision = decide(
-    {
-      width: device.width,
-      height: device.height,
-      dpr: device.dpr,
-      gpuTier: Number(gpu) as GpuTier,
-      effectiveType: network,
-      saveData,
-    },
-    target,
-  );
-  const tier = manifest.tiers[decision.tier.index] as Tier;
-  const largest = manifest.tiers[manifest.tiers.length - 1] as Tier;
+  // The layout renders from the first paint, with placeholders until the manifest
+  // arrives, so nothing below it moves when it does.
+  const decision = target
+    ? decide(
+        {
+          width: device.width,
+          height: device.height,
+          dpr: device.dpr,
+          gpuTier: Number(gpu) as GpuTier,
+          effectiveType: network,
+          saveData,
+        },
+        target,
+      )
+    : null;
+  const tier = manifest && decision ? (manifest.tiers[decision.tier.index] as Tier) : null;
+  const largest = manifest ? (manifest.tiers[manifest.tiers.length - 1] as Tier) : null;
 
   const detect = async () => {
     setDetected("Detecting");
@@ -90,34 +92,42 @@ export default function Demo() {
       <div className={shared.split}>
         <Screen
           device={device}
-          label={`The ${tier.name} frame at ${device.width} x ${device.height}`}
+          label={
+            tier
+              ? `The ${tier.name} frame at ${device.width} x ${device.height}`
+              : "Loading the sequence manifest"
+          }
         >
           <div className={styles.stage}>
-            {/* biome-ignore lint/performance/noImgElement: shows the exact tier file resolve picked */}
-            <img
-              src={SEQUENCE_URL + framePath(manifest, tier, "webp", Math.floor(tier.frames / 6))}
-              alt=""
-              style={{ objectFit: fit }}
-              data-testid="rv-frame"
-            />
+            {manifest && tier && (
+              // biome-ignore lint/performance/noImgElement: shows the exact tier file resolve picked
+              <img
+                src={SEQUENCE_URL + framePath(manifest, tier, "webp", Math.floor(tier.frames / 6))}
+                alt=""
+                style={{ objectFit: fit }}
+                data-testid="rv-frame"
+              />
+            )}
           </div>
         </Screen>
         <div className={shared.side}>
           <Readout
             label="Decision"
             rows={[
-              ["Sequence tier", `${tier.name} (${tier.width} px)`, "rv-tier"],
-              ["Canvas pixel ratio", decision.dpr, "rv-dpr"],
-              ["Device px needed", decision.needed, "rv-needed"],
-              ["Texture", decision.texture, "rv-texture"],
-              ["Shadow map", decision.shadowMap || "off", "rv-shadow"],
-              ["Tier weight (AVIF)", formatBytes(tier.bytes.avif ?? 0)],
-              ["Largest tier (AVIF)", formatBytes(largest.bytes.avif ?? 0)],
+              ["Sequence tier", tier ? `${tier.name} (${tier.width} px)` : "–", "rv-tier"],
+              ["Canvas pixel ratio", decision?.dpr ?? "–", "rv-dpr"],
+              ["Device px needed", decision?.needed ?? "–", "rv-needed"],
+              ["Texture", decision?.texture ?? "–", "rv-texture"],
+              ["Shadow map", decision ? decision.shadowMap || "off" : "–", "rv-shadow"],
+              ["Tier weight (AVIF)", tier ? formatBytes(tier.bytes.avif ?? 0) : "–"],
+              ["Largest tier (AVIF)", largest ? formatBytes(largest.bytes.avif ?? 0) : "–"],
             ]}
           />
           <div className={styles.reasons}>
             <h3 className={shared.panelTitle}>Why</h3>
-            <pre data-testid="rv-explain">{explain(decision)}</pre>
+            <pre data-testid="rv-explain">
+              {decision ? explain(decision) : "Loading the sequence manifest."}
+            </pre>
           </div>
           <Controls label="This device">
             <Button onClick={detect}>Detect this GPU</Button>
@@ -140,16 +150,25 @@ console.log(explain(decision));`}</Code>
   );
 }
 
-function ThisBrowser({ target }: { target: NonNullable<Parameters<typeof useResolve>[0]> }) {
-  const decision = useResolve(target);
-  if (!decision) return null;
+type Target = NonNullable<Parameters<typeof useResolve>[0]>;
+
+function ThisBrowser({ target }: { target: Target | null }) {
+  return target ? <ThisBrowserDecision target={target} /> : <ThisBrowserReadout decision={null} />;
+}
+
+function ThisBrowserDecision({ target }: { target: Target }) {
+  return <ThisBrowserReadout decision={useResolve(target)} />;
+}
+
+// Rendered with placeholders until there is a decision, so the page does not grow.
+function ThisBrowserReadout({ decision }: { decision: ReturnType<typeof useResolve> }) {
   return (
     <Readout
       label="This browser window"
       rows={[
-        ["Your tier", decision.tier.name, "rv-own-tier"],
-        ["Your pixel ratio", decision.dpr],
-        ["Why", decision.reasons.tier.join("; ")],
+        ["Your tier", decision?.tier.name ?? "–", "rv-own-tier"],
+        ["Your pixel ratio", decision?.dpr ?? "–"],
+        ["Why", decision?.reasons.tier.join("; ") ?? "–"],
       ]}
     />
   );

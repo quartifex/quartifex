@@ -99,10 +99,13 @@
   background: #050505;
 }
 
+/* The sequence's own 16:9 frame, as large as the sticky frame allows. (Height 100% in an
+   auto grid row fell back to the canvas's 2:1 default and overflowed on wide windows.) */
 .sticky canvas {
   display: block;
-  width: 100%;
-  height: 100%;
+  width: min(100%, 100vh * 16 / 9);
+  height: auto;
+  aspect-ratio: 16 / 9;
 }
 
 @media (max-width: 56rem) {

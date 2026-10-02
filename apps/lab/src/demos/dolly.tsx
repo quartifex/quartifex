@@ -23,6 +23,7 @@ import {
   Toggle,
   useReducedMotion,
 } from "@/components/demo/kit";
+import { previewPixelRatio, useView } from "@/components/demo/pixels";
 import { Jar3D, Stage } from "@/scene/Jar3D";
 import shared from "./demos.module.css";
 import layouts from "./layouts.module.css";
@@ -114,8 +115,7 @@ export default function Demo() {
 
   const path = useMemo(() => makePath(spline, segmentEase), [spline, segmentEase]);
   const [previewScale, setPreviewScale] = useState(1);
-  const [windowDpr, setWindowDpr] = useState(1);
-  useEffect(() => setWindowDpr(window.devicePixelRatio || 1), []);
+  const view = useView();
   const points = useMemo(() => pathPoints((p) => sample(path, p), 96), [path]);
   const bucket = bucketFor(device);
 
@@ -149,9 +149,9 @@ export default function Demo() {
             <Canvas
               resize={{ offsetSize: true }}
               gl={{ preserveDrawingBuffer: true }}
-              // Draw only the pixels the scaled preview shows (contactsheet flagged the full
-              // device resolution rendered into a small preview).
-              dpr={Math.min(device.dpr, previewScale * windowDpr)}
+              // Draw only the pixels the scaled preview shows, and no more than the window
+              // has (contactsheet flagged the full device resolution in a small preview).
+              dpr={previewPixelRatio(device, previewScale, view)}
               camera={{ fov: 32, position: [0, 1.4, 7] }}
               data-testid="dolly-canvas"
               aria-hidden="true"
@@ -232,18 +232,21 @@ export default function Demo() {
             <ReducedMotionToggle value={reduced} onChange={setReduced} />
           </Controls>
           <Controls label="Screen">{controls}</Controls>
-          {camera && (
-            <Readout
-              label="Camera"
-              rows={[
-                ["Chapter", camera.chapter ?? "", "dl-chapter"],
-                ["Segment", camera.segment + 1, "dl-segment"],
-                ["Position", camera.position.map((n) => n.toFixed(2)).join(", "), "dl-position"],
-                ["FOV", `${camera.fov.toFixed(1)}°`, "dl-fov"],
-                ["Bucket", bucket],
-              ]}
-            />
-          )}
+          {/* Rendered with placeholders until the rig reports, so nothing below it moves. */}
+          <Readout
+            label="Camera"
+            rows={[
+              ["Chapter", camera ? (camera.chapter ?? "") : "–", "dl-chapter"],
+              ["Segment", camera ? camera.segment + 1 : "–", "dl-segment"],
+              [
+                "Position",
+                camera ? camera.position.map((n) => n.toFixed(2)).join(", ") : "–",
+                "dl-position",
+              ],
+              ["FOV", camera ? `${camera.fov.toFixed(1)}°` : "–", "dl-fov"],
+              ["Bucket", bucket],
+            ]}
+          />
           <Note>
             {reduced
               ? "Reduced motion is on: the camera holds each chapter's pose and jumps between them; nothing glides."

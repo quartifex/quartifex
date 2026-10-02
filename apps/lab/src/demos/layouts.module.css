@@ -75,6 +75,13 @@
   gap: var(--qx-space-4);
 }
 
+/* Status under the headline: the row keeps its height when the headline's length changes. */
+.verdictStack {
+  flex-direction: column;
+  align-items: start;
+  gap: var(--qx-space-2);
+}
+
 .headline {
   margin: 0;
   font-family: var(--qx-font-display);

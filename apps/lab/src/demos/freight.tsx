@@ -235,7 +235,7 @@ export default function Demo() {
 
   return (
     <div className={shared.demo} data-demo="freight">
-      <div className={layouts.verdictRow}>
+      <div className={`${layouts.verdictRow} ${layouts.verdictStack}`}>
         {out ? (
           <p
             className={layouts.headline}

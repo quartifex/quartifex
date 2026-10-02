@@ -14,7 +14,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { type RefObject, Suspense, useEffect, useRef, useState } from "react";
 import {
   Button,
   Code,
@@ -54,11 +54,28 @@ function Scene({
       onUpdate: (self) => report.current(self.progress),
     });
   }, [name]);
+  return <ScenePanel name={name} progress={progress} section={section} panel={panel} live />;
+}
+
+/** The scene's markup. Rendered on its own from the first paint, so spine starting moves nothing. */
+function ScenePanel({
+  name,
+  progress,
+  section,
+  panel,
+  live = false,
+}: {
+  name: string;
+  progress: number;
+  section?: RefObject<HTMLElement | null>;
+  panel?: RefObject<HTMLDivElement | null>;
+  live?: boolean;
+}) {
   return (
     <section
       ref={section}
       className={styles.scene}
-      data-testid="sp-scene"
+      data-testid={live ? "sp-scene" : undefined}
       data-chapter={`Scene ${name}`}
     >
       <div ref={panel} className={styles.panel}>
@@ -98,8 +115,9 @@ export default function Demo() {
   const [progress, setProgress] = useState(0);
   const router = useRouter();
   const pathname = usePathname();
-  const params = useSearchParams();
-  const scene = params.get("scene") === "b" ? "b" : "a";
+  // Read from the query in a child of its own, so the rest of the demo is in the page's
+  // HTML from the first paint (useSearchParams opts a static page out up to its Suspense).
+  const [scene, setScene] = useState<"a" | "b">("a");
 
   useEffect(() => {
     const p = createPlumb();
@@ -130,34 +148,35 @@ export default function Demo() {
             </Button>
           </Controls>
         </div>
-        {stats && (
-          <dl className={layouts.statline} aria-label="Spine, live">
-            {(
+        {/* Rendered with placeholders until spine reports, so nothing below it moves. */}
+        <dl className={layouts.statline} aria-label="Spine, live">
+          {(
+            [
+              ["Scrolling", stats ? (stats.lenis ? "Lenis" : "native") : "–", "sp-mode"],
+              ["Tickers", stats?.tickers ?? "–", "sp-tickers"],
+              ["ScrollTriggers", stats?.triggers ?? "–", "sp-triggers"],
               [
-                ["Scrolling", stats.lenis ? "Lenis" : "native", "sp-mode"],
-                ["Tickers", stats.tickers, "sp-tickers"],
-                ["ScrollTriggers", stats.triggers, "sp-triggers"],
-                [
-                  "Pins",
-                  `${stats.pins} (${stats.spacers} spacer${stats.spacers === 1 ? "" : "s"} in the page)`,
-                  "sp-pins",
-                ],
-                ["Route", stats.route ?? "", "sp-route"],
-                ["Scene", `${Math.round(progress * 100)}%`, "sp-progress"],
-                [
-                  "Refreshes",
-                  stats.refreshes.map((r) => r.reason).join(", ") || "none",
-                  "sp-refreshes",
-                ],
-              ] as const
-            ).map(([name, value, id]) => (
-              <div key={name}>
-                <dt>{name}</dt>
-                <dd data-testid={id}>{value}</dd>
-              </div>
-            ))}
-          </dl>
-        )}
+                "Pins",
+                stats
+                  ? `${stats.pins} (${stats.spacers} spacer${stats.spacers === 1 ? "" : "s"} in the page)`
+                  : "–",
+                "sp-pins",
+              ],
+              ["Route", stats ? (stats.route ?? "") : "–", "sp-route"],
+              ["Scene", `${Math.round(progress * 100)}%`, "sp-progress"],
+              [
+                "Refreshes",
+                stats ? stats.refreshes.map((r) => r.reason).join(", ") || "none" : "–",
+                "sp-refreshes",
+              ],
+            ] as const
+          ).map(([name, value, id]) => (
+            <div key={name}>
+              <dt>{name}</dt>
+              <dd data-testid={id}>{value}</dd>
+            </div>
+          ))}
+        </dl>
       </div>
       <Note>
         {native
@@ -167,6 +186,10 @@ export default function Demo() {
         nothing. Leave the tab for more than a second and come back: a "wake" refresh is logged.
       </Note>
 
+      <Suspense fallback={null}>
+        <SceneFromQuery onScene={setScene} />
+      </Suspense>
+      {!plumb && <ScenePanel name={scene} progress={0} />}
       {plumb && (
         <SpineProvider
           key={native ? "native" : "lenis"}
@@ -194,4 +217,10 @@ useSpineScope(() => {
 }, []);`}</Code>
     </div>
   );
+}
+
+function SceneFromQuery({ onScene }: { onScene: (scene: "a" | "b") => void }) {
+  const scene = useSearchParams().get("scene") === "b" ? "b" : "a";
+  useEffect(() => onScene(scene), [scene, onScene]);
+  return null;
 }

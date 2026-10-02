@@ -6,6 +6,7 @@
 // reel shows the poster and loads no frames.
 import { bindScroll, createReel, type ReelStats } from "@quartifex/reel";
 import { scrubReel } from "@quartifex/reel/gsap";
+import { decide, readEnvironment, targetFromManifest } from "@quartifex/resolve";
 import type { Format } from "@quartifex/rushes/manifest";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -21,6 +22,7 @@ import {
   Slider,
   useReducedMotion,
 } from "@/components/demo/kit";
+import { previewPixelRatio, useView } from "@/components/demo/pixels";
 import { SEQUENCE_URL, useSequence } from "@/scene/sequence";
 import shared from "./demos.module.css";
 import styles from "./sequence.module.css";
@@ -54,27 +56,42 @@ export default function Demo() {
   const [reduced, setReduced] = useReducedMotion();
   const [stats, setStats] = useState<ReelStats | null>(null);
   const [position, setPosition] = useState(0);
+  const [previewScale, setPreviewScale] = useState<number | null>(null);
+  const [deviceDpr, setDeviceDpr] = useState<number | null>(null);
+  const view = useView();
   const canvas = useRef<HTMLCanvasElement>(null);
   const scroller = useRef<HTMLDivElement>(null);
   const pinned = useRef<HTMLElement>(null);
 
   const manifest = data?.manifest ?? null;
   const { width, height, dpr } = device;
+  // What the preview draws at: the simulated screen is shown scaled down, so its canvas
+  // needs only the pixels the preview shows (contactsheet flagged the full resolution).
+  const drawn = previewScale === null ? null : previewPixelRatio(device, previewScale, view);
 
   // Build the reel and its scroll driver; rebuild when an option changes.
   useEffect(() => {
     const el = canvas.current;
     const section = pinned.current;
     const box = scroller.current;
-    if (!el || !section || !box || !manifest) return;
+    if (!el || !section || !box || !manifest || drawn === null) return;
+    // Load the tier the simulated device would get, as resolve decides it for this canvas.
+    const real = decide(
+      { ...readEnvironment(), width, height, dpr },
+      targetFromManifest(manifest, {
+        fit,
+        box: { width: el.clientWidth || width, height: el.clientHeight || height },
+      }),
+    );
+    setDeviceDpr(real.dpr);
     const reel = createReel(el, manifest, {
       baseUrl: SEQUENCE_URL,
       format,
       fit,
       decode,
       reducedMotion: reduced,
-      environment: { width, height, dpr },
-      ...(tier === "auto" ? {} : { tier }),
+      environment: { width, height, dpr: drawn },
+      tier: tier === "auto" ? real.tier.name : tier,
     });
     let stop: () => void;
     if (driver === "gsap") {
@@ -95,7 +112,7 @@ export default function Demo() {
       stop();
       reel.destroy();
     };
-  }, [manifest, driver, tier, format, fit, decode, width, height, dpr, reduced]);
+  }, [manifest, driver, tier, format, fit, decode, width, height, dpr, drawn, reduced]);
 
   // Keyboard-friendly scrolling of the simulated page.
   const scrollTo = (p: number) => {
@@ -124,7 +141,11 @@ export default function Demo() {
     <div className={shared.demo} data-demo="reel">
       <Controls label="Screen">{controls}</Controls>
       <div className={shared.split}>
-        <Screen device={device} label="A launch page with a scrubbed image sequence">
+        <Screen
+          device={device}
+          onScale={setPreviewScale}
+          label="A launch page with a scrubbed image sequence"
+        >
           <div className={styles.scroller} ref={scroller} data-testid="reel-scroller">
             <section className={styles.section}>
               <h3>Scroll</h3>
@@ -172,7 +193,8 @@ export default function Demo() {
                 rows={[
                   ["Tier", stats.tier, "rl-tier"],
                   ["Format", stats.format, "rl-format"],
-                  ["Canvas DPR", stats.dpr],
+                  ["Canvas DPR", deviceDpr ?? "–"],
+                  ["Preview draws at", stats.dpr],
                   [
                     "Frame",
                     stats.reducedMotion ? "poster" : `${stats.shown + 1} / ${stats.frames}`,

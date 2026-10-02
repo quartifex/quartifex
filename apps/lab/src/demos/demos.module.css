@@ -1,5 +1,7 @@
 .demo {
   display: grid;
+  /* One column that never grows past the page: wide content (generated code) scrolls. */
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--qx-space-6);
   min-width: 0;
 }

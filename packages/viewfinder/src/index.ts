@@ -129,7 +129,8 @@ export function createViewfinder(options: ViewfinderOptions = {}): Viewfinder {
   const perfSection = el("section", { "aria-label": "Performance" });
   const toolsSection = el("section", { "aria-label": "Tools" });
   perfSection.append(el("h2", {}, "Frames"));
-  const perfText = el("p", { "data-vf": "fps", style: "margin:0" });
+  // A line from the start, so the frame graph below it does not move when the first figures arrive.
+  const perfText = el("p", { "data-vf": "fps", style: "margin:0" }, "Measuring frames…");
   const graph = el("canvas", {
     width: "272",
     height: "48",
@@ -293,8 +294,12 @@ export function createViewfinder(options: ViewfinderOptions = {}): Viewfinder {
     else if (markersButton.getAttribute("aria-pressed") === "true") markers.hidden = false;
     cancelAnimationFrame(raf);
     if (open) {
+      // Fill the panel before it is first painted, so its sections do not grow (and push
+      // the ones below) a frame after it opens.
+      renderChapters();
+      renderReadings();
       last = performance.now();
-      lastText = 0;
+      lastText = last;
       raf = requestAnimationFrame(loop);
     }
   };
