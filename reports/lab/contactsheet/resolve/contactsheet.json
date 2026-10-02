@@ -1,6 +1,6 @@
 {
   "url": "http://localhost:3100/resolve",
-  "createdAt": "2026-10-02T05:03:25.952Z",
+  "createdAt": "2026-10-02T05:39:10.904Z",
   "chapters": ["page"],
   "rows": [
     {
@@ -303,12 +303,7 @@
         {
           "chapter": "page",
           "image": "ipad-mini/page.png",
-          "flags": [
-            {
-              "kind": "layout-shift",
-              "message": "layout shift 0.541, over 0.1"
-            }
-          ]
+          "flags": []
         }
       ]
     },
@@ -327,12 +322,7 @@
         {
           "chapter": "page",
           "image": "ipad-air/page.png",
-          "flags": [
-            {
-              "kind": "layout-shift",
-              "message": "layout shift 0.469, over 0.1"
-            }
-          ]
+          "flags": []
         }
       ]
     },
@@ -351,12 +341,7 @@
         {
           "chapter": "page",
           "image": "ipad-air-landscape/page.png",
-          "flags": [
-            {
-              "kind": "layout-shift",
-              "message": "layout shift 0.372, over 0.1"
-            }
-          ]
+          "flags": []
         }
       ]
     },
@@ -375,12 +360,7 @@
         {
           "chapter": "page",
           "image": "ipad-air-split-view-half/page.png",
-          "flags": [
-            {
-              "kind": "layout-shift",
-              "message": "layout shift 0.501, over 0.1"
-            }
-          ]
+          "flags": []
         }
       ]
     },
@@ -399,12 +379,7 @@
         {
           "chapter": "page",
           "image": "ipad-air-split-view-third/page.png",
-          "flags": [
-            {
-              "kind": "layout-shift",
-              "message": "layout shift 0.461, over 0.1"
-            }
-          ]
+          "flags": []
         }
       ]
     },
@@ -423,12 +398,7 @@
         {
           "chapter": "page",
           "image": "ipad-pro-12-9/page.png",
-          "flags": [
-            {
-              "kind": "layout-shift",
-              "message": "layout shift 0.325, over 0.1"
-            }
-          ]
+          "flags": []
         }
       ]
     },
@@ -447,12 +417,7 @@
         {
           "chapter": "page",
           "image": "ipad-pro-12-9-landscape/page.png",
-          "flags": [
-            {
-              "kind": "layout-shift",
-              "message": "layout shift 0.259, over 0.1"
-            }
-          ]
+          "flags": []
         }
       ]
     },
@@ -471,12 +436,7 @@
         {
           "chapter": "page",
           "image": "android-tablet/page.png",
-          "flags": [
-            {
-              "kind": "layout-shift",
-              "message": "layout shift 0.432, over 0.1"
-            }
-          ]
+          "flags": []
         }
       ]
     },
@@ -494,12 +454,7 @@
         {
           "chapter": "page",
           "image": "laptop-13in/page.png",
-          "flags": [
-            {
-              "kind": "layout-shift",
-              "message": "layout shift 0.323, over 0.1"
-            }
-          ]
+          "flags": []
         }
       ]
     },
@@ -517,12 +472,7 @@
         {
           "chapter": "page",
           "image": "macbook-air-13/page.png",
-          "flags": [
-            {
-              "kind": "layout-shift",
-              "message": "layout shift 0.242, over 0.1"
-            }
-          ]
+          "flags": []
         }
       ]
     },
@@ -540,12 +490,7 @@
         {
           "chapter": "page",
           "image": "windows-laptop/page.png",
-          "flags": [
-            {
-              "kind": "layout-shift",
-              "message": "layout shift 0.340, over 0.1"
-            }
-          ]
+          "flags": []
         }
       ]
     },
@@ -563,12 +508,7 @@
         {
           "chapter": "page",
           "image": "laptop-15in-at-125/page.png",
-          "flags": [
-            {
-              "kind": "layout-shift",
-              "message": "layout shift 0.264, over 0.1"
-            }
-          ]
+          "flags": []
         }
       ]
     },
@@ -586,12 +526,7 @@
         {
           "chapter": "page",
           "image": "desktop-1080p/page.png",
-          "flags": [
-            {
-              "kind": "layout-shift",
-              "message": "layout shift 0.155, over 0.1"
-            }
-          ]
+          "flags": []
         }
       ]
     },
@@ -645,12 +580,7 @@
         {
           "chapter": "page",
           "image": "desktop-4k-at-200/page.png",
-          "flags": [
-            {
-              "kind": "layout-shift",
-              "message": "layout shift 0.131, over 0.1"
-            }
-          ]
+          "flags": []
         }
       ]
     },

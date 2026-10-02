@@ -137,15 +137,44 @@ watch and the jar.
 | CI on GitHub | pass on `5694be4`: check job and all five Playwright suites |
 | contactsheet over the restructured pages (36 profiles each), reports in `reports/lab/contactsheet/` | no flags: the watch scene, the jar scene, `heft`, `anatomy`, `sleeve`, `understudy`, `plumb`. Remaining flags listed under Known issues |
 
+## Contactsheet follow-up (2 Oct 2026): hub demo pages cleared
+
+The flags left by the hub pass are cleared; no demo control does anything different.
+
+| Page | Cause | Fix |
+| --- | --- | --- |
+| `dolly` (15 layout shift, 2 canvas) | The camera readout mounted 150 ms after load and pushed the note and code below it; in phone landscape the preview is larger than the window | Readout rendered from the first paint with placeholders; canvas pixel ratio also capped by the window's pixels (shared `previewPixelRatio`, `components/demo/pixels.ts`) |
+| `resolve` (14) | Rendered only "Loading the sequence manifest" until the manifest arrived | The whole layout renders from the first paint, placeholders until the manifest (and this window's decision) arrive |
+| `spine` (18) | `useSearchParams` opted the demo out of the page's HTML (Next renders the Suspense fallback), and the stat line and scene arrived after hydration | The query is read in a child of its own; stat line and the scene's space render from the first paint. ScrollTrigger's pin spacer moves nothing once the section is already there |
+| `freight` (3) | The headline and status shared a wrapping row, and the generated typed module (a long-lined `pre`) widened the demo's grid column past the window | Status sits under the headline; the demo grid's column is `minmax(0, 1fr)` for every demo, so wide code scrolls |
+| `viewfinder` (2 shift, 3 canvas) | The overlay painted empty sections and filled them a frame later; the canvas's `height: 100%` in an auto grid row fell back to its 2:1 default, 2368 px tall in a 1440 px frame on 32:9 | viewfinder fills the panel before it is first painted (patch changeset); the scene's canvas is the sequence's 16:9, bounded by the frame height, with its pixel ratio capped to the 8.3 MP budget |
+| `reel` (12 canvas) | The preview rendered the simulated device's full resolution | As in anyframe: load the tier resolve picks for the simulated device, draw at the preview's pixel ratio. The readout shows both ("Canvas DPR" for the device, "Preview draws at") |
+
+| Check | Result |
+| --- | --- |
+| `pnpm check` | green: typecheck (35 tasks), lint (0 errors), test (21 files, 220 tests), size (all budgets met) |
+| `pnpm build` | pass |
+| `PW_CHANNEL=chrome pnpm e2e` | pass: hub 90, anyframe 8, dailies 4, heft 1, contactsheet 1. A first run failed one heft test (the heavy page's scroll CLS read as passing under load); it passed 4 of 4 alone and the full rerun was green |
+| contactsheet, 36 profiles, on `dolly`, `resolve`, `spine`, `freight`, `viewfinder`, `reel` | no flags. Reports regenerated in `reports/lab/contactsheet/` and formatted with Biome |
+| contactsheet regression pass on `anatomy`, `heft`, `plumb`, `sleeve`, `understudy` (scratch, not committed) | no flags |
+
+Notes: port 3100 was first held by a server started from the main checkout, so the first
+measurements ran on 3101; the committed reports were taken on 3100 once it was free. This
+worktree also needed `pnpm install --frozen-lockfile --offline --force` (anyframe was not
+linked) and a cache-less anyframe build (turbo restored `.next` without the generated
+`public/sequences`), both environment only.
+
+Next prompt: unchanged, **P5V** (`volumetric`) if scheduled, otherwise **PF** (the flagship quartifex.com).
+
 ## Known issues
 
-- contactsheet flags on hub pages it had not been pointed at before this pass (36 profiles):
-  layout shift on tablets for `dolly` (15), `resolve` (14), `spine` (18, ScrollTrigger's pin
-  spacer arriving after hydration), `freight` (3) and `viewfinder` (2, split view); canvas over
-  budget for `reel` (12, its preview renders the simulated device's full resolution, the fault
-  fixed in `dolly` here and in anyframe in P4) and `viewfinder` (3, a 32:9 window at 2x). The
-  safeframe page's own flags come from its scaled preview of other devices and are expected.
-  None affects a launch site; they are queued as a follow-up.
+- The safeframe page's own contactsheet flags come from its scaled preview of other devices and
+  are expected (re-measured: 23 subject outside frame, 32 canvas, 38 text over subject; its
+  committed report is from before the target-size fix and still lists 60 tap targets).
+- viewfinder's scene caps its canvas pixel ratio when the scene is built; a window resized much
+  larger afterwards keeps that ratio until the page reloads or reduced motion is toggled.
+- turbo's build outputs for the apps do not include the generated `public/sequences`, so a
+  cache hit can leave a checkout without frames (seen here for anyframe).
 
 ## Items
 

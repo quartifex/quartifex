@@ -1,6 +1,6 @@
 {
   "url": "http://localhost:3100/reel",
-  "createdAt": "2026-10-02T05:02:56.342Z",
+  "createdAt": "2026-10-02T05:40:30.816Z",
   "chapters": ["page"],
   "rows": [
     {
@@ -303,18 +303,7 @@
         {
           "chapter": "page",
           "image": "ipad-mini/page.png",
-          "flags": [
-            {
-              "kind": "canvas-budget",
-              "message": "canvas renders 780x1688 for 257x556 CSS px at DPR 2: more pixels than the screen shows",
-              "rect": {
-                "x": 243.609375,
-                "y": 1056.370361328125,
-                "width": 256.765625,
-                "height": 555.6671142578125
-              }
-            }
-          ]
+          "flags": []
         }
       ]
     },
@@ -333,18 +322,7 @@
         {
           "chapter": "page",
           "image": "ipad-air/page.png",
-          "flags": [
-            {
-              "kind": "canvas-budget",
-              "message": "canvas renders 780x1688 for 257x556 CSS px at DPR 2: more pixels than the screen shows",
-              "rect": {
-                "x": 281.609375,
-                "y": 991.9171752929688,
-                "width": 256.765625,
-                "height": 555.6671752929688
-              }
-            }
-          ]
+          "flags": []
         }
       ]
     },
@@ -420,18 +398,7 @@
         {
           "chapter": "page",
           "image": "ipad-pro-12-9/page.png",
-          "flags": [
-            {
-              "kind": "canvas-budget",
-              "message": "canvas renders 780x1688 for 257x556 CSS px at DPR 2: more pixels than the screen shows",
-              "rect": {
-                "x": 175.609375,
-                "y": 921.8546752929688,
-                "width": 256.765625,
-                "height": 555.6671752929688
-              }
-            }
-          ]
+          "flags": []
         }
       ]
     },
@@ -450,18 +417,7 @@
         {
           "chapter": "page",
           "image": "ipad-pro-12-9-landscape/page.png",
-          "flags": [
-            {
-              "kind": "canvas-budget",
-              "message": "canvas renders 780x1688 for 257x556 CSS px at DPR 2: more pixels than the screen shows",
-              "rect": {
-                "x": 346.609375,
-                "y": 933.5421752929688,
-                "width": 256.765625,
-                "height": 555.6671752929688
-              }
-            }
-          ]
+          "flags": []
         }
       ]
     },
@@ -480,18 +436,7 @@
         {
           "chapter": "page",
           "image": "android-tablet/page.png",
-          "flags": [
-            {
-              "kind": "canvas-budget",
-              "message": "canvas renders 780x1688 for 257x556 CSS px at DPR 1.5: more pixels than the screen shows",
-              "rect": {
-                "x": 271.609375,
-                "y": 991.2453002929688,
-                "width": 256.765625,
-                "height": 555.6671752929688
-              }
-            }
-          ]
+          "flags": []
         }
       ]
     },
@@ -527,18 +472,7 @@
         {
           "chapter": "page",
           "image": "macbook-air-13/page.png",
-          "flags": [
-            {
-              "kind": "canvas-budget",
-              "message": "canvas renders 780x1688 for 257x556 CSS px at DPR 2: more pixels than the screen shows",
-              "rect": {
-                "x": 398.609375,
-                "y": 933.9484252929688,
-                "width": 256.765625,
-                "height": 555.6671752929688
-              }
-            }
-          ]
+          "flags": []
         }
       ]
     },
@@ -592,18 +526,7 @@
         {
           "chapter": "page",
           "image": "desktop-1080p/page.png",
-          "flags": [
-            {
-              "kind": "canvas-budget",
-              "message": "canvas renders 780x1688 for 257x556 CSS px at DPR 1: more pixels than the screen shows",
-              "rect": {
-                "x": 623.609375,
-                "y": 933.9484252929688,
-                "width": 256.765625,
-                "height": 555.6671752929688
-              }
-            }
-          ]
+          "flags": []
         }
       ]
     },
@@ -621,18 +544,7 @@
         {
           "chapter": "page",
           "image": "desktop-1440p/page.png",
-          "flags": [
-            {
-              "kind": "canvas-budget",
-              "message": "canvas renders 780x1688 for 257x556 CSS px at DPR 1: more pixels than the screen shows",
-              "rect": {
-                "x": 943.609375,
-                "y": 933.9484252929688,
-                "width": 256.765625,
-                "height": 555.6671752929688
-              }
-            }
-          ]
+          "flags": []
         }
       ]
     },
@@ -650,18 +562,7 @@
         {
           "chapter": "page",
           "image": "desktop-4k/page.png",
-          "flags": [
-            {
-              "kind": "canvas-budget",
-              "message": "canvas renders 780x1688 for 257x556 CSS px at DPR 1: more pixels than the screen shows",
-              "rect": {
-                "x": 1583.609375,
-                "y": 933.9484252929688,
-                "width": 256.765625,
-                "height": 555.6671752929688
-              }
-            }
-          ]
+          "flags": []
         }
       ]
     },
@@ -679,18 +580,7 @@
         {
           "chapter": "page",
           "image": "desktop-4k-at-200/page.png",
-          "flags": [
-            {
-              "kind": "canvas-budget",
-              "message": "canvas renders 780x1688 for 257x556 CSS px at DPR 2: more pixels than the screen shows",
-              "rect": {
-                "x": 623.609375,
-                "y": 933.9484252929688,
-                "width": 256.765625,
-                "height": 555.6671752929688
-              }
-            }
-          ]
+          "flags": []
         }
       ]
     },
@@ -708,18 +598,7 @@
         {
           "chapter": "page",
           "image": "ultrawide-21-9/page.png",
-          "flags": [
-            {
-              "kind": "canvas-budget",
-              "message": "canvas renders 780x1688 for 257x556 CSS px at DPR 1: more pixels than the screen shows",
-              "rect": {
-                "x": 1383.609375,
-                "y": 933.9484252929688,
-                "width": 256.765625,
-                "height": 555.6671752929688
-              }
-            }
-          ]
+          "flags": []
         }
       ]
     },
@@ -737,18 +616,7 @@
         {
           "chapter": "page",
           "image": "super-ultrawide-32-9/page.png",
-          "flags": [
-            {
-              "kind": "canvas-budget",
-              "message": "canvas renders 780x1688 for 257x556 CSS px at DPR 1: more pixels than the screen shows",
-              "rect": {
-                "x": 2223.609375,
-                "y": 933.9484252929688,
-                "width": 256.765625,
-                "height": 555.6671752929688
-              }
-            }
-          ]
+          "flags": []
         }
       ]
     },

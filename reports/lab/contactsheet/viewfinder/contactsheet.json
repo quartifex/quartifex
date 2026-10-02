@@ -1,6 +1,6 @@
 {
   "url": "http://localhost:3100/viewfinder",
-  "createdAt": "2026-10-02T04:57:46.928Z",
+  "createdAt": "2026-10-02T05:40:13.142Z",
   "chapters": ["Before", "Sequence", "After"],
   "rows": [
     {
@@ -574,22 +574,12 @@
         {
           "chapter": "Sequence",
           "image": "ipad-air-split-view-third/sequence.png",
-          "flags": [
-            {
-              "kind": "layout-shift",
-              "message": "layout shift 0.139, over 0.1"
-            }
-          ]
+          "flags": []
         },
         {
           "chapter": "After",
           "image": "ipad-air-split-view-third/after.png",
-          "flags": [
-            {
-              "kind": "layout-shift",
-              "message": "layout shift 0.139, over 0.1"
-            }
-          ]
+          "flags": []
         }
       ]
     },
@@ -946,50 +936,17 @@
         {
           "chapter": "Before",
           "image": "super-ultrawide-32-9/before.png",
-          "flags": [
-            {
-              "kind": "canvas-budget",
-              "message": "canvas is 4736x2368 (11.2 MP), over the 8.3 MP budget",
-              "rect": {
-                "x": 344,
-                "y": 1008.234375,
-                "width": 4736,
-                "height": 2368
-              }
-            }
-          ]
+          "flags": []
         },
         {
           "chapter": "Sequence",
           "image": "super-ultrawide-32-9/sequence.png",
-          "flags": [
-            {
-              "kind": "canvas-budget",
-              "message": "canvas is 4736x2368 (11.2 MP), over the 8.3 MP budget",
-              "rect": {
-                "x": 344,
-                "y": 0,
-                "width": 4736,
-                "height": 2368
-              }
-            }
-          ]
+          "flags": []
         },
         {
           "chapter": "After",
           "image": "super-ultrawide-32-9/after.png",
-          "flags": [
-            {
-              "kind": "canvas-budget",
-              "message": "canvas is 4736x2368 (11.2 MP), over the 8.3 MP budget",
-              "rect": {
-                "x": 344,
-                "y": -1439.765625,
-                "width": 4736,
-                "height": 2368
-              }
-            }
-          ]
+          "flags": []
         }
       ]
     },

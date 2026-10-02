@@ -1,6 +1,6 @@
 {
   "url": "http://localhost:3100/freight",
-  "createdAt": "2026-10-02T05:01:53.535Z",
+  "createdAt": "2026-10-02T05:39:48.776Z",
   "chapters": ["page"],
   "rows": [
     {
@@ -303,12 +303,7 @@
         {
           "chapter": "page",
           "image": "ipad-mini/page.png",
-          "flags": [
-            {
-              "kind": "layout-shift",
-              "message": "layout shift 0.633, over 0.1"
-            }
-          ]
+          "flags": []
         }
       ]
     },
@@ -327,12 +322,7 @@
         {
           "chapter": "page",
           "image": "ipad-air/page.png",
-          "flags": [
-            {
-              "kind": "layout-shift",
-              "message": "layout shift 0.218, over 0.1"
-            }
-          ]
+          "flags": []
         }
       ]
     },
@@ -446,12 +436,7 @@
         {
           "chapter": "page",
           "image": "android-tablet/page.png",
-          "flags": [
-            {
-              "kind": "layout-shift",
-              "message": "layout shift 0.230, over 0.1"
-            }
-          ]
+          "flags": []
         }
       ]
     },

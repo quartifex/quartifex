@@ -1,6 +1,6 @@
 {
   "url": "http://localhost:3100/dolly",
-  "createdAt": "2026-10-02T05:02:20.308Z",
+  "createdAt": "2026-10-02T05:38:54.363Z",
   "chapters": ["Front", "Orbit", "Top", "Close"],
   "rows": [
     {
@@ -290,18 +290,7 @@
         {
           "chapter": "Front",
           "image": "iphone-15-landscape/front.png",
-          "flags": [
-            {
-              "kind": "canvas-budget",
-              "message": "canvas renders 2396x1497 for 799x499 CSS px at DPR 3: more pixels than the screen shows",
-              "rect": {
-                "x": 26.546875,
-                "y": -203.734375,
-                "width": 798.90625,
-                "height": 499.31640625
-              }
-            }
-          ]
+          "flags": []
         },
         {
           "chapter": "Orbit",
@@ -335,18 +324,7 @@
         {
           "chapter": "Front",
           "image": "pixel-8-landscape/front.png",
-          "flags": [
-            {
-              "kind": "canvas-budget",
-              "message": "canvas renders 2252x1407 for 858x536 CSS px at DPR 2.625: more pixels than the screen shows",
-              "rect": {
-                "x": 28.4375,
-                "y": -193.59375,
-                "width": 858.125,
-                "height": 536.328125
-              }
-            }
-          ]
+          "flags": []
         },
         {
           "chapter": "Orbit",
@@ -589,32 +567,17 @@
         {
           "chapter": "Orbit",
           "image": "ipad-air/orbit.png",
-          "flags": [
-            {
-              "kind": "layout-shift",
-              "message": "layout shift 0.252, over 0.1"
-            }
-          ]
+          "flags": []
         },
         {
           "chapter": "Top",
           "image": "ipad-air/top.png",
-          "flags": [
-            {
-              "kind": "layout-shift",
-              "message": "layout shift 0.252, over 0.1"
-            }
-          ]
+          "flags": []
         },
         {
           "chapter": "Close",
           "image": "ipad-air/close.png",
-          "flags": [
-            {
-              "kind": "layout-shift",
-              "message": "layout shift 0.252, over 0.1"
-            }
-          ]
+          "flags": []
         }
       ]
     },
@@ -740,32 +703,17 @@
         {
           "chapter": "Orbit",
           "image": "ipad-pro-12-9/orbit.png",
-          "flags": [
-            {
-              "kind": "layout-shift",
-              "message": "layout shift 0.188, over 0.1"
-            }
-          ]
+          "flags": []
         },
         {
           "chapter": "Top",
           "image": "ipad-pro-12-9/top.png",
-          "flags": [
-            {
-              "kind": "layout-shift",
-              "message": "layout shift 0.188, over 0.1"
-            }
-          ]
+          "flags": []
         },
         {
           "chapter": "Close",
           "image": "ipad-pro-12-9/close.png",
-          "flags": [
-            {
-              "kind": "layout-shift",
-              "message": "layout shift 0.188, over 0.1"
-            }
-          ]
+          "flags": []
         }
       ]
     },
@@ -789,32 +737,17 @@
         {
           "chapter": "Orbit",
           "image": "ipad-pro-12-9-landscape/orbit.png",
-          "flags": [
-            {
-              "kind": "layout-shift",
-              "message": "layout shift 0.552, over 0.1"
-            }
-          ]
+          "flags": []
         },
         {
           "chapter": "Top",
           "image": "ipad-pro-12-9-landscape/top.png",
-          "flags": [
-            {
-              "kind": "layout-shift",
-              "message": "layout shift 0.552, over 0.1"
-            }
-          ]
+          "flags": []
         },
         {
           "chapter": "Close",
           "image": "ipad-pro-12-9-landscape/close.png",
-          "flags": [
-            {
-              "kind": "layout-shift",
-              "message": "layout shift 0.552, over 0.1"
-            }
-          ]
+          "flags": []
         }
       ]
     },
@@ -904,32 +837,17 @@
         {
           "chapter": "Orbit",
           "image": "macbook-air-13/orbit.png",
-          "flags": [
-            {
-              "kind": "layout-shift",
-              "message": "layout shift 0.584, over 0.1"
-            }
-          ]
+          "flags": []
         },
         {
           "chapter": "Top",
           "image": "macbook-air-13/top.png",
-          "flags": [
-            {
-              "kind": "layout-shift",
-              "message": "layout shift 0.584, over 0.1"
-            }
-          ]
+          "flags": []
         },
         {
           "chapter": "Close",
           "image": "macbook-air-13/close.png",
-          "flags": [
-            {
-              "kind": "layout-shift",
-              "message": "layout shift 0.584, over 0.1"
-            }
-          ]
+          "flags": []
         }
       ]
     },
@@ -1084,32 +1002,17 @@
         {
           "chapter": "Orbit",
           "image": "desktop-4k/orbit.png",
-          "flags": [
-            {
-              "kind": "layout-shift",
-              "message": "layout shift 0.187, over 0.1"
-            }
-          ]
+          "flags": []
         },
         {
           "chapter": "Top",
           "image": "desktop-4k/top.png",
-          "flags": [
-            {
-              "kind": "layout-shift",
-              "message": "layout shift 0.187, over 0.1"
-            }
-          ]
+          "flags": []
         },
         {
           "chapter": "Close",
           "image": "desktop-4k/close.png",
-          "flags": [
-            {
-              "kind": "layout-shift",
-              "message": "layout shift 0.187, over 0.1"
-            }
-          ]
+          "flags": []
         }
       ]
     },

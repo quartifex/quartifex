@@ -1,7 +1,7 @@
 {
   "url": "http://localhost:3100/spine",
-  "createdAt": "2026-10-02T04:58:03.014Z",
-  "chapters": ["Scene a", "page"],
+  "createdAt": "2026-10-02T05:39:26.073Z",
+  "chapters": ["Scene a"],
   "rows": [
     {
       "profile": {
@@ -18,11 +18,6 @@
         {
           "chapter": "Scene a",
           "image": "iphone-se/scene-a.png",
-          "flags": []
-        },
-        {
-          "chapter": "page",
-          "image": "",
           "flags": []
         }
       ]
@@ -41,12 +36,7 @@
       "cells": [
         {
           "chapter": "Scene a",
-          "image": "",
-          "flags": []
-        },
-        {
-          "chapter": "page",
-          "image": "iphone-13-mini/page.png",
+          "image": "iphone-13-mini/scene-a.png",
           "flags": []
         }
       ]
@@ -65,12 +55,7 @@
       "cells": [
         {
           "chapter": "Scene a",
-          "image": "",
-          "flags": []
-        },
-        {
-          "chapter": "page",
-          "image": "iphone-15/page.png",
+          "image": "iphone-15/scene-a.png",
           "flags": []
         }
       ]
@@ -89,12 +74,7 @@
       "cells": [
         {
           "chapter": "Scene a",
-          "image": "",
-          "flags": []
-        },
-        {
-          "chapter": "page",
-          "image": "iphone-15-pro-max/page.png",
+          "image": "iphone-15-pro-max/scene-a.png",
           "flags": []
         }
       ]
@@ -113,12 +93,7 @@
       "cells": [
         {
           "chapter": "Scene a",
-          "image": "",
-          "flags": []
-        },
-        {
-          "chapter": "page",
-          "image": "pixel-8/page.png",
+          "image": "pixel-8/scene-a.png",
           "flags": []
         }
       ]
@@ -137,12 +112,7 @@
       "cells": [
         {
           "chapter": "Scene a",
-          "image": "",
-          "flags": []
-        },
-        {
-          "chapter": "page",
-          "image": "galaxy-s24/page.png",
+          "image": "galaxy-s24/scene-a.png",
           "flags": []
         }
       ]
@@ -161,12 +131,7 @@
       "cells": [
         {
           "chapter": "Scene a",
-          "image": "",
-          "flags": []
-        },
-        {
-          "chapter": "page",
-          "image": "budget-android/page.png",
+          "image": "budget-android/scene-a.png",
           "flags": []
         }
       ]
@@ -185,12 +150,7 @@
       "cells": [
         {
           "chapter": "Scene a",
-          "image": "",
-          "flags": []
-        },
-        {
-          "chapter": "page",
-          "image": "iphone-se-landscape/page.png",
+          "image": "iphone-se-landscape/scene-a.png",
           "flags": []
         }
       ]
@@ -209,12 +169,7 @@
       "cells": [
         {
           "chapter": "Scene a",
-          "image": "",
-          "flags": []
-        },
-        {
-          "chapter": "page",
-          "image": "iphone-15-landscape/page.png",
+          "image": "iphone-15-landscape/scene-a.png",
           "flags": []
         }
       ]
@@ -233,12 +188,7 @@
       "cells": [
         {
           "chapter": "Scene a",
-          "image": "",
-          "flags": []
-        },
-        {
-          "chapter": "page",
-          "image": "pixel-8-landscape/page.png",
+          "image": "pixel-8-landscape/scene-a.png",
           "flags": []
         }
       ]
@@ -259,11 +209,6 @@
           "chapter": "Scene a",
           "image": "galaxy-z-fold-closed/scene-a.png",
           "flags": []
-        },
-        {
-          "chapter": "page",
-          "image": "",
-          "flags": []
         }
       ]
     },
@@ -281,12 +226,7 @@
       "cells": [
         {
           "chapter": "Scene a",
-          "image": "",
-          "flags": []
-        },
-        {
-          "chapter": "page",
-          "image": "galaxy-z-fold-open/page.png",
+          "image": "galaxy-z-fold-open/scene-a.png",
           "flags": []
         }
       ]
@@ -305,12 +245,7 @@
       "cells": [
         {
           "chapter": "Scene a",
-          "image": "",
-          "flags": []
-        },
-        {
-          "chapter": "page",
-          "image": "galaxy-z-fold-open-landscape/page.png",
+          "image": "galaxy-z-fold-open-landscape/scene-a.png",
           "flags": []
         }
       ]
@@ -329,12 +264,7 @@
       "cells": [
         {
           "chapter": "Scene a",
-          "image": "",
-          "flags": []
-        },
-        {
-          "chapter": "page",
-          "image": "galaxy-z-flip-open/page.png",
+          "image": "galaxy-z-flip-open/scene-a.png",
           "flags": []
         }
       ]
@@ -353,12 +283,7 @@
       "cells": [
         {
           "chapter": "Scene a",
-          "image": "",
-          "flags": []
-        },
-        {
-          "chapter": "page",
-          "image": "pixel-fold-open/page.png",
+          "image": "pixel-fold-open/scene-a.png",
           "flags": []
         }
       ]
@@ -377,18 +302,8 @@
       "cells": [
         {
           "chapter": "Scene a",
-          "image": "",
+          "image": "ipad-mini/scene-a.png",
           "flags": []
-        },
-        {
-          "chapter": "page",
-          "image": "ipad-mini/page.png",
-          "flags": [
-            {
-              "kind": "layout-shift",
-              "message": "layout shift 0.682, over 0.1"
-            }
-          ]
         }
       ]
     },
@@ -407,16 +322,6 @@
         {
           "chapter": "Scene a",
           "image": "ipad-air/scene-a.png",
-          "flags": [
-            {
-              "kind": "layout-shift",
-              "message": "layout shift 0.737, over 0.1"
-            }
-          ]
-        },
-        {
-          "chapter": "page",
-          "image": "",
           "flags": []
         }
       ]
@@ -435,18 +340,8 @@
       "cells": [
         {
           "chapter": "Scene a",
-          "image": "",
+          "image": "ipad-air-landscape/scene-a.png",
           "flags": []
-        },
-        {
-          "chapter": "page",
-          "image": "ipad-air-landscape/page.png",
-          "flags": [
-            {
-              "kind": "layout-shift",
-              "message": "layout shift 0.512, over 0.1"
-            }
-          ]
         }
       ]
     },
@@ -464,18 +359,8 @@
       "cells": [
         {
           "chapter": "Scene a",
-          "image": "",
+          "image": "ipad-air-split-view-half/scene-a.png",
           "flags": []
-        },
-        {
-          "chapter": "page",
-          "image": "ipad-air-split-view-half/page.png",
-          "flags": [
-            {
-              "kind": "layout-shift",
-              "message": "layout shift 0.482, over 0.1"
-            }
-          ]
         }
       ]
     },
@@ -494,16 +379,6 @@
         {
           "chapter": "Scene a",
           "image": "ipad-air-split-view-third/scene-a.png",
-          "flags": [
-            {
-              "kind": "layout-shift",
-              "message": "layout shift 0.397, over 0.1"
-            }
-          ]
-        },
-        {
-          "chapter": "page",
-          "image": "",
           "flags": []
         }
       ]
@@ -522,18 +397,8 @@
       "cells": [
         {
           "chapter": "Scene a",
-          "image": "",
+          "image": "ipad-pro-12-9/scene-a.png",
           "flags": []
-        },
-        {
-          "chapter": "page",
-          "image": "ipad-pro-12-9/page.png",
-          "flags": [
-            {
-              "kind": "layout-shift",
-              "message": "layout shift 0.673, over 0.1"
-            }
-          ]
         }
       ]
     },
@@ -552,16 +417,6 @@
         {
           "chapter": "Scene a",
           "image": "ipad-pro-12-9-landscape/scene-a.png",
-          "flags": [
-            {
-              "kind": "layout-shift",
-              "message": "layout shift 0.562, over 0.1"
-            }
-          ]
-        },
-        {
-          "chapter": "page",
-          "image": "",
           "flags": []
         }
       ]
@@ -581,16 +436,6 @@
         {
           "chapter": "Scene a",
           "image": "android-tablet/scene-a.png",
-          "flags": [
-            {
-              "kind": "layout-shift",
-              "message": "layout shift 0.698, over 0.1"
-            }
-          ]
-        },
-        {
-          "chapter": "page",
-          "image": "",
           "flags": []
         }
       ]
@@ -608,18 +453,8 @@
       "cells": [
         {
           "chapter": "Scene a",
-          "image": "",
+          "image": "laptop-13in/scene-a.png",
           "flags": []
-        },
-        {
-          "chapter": "page",
-          "image": "laptop-13in/page.png",
-          "flags": [
-            {
-              "kind": "layout-shift",
-              "message": "layout shift 0.461, over 0.1"
-            }
-          ]
         }
       ]
     },
@@ -636,18 +471,8 @@
       "cells": [
         {
           "chapter": "Scene a",
-          "image": "",
+          "image": "macbook-air-13/scene-a.png",
           "flags": []
-        },
-        {
-          "chapter": "page",
-          "image": "macbook-air-13/page.png",
-          "flags": [
-            {
-              "kind": "layout-shift",
-              "message": "layout shift 0.495, over 0.1"
-            }
-          ]
         }
       ]
     },
@@ -664,18 +489,8 @@
       "cells": [
         {
           "chapter": "Scene a",
-          "image": "",
+          "image": "windows-laptop/scene-a.png",
           "flags": []
-        },
-        {
-          "chapter": "page",
-          "image": "windows-laptop/page.png",
-          "flags": [
-            {
-              "kind": "layout-shift",
-              "message": "layout shift 0.415, over 0.1"
-            }
-          ]
         }
       ]
     },
@@ -692,18 +507,8 @@
       "cells": [
         {
           "chapter": "Scene a",
-          "image": "",
+          "image": "laptop-15in-at-125/scene-a.png",
           "flags": []
-        },
-        {
-          "chapter": "page",
-          "image": "laptop-15in-at-125/page.png",
-          "flags": [
-            {
-              "kind": "layout-shift",
-              "message": "layout shift 0.436, over 0.1"
-            }
-          ]
         }
       ]
     },
@@ -720,18 +525,8 @@
       "cells": [
         {
           "chapter": "Scene a",
-          "image": "",
+          "image": "desktop-1080p/scene-a.png",
           "flags": []
-        },
-        {
-          "chapter": "page",
-          "image": "desktop-1080p/page.png",
-          "flags": [
-            {
-              "kind": "layout-shift",
-              "message": "layout shift 0.438, over 0.1"
-            }
-          ]
         }
       ]
     },
@@ -748,18 +543,8 @@
       "cells": [
         {
           "chapter": "Scene a",
-          "image": "",
+          "image": "desktop-1440p/scene-a.png",
           "flags": []
-        },
-        {
-          "chapter": "page",
-          "image": "desktop-1440p/page.png",
-          "flags": [
-            {
-              "kind": "layout-shift",
-              "message": "layout shift 0.352, over 0.1"
-            }
-          ]
         }
       ]
     },
@@ -777,16 +562,6 @@
         {
           "chapter": "Scene a",
           "image": "desktop-4k/scene-a.png",
-          "flags": [
-            {
-              "kind": "layout-shift",
-              "message": "layout shift 0.193, over 0.1"
-            }
-          ]
-        },
-        {
-          "chapter": "page",
-          "image": "",
           "flags": []
         }
       ]
@@ -804,18 +579,8 @@
       "cells": [
         {
           "chapter": "Scene a",
-          "image": "",
+          "image": "desktop-4k-at-200/scene-a.png",
           "flags": []
-        },
-        {
-          "chapter": "page",
-          "image": "desktop-4k-at-200/page.png",
-          "flags": [
-            {
-              "kind": "layout-shift",
-              "message": "layout shift 0.438, over 0.1"
-            }
-          ]
         }
       ]
     },
@@ -832,18 +597,8 @@
       "cells": [
         {
           "chapter": "Scene a",
-          "image": "",
+          "image": "ultrawide-21-9/scene-a.png",
           "flags": []
-        },
-        {
-          "chapter": "page",
-          "image": "ultrawide-21-9/page.png",
-          "flags": [
-            {
-              "kind": "layout-shift",
-              "message": "layout shift 0.304, over 0.1"
-            }
-          ]
         }
       ]
     },
@@ -861,16 +616,6 @@
         {
           "chapter": "Scene a",
           "image": "super-ultrawide-32-9/scene-a.png",
-          "flags": [
-            {
-              "kind": "layout-shift",
-              "message": "layout shift 0.189, over 0.1"
-            }
-          ]
-        },
-        {
-          "chapter": "page",
-          "image": "",
           "flags": []
         }
       ]
@@ -889,12 +634,7 @@
       "cells": [
         {
           "chapter": "Scene a",
-          "image": "",
-          "flags": []
-        },
-        {
-          "chapter": "page",
-          "image": "instagram-in-app-ios/page.png",
+          "image": "instagram-in-app-ios/scene-a.png",
           "flags": []
         }
       ]
@@ -913,12 +653,7 @@
       "cells": [
         {
           "chapter": "Scene a",
-          "image": "",
-          "flags": []
-        },
-        {
-          "chapter": "page",
-          "image": "facebook-in-app-android/page.png",
+          "image": "facebook-in-app-android/scene-a.png",
           "flags": []
         }
       ]
@@ -937,12 +672,7 @@
       "cells": [
         {
           "chapter": "Scene a",
-          "image": "",
-          "flags": []
-        },
-        {
-          "chapter": "page",
-          "image": "linkedin-in-app-ios/page.png",
+          "image": "linkedin-in-app-ios/scene-a.png",
           "flags": []
         }
       ]
