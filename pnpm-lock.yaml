@@ -296,6 +296,9 @@ importers:
       '@quartifex/viewfinder':
         specifier: workspace:*
         version: link:../../packages/viewfinder
+      '@quartifex/volumetric':
+        specifier: workspace:*
+        version: link:../../packages/volumetric
       '@react-three/drei':
         specifier: ^10.7.9
         version: 10.7.9(@react-three/fiber@9.8.1(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(three@0.186.1))(@types/react@19.3.0)(@types/three@0.186.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(three@0.186.1)
@@ -807,6 +810,43 @@ importers:
       size-limit:
         specifier: ^14.1.0
         version: 14.1.0
+      typescript:
+        specifier: ^7.0.2
+        version: 7.0.2
+
+  packages/volumetric:
+    dependencies:
+      '@quartifex/dolly':
+        specifier: workspace:^
+        version: link:../dolly
+      '@quartifex/resolve':
+        specifier: workspace:^
+        version: link:../resolve
+      '@quartifex/understudy':
+        specifier: workspace:^
+        version: link:../understudy
+    devDependencies:
+      '@react-three/fiber':
+        specifier: ^9.8.1
+        version: 9.8.1(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(three@0.186.1)
+      '@size-limit/file':
+        specifier: ^14.1.0
+        version: 14.1.0(size-limit@14.1.0)
+      '@types/react':
+        specifier: ^19.3.0
+        version: 19.3.0
+      '@types/three':
+        specifier: ^0.186.0
+        version: 0.186.0
+      react:
+        specifier: ^19.3.0
+        version: 19.3.0
+      size-limit:
+        specifier: ^14.1.0
+        version: 14.1.0
+      three:
+        specifier: ^0.186.1
+        version: 0.186.1
       typescript:
         specifier: ^7.0.2
         version: 7.0.2

@@ -1,0 +1,116 @@
+{
+  "name": "@quartifex/volumetric",
+  "version": "0.0.0",
+  "description": "Volumetric light shafts (god-rays) through a translucent medium: a WebGL post-process for three.js and React Three Fiber, and a Canvas 2D overlay for image sequences and static heroes, sharing one settings API, tier-aware and still under reduced motion.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./overlay": {
+      "types": "./dist/overlay.d.ts",
+      "import": "./dist/overlay.js"
+    },
+    "./three": {
+      "types": "./dist/three.d.ts",
+      "import": "./dist/three.js"
+    },
+    "./r3f": {
+      "types": "./dist/r3f.d.ts",
+      "import": "./dist/r3f.js"
+    },
+    "./react": {
+      "types": "./dist/react.d.ts",
+      "import": "./dist/react.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/quartifex/quartifex.git",
+    "directory": "packages/volumetric"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "size": "size-limit"
+  },
+  "peerDependencies": {
+    "@react-three/fiber": "^9.0.0",
+    "react": "^19.0.0",
+    "three": ">=0.156.0"
+  },
+  "peerDependenciesMeta": {
+    "@react-three/fiber": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    },
+    "three": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@react-three/fiber": "^9.8.1",
+    "@size-limit/file": "^14.1.0",
+    "@types/react": "^19.3.0",
+    "@types/three": "^0.186.0",
+    "react": "^19.3.0",
+    "size-limit": "^14.1.0",
+    "three": "^0.186.1",
+    "typescript": "^7.0.2"
+  },
+  "size-limit": [
+    {
+      "name": "core",
+      "path": "dist/index.js",
+      "limit": "3 kB"
+    },
+    {
+      "name": "canvas overlay",
+      "path": "dist/overlay.js",
+      "limit": "2.5 kB"
+    },
+    {
+      "name": "webgl pass",
+      "path": "dist/three.js",
+      "limit": "3.5 kB"
+    },
+    {
+      "name": "r3f component",
+      "path": "dist/r3f.js",
+      "limit": "1 kB"
+    },
+    {
+      "name": "react overlay",
+      "path": "dist/react.js",
+      "limit": "1 kB"
+    }
+  ],
+  "dependencies": {
+    "@quartifex/dolly": "workspace:^",
+    "@quartifex/resolve": "workspace:^",
+    "@quartifex/understudy": "workspace:^"
+  },
+  "keywords": [
+    "god-rays",
+    "volumetric-light",
+    "light-shafts",
+    "three",
+    "react-three-fiber",
+    "post-processing",
+    "canvas",
+    "scrollytelling"
+  ]
+}
