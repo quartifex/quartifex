@@ -674,6 +674,7 @@
   "label": "Open-source demo",
   "prompt": "P4",
   "state": "built",
+  "live": true,
   "icon": "icons/svg/S13"
  },
  {
