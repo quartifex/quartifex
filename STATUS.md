@@ -134,6 +134,7 @@ watch and the jar.
 | `pnpm build` | pass (the gyroscope sequence encodes in about 5 s) |
 | `pnpm e2e` (installed Chrome) | pass: hub 90 (incl. 35 new layout tests), anyframe 8, dailies 4, heft 1, contactsheet 1 |
 | hub e2e `--repeat-each 3` | pass: 264 of 264 (before the last fixes); 90 of 90 after |
+| CI on GitHub | pass on `5694be4`: check job and all five Playwright suites |
 | contactsheet over the restructured pages (36 profiles each), reports in `reports/lab/contactsheet/` | no flags: the watch scene, the jar scene, `heft`, `anatomy`, `sleeve`, `understudy`, `plumb`. Remaining flags listed under Known issues |
 
 ## Known issues
