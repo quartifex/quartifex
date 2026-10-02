@@ -39,3 +39,8 @@ apps/*/public/sequences/
 
 # Python bytecode from the Blender exporter tests.
 __pycache__/
+
+# Font kits dropped into the repo are never committed (licence): fonts are synced from
+# assets-private/fonts or served from QX_FONT_ORIGIN. See licence-check.md, Fonts.
+assets/fonts/
+*.eot
