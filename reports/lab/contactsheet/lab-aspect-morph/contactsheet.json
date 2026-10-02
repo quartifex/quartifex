@@ -1,6 +1,6 @@
 {
-  "url": "http://localhost:3100/freight",
-  "createdAt": "2026-10-02T18:19:29.035Z",
+  "url": "http://localhost:3100/lab/aspect-morph",
+  "createdAt": "2026-10-02T18:26:05.981Z",
   "chapters": ["page"],
   "rows": [
     {
@@ -18,7 +18,18 @@
         {
           "chapter": "page",
           "image": "iphone-se/page.png",
-          "flags": []
+          "flags": [
+            {
+              "kind": "subject-outside-frame",
+              "message": "scene (tall-phone): the subject runs outside the screen",
+              "rect": {
+                "x": 126.171875,
+                "y": 804.109375,
+                "width": 222,
+                "height": 374
+              }
+            }
+          ]
         }
       ]
     },
@@ -37,7 +48,18 @@
         {
           "chapter": "page",
           "image": "iphone-13-mini/page.png",
-          "flags": []
+          "flags": [
+            {
+              "kind": "subject-outside-frame",
+              "message": "scene (tall-phone): the subject runs outside the screen",
+              "rect": {
+                "x": 126.171875,
+                "y": 804.109375,
+                "width": 222,
+                "height": 374
+              }
+            }
+          ]
         }
       ]
     },
@@ -56,7 +78,18 @@
         {
           "chapter": "page",
           "image": "iphone-15/page.png",
-          "flags": []
+          "flags": [
+            {
+              "kind": "subject-outside-frame",
+              "message": "scene (tall-phone): the subject runs outside the screen",
+              "rect": {
+                "x": 135.171875,
+                "y": 803.09375,
+                "width": 222,
+                "height": 374
+              }
+            }
+          ]
         }
       ]
     },
@@ -75,7 +108,18 @@
         {
           "chapter": "page",
           "image": "iphone-15-pro-max/page.png",
-          "flags": []
+          "flags": [
+            {
+              "kind": "subject-outside-frame",
+              "message": "scene (tall-phone): the subject runs outside the screen",
+              "rect": {
+                "x": 153.671875,
+                "y": 804.34375,
+                "width": 222,
+                "height": 374
+              }
+            }
+          ]
         }
       ]
     },
@@ -94,7 +138,18 @@
         {
           "chapter": "page",
           "image": "pixel-8/page.png",
-          "flags": []
+          "flags": [
+            {
+              "kind": "subject-outside-frame",
+              "message": "scene (tall-phone): the subject runs outside the screen",
+              "rect": {
+                "x": 144.671875,
+                "y": 803.734375,
+                "width": 222,
+                "height": 374
+              }
+            }
+          ]
         }
       ]
     },
@@ -113,7 +168,18 @@
         {
           "chapter": "page",
           "image": "galaxy-s24/page.png",
-          "flags": []
+          "flags": [
+            {
+              "kind": "subject-outside-frame",
+              "message": "scene (tall-phone): the subject runs outside the screen",
+              "rect": {
+                "x": 118.671875,
+                "y": 804.109375,
+                "width": 222,
+                "height": 374
+              }
+            }
+          ]
         }
       ]
     },
@@ -132,7 +198,18 @@
         {
           "chapter": "page",
           "image": "budget-android/page.png",
-          "flags": []
+          "flags": [
+            {
+              "kind": "subject-outside-frame",
+              "message": "scene (tall-phone): the subject runs outside the screen",
+              "rect": {
+                "x": 118.671875,
+                "y": 804.109375,
+                "width": 222,
+                "height": 374
+              }
+            }
+          ]
         }
       ]
     },
@@ -208,7 +285,18 @@
         {
           "chapter": "page",
           "image": "galaxy-z-fold-closed/page.png",
-          "flags": []
+          "flags": [
+            {
+              "kind": "subject-outside-frame",
+              "message": "scene (tall-phone): the subject runs outside the screen",
+              "rect": {
+                "x": 110.671875,
+                "y": 838.296875,
+                "width": 222,
+                "height": 374
+              }
+            }
+          ]
         }
       ]
     },
@@ -227,7 +315,18 @@
         {
           "chapter": "page",
           "image": "galaxy-z-fold-open/page.png",
-          "flags": []
+          "flags": [
+            {
+              "kind": "subject-outside-frame",
+              "message": "scene (tall-phone): the subject runs outside the screen",
+              "rect": {
+                "x": 283.671875,
+                "y": 670.84375,
+                "width": 222,
+                "height": 374
+              }
+            }
+          ]
         }
       ]
     },
@@ -246,7 +345,18 @@
         {
           "chapter": "page",
           "image": "galaxy-z-fold-open-landscape/page.png",
-          "flags": []
+          "flags": [
+            {
+              "kind": "subject-outside-frame",
+              "message": "scene (tall-phone): the subject runs outside the screen",
+              "rect": {
+                "x": 353.171875,
+                "y": 608.5625,
+                "width": 222,
+                "height": 374
+              }
+            }
+          ]
         }
       ]
     },
@@ -265,7 +375,18 @@
         {
           "chapter": "page",
           "image": "galaxy-z-flip-open/page.png",
-          "flags": []
+          "flags": [
+            {
+              "kind": "subject-outside-frame",
+              "message": "scene (tall-phone): the subject runs outside the screen",
+              "rect": {
+                "x": 118.671875,
+                "y": 804.109375,
+                "width": 222,
+                "height": 374
+              }
+            }
+          ]
         }
       ]
     },
@@ -284,7 +405,18 @@
         {
           "chapter": "page",
           "image": "pixel-fold-open/page.png",
-          "flags": []
+          "flags": [
+            {
+              "kind": "subject-outside-frame",
+              "message": "scene (tall-phone): the subject runs outside the screen",
+              "rect": {
+                "x": 359.171875,
+                "y": 608.96875,
+                "width": 222,
+                "height": 374
+              }
+            }
+          ]
         }
       ]
     },
@@ -303,7 +435,18 @@
         {
           "chapter": "page",
           "image": "ipad-mini/page.png",
-          "flags": []
+          "flags": [
+            {
+              "kind": "text-over-subject",
+              "message": "p \"390 x 693 CSS px · shown at 75%\" covers 80% of its box over the subject",
+              "rect": {
+                "x": 269.671875,
+                "y": 1019.6875,
+                "width": 204.65625,
+                "height": 17.046875
+              }
+            }
+          ]
         }
       ]
     },
@@ -322,7 +465,18 @@
         {
           "chapter": "page",
           "image": "ipad-air/page.png",
-          "flags": []
+          "flags": [
+            {
+              "kind": "text-over-subject",
+              "message": "p \"390 x 693 CSS px · shown at 75%\" covers 80% of its box over the subject",
+              "rect": {
+                "x": 307.671875,
+                "y": 955.234375,
+                "width": 204.65625,
+                "height": 17.046875
+              }
+            }
+          ]
         }
       ]
     },
@@ -341,7 +495,18 @@
         {
           "chapter": "page",
           "image": "ipad-air-landscape/page.png",
-          "flags": []
+          "flags": [
+            {
+              "kind": "subject-outside-frame",
+              "message": "scene (tall-phone): the subject runs outside the screen",
+              "rect": {
+                "x": 528.671875,
+                "y": 603.515625,
+                "width": 222,
+                "height": 374
+              }
+            }
+          ]
         }
       ]
     },
@@ -360,7 +525,18 @@
         {
           "chapter": "page",
           "image": "ipad-air-split-view-half/page.png",
-          "flags": []
+          "flags": [
+            {
+              "kind": "subject-outside-frame",
+              "message": "scene (tall-phone): the subject runs outside the screen",
+              "rect": {
+                "x": 233.671875,
+                "y": 719.4375,
+                "width": 222,
+                "height": 374
+              }
+            }
+          ]
         }
       ]
     },
@@ -379,7 +555,18 @@
         {
           "chapter": "page",
           "image": "ipad-air-split-view-third/page.png",
-          "flags": []
+          "flags": [
+            {
+              "kind": "subject-outside-frame",
+              "message": "scene (tall-phone): the subject runs outside the screen",
+              "rect": {
+                "x": 126.171875,
+                "y": 804.109375,
+                "width": 222,
+                "height": 374
+              }
+            }
+          ]
         }
       ]
     },
@@ -398,7 +585,18 @@
         {
           "chapter": "page",
           "image": "ipad-pro-12-9/page.png",
-          "flags": []
+          "flags": [
+            {
+              "kind": "text-over-subject",
+              "message": "p \"390 x 693 CSS px · shown at 75%\" covers 80% of its box over the subject",
+              "rect": {
+                "x": 409.671875,
+                "y": 962.21875,
+                "width": 204.65625,
+                "height": 17.046875
+              }
+            }
+          ]
         }
       ]
     },
@@ -417,7 +615,18 @@
         {
           "chapter": "page",
           "image": "ipad-pro-12-9-landscape/page.png",
-          "flags": []
+          "flags": [
+            {
+              "kind": "text-over-subject",
+              "message": "p \"390 x 693 CSS px · shown at 75%\" covers 80% of its box over the subject",
+              "rect": {
+                "x": 580.671875,
+                "y": 904.859375,
+                "width": 204.65625,
+                "height": 17.046875
+              }
+            }
+          ]
         }
       ]
     },
@@ -436,7 +645,18 @@
         {
           "chapter": "page",
           "image": "android-tablet/page.png",
-          "flags": []
+          "flags": [
+            {
+              "kind": "text-over-subject",
+              "message": "p \"390 x 693 CSS px · shown at 75%\" covers 80% of its box over the subject",
+              "rect": {
+                "x": 297.671875,
+                "y": 954.5625,
+                "width": 204.65625,
+                "height": 17.046875
+              }
+            }
+          ]
         }
       ]
     },
@@ -454,7 +674,18 @@
         {
           "chapter": "page",
           "image": "laptop-13in/page.png",
-          "flags": []
+          "flags": [
+            {
+              "kind": "subject-outside-frame",
+              "message": "scene (tall-phone): the subject runs outside the screen",
+              "rect": {
+                "x": 578.671875,
+                "y": 554.9375,
+                "width": 222,
+                "height": 374
+              }
+            }
+          ]
         }
       ]
     },
@@ -472,7 +703,18 @@
         {
           "chapter": "page",
           "image": "macbook-air-13/page.png",
-          "flags": []
+          "flags": [
+            {
+              "kind": "text-over-subject",
+              "message": "p \"390 x 693 CSS px · shown at 75%\" covers 80% of its box over the subject",
+              "rect": {
+                "x": 632.671875,
+                "y": 905.265625,
+                "width": 204.65625,
+                "height": 17.046875
+              }
+            }
+          ]
         }
       ]
     },
@@ -490,7 +732,28 @@
         {
           "chapter": "page",
           "image": "windows-laptop/page.png",
-          "flags": []
+          "flags": [
+            {
+              "kind": "subject-outside-frame",
+              "message": "scene (tall-phone): the subject runs outside the screen",
+              "rect": {
+                "x": 621.671875,
+                "y": 557.875,
+                "width": 222,
+                "height": 374
+              }
+            },
+            {
+              "kind": "canvas-budget",
+              "message": "canvas renders 390x693 for 291x516 CSS px at DPR 1: more pixels than the screen shows",
+              "rect": {
+                "x": 537.671875,
+                "y": 377.875,
+                "width": 290.640625,
+                "height": 516.4459838867188
+              }
+            }
+          ]
         }
       ]
     },
@@ -508,7 +771,28 @@
         {
           "chapter": "page",
           "image": "laptop-15in-at-125/page.png",
-          "flags": []
+          "flags": [
+            {
+              "kind": "subject-outside-frame",
+              "message": "scene (tall-phone): the subject runs outside the screen",
+              "rect": {
+                "x": 706.671875,
+                "y": 558.28125,
+                "width": 222,
+                "height": 374
+              }
+            },
+            {
+              "kind": "canvas-budget",
+              "message": "canvas renders 390x693 for 291x516 CSS px at DPR 1.25: more pixels than the screen shows",
+              "rect": {
+                "x": 622.671875,
+                "y": 378.28125,
+                "width": 290.640625,
+                "height": 516.4459838867188
+              }
+            }
+          ]
         }
       ]
     },
@@ -526,7 +810,28 @@
         {
           "chapter": "page",
           "image": "desktop-1080p/page.png",
-          "flags": []
+          "flags": [
+            {
+              "kind": "text-over-subject",
+              "message": "p \"390 x 693 CSS px · shown at 75%\" covers 80% of its box over the subject",
+              "rect": {
+                "x": 857.671875,
+                "y": 905.265625,
+                "width": 204.65625,
+                "height": 17.046875
+              }
+            },
+            {
+              "kind": "canvas-budget",
+              "message": "canvas renders 390x693 for 291x516 CSS px at DPR 1: more pixels than the screen shows",
+              "rect": {
+                "x": 814.671875,
+                "y": 378.28125,
+                "width": 290.640625,
+                "height": 516.4459838867188
+              }
+            }
+          ]
         }
       ]
     },
@@ -544,7 +849,28 @@
         {
           "chapter": "page",
           "image": "desktop-1440p/page.png",
-          "flags": []
+          "flags": [
+            {
+              "kind": "text-over-subject",
+              "message": "p \"390 x 693 CSS px · shown at 75%\" covers 80% of its box over the subject",
+              "rect": {
+                "x": 1177.671875,
+                "y": 905.265625,
+                "width": 204.65625,
+                "height": 17.046875
+              }
+            },
+            {
+              "kind": "canvas-budget",
+              "message": "canvas renders 390x693 for 291x516 CSS px at DPR 1: more pixels than the screen shows",
+              "rect": {
+                "x": 1134.671875,
+                "y": 378.28125,
+                "width": 290.640625,
+                "height": 516.4459838867188
+              }
+            }
+          ]
         }
       ]
     },
@@ -562,7 +888,28 @@
         {
           "chapter": "page",
           "image": "desktop-4k/page.png",
-          "flags": []
+          "flags": [
+            {
+              "kind": "text-over-subject",
+              "message": "p \"390 x 693 CSS px · shown at 75%\" covers 80% of its box over the subject",
+              "rect": {
+                "x": 1817.671875,
+                "y": 905.265625,
+                "width": 204.65625,
+                "height": 17.046875
+              }
+            },
+            {
+              "kind": "canvas-budget",
+              "message": "canvas renders 390x693 for 291x516 CSS px at DPR 1: more pixels than the screen shows",
+              "rect": {
+                "x": 1774.671875,
+                "y": 378.28125,
+                "width": 290.640625,
+                "height": 516.4459838867188
+              }
+            }
+          ]
         }
       ]
     },
@@ -580,7 +927,18 @@
         {
           "chapter": "page",
           "image": "desktop-4k-at-200/page.png",
-          "flags": []
+          "flags": [
+            {
+              "kind": "text-over-subject",
+              "message": "p \"390 x 693 CSS px · shown at 75%\" covers 80% of its box over the subject",
+              "rect": {
+                "x": 857.671875,
+                "y": 905.265625,
+                "width": 204.65625,
+                "height": 17.046875
+              }
+            }
+          ]
         }
       ]
     },
@@ -598,7 +956,28 @@
         {
           "chapter": "page",
           "image": "ultrawide-21-9/page.png",
-          "flags": []
+          "flags": [
+            {
+              "kind": "text-over-subject",
+              "message": "p \"390 x 693 CSS px · shown at 75%\" covers 80% of its box over the subject",
+              "rect": {
+                "x": 1617.671875,
+                "y": 905.265625,
+                "width": 204.65625,
+                "height": 17.046875
+              }
+            },
+            {
+              "kind": "canvas-budget",
+              "message": "canvas renders 390x693 for 291x516 CSS px at DPR 1: more pixels than the screen shows",
+              "rect": {
+                "x": 1574.671875,
+                "y": 378.28125,
+                "width": 290.640625,
+                "height": 516.4459838867188
+              }
+            }
+          ]
         }
       ]
     },
@@ -616,7 +995,28 @@
         {
           "chapter": "page",
           "image": "super-ultrawide-32-9/page.png",
-          "flags": []
+          "flags": [
+            {
+              "kind": "text-over-subject",
+              "message": "p \"390 x 693 CSS px · shown at 75%\" covers 80% of its box over the subject",
+              "rect": {
+                "x": 2457.671875,
+                "y": 905.265625,
+                "width": 204.65625,
+                "height": 17.046875
+              }
+            },
+            {
+              "kind": "canvas-budget",
+              "message": "canvas renders 390x693 for 291x516 CSS px at DPR 1: more pixels than the screen shows",
+              "rect": {
+                "x": 2414.671875,
+                "y": 378.28125,
+                "width": 290.640625,
+                "height": 516.4459838867188
+              }
+            }
+          ]
         }
       ]
     },
@@ -635,7 +1035,18 @@
         {
           "chapter": "page",
           "image": "instagram-in-app-ios/page.png",
-          "flags": []
+          "flags": [
+            {
+              "kind": "subject-outside-frame",
+              "message": "scene (tall-phone): the subject runs outside the screen",
+              "rect": {
+                "x": 133.671875,
+                "y": 804.53125,
+                "width": 222,
+                "height": 374
+              }
+            }
+          ]
         }
       ]
     },
@@ -654,7 +1065,18 @@
         {
           "chapter": "page",
           "image": "facebook-in-app-android/page.png",
-          "flags": []
+          "flags": [
+            {
+              "kind": "subject-outside-frame",
+              "message": "scene (tall-phone): the subject runs outside the screen",
+              "rect": {
+                "x": 144.671875,
+                "y": 803.734375,
+                "width": 222,
+                "height": 374
+              }
+            }
+          ]
         }
       ]
     },
@@ -673,7 +1095,18 @@
         {
           "chapter": "page",
           "image": "linkedin-in-app-ios/page.png",
-          "flags": []
+          "flags": [
+            {
+              "kind": "subject-outside-frame",
+              "message": "scene (tall-phone): the subject runs outside the screen",
+              "rect": {
+                "x": 133.671875,
+                "y": 804.53125,
+                "width": 222,
+                "height": 374
+              }
+            }
+          ]
         }
       ]
     }

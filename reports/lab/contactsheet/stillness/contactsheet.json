@@ -1,6 +1,6 @@
 {
-  "url": "http://localhost:3100/freight",
-  "createdAt": "2026-10-02T18:19:29.035Z",
+  "url": "http://localhost:3100/stillness",
+  "createdAt": "2026-10-02T18:25:14.967Z",
   "chapters": ["page"],
   "rows": [
     {
@@ -303,7 +303,12 @@
         {
           "chapter": "page",
           "image": "ipad-mini/page.png",
-          "flags": []
+          "flags": [
+            {
+              "kind": "layout-shift",
+              "message": "layout shift 0.118, over 0.1"
+            }
+          ]
         }
       ]
     },
@@ -436,7 +441,12 @@
         {
           "chapter": "page",
           "image": "android-tablet/page.png",
-          "flags": []
+          "flags": [
+            {
+              "kind": "layout-shift",
+              "message": "layout shift 0.122, over 0.1"
+            }
+          ]
         }
       ]
     },

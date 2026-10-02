@@ -1,6 +1,6 @@
 {
-  "url": "http://localhost:3100/safeframe",
-  "createdAt": "2026-10-02T18:15:17.921Z",
+  "url": "http://localhost:3100/lab/frameguide",
+  "createdAt": "2026-10-02T18:25:51.731Z",
   "chapters": ["page"],
   "rows": [
     {
@@ -18,28 +18,7 @@
         {
           "chapter": "page",
           "image": "iphone-se/page.png",
-          "flags": [
-            {
-              "kind": "subject-outside-frame",
-              "message": "scene (tall-phone): the subject runs outside the screen",
-              "rect": {
-                "x": 96.109375,
-                "y": 852.203125,
-                "width": 315,
-                "height": 473
-              }
-            },
-            {
-              "kind": "canvas-budget",
-              "message": "canvas renders 1170x2532 for 257x556 CSS px at DPR 2: more pixels than the screen shows",
-              "rect": {
-                "x": 59.109375,
-                "y": 666.203125,
-                "width": 256.765625,
-                "height": 555.667236328125
-              }
-            }
-          ]
+          "flags": []
         }
       ]
     },
@@ -63,10 +42,10 @@
               "kind": "subject-outside-frame",
               "message": "scene (tall-phone): the subject runs outside the screen",
               "rect": {
-                "x": 96.109375,
-                "y": 852.203125,
-                "width": 315,
-                "height": 473
+                "x": 119.109375,
+                "y": 892.953125,
+                "width": 270,
+                "height": 456
               }
             },
             {
@@ -74,7 +53,7 @@
               "message": "canvas renders 1170x2532 for 257x556 CSS px at DPR 3: more pixels than the screen shows",
               "rect": {
                 "x": 59.109375,
-                "y": 666.203125,
+                "y": 673.953125,
                 "width": 256.765625,
                 "height": 555.667236328125
               }
@@ -103,10 +82,10 @@
               "kind": "subject-outside-frame",
               "message": "scene (tall-phone): the subject runs outside the screen",
               "rect": {
-                "x": 105.109375,
-                "y": 851.1875,
-                "width": 315,
-                "height": 473
+                "x": 128.109375,
+                "y": 891.9375,
+                "width": 270,
+                "height": 456
               }
             },
             {
@@ -114,7 +93,7 @@
               "message": "canvas renders 1170x2532 for 257x556 CSS px at DPR 3: more pixels than the screen shows",
               "rect": {
                 "x": 68.109375,
-                "y": 665.1875,
+                "y": 672.9375,
                 "width": 256.765625,
                 "height": 555.667236328125
               }
@@ -143,10 +122,10 @@
               "kind": "subject-outside-frame",
               "message": "scene (tall-phone): the subject runs outside the screen",
               "rect": {
-                "x": 123.609375,
-                "y": 852.4375,
-                "width": 315,
-                "height": 473
+                "x": 146.609375,
+                "y": 868.390625,
+                "width": 270,
+                "height": 456
               }
             },
             {
@@ -154,7 +133,7 @@
               "message": "canvas renders 1170x2532 for 257x556 CSS px at DPR 3: more pixels than the screen shows",
               "rect": {
                 "x": 86.609375,
-                "y": 666.4375,
+                "y": 649.390625,
                 "width": 256.765625,
                 "height": 555.667236328125
               }
@@ -183,10 +162,10 @@
               "kind": "subject-outside-frame",
               "message": "scene (tall-phone): the subject runs outside the screen",
               "rect": {
-                "x": 114.609375,
-                "y": 851.828125,
-                "width": 315,
-                "height": 473
+                "x": 137.609375,
+                "y": 867.78125,
+                "width": 270,
+                "height": 456
               }
             },
             {
@@ -194,7 +173,7 @@
               "message": "canvas renders 1170x2532 for 257x556 CSS px at DPR 2.625: more pixels than the screen shows",
               "rect": {
                 "x": 77.609375,
-                "y": 665.828125,
+                "y": 648.78125,
                 "width": 256.765625,
                 "height": 555.667236328125
               }
@@ -223,10 +202,10 @@
               "kind": "subject-outside-frame",
               "message": "scene (tall-phone): the subject runs outside the screen",
               "rect": {
-                "x": 88.609375,
-                "y": 852.203125,
-                "width": 315,
-                "height": 473
+                "x": 111.609375,
+                "y": 892.953125,
+                "width": 270,
+                "height": 456
               }
             },
             {
@@ -234,7 +213,7 @@
               "message": "canvas renders 1170x2532 for 257x556 CSS px at DPR 3: more pixels than the screen shows",
               "rect": {
                 "x": 51.609375,
-                "y": 666.203125,
+                "y": 673.953125,
                 "width": 256.765625,
                 "height": 555.667236328125
               }
@@ -263,10 +242,10 @@
               "kind": "subject-outside-frame",
               "message": "scene (tall-phone): the subject runs outside the screen",
               "rect": {
-                "x": 88.609375,
-                "y": 852.203125,
-                "width": 315,
-                "height": 473
+                "x": 111.609375,
+                "y": 892.953125,
+                "width": 270,
+                "height": 456
               }
             },
             {
@@ -274,7 +253,7 @@
               "message": "canvas renders 1170x2532 for 257x556 CSS px at DPR 2: more pixels than the screen shows",
               "rect": {
                 "x": 51.609375,
-                "y": 666.203125,
+                "y": 673.953125,
                 "width": 256.765625,
                 "height": 555.667236328125
               }
@@ -360,10 +339,10 @@
               "kind": "subject-outside-frame",
               "message": "scene (tall-phone): the subject runs outside the screen",
               "rect": {
-                "x": 80.609375,
-                "y": 852.203125,
-                "width": 315,
-                "height": 473
+                "x": 103.609375,
+                "y": 892.953125,
+                "width": 270,
+                "height": 456
               }
             },
             {
@@ -371,7 +350,7 @@
               "message": "canvas renders 1170x2532 for 257x556 CSS px at DPR 2.625: more pixels than the screen shows",
               "rect": {
                 "x": 43.609375,
-                "y": 666.203125,
+                "y": 673.953125,
                 "width": 256.765625,
                 "height": 555.667236328125
               }
@@ -400,10 +379,10 @@
               "kind": "subject-outside-frame",
               "message": "scene (tall-phone): the subject runs outside the screen",
               "rect": {
-                "x": 253.609375,
-                "y": 684.84375,
-                "width": 315,
-                "height": 473
+                "x": 276.609375,
+                "y": 717.84375,
+                "width": 270,
+                "height": 456
               }
             },
             {
@@ -440,10 +419,10 @@
               "kind": "subject-outside-frame",
               "message": "scene (tall-phone): the subject runs outside the screen",
               "rect": {
-                "x": 323.109375,
-                "y": 622.5625,
-                "width": 315,
-                "height": 473
+                "x": 346.109375,
+                "y": 680.359375,
+                "width": 270,
+                "height": 456
               }
             },
             {
@@ -451,7 +430,7 @@
               "message": "canvas renders 1170x2532 for 257x556 CSS px at DPR 2.625: more pixels than the screen shows",
               "rect": {
                 "x": 286.109375,
-                "y": 436.5625,
+                "y": 461.359375,
                 "width": 256.765625,
                 "height": 555.6671752929688
               }
@@ -480,10 +459,10 @@
               "kind": "subject-outside-frame",
               "message": "scene (tall-phone): the subject runs outside the screen",
               "rect": {
-                "x": 88.609375,
-                "y": 852.203125,
-                "width": 315,
-                "height": 473
+                "x": 111.609375,
+                "y": 892.953125,
+                "width": 270,
+                "height": 456
               }
             },
             {
@@ -491,7 +470,7 @@
               "message": "canvas renders 1170x2532 for 257x556 CSS px at DPR 3: more pixels than the screen shows",
               "rect": {
                 "x": 51.609375,
-                "y": 666.203125,
+                "y": 673.953125,
                 "width": 256.765625,
                 "height": 555.667236328125
               }
@@ -520,10 +499,10 @@
               "kind": "subject-outside-frame",
               "message": "scene (tall-phone): the subject runs outside the screen",
               "rect": {
-                "x": 329.109375,
-                "y": 622.96875,
-                "width": 315,
-                "height": 473
+                "x": 352.109375,
+                "y": 680.765625,
+                "width": 270,
+                "height": 456
               }
             },
             {
@@ -531,7 +510,7 @@
               "message": "canvas renders 1170x2532 for 257x556 CSS px at DPR 2.625: more pixels than the screen shows",
               "rect": {
                 "x": 292.109375,
-                "y": 436.96875,
+                "y": 461.765625,
                 "width": 256.765625,
                 "height": 555.6671752929688
               }
@@ -560,39 +539,19 @@
               "kind": "subject-outside-frame",
               "message": "scene (tall-phone): the subject runs outside the screen",
               "rect": {
-                "x": 280.609375,
-                "y": 686.703125,
-                "width": 315,
-                "height": 473
+                "x": 303.609375,
+                "y": 719.703125,
+                "width": 270,
+                "height": 456
               }
             },
             {
               "kind": "text-over-subject",
-              "message": "h2 \"A watch, staged for every screen.\" covers 91% of its box over the subject",
-              "rect": {
-                "x": 261.5809020996094,
-                "y": 959.815673828125,
-                "width": 220.81228637695312,
-                "height": 38.9468994140625
-              }
-            },
-            {
-              "kind": "text-over-subject",
-              "message": "p \"390 x 844 CSS px · shown at 66%\" covers 95% of its box over the subject",
+              "message": "p \"390 x 844 CSS px · shown at 66%\" covers 83% of its box over the subject",
               "rect": {
                 "x": 269.671875,
                 "y": 1067.6875,
                 "width": 204.65625,
-                "height": 17.046875
-              }
-            },
-            {
-              "kind": "text-over-subject",
-              "message": "label \"Sequence frame\" covers 29% of its box over the subject",
-              "rect": {
-                "x": 22.3125,
-                "y": 1116.734375,
-                "width": 362.40625,
                 "height": 17.046875
               }
             },
@@ -628,42 +587,12 @@
           "flags": [
             {
               "kind": "text-over-subject",
-              "message": "h2 \"A watch, staged for every screen.\" covers 91% of its box over the subject",
-              "rect": {
-                "x": 299.5809020996094,
-                "y": 895.362548828125,
-                "width": 220.81228637695312,
-                "height": 38.9468994140625
-              }
-            },
-            {
-              "kind": "text-over-subject",
-              "message": "p \"390 x 844 CSS px · shown at 66%\" covers 95% of its box over the subject",
+              "message": "p \"390 x 844 CSS px · shown at 66%\" covers 83% of its box over the subject",
               "rect": {
                 "x": 307.671875,
-                "y": 1003.234375,
+                "y": 1028.03125,
                 "width": 204.65625,
                 "height": 17.046875
-              }
-            },
-            {
-              "kind": "text-over-subject",
-              "message": "label \"Sequence frame\" covers 19% of its box over the subject",
-              "rect": {
-                "x": 24.59375,
-                "y": 1052.28125,
-                "width": 362.40625,
-                "height": 17.046875
-              }
-            },
-            {
-              "kind": "text-over-subject",
-              "message": "label \"Guides\" covers 72% of its box over the subject",
-              "rect": {
-                "x": 506.921875,
-                "y": 1069.328125,
-                "width": 102.890625,
-                "height": 36
               }
             },
             {
@@ -671,7 +600,7 @@
               "message": "canvas renders 1170x2532 for 257x556 CSS px at DPR 2: more pixels than the screen shows",
               "rect": {
                 "x": 281.609375,
-                "y": 436.25,
+                "y": 461.046875,
                 "width": 256.765625,
                 "height": 555.6671752929688
               }
@@ -700,17 +629,17 @@
               "kind": "subject-outside-frame",
               "message": "scene (tall-phone): the subject runs outside the screen",
               "rect": {
-                "x": 290.609375,
-                "y": 557.515625,
-                "width": 315,
-                "height": 473
+                "x": 329.609375,
+                "y": 590.515625,
+                "width": 270,
+                "height": 456
               }
             },
             {
               "kind": "canvas-budget",
               "message": "canvas renders 1170x2532 for 257x556 CSS px at DPR 2: more pixels than the screen shows",
               "rect": {
-                "x": 253.609375,
+                "x": 269.609375,
                 "y": 371.515625,
                 "width": 256.765625,
                 "height": 555.6671752929688
@@ -740,10 +669,10 @@
               "kind": "subject-outside-frame",
               "message": "scene (tall-phone): the subject runs outside the screen",
               "rect": {
-                "x": 203.609375,
-                "y": 725.4375,
-                "width": 315,
-                "height": 473
+                "x": 226.609375,
+                "y": 783.234375,
+                "width": 270,
+                "height": 456
               }
             },
             {
@@ -751,7 +680,7 @@
               "message": "canvas renders 1170x2532 for 257x556 CSS px at DPR 2: more pixels than the screen shows",
               "rect": {
                 "x": 166.609375,
-                "y": 539.4375,
+                "y": 564.234375,
                 "width": 256.765625,
                 "height": 555.667236328125
               }
@@ -780,10 +709,10 @@
               "kind": "subject-outside-frame",
               "message": "scene (tall-phone): the subject runs outside the screen",
               "rect": {
-                "x": 96.109375,
-                "y": 852.203125,
-                "width": 315,
-                "height": 473
+                "x": 119.109375,
+                "y": 892.953125,
+                "width": 270,
+                "height": 456
               }
             },
             {
@@ -791,7 +720,7 @@
               "message": "canvas renders 1170x2532 for 257x556 CSS px at DPR 2: more pixels than the screen shows",
               "rect": {
                 "x": 59.109375,
-                "y": 666.203125,
+                "y": 673.953125,
                 "width": 256.765625,
                 "height": 555.667236328125
               }
@@ -818,19 +747,9 @@
           "flags": [
             {
               "kind": "text-over-subject",
-              "message": "h2 \"A watch, staged for every screen.\" covers 91% of its box over the subject",
+              "message": "p \"390 x 844 CSS px · shown at 66%\" covers 83% of its box over the subject",
               "rect": {
-                "x": 193.58091735839844,
-                "y": 902.346923828125,
-                "width": 220.81227111816406,
-                "height": 38.9468994140625
-              }
-            },
-            {
-              "kind": "text-over-subject",
-              "message": "p \"390 x 844 CSS px · shown at 66%\" covers 95% of its box over the subject",
-              "rect": {
-                "x": 201.671875,
+                "x": 217.671875,
                 "y": 1010.21875,
                 "width": 204.65625,
                 "height": 17.046875
@@ -838,10 +757,10 @@
             },
             {
               "kind": "text-over-subject",
-              "message": "h3 \"3D: camera fit for this aspect\" covers 33% of its box over the subject",
+              "message": "h2 \"About frameguide\" covers 28% of its box over the subject",
               "rect": {
                 "x": 30.71875,
-                "y": 1076.265625,
+                "y": 1098.21875,
                 "width": 962.5625,
                 "height": 17.046875
               }
@@ -850,7 +769,7 @@
               "kind": "canvas-budget",
               "message": "canvas renders 1170x2532 for 257x556 CSS px at DPR 2: more pixels than the screen shows",
               "rect": {
-                "x": 175.609375,
+                "x": 191.609375,
                 "y": 443.234375,
                 "width": 256.765625,
                 "height": 555.6671752929688
@@ -880,39 +799,19 @@
               "kind": "subject-outside-frame",
               "message": "scene (tall-phone): the subject runs outside the screen",
               "rect": {
-                "x": 383.609375,
-                "y": 563.875,
-                "width": 315,
-                "height": 473
+                "x": 422.609375,
+                "y": 596.875,
+                "width": 270,
+                "height": 456
               }
             },
             {
               "kind": "text-over-subject",
-              "message": "h2 \"A watch, staged for every screen.\" covers 91% of its box over the subject",
+              "message": "p \"390 x 844 CSS px · shown at 66%\" covers 83% of its box over the subject",
               "rect": {
-                "x": 364.5809020996094,
-                "y": 836.987548828125,
-                "width": 220.81228637695312,
-                "height": 38.9468994140625
-              }
-            },
-            {
-              "kind": "text-over-subject",
-              "message": "p \"390 x 844 CSS px · shown at 66%\" covers 95% of its box over the subject",
-              "rect": {
-                "x": 372.671875,
+                "x": 388.671875,
                 "y": 944.859375,
                 "width": 204.65625,
-                "height": 17.046875
-              }
-            },
-            {
-              "kind": "text-over-subject",
-              "message": "h3 \"3D: camera fit for this aspect\" covers 24% of its box over the subject",
-              "rect": {
-                "x": 40,
-                "y": 1010.90625,
-                "width": 1286,
                 "height": 17.046875
               }
             },
@@ -920,7 +819,7 @@
               "kind": "canvas-budget",
               "message": "canvas renders 1170x2532 for 257x556 CSS px at DPR 2: more pixels than the screen shows",
               "rect": {
-                "x": 346.609375,
+                "x": 362.609375,
                 "y": 377.875,
                 "width": 256.765625,
                 "height": 555.6671752929688
@@ -948,42 +847,12 @@
           "flags": [
             {
               "kind": "text-over-subject",
-              "message": "h2 \"A watch, staged for every screen.\" covers 91% of its box over the subject",
-              "rect": {
-                "x": 289.5809020996094,
-                "y": 919.487548828125,
-                "width": 220.81228637695312,
-                "height": 38.9468994140625
-              }
-            },
-            {
-              "kind": "text-over-subject",
-              "message": "p \"390 x 844 CSS px · shown at 66%\" covers 95% of its box over the subject",
+              "message": "p \"390 x 844 CSS px · shown at 66%\" covers 83% of its box over the subject",
               "rect": {
                 "x": 297.671875,
                 "y": 1027.359375,
                 "width": 204.65625,
                 "height": 17.046875
-              }
-            },
-            {
-              "kind": "text-over-subject",
-              "message": "label \"Sequence frame\" covers 21% of its box over the subject",
-              "rect": {
-                "x": 24,
-                "y": 1076.40625,
-                "width": 362.40625,
-                "height": 17.046875
-              }
-            },
-            {
-              "kind": "text-over-subject",
-              "message": "label \"Guides\" covers 72% of its box over the subject",
-              "rect": {
-                "x": 506.328125,
-                "y": 1093.453125,
-                "width": 102.890625,
-                "height": 36
               }
             },
             {
@@ -1019,17 +888,17 @@
               "kind": "subject-outside-frame",
               "message": "scene (tall-phone): the subject runs outside the screen",
               "rect": {
-                "x": 340.609375,
-                "y": 560.9375,
-                "width": 315,
-                "height": 473
+                "x": 379.609375,
+                "y": 593.9375,
+                "width": 270,
+                "height": 456
               }
             },
             {
               "kind": "canvas-budget",
               "message": "canvas renders 1170x2532 for 257x556 CSS px at DPR 2: more pixels than the screen shows",
               "rect": {
-                "x": 303.609375,
+                "x": 319.609375,
                 "y": 374.9375,
                 "width": 256.765625,
                 "height": 555.6671752929688
@@ -1058,27 +927,17 @@
               "kind": "subject-outside-frame",
               "message": "scene (tall-phone): the subject runs outside the screen",
               "rect": {
-                "x": 435.609375,
-                "y": 564.28125,
-                "width": 315,
-                "height": 473
+                "x": 474.609375,
+                "y": 597.28125,
+                "width": 270,
+                "height": 456
               }
             },
             {
               "kind": "text-over-subject",
-              "message": "h2 \"A watch, staged for every screen.\" covers 91% of its box over the subject",
+              "message": "p \"390 x 844 CSS px · shown at 66%\" covers 83% of its box over the subject",
               "rect": {
-                "x": 416.5809020996094,
-                "y": 837.393798828125,
-                "width": 220.81228637695312,
-                "height": 38.9468994140625
-              }
-            },
-            {
-              "kind": "text-over-subject",
-              "message": "p \"390 x 844 CSS px · shown at 66%\" covers 95% of its box over the subject",
-              "rect": {
-                "x": 424.671875,
+                "x": 440.671875,
                 "y": 945.265625,
                 "width": 204.65625,
                 "height": 17.046875
@@ -1088,7 +947,7 @@
               "kind": "canvas-budget",
               "message": "canvas renders 1170x2532 for 257x556 CSS px at DPR 2: more pixels than the screen shows",
               "rect": {
-                "x": 398.609375,
+                "x": 414.609375,
                 "y": 378.28125,
                 "width": 256.765625,
                 "height": 555.6671752929688
@@ -1117,17 +976,17 @@
               "kind": "subject-outside-frame",
               "message": "scene (tall-phone): the subject runs outside the screen",
               "rect": {
-                "x": 383.609375,
-                "y": 563.875,
-                "width": 315,
-                "height": 473
+                "x": 422.609375,
+                "y": 596.875,
+                "width": 270,
+                "height": 456
               }
             },
             {
               "kind": "canvas-budget",
               "message": "canvas renders 1170x2532 for 257x556 CSS px at DPR 1: more pixels than the screen shows",
               "rect": {
-                "x": 346.609375,
+                "x": 362.609375,
                 "y": 377.875,
                 "width": 256.765625,
                 "height": 555.6671752929688
@@ -1156,27 +1015,17 @@
               "kind": "subject-outside-frame",
               "message": "scene (tall-phone): the subject runs outside the screen",
               "rect": {
-                "x": 468.609375,
-                "y": 564.28125,
-                "width": 315,
-                "height": 473
-              }
-            },
-            {
-              "kind": "text-over-subject",
-              "message": "h2 \"A watch, staged for every screen.\" covers 91% of its box over the subject",
-              "rect": {
-                "x": 449.5809020996094,
-                "y": 837.393798828125,
-                "width": 220.81228637695312,
-                "height": 38.9468994140625
+                "x": 507.609375,
+                "y": 597.28125,
+                "width": 270,
+                "height": 456
               }
             },
             {
               "kind": "canvas-budget",
               "message": "canvas renders 1170x2532 for 257x556 CSS px at DPR 1.25: more pixels than the screen shows",
               "rect": {
-                "x": 431.609375,
+                "x": 447.609375,
                 "y": 378.28125,
                 "width": 256.765625,
                 "height": 555.6671752929688
@@ -1203,19 +1052,9 @@
           "flags": [
             {
               "kind": "text-over-subject",
-              "message": "h2 \"A watch, staged for every screen.\" covers 91% of its box over the subject",
+              "message": "p \"390 x 844 CSS px · shown at 66%\" covers 83% of its box over the subject",
               "rect": {
-                "x": 641.5809326171875,
-                "y": 837.393798828125,
-                "width": 220.812255859375,
-                "height": 38.9468994140625
-              }
-            },
-            {
-              "kind": "text-over-subject",
-              "message": "p \"390 x 844 CSS px · shown at 66%\" covers 95% of its box over the subject",
-              "rect": {
-                "x": 649.671875,
+                "x": 665.671875,
                 "y": 945.265625,
                 "width": 204.65625,
                 "height": 17.046875
@@ -1223,11 +1062,11 @@
             },
             {
               "kind": "text-over-subject",
-              "message": "h3 \"3D: camera fit for this aspect\" covers 17% of its box over the subject",
+              "message": "h2 \"About frameguide\" covers 26% of its box over the subject",
               "rect": {
                 "x": 40,
-                "y": 1011.3125,
-                "width": 1840,
+                "y": 1033.265625,
+                "width": 1024,
                 "height": 17.046875
               }
             },
@@ -1235,7 +1074,7 @@
               "kind": "canvas-budget",
               "message": "canvas renders 1170x2532 for 257x556 CSS px at DPR 1: more pixels than the screen shows",
               "rect": {
-                "x": 623.609375,
+                "x": 639.609375,
                 "y": 378.28125,
                 "width": 256.765625,
                 "height": 555.6671752929688
@@ -1262,19 +1101,9 @@
           "flags": [
             {
               "kind": "text-over-subject",
-              "message": "h2 \"A watch, staged for every screen.\" covers 91% of its box over the subject",
+              "message": "p \"390 x 844 CSS px · shown at 66%\" covers 83% of its box over the subject",
               "rect": {
-                "x": 961.5809326171875,
-                "y": 837.393798828125,
-                "width": 220.812255859375,
-                "height": 38.9468994140625
-              }
-            },
-            {
-              "kind": "text-over-subject",
-              "message": "p \"390 x 844 CSS px · shown at 66%\" covers 95% of its box over the subject",
-              "rect": {
-                "x": 969.671875,
+                "x": 985.671875,
                 "y": 945.265625,
                 "width": 204.65625,
                 "height": 17.046875
@@ -1282,11 +1111,11 @@
             },
             {
               "kind": "text-over-subject",
-              "message": "h3 \"3D: camera fit for this aspect\" covers 13% of its box over the subject",
+              "message": "h2 \"About frameguide\" covers 4% of its box over the subject",
               "rect": {
                 "x": 40,
-                "y": 1011.3125,
-                "width": 2480,
+                "y": 1033.265625,
+                "width": 1024,
                 "height": 17.046875
               }
             },
@@ -1294,7 +1123,7 @@
               "kind": "canvas-budget",
               "message": "canvas renders 1170x2532 for 257x556 CSS px at DPR 1: more pixels than the screen shows",
               "rect": {
-                "x": 943.609375,
+                "x": 959.609375,
                 "y": 378.28125,
                 "width": 256.765625,
                 "height": 555.6671752929688
@@ -1321,31 +1150,11 @@
           "flags": [
             {
               "kind": "text-over-subject",
-              "message": "h2 \"A watch, staged for every screen.\" covers 91% of its box over the subject",
+              "message": "p \"390 x 844 CSS px · shown at 66%\" covers 83% of its box over the subject",
               "rect": {
-                "x": 1601.5809326171875,
-                "y": 837.393798828125,
-                "width": 220.812255859375,
-                "height": 38.9468994140625
-              }
-            },
-            {
-              "kind": "text-over-subject",
-              "message": "p \"390 x 844 CSS px · shown at 66%\" covers 95% of its box over the subject",
-              "rect": {
-                "x": 1609.671875,
+                "x": 1625.671875,
                 "y": 945.265625,
                 "width": 204.65625,
-                "height": 17.046875
-              }
-            },
-            {
-              "kind": "text-over-subject",
-              "message": "h3 \"3D: camera fit for this aspect\" covers 8% of its box over the subject",
-              "rect": {
-                "x": 40,
-                "y": 1011.3125,
-                "width": 3760,
                 "height": 17.046875
               }
             },
@@ -1353,7 +1162,7 @@
               "kind": "canvas-budget",
               "message": "canvas renders 1170x2532 for 257x556 CSS px at DPR 1: more pixels than the screen shows",
               "rect": {
-                "x": 1583.609375,
+                "x": 1599.609375,
                 "y": 378.28125,
                 "width": 256.765625,
                 "height": 555.6671752929688
@@ -1380,19 +1189,9 @@
           "flags": [
             {
               "kind": "text-over-subject",
-              "message": "h2 \"A watch, staged for every screen.\" covers 91% of its box over the subject",
+              "message": "p \"390 x 844 CSS px · shown at 66%\" covers 83% of its box over the subject",
               "rect": {
-                "x": 641.5809326171875,
-                "y": 837.393798828125,
-                "width": 220.812255859375,
-                "height": 38.9468994140625
-              }
-            },
-            {
-              "kind": "text-over-subject",
-              "message": "p \"390 x 844 CSS px · shown at 66%\" covers 95% of its box over the subject",
-              "rect": {
-                "x": 649.671875,
+                "x": 665.671875,
                 "y": 945.265625,
                 "width": 204.65625,
                 "height": 17.046875
@@ -1400,11 +1199,11 @@
             },
             {
               "kind": "text-over-subject",
-              "message": "h3 \"3D: camera fit for this aspect\" covers 17% of its box over the subject",
+              "message": "h2 \"About frameguide\" covers 26% of its box over the subject",
               "rect": {
                 "x": 40,
-                "y": 1011.3125,
-                "width": 1840,
+                "y": 1033.265625,
+                "width": 1024,
                 "height": 17.046875
               }
             },
@@ -1412,7 +1211,7 @@
               "kind": "canvas-budget",
               "message": "canvas renders 1170x2532 for 257x556 CSS px at DPR 2: more pixels than the screen shows",
               "rect": {
-                "x": 623.609375,
+                "x": 639.609375,
                 "y": 378.28125,
                 "width": 256.765625,
                 "height": 555.6671752929688
@@ -1439,31 +1238,11 @@
           "flags": [
             {
               "kind": "text-over-subject",
-              "message": "h2 \"A watch, staged for every screen.\" covers 91% of its box over the subject",
+              "message": "p \"390 x 844 CSS px · shown at 66%\" covers 83% of its box over the subject",
               "rect": {
-                "x": 1401.5809326171875,
-                "y": 837.393798828125,
-                "width": 220.812255859375,
-                "height": 38.9468994140625
-              }
-            },
-            {
-              "kind": "text-over-subject",
-              "message": "p \"390 x 844 CSS px · shown at 66%\" covers 95% of its box over the subject",
-              "rect": {
-                "x": 1409.671875,
+                "x": 1425.671875,
                 "y": 945.265625,
                 "width": 204.65625,
-                "height": 17.046875
-              }
-            },
-            {
-              "kind": "text-over-subject",
-              "message": "h3 \"3D: camera fit for this aspect\" covers 9% of its box over the subject",
-              "rect": {
-                "x": 40,
-                "y": 1011.3125,
-                "width": 3360,
                 "height": 17.046875
               }
             },
@@ -1471,7 +1250,7 @@
               "kind": "canvas-budget",
               "message": "canvas renders 1170x2532 for 257x556 CSS px at DPR 1: more pixels than the screen shows",
               "rect": {
-                "x": 1383.609375,
+                "x": 1399.609375,
                 "y": 378.28125,
                 "width": 256.765625,
                 "height": 555.6671752929688
@@ -1498,31 +1277,11 @@
           "flags": [
             {
               "kind": "text-over-subject",
-              "message": "h2 \"A watch, staged for every screen.\" covers 91% of its box over the subject",
+              "message": "p \"390 x 844 CSS px · shown at 66%\" covers 83% of its box over the subject",
               "rect": {
-                "x": 2241.580810546875,
-                "y": 837.393798828125,
-                "width": 220.812255859375,
-                "height": 38.9468994140625
-              }
-            },
-            {
-              "kind": "text-over-subject",
-              "message": "p \"390 x 844 CSS px · shown at 66%\" covers 95% of its box over the subject",
-              "rect": {
-                "x": 2249.671875,
+                "x": 2265.671875,
                 "y": 945.265625,
                 "width": 204.65625,
-                "height": 17.046875
-              }
-            },
-            {
-              "kind": "text-over-subject",
-              "message": "h3 \"3D: camera fit for this aspect\" covers 6% of its box over the subject",
-              "rect": {
-                "x": 40,
-                "y": 1011.3125,
-                "width": 5040,
                 "height": 17.046875
               }
             },
@@ -1530,7 +1289,7 @@
               "kind": "canvas-budget",
               "message": "canvas renders 1170x2532 for 257x556 CSS px at DPR 1: more pixels than the screen shows",
               "rect": {
-                "x": 2223.609375,
+                "x": 2239.609375,
                 "y": 378.28125,
                 "width": 256.765625,
                 "height": 555.6671752929688
@@ -1579,10 +1338,10 @@
               "kind": "subject-outside-frame",
               "message": "scene (tall-phone): the subject runs outside the screen",
               "rect": {
-                "x": 114.609375,
-                "y": 851.828125,
-                "width": 315,
-                "height": 473
+                "x": 137.609375,
+                "y": 867.78125,
+                "width": 270,
+                "height": 456
               }
             },
             {
@@ -1590,7 +1349,7 @@
               "message": "canvas renders 1170x2532 for 257x556 CSS px at DPR 2.625: more pixels than the screen shows",
               "rect": {
                 "x": 77.609375,
-                "y": 665.828125,
+                "y": 648.78125,
                 "width": 256.765625,
                 "height": 555.667236328125
               }
@@ -1619,10 +1378,10 @@
               "kind": "subject-outside-frame",
               "message": "scene (tall-phone): the subject runs outside the screen",
               "rect": {
-                "x": 103.609375,
-                "y": 852.625,
-                "width": 315,
-                "height": 473
+                "x": 126.609375,
+                "y": 893.375,
+                "width": 270,
+                "height": 456
               }
             },
             {
@@ -1630,7 +1389,7 @@
               "message": "canvas renders 1170x2532 for 257x556 CSS px at DPR 3: more pixels than the screen shows",
               "rect": {
                 "x": 66.609375,
-                "y": 666.625,
+                "y": 674.375,
                 "width": 256.765625,
                 "height": 555.667236328125
               }

@@ -1,7 +1,7 @@
 {
-  "url": "http://localhost:3100/dolly",
-  "createdAt": "2026-10-02T18:17:27.774Z",
-  "chapters": ["Front", "Orbit", "Top", "Close"],
+  "url": "http://localhost:3100/dailies",
+  "createdAt": "2026-10-02T18:25:36.705Z",
+  "chapters": ["intro", "scrub", "outro"],
   "rows": [
     {
       "profile": {
@@ -16,23 +16,18 @@
       },
       "cells": [
         {
-          "chapter": "Front",
-          "image": "iphone-se/front.png",
+          "chapter": "intro",
+          "image": "iphone-se/intro.png",
           "flags": []
         },
         {
-          "chapter": "Orbit",
-          "image": "iphone-se/orbit.png",
+          "chapter": "scrub",
+          "image": "iphone-se/scrub.png",
           "flags": []
         },
         {
-          "chapter": "Top",
-          "image": "iphone-se/top.png",
-          "flags": []
-        },
-        {
-          "chapter": "Close",
-          "image": "iphone-se/close.png",
+          "chapter": "outro",
+          "image": "iphone-se/outro.png",
           "flags": []
         }
       ]
@@ -50,23 +45,18 @@
       },
       "cells": [
         {
-          "chapter": "Front",
-          "image": "iphone-13-mini/front.png",
+          "chapter": "intro",
+          "image": "iphone-13-mini/intro.png",
           "flags": []
         },
         {
-          "chapter": "Orbit",
-          "image": "iphone-13-mini/orbit.png",
+          "chapter": "scrub",
+          "image": "iphone-13-mini/scrub.png",
           "flags": []
         },
         {
-          "chapter": "Top",
-          "image": "iphone-13-mini/top.png",
-          "flags": []
-        },
-        {
-          "chapter": "Close",
-          "image": "iphone-13-mini/close.png",
+          "chapter": "outro",
+          "image": "iphone-13-mini/outro.png",
           "flags": []
         }
       ]
@@ -84,23 +74,18 @@
       },
       "cells": [
         {
-          "chapter": "Front",
-          "image": "iphone-15/front.png",
+          "chapter": "intro",
+          "image": "iphone-15/intro.png",
           "flags": []
         },
         {
-          "chapter": "Orbit",
-          "image": "iphone-15/orbit.png",
+          "chapter": "scrub",
+          "image": "iphone-15/scrub.png",
           "flags": []
         },
         {
-          "chapter": "Top",
-          "image": "iphone-15/top.png",
-          "flags": []
-        },
-        {
-          "chapter": "Close",
-          "image": "iphone-15/close.png",
+          "chapter": "outro",
+          "image": "iphone-15/outro.png",
           "flags": []
         }
       ]
@@ -118,23 +103,18 @@
       },
       "cells": [
         {
-          "chapter": "Front",
-          "image": "iphone-15-pro-max/front.png",
+          "chapter": "intro",
+          "image": "iphone-15-pro-max/intro.png",
           "flags": []
         },
         {
-          "chapter": "Orbit",
-          "image": "iphone-15-pro-max/orbit.png",
+          "chapter": "scrub",
+          "image": "iphone-15-pro-max/scrub.png",
           "flags": []
         },
         {
-          "chapter": "Top",
-          "image": "iphone-15-pro-max/top.png",
-          "flags": []
-        },
-        {
-          "chapter": "Close",
-          "image": "iphone-15-pro-max/close.png",
+          "chapter": "outro",
+          "image": "iphone-15-pro-max/outro.png",
           "flags": []
         }
       ]
@@ -152,23 +132,18 @@
       },
       "cells": [
         {
-          "chapter": "Front",
-          "image": "pixel-8/front.png",
+          "chapter": "intro",
+          "image": "pixel-8/intro.png",
           "flags": []
         },
         {
-          "chapter": "Orbit",
-          "image": "pixel-8/orbit.png",
+          "chapter": "scrub",
+          "image": "pixel-8/scrub.png",
           "flags": []
         },
         {
-          "chapter": "Top",
-          "image": "pixel-8/top.png",
-          "flags": []
-        },
-        {
-          "chapter": "Close",
-          "image": "pixel-8/close.png",
+          "chapter": "outro",
+          "image": "pixel-8/outro.png",
           "flags": []
         }
       ]
@@ -186,23 +161,18 @@
       },
       "cells": [
         {
-          "chapter": "Front",
-          "image": "galaxy-s24/front.png",
+          "chapter": "intro",
+          "image": "galaxy-s24/intro.png",
           "flags": []
         },
         {
-          "chapter": "Orbit",
-          "image": "galaxy-s24/orbit.png",
+          "chapter": "scrub",
+          "image": "galaxy-s24/scrub.png",
           "flags": []
         },
         {
-          "chapter": "Top",
-          "image": "galaxy-s24/top.png",
-          "flags": []
-        },
-        {
-          "chapter": "Close",
-          "image": "galaxy-s24/close.png",
+          "chapter": "outro",
+          "image": "galaxy-s24/outro.png",
           "flags": []
         }
       ]
@@ -220,23 +190,18 @@
       },
       "cells": [
         {
-          "chapter": "Front",
-          "image": "budget-android/front.png",
+          "chapter": "intro",
+          "image": "budget-android/intro.png",
           "flags": []
         },
         {
-          "chapter": "Orbit",
-          "image": "budget-android/orbit.png",
+          "chapter": "scrub",
+          "image": "budget-android/scrub.png",
           "flags": []
         },
         {
-          "chapter": "Top",
-          "image": "budget-android/top.png",
-          "flags": []
-        },
-        {
-          "chapter": "Close",
-          "image": "budget-android/close.png",
+          "chapter": "outro",
+          "image": "budget-android/outro.png",
           "flags": []
         }
       ]
@@ -254,23 +219,18 @@
       },
       "cells": [
         {
-          "chapter": "Front",
-          "image": "iphone-se-landscape/front.png",
+          "chapter": "intro",
+          "image": "iphone-se-landscape/intro.png",
           "flags": []
         },
         {
-          "chapter": "Orbit",
-          "image": "iphone-se-landscape/orbit.png",
+          "chapter": "scrub",
+          "image": "iphone-se-landscape/scrub.png",
           "flags": []
         },
         {
-          "chapter": "Top",
-          "image": "iphone-se-landscape/top.png",
-          "flags": []
-        },
-        {
-          "chapter": "Close",
-          "image": "iphone-se-landscape/close.png",
+          "chapter": "outro",
+          "image": "iphone-se-landscape/outro.png",
           "flags": []
         }
       ]
@@ -288,23 +248,18 @@
       },
       "cells": [
         {
-          "chapter": "Front",
-          "image": "iphone-15-landscape/front.png",
+          "chapter": "intro",
+          "image": "iphone-15-landscape/intro.png",
           "flags": []
         },
         {
-          "chapter": "Orbit",
-          "image": "iphone-15-landscape/orbit.png",
+          "chapter": "scrub",
+          "image": "iphone-15-landscape/scrub.png",
           "flags": []
         },
         {
-          "chapter": "Top",
-          "image": "iphone-15-landscape/top.png",
-          "flags": []
-        },
-        {
-          "chapter": "Close",
-          "image": "iphone-15-landscape/close.png",
+          "chapter": "outro",
+          "image": "iphone-15-landscape/outro.png",
           "flags": []
         }
       ]
@@ -322,23 +277,18 @@
       },
       "cells": [
         {
-          "chapter": "Front",
-          "image": "pixel-8-landscape/front.png",
+          "chapter": "intro",
+          "image": "pixel-8-landscape/intro.png",
           "flags": []
         },
         {
-          "chapter": "Orbit",
-          "image": "pixel-8-landscape/orbit.png",
+          "chapter": "scrub",
+          "image": "pixel-8-landscape/scrub.png",
           "flags": []
         },
         {
-          "chapter": "Top",
-          "image": "pixel-8-landscape/top.png",
-          "flags": []
-        },
-        {
-          "chapter": "Close",
-          "image": "pixel-8-landscape/close.png",
+          "chapter": "outro",
+          "image": "pixel-8-landscape/outro.png",
           "flags": []
         }
       ]
@@ -356,23 +306,18 @@
       },
       "cells": [
         {
-          "chapter": "Front",
-          "image": "galaxy-z-fold-closed/front.png",
+          "chapter": "intro",
+          "image": "galaxy-z-fold-closed/intro.png",
           "flags": []
         },
         {
-          "chapter": "Orbit",
-          "image": "galaxy-z-fold-closed/orbit.png",
+          "chapter": "scrub",
+          "image": "galaxy-z-fold-closed/scrub.png",
           "flags": []
         },
         {
-          "chapter": "Top",
-          "image": "galaxy-z-fold-closed/top.png",
-          "flags": []
-        },
-        {
-          "chapter": "Close",
-          "image": "galaxy-z-fold-closed/close.png",
+          "chapter": "outro",
+          "image": "galaxy-z-fold-closed/outro.png",
           "flags": []
         }
       ]
@@ -390,23 +335,18 @@
       },
       "cells": [
         {
-          "chapter": "Front",
-          "image": "galaxy-z-fold-open/front.png",
+          "chapter": "intro",
+          "image": "galaxy-z-fold-open/intro.png",
           "flags": []
         },
         {
-          "chapter": "Orbit",
-          "image": "galaxy-z-fold-open/orbit.png",
+          "chapter": "scrub",
+          "image": "galaxy-z-fold-open/scrub.png",
           "flags": []
         },
         {
-          "chapter": "Top",
-          "image": "galaxy-z-fold-open/top.png",
-          "flags": []
-        },
-        {
-          "chapter": "Close",
-          "image": "galaxy-z-fold-open/close.png",
+          "chapter": "outro",
+          "image": "galaxy-z-fold-open/outro.png",
           "flags": []
         }
       ]
@@ -424,23 +364,18 @@
       },
       "cells": [
         {
-          "chapter": "Front",
-          "image": "galaxy-z-fold-open-landscape/front.png",
+          "chapter": "intro",
+          "image": "galaxy-z-fold-open-landscape/intro.png",
           "flags": []
         },
         {
-          "chapter": "Orbit",
-          "image": "galaxy-z-fold-open-landscape/orbit.png",
+          "chapter": "scrub",
+          "image": "galaxy-z-fold-open-landscape/scrub.png",
           "flags": []
         },
         {
-          "chapter": "Top",
-          "image": "galaxy-z-fold-open-landscape/top.png",
-          "flags": []
-        },
-        {
-          "chapter": "Close",
-          "image": "galaxy-z-fold-open-landscape/close.png",
+          "chapter": "outro",
+          "image": "galaxy-z-fold-open-landscape/outro.png",
           "flags": []
         }
       ]
@@ -458,23 +393,18 @@
       },
       "cells": [
         {
-          "chapter": "Front",
-          "image": "galaxy-z-flip-open/front.png",
+          "chapter": "intro",
+          "image": "galaxy-z-flip-open/intro.png",
           "flags": []
         },
         {
-          "chapter": "Orbit",
-          "image": "galaxy-z-flip-open/orbit.png",
+          "chapter": "scrub",
+          "image": "galaxy-z-flip-open/scrub.png",
           "flags": []
         },
         {
-          "chapter": "Top",
-          "image": "galaxy-z-flip-open/top.png",
-          "flags": []
-        },
-        {
-          "chapter": "Close",
-          "image": "galaxy-z-flip-open/close.png",
+          "chapter": "outro",
+          "image": "galaxy-z-flip-open/outro.png",
           "flags": []
         }
       ]
@@ -492,23 +422,18 @@
       },
       "cells": [
         {
-          "chapter": "Front",
-          "image": "pixel-fold-open/front.png",
+          "chapter": "intro",
+          "image": "pixel-fold-open/intro.png",
           "flags": []
         },
         {
-          "chapter": "Orbit",
-          "image": "pixel-fold-open/orbit.png",
+          "chapter": "scrub",
+          "image": "pixel-fold-open/scrub.png",
           "flags": []
         },
         {
-          "chapter": "Top",
-          "image": "pixel-fold-open/top.png",
-          "flags": []
-        },
-        {
-          "chapter": "Close",
-          "image": "pixel-fold-open/close.png",
+          "chapter": "outro",
+          "image": "pixel-fold-open/outro.png",
           "flags": []
         }
       ]
@@ -526,23 +451,18 @@
       },
       "cells": [
         {
-          "chapter": "Front",
-          "image": "ipad-mini/front.png",
+          "chapter": "intro",
+          "image": "ipad-mini/intro.png",
           "flags": []
         },
         {
-          "chapter": "Orbit",
-          "image": "ipad-mini/orbit.png",
+          "chapter": "scrub",
+          "image": "ipad-mini/scrub.png",
           "flags": []
         },
         {
-          "chapter": "Top",
-          "image": "ipad-mini/top.png",
-          "flags": []
-        },
-        {
-          "chapter": "Close",
-          "image": "ipad-mini/close.png",
+          "chapter": "outro",
+          "image": "ipad-mini/outro.png",
           "flags": []
         }
       ]
@@ -560,23 +480,18 @@
       },
       "cells": [
         {
-          "chapter": "Front",
-          "image": "ipad-air/front.png",
+          "chapter": "intro",
+          "image": "ipad-air/intro.png",
           "flags": []
         },
         {
-          "chapter": "Orbit",
-          "image": "ipad-air/orbit.png",
+          "chapter": "scrub",
+          "image": "ipad-air/scrub.png",
           "flags": []
         },
         {
-          "chapter": "Top",
-          "image": "ipad-air/top.png",
-          "flags": []
-        },
-        {
-          "chapter": "Close",
-          "image": "ipad-air/close.png",
+          "chapter": "outro",
+          "image": "ipad-air/outro.png",
           "flags": []
         }
       ]
@@ -594,23 +509,18 @@
       },
       "cells": [
         {
-          "chapter": "Front",
-          "image": "ipad-air-landscape/front.png",
+          "chapter": "intro",
+          "image": "ipad-air-landscape/intro.png",
           "flags": []
         },
         {
-          "chapter": "Orbit",
-          "image": "ipad-air-landscape/orbit.png",
+          "chapter": "scrub",
+          "image": "ipad-air-landscape/scrub.png",
           "flags": []
         },
         {
-          "chapter": "Top",
-          "image": "ipad-air-landscape/top.png",
-          "flags": []
-        },
-        {
-          "chapter": "Close",
-          "image": "ipad-air-landscape/close.png",
+          "chapter": "outro",
+          "image": "ipad-air-landscape/outro.png",
           "flags": []
         }
       ]
@@ -628,23 +538,18 @@
       },
       "cells": [
         {
-          "chapter": "Front",
-          "image": "ipad-air-split-view-half/front.png",
+          "chapter": "intro",
+          "image": "ipad-air-split-view-half/intro.png",
           "flags": []
         },
         {
-          "chapter": "Orbit",
-          "image": "ipad-air-split-view-half/orbit.png",
+          "chapter": "scrub",
+          "image": "ipad-air-split-view-half/scrub.png",
           "flags": []
         },
         {
-          "chapter": "Top",
-          "image": "ipad-air-split-view-half/top.png",
-          "flags": []
-        },
-        {
-          "chapter": "Close",
-          "image": "ipad-air-split-view-half/close.png",
+          "chapter": "outro",
+          "image": "ipad-air-split-view-half/outro.png",
           "flags": []
         }
       ]
@@ -662,23 +567,18 @@
       },
       "cells": [
         {
-          "chapter": "Front",
-          "image": "ipad-air-split-view-third/front.png",
+          "chapter": "intro",
+          "image": "ipad-air-split-view-third/intro.png",
           "flags": []
         },
         {
-          "chapter": "Orbit",
-          "image": "ipad-air-split-view-third/orbit.png",
+          "chapter": "scrub",
+          "image": "ipad-air-split-view-third/scrub.png",
           "flags": []
         },
         {
-          "chapter": "Top",
-          "image": "ipad-air-split-view-third/top.png",
-          "flags": []
-        },
-        {
-          "chapter": "Close",
-          "image": "ipad-air-split-view-third/close.png",
+          "chapter": "outro",
+          "image": "ipad-air-split-view-third/outro.png",
           "flags": []
         }
       ]
@@ -696,23 +596,18 @@
       },
       "cells": [
         {
-          "chapter": "Front",
-          "image": "ipad-pro-12-9/front.png",
+          "chapter": "intro",
+          "image": "ipad-pro-12-9/intro.png",
           "flags": []
         },
         {
-          "chapter": "Orbit",
-          "image": "ipad-pro-12-9/orbit.png",
+          "chapter": "scrub",
+          "image": "ipad-pro-12-9/scrub.png",
           "flags": []
         },
         {
-          "chapter": "Top",
-          "image": "ipad-pro-12-9/top.png",
-          "flags": []
-        },
-        {
-          "chapter": "Close",
-          "image": "ipad-pro-12-9/close.png",
+          "chapter": "outro",
+          "image": "ipad-pro-12-9/outro.png",
           "flags": []
         }
       ]
@@ -730,23 +625,18 @@
       },
       "cells": [
         {
-          "chapter": "Front",
-          "image": "ipad-pro-12-9-landscape/front.png",
+          "chapter": "intro",
+          "image": "ipad-pro-12-9-landscape/intro.png",
           "flags": []
         },
         {
-          "chapter": "Orbit",
-          "image": "ipad-pro-12-9-landscape/orbit.png",
+          "chapter": "scrub",
+          "image": "ipad-pro-12-9-landscape/scrub.png",
           "flags": []
         },
         {
-          "chapter": "Top",
-          "image": "ipad-pro-12-9-landscape/top.png",
-          "flags": []
-        },
-        {
-          "chapter": "Close",
-          "image": "ipad-pro-12-9-landscape/close.png",
+          "chapter": "outro",
+          "image": "ipad-pro-12-9-landscape/outro.png",
           "flags": []
         }
       ]
@@ -764,23 +654,18 @@
       },
       "cells": [
         {
-          "chapter": "Front",
-          "image": "android-tablet/front.png",
+          "chapter": "intro",
+          "image": "android-tablet/intro.png",
           "flags": []
         },
         {
-          "chapter": "Orbit",
-          "image": "android-tablet/orbit.png",
+          "chapter": "scrub",
+          "image": "android-tablet/scrub.png",
           "flags": []
         },
         {
-          "chapter": "Top",
-          "image": "android-tablet/top.png",
-          "flags": []
-        },
-        {
-          "chapter": "Close",
-          "image": "android-tablet/close.png",
+          "chapter": "outro",
+          "image": "android-tablet/outro.png",
           "flags": []
         }
       ]
@@ -797,23 +682,18 @@
       },
       "cells": [
         {
-          "chapter": "Front",
-          "image": "laptop-13in/front.png",
+          "chapter": "intro",
+          "image": "laptop-13in/intro.png",
           "flags": []
         },
         {
-          "chapter": "Orbit",
-          "image": "laptop-13in/orbit.png",
+          "chapter": "scrub",
+          "image": "laptop-13in/scrub.png",
           "flags": []
         },
         {
-          "chapter": "Top",
-          "image": "laptop-13in/top.png",
-          "flags": []
-        },
-        {
-          "chapter": "Close",
-          "image": "laptop-13in/close.png",
+          "chapter": "outro",
+          "image": "laptop-13in/outro.png",
           "flags": []
         }
       ]
@@ -830,23 +710,18 @@
       },
       "cells": [
         {
-          "chapter": "Front",
-          "image": "macbook-air-13/front.png",
+          "chapter": "intro",
+          "image": "macbook-air-13/intro.png",
           "flags": []
         },
         {
-          "chapter": "Orbit",
-          "image": "macbook-air-13/orbit.png",
+          "chapter": "scrub",
+          "image": "macbook-air-13/scrub.png",
           "flags": []
         },
         {
-          "chapter": "Top",
-          "image": "macbook-air-13/top.png",
-          "flags": []
-        },
-        {
-          "chapter": "Close",
-          "image": "macbook-air-13/close.png",
+          "chapter": "outro",
+          "image": "macbook-air-13/outro.png",
           "flags": []
         }
       ]
@@ -863,23 +738,18 @@
       },
       "cells": [
         {
-          "chapter": "Front",
-          "image": "windows-laptop/front.png",
+          "chapter": "intro",
+          "image": "windows-laptop/intro.png",
           "flags": []
         },
         {
-          "chapter": "Orbit",
-          "image": "windows-laptop/orbit.png",
+          "chapter": "scrub",
+          "image": "windows-laptop/scrub.png",
           "flags": []
         },
         {
-          "chapter": "Top",
-          "image": "windows-laptop/top.png",
-          "flags": []
-        },
-        {
-          "chapter": "Close",
-          "image": "windows-laptop/close.png",
+          "chapter": "outro",
+          "image": "windows-laptop/outro.png",
           "flags": []
         }
       ]
@@ -896,23 +766,18 @@
       },
       "cells": [
         {
-          "chapter": "Front",
-          "image": "laptop-15in-at-125/front.png",
+          "chapter": "intro",
+          "image": "laptop-15in-at-125/intro.png",
           "flags": []
         },
         {
-          "chapter": "Orbit",
-          "image": "laptop-15in-at-125/orbit.png",
+          "chapter": "scrub",
+          "image": "laptop-15in-at-125/scrub.png",
           "flags": []
         },
         {
-          "chapter": "Top",
-          "image": "laptop-15in-at-125/top.png",
-          "flags": []
-        },
-        {
-          "chapter": "Close",
-          "image": "laptop-15in-at-125/close.png",
+          "chapter": "outro",
+          "image": "laptop-15in-at-125/outro.png",
           "flags": []
         }
       ]
@@ -929,23 +794,18 @@
       },
       "cells": [
         {
-          "chapter": "Front",
-          "image": "desktop-1080p/front.png",
+          "chapter": "intro",
+          "image": "desktop-1080p/intro.png",
           "flags": []
         },
         {
-          "chapter": "Orbit",
-          "image": "desktop-1080p/orbit.png",
+          "chapter": "scrub",
+          "image": "desktop-1080p/scrub.png",
           "flags": []
         },
         {
-          "chapter": "Top",
-          "image": "desktop-1080p/top.png",
-          "flags": []
-        },
-        {
-          "chapter": "Close",
-          "image": "desktop-1080p/close.png",
+          "chapter": "outro",
+          "image": "desktop-1080p/outro.png",
           "flags": []
         }
       ]
@@ -962,23 +822,18 @@
       },
       "cells": [
         {
-          "chapter": "Front",
-          "image": "desktop-1440p/front.png",
+          "chapter": "intro",
+          "image": "desktop-1440p/intro.png",
           "flags": []
         },
         {
-          "chapter": "Orbit",
-          "image": "desktop-1440p/orbit.png",
+          "chapter": "scrub",
+          "image": "desktop-1440p/scrub.png",
           "flags": []
         },
         {
-          "chapter": "Top",
-          "image": "desktop-1440p/top.png",
-          "flags": []
-        },
-        {
-          "chapter": "Close",
-          "image": "desktop-1440p/close.png",
+          "chapter": "outro",
+          "image": "desktop-1440p/outro.png",
           "flags": []
         }
       ]
@@ -995,23 +850,18 @@
       },
       "cells": [
         {
-          "chapter": "Front",
-          "image": "desktop-4k/front.png",
+          "chapter": "intro",
+          "image": "desktop-4k/intro.png",
           "flags": []
         },
         {
-          "chapter": "Orbit",
-          "image": "desktop-4k/orbit.png",
+          "chapter": "scrub",
+          "image": "desktop-4k/scrub.png",
           "flags": []
         },
         {
-          "chapter": "Top",
-          "image": "desktop-4k/top.png",
-          "flags": []
-        },
-        {
-          "chapter": "Close",
-          "image": "desktop-4k/close.png",
+          "chapter": "outro",
+          "image": "desktop-4k/outro.png",
           "flags": []
         }
       ]
@@ -1028,23 +878,18 @@
       },
       "cells": [
         {
-          "chapter": "Front",
-          "image": "desktop-4k-at-200/front.png",
+          "chapter": "intro",
+          "image": "desktop-4k-at-200/intro.png",
           "flags": []
         },
         {
-          "chapter": "Orbit",
-          "image": "desktop-4k-at-200/orbit.png",
+          "chapter": "scrub",
+          "image": "desktop-4k-at-200/scrub.png",
           "flags": []
         },
         {
-          "chapter": "Top",
-          "image": "desktop-4k-at-200/top.png",
-          "flags": []
-        },
-        {
-          "chapter": "Close",
-          "image": "desktop-4k-at-200/close.png",
+          "chapter": "outro",
+          "image": "desktop-4k-at-200/outro.png",
           "flags": []
         }
       ]
@@ -1061,23 +906,18 @@
       },
       "cells": [
         {
-          "chapter": "Front",
-          "image": "ultrawide-21-9/front.png",
+          "chapter": "intro",
+          "image": "ultrawide-21-9/intro.png",
           "flags": []
         },
         {
-          "chapter": "Orbit",
-          "image": "ultrawide-21-9/orbit.png",
+          "chapter": "scrub",
+          "image": "ultrawide-21-9/scrub.png",
           "flags": []
         },
         {
-          "chapter": "Top",
-          "image": "ultrawide-21-9/top.png",
-          "flags": []
-        },
-        {
-          "chapter": "Close",
-          "image": "ultrawide-21-9/close.png",
+          "chapter": "outro",
+          "image": "ultrawide-21-9/outro.png",
           "flags": []
         }
       ]
@@ -1094,23 +934,18 @@
       },
       "cells": [
         {
-          "chapter": "Front",
-          "image": "super-ultrawide-32-9/front.png",
+          "chapter": "intro",
+          "image": "super-ultrawide-32-9/intro.png",
           "flags": []
         },
         {
-          "chapter": "Orbit",
-          "image": "super-ultrawide-32-9/orbit.png",
+          "chapter": "scrub",
+          "image": "super-ultrawide-32-9/scrub.png",
           "flags": []
         },
         {
-          "chapter": "Top",
-          "image": "super-ultrawide-32-9/top.png",
-          "flags": []
-        },
-        {
-          "chapter": "Close",
-          "image": "super-ultrawide-32-9/close.png",
+          "chapter": "outro",
+          "image": "super-ultrawide-32-9/outro.png",
           "flags": []
         }
       ]
@@ -1128,23 +963,18 @@
       },
       "cells": [
         {
-          "chapter": "Front",
-          "image": "instagram-in-app-ios/front.png",
+          "chapter": "intro",
+          "image": "instagram-in-app-ios/intro.png",
           "flags": []
         },
         {
-          "chapter": "Orbit",
-          "image": "instagram-in-app-ios/orbit.png",
+          "chapter": "scrub",
+          "image": "instagram-in-app-ios/scrub.png",
           "flags": []
         },
         {
-          "chapter": "Top",
-          "image": "instagram-in-app-ios/top.png",
-          "flags": []
-        },
-        {
-          "chapter": "Close",
-          "image": "instagram-in-app-ios/close.png",
+          "chapter": "outro",
+          "image": "instagram-in-app-ios/outro.png",
           "flags": []
         }
       ]
@@ -1162,23 +992,18 @@
       },
       "cells": [
         {
-          "chapter": "Front",
-          "image": "facebook-in-app-android/front.png",
+          "chapter": "intro",
+          "image": "facebook-in-app-android/intro.png",
           "flags": []
         },
         {
-          "chapter": "Orbit",
-          "image": "facebook-in-app-android/orbit.png",
+          "chapter": "scrub",
+          "image": "facebook-in-app-android/scrub.png",
           "flags": []
         },
         {
-          "chapter": "Top",
-          "image": "facebook-in-app-android/top.png",
-          "flags": []
-        },
-        {
-          "chapter": "Close",
-          "image": "facebook-in-app-android/close.png",
+          "chapter": "outro",
+          "image": "facebook-in-app-android/outro.png",
           "flags": []
         }
       ]
@@ -1196,23 +1021,18 @@
       },
       "cells": [
         {
-          "chapter": "Front",
-          "image": "linkedin-in-app-ios/front.png",
+          "chapter": "intro",
+          "image": "linkedin-in-app-ios/intro.png",
           "flags": []
         },
         {
-          "chapter": "Orbit",
-          "image": "linkedin-in-app-ios/orbit.png",
+          "chapter": "scrub",
+          "image": "linkedin-in-app-ios/scrub.png",
           "flags": []
         },
         {
-          "chapter": "Top",
-          "image": "linkedin-in-app-ios/top.png",
-          "flags": []
-        },
-        {
-          "chapter": "Close",
-          "image": "linkedin-in-app-ios/close.png",
+          "chapter": "outro",
+          "image": "linkedin-in-app-ios/outro.png",
           "flags": []
         }
       ]

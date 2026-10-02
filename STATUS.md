@@ -166,6 +166,43 @@ linked) and a cache-less anyframe build (turbo restored `.next` without the gene
 
 Next prompt: unchanged, **P5V** (`volumetric`) if scheduled, otherwise **PF** (the flagship quartifex.com).
 
+## PY (2 Oct 2026): light by default, and the Lab gallery
+
+**Part 1, default theme.** What existed: `tokens.css` put dark on the base `:root` and light
+under `@media (prefers-color-scheme: light)` or `[data-theme="light"]`; the hub's inline script
+applies a saved `qx-theme`; anyframe has no toggle and follows the tokens. So the OS preference
+already decided for nearly every visitor; dark was only the no-signal fallback. Flipped at the
+source: the base `:root` is the light palette, dark comes from `@media (prefers-color-scheme:
+dark)` or `[data-theme="dark"]`, the toggle's fallback follows, and both apps' browser theme
+colour follows the scheme. Token values unchanged; a saved choice and the OS still win. The
+flagship's "Four States" preloader is untouched (deferred to PF by Nitesh).
+
+**Part 2, the Lab gallery** at `/lab` (header "Lab gallery", the home intro, each seed's
+breadcrumb):
+
+| Point | Done |
+| --- | --- |
+| 1. Poster per card | Yes: built seeds drawn small and still from their own code (frameguide's guides over the scene, aspect-morph's three frames); unbuilt seeds show their icon. Static, so nothing to stop under reduced motion |
+| 2. Category tag on the card | Yes, DM Mono label. Seeds have no catalog category, so the hub tags them in the libraries' vocabulary |
+| 3. "New" indicator | Yes, from git: a seed whose folder first appeared within the last 14 days (two weekly drops). Without git history, nothing is marked |
+| 4. Keyboard | Yes: arrow keys (and Home, End) move between cards on top of the tab order, Enter opens, Escape on a seed returns to the gallery |
+| 5. List view | Yes, remembered per visitor. The carousel view is not built (see `DECISIONS.md`) |
+| 6. Scope | The Lab seeds only; the main hub grid keeps PX's layout |
+
+Found on the way: a Fontshare kit inside the repo at `assets/fonts/` (its `.eot` files were not
+ignored); the folder and `*.eot` are now git-ignored and nothing from it was committed. With the
+brand fonts now present locally, the font swap moved the home page; both apps preload the two
+main faces now. contactsheet (patch) now measures text by what can be seen, so text scrolled
+away inside a demo's simulated page is no longer flagged.
+
+| Check | Result |
+| --- | --- |
+| `pnpm check` | green: typecheck, lint (330 files, 0 errors), test (21 files, 220 tests), size (all budgets met; contactsheet's checks entry now 3 kB) |
+| `pnpm build` | pass (fonts: 3 files synced into each app) |
+| `pnpm e2e` (installed Chrome) | pass: hub 95 (incl. 4 gallery and 1 light-default test), anyframe 8, dailies 4, heft 1, contactsheet 2 |
+| hub e2e `--repeat-each 2` | pass: 190 of 190 |
+| contactsheet after the switch, 36 profiles, every built page plus home and `/lab` | no flags on home, `/lab`, plumb, contactsheet, rushes, resolve, reel, dolly, anatomy, heft, spine, viewfinder, sleeve, freight, understudy, dailies. Remaining: see Known issues |
+
 ## Known issues
 
 - The safeframe page's own contactsheet flags come from its scaled preview of other devices and
@@ -173,6 +210,9 @@ Next prompt: unchanged, **P5V** (`volumetric`) if scheduled, otherwise **PF** (t
   committed report is from before the target-size fix and still lists 60 tap targets).
 - viewfinder's scene caps its canvas pixel ratio when the scene is built; a window resized much
   larger afterwards keeps that ratio until the page reloads or reduced motion is toggled.
+- stillness: two small layout shifts on iPads (0.12 and 0.13), and frameguide's and
+  aspect-morph's pages flag their own scaled previews of other screens, the same expected case
+  as safeframe.
 - turbo's build outputs for the apps do not include the generated `public/sequences`, so a
   cache hit can leave a checkout without frames (seen here for anyframe).
 
@@ -268,11 +308,11 @@ Things only Nitesh can supply or decide. None of them blocks the library work.
 | 1 | ~~Push access~~ Resolved: pushes to `quartifex/quartifex` work since 1 Oct 2026, and CI passes on GitHub. | done |
 | 2 | **Commit identity.** Commits are authored as `Nitesh <lab@quartifex.com>`. If GitHub should link them to your account, add that address to your GitHub account, or tell us the address to use. | Commit attribution |
 | 3 | ~~Sindoor red value~~ Resolved 1 Oct 2026: `#c1440e`. | done |
-| 4 | **Font files.** Put `ClashDisplay-Variable.woff2`, `Satoshi-Variable.woff2` and `Satoshi-VariableItalic.woff2` (from the Fontshare downloads) in `C:\dev\assets-private\fonts\`, and for deploys either upload the same three to a private CDN path and set `QX_FONT_ORIGIN` in Vercel, or build from a machine that has them. Until then pages use the system fallbacks. | Brand type on the hub and sites |
+| 4 | **Font files for deploys.** Resolved locally: the three faces are in `C:\dev\assets-private\fonts\`, so local builds use the brand type. The live hub still serves system fonts (`/fonts/*.woff2` is a 404 on lab.quartifex.com): upload the same three files to a private CDN path and set `QX_FONT_ORIGIN` in the Vercel projects. Separately, a full Fontshare kit sits inside the repo at `C:\dev\quartifex\assets\fonts\`; it is git-ignored now, but it would be tidier in `assets-private`. | Brand type on the live hub and sites |
 | 5 | ~~Catalog wording~~ Resolved 1 Oct 2026: L23 is "process templates", S18 is "product launch page". | done |
 | 6 | **GSAP confirmation (optional).** The licence text does not address libraries that use GSAP as an optional peer dependency. Decide whether to ask GSAP before the first publish. See `licence-check.md`. | First npm publish |
 | 7 | **Release switch.** To enable releases: create the npm org and trusted publisher for this repo, then set the repository variable `RELEASE_ENABLED` to `true`. | First npm publish |
-| 8 | Vercel projects and DNS for `lab.quartifex.com` and `anyframe.quartifex.com` (root directories `apps/lab` and `apps/anyframe`; each has its `vercel.json`). Then set `"live": true` on the catalog entry. | Deploying the hub and anyframe |
+| 8 | **anyframe's DNS.** `lab.quartifex.com` is live (checked 2 Oct 2026). anyframe's catalog entry is set to `"live": true`, but `anyframe.quartifex.com` does not resolve yet: finish its Vercel domain and DNS record. | anyframe going live |
 | 9 | **Optional: KTX-Software.** Install `toktx` (KTX-Software 4) on this machine and in CI if you want freight's KTX2 path exercised; without it freight writes WebP and says so. | freight KTX2 |
 | 10 | **NutriMuscle (optional).** The plan describes sleeve as extracted from the NutriMuscle jar work. No jar model or label art is in `assets-private`, and it is client work, so sleeve was built generically with a fictional demo brand. If NutriMuscle should appear (a case study, a demo), supply the model and label and confirm the client's permission in writing. | Any NutriMuscle showcase |
 
@@ -463,10 +503,14 @@ Deviations from the P5 brief:
 - understudy's frame-rate tests use simulated frame times; on real hardware the thresholds were
   only exercised through the Lab demo on this machine.
 
+### 2026-10-02, PY
+
+See "PY" above for both parts, the checks and what is left.
+
 ### 2026-10-02, hub pass
 
 See "Hub pass" above for what changed per item, the checks and the known issues.
 
-Next prompt: **P5V** (`volumetric`) if scheduled, otherwise **PF** (the flagship quartifex.com)
-or **P6** (gate M6): the proof sites `reelhouse` and `halcyon`. From P8 on, see the positioning
+Next prompt: **P5V** (`volumetric`, L30), per the order in `docs/code-prompts.md`
+(P5 > PX > PY > P5V > P6); PF and P6 both need it. From P8 on, see the positioning
 note in `DECISIONS.md` (general-purpose libraries built to stand on their own).
