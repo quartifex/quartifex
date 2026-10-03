@@ -264,6 +264,37 @@ Deviations from the P6 brief:
   (most today), and the page says so; the WebP numbers are real bytes.
 - halcyon's on-page results are from a local run until CI's first publish on `main`.
 
+## PF: the flagship, quartifex.com (private repo `quartifex-www`)
+
+Current state: **PF-1 (Shell) built**, 3 Oct 2026. The full record (checks, copy list, inputs,
+decisions) is in `C:\dev\quartifex-www\STATUS.md` and `DECISIONS.md`; this is the summary.
+
+| Step | State | Notes |
+| --- | --- | --- |
+| PF-1 Shell | built | Separate git repo at `C:\dev\quartifex-www` (outside OneDrive), committed locally, not pushed. Next.js App Router consuming `tokens`, `spine` and `plumb` from this checkout via `link:`. Light by default with the full dark mirror, Ganga teal, hairlines, no gradients; Clash Display, Satoshi, DM Mono. Nav (current-page hairline, tuck on scroll, modal mobile menu) and footer with `[[COPY NEEDED]]` markers. "The Four States" preloader: a line-work face whose lines are the loading bars, three quiet states and one lit (the teal mark at 100%), driven by measured load (document, three faces, load event, page-registered work; bytes from Resource Timing), DM Mono readout, waits for the visitor, pushes into the lit mark. Lenis + ScrollTrigger wired once at the shell (`useShellScope` for pages). Every animation has a designed reduced-motion form |
+| PF-2 Home | not started | Hero on reel + safeframe + volumetric |
+| PF-3 Work | not started | |
+| PF-4 Studio, Capabilities, Contact | not started | |
+| PF-5 Lab section | not started | |
+
+| Check (quartifex-www) | Result |
+| --- | --- |
+| `pnpm check` | green: typecheck, lint (47 files, 0 errors), test (2 files, 14 tests), size (initial JS 149.1 / 170 kB, CSS 4.3 / 30 kB, brotli) |
+| `pnpm build` | pass: 8 static routes |
+| `PW_CHANNEL=chrome pnpm e2e` | pass: 20 tests; 40 of 40 with `--repeat-each 2` |
+| LCP / CLS, Pixel 7, 4x CPU, 1.6 Mbps / 150 ms | with preloader: 808 to 828 ms, CLS 0.001; without: 804 to 836 ms, CLS 0.000 |
+| axe, WCAG 2.2 AA | 0 violations on every page in light and dark, and on the preloader |
+
+Deviations from the PF-1 brief: the default theme follows the locked light-primary system (the
+brief said dark-primary); the preloader stays a dark moment on the light site (Nitesh's
+deferred question, decided and flagged); the readout sits beside the line-work; the push-in
+hands over by a fade until the PF-2 hero exists to receive it.
+
+Inputs needed for PF (details in `quartifex-www/STATUS.md`): when to push (the remote's `main`
+deploys quartifex.com); how the linked packages reach a Vercel build (publish, or another
+route); fonts on Vercel (`QX_FONT_ORIGIN`, as input 4 below); the Q-and-bindu mark SVG (none
+exists); confirm the dark preloader; the copy listed there.
+
 ## Known issues
 
 - The safeframe page's own contactsheet flags come from its scaled preview of other devices and
@@ -584,6 +615,14 @@ See "P6" above for the two sites, the library fixes, the checks and the deviatio
 
 Next prompt: **P7** (gate M7), heftmark, which needs a PageSpeed Insights API key, or **PF**
 (the flagship) if it has not run, per the order in `docs/code-prompts.md`.
+
+### 2026-10-03, PF-1
+
+See "PF" above. Nothing in this repo changed for it except this file and `DECISIONS.md`; the
+linked packages were used as they are.
+
+Next prompt: **PF-2** (Home, the scroll-scrubbed hero on reel + safeframe + volumetric), or
+**P7** (heftmark) per the order in `docs/code-prompts.md`.
 
 ### 2026-10-03, P5V
 
