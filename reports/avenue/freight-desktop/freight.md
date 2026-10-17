@@ -4,11 +4,11 @@
 
 | | Before | After |
 | --- | --- | --- |
-| File size | 2377.7 kB | 337.3 kB |
-| Triangles | 69818 | 69818 |
-| Vertices | 56634 | 36666 |
-| Draw calls | 21 | 21 |
-| Materials | 10 | 10 |
+| File size | 2998.4 kB | 465.1 kB |
+| Triangles | 91714 | 91714 |
+| Vertices | 68226 | 48258 |
+| Draw calls | 23 | 23 |
+| Materials | 12 | 12 |
 | Textures | 0, 0.0 kB | 0, 0.0 kB |
 | Largest texture | 0 px | 0 px |
 
@@ -24,10 +24,10 @@
 
 | Metric | Value | Limit | |
 | --- | --- | --- | --- |
-| bytes | 345380 | 4000000 | pass |
-| triangles | 69818 | 260000 | pass |
-| drawCalls | 21 | 40 | pass |
-| materials | 10 | 12 | pass |
+| bytes | 476256 | 4000000 | pass |
+| triangles | 91714 | 260000 | pass |
+| drawCalls | 23 | 40 | pass |
+| materials | 12 | 12 | pass |
 
 ## Names
 

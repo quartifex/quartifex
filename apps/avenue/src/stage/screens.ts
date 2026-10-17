@@ -5,13 +5,13 @@
 import { MODULE_BY_ID } from "@/content/modules";
 import { MEDIA_BY_ID, SEAT_NAME, type SeatId, type System } from "@/demo/system";
 import { colour } from "@/design/tokens";
-import { SEATS } from "@/three/shape";
+import { SCREENS } from "@/stage/camera";
 
 const c = colour.cabin;
 const ACCENT = c.accent;
 
 export function screenCanvasSize(seat: SeatId): [number, number] {
-  const [w, h] = SEATS[seat].screen.size;
+  const [w, h] = SCREENS[seat].size;
   const width = 640;
   return [width, Math.round((width * h) / w)];
 }
@@ -50,7 +50,7 @@ export function drawScreen(
   const bar = H * 0.12;
   // Status bar.
   ctx.fillStyle = c.textMuted;
-  ctx.font = `500 ${Math.round(bar * 0.62)}px system-ui, sans-serif`;
+  ctx.font = `500 ${Math.round(bar * 0.62)}px Archivo, system-ui, sans-serif`;
   ctx.textBaseline = "middle";
   ctx.fillText(SEAT_NAME[seat].toUpperCase(), pad, pad + bar / 2);
   ctx.textAlign = "right";
@@ -61,7 +61,7 @@ export function drawScreen(
     ctx.fillStyle = "#3a0f0c";
     ctx.fillRect(0, 0, W, H);
     ctx.fillStyle = c.danger;
-    ctx.font = `600 ${Math.round(H * 0.34)}px system-ui, sans-serif`;
+    ctx.font = `600 ${Math.round(H * 0.34)}px Archivo, system-ui, sans-serif`;
     ctx.textAlign = "center";
     ctx.fillText(
       system.sos.state === "calling" ? "SOS" : String(system.sos.remaining),
@@ -103,10 +103,10 @@ export function drawScreen(
     ctx.roundRect(x0, top, w0 * 0.58, bodyH, H * 0.06);
     ctx.fill();
     ctx.fillStyle = ACCENT;
-    ctx.font = `600 ${Math.round(bodyH * 0.3)}px system-ui, sans-serif`;
+    ctx.font = `600 ${Math.round(bodyH * 0.3)}px Archivo, system-ui, sans-serif`;
     ctx.fillText("600 m", x0 + pad, top + bodyH * 0.4);
     ctx.fillStyle = c.text;
-    ctx.font = `500 ${Math.round(bodyH * 0.14)}px system-ui, sans-serif`;
+    ctx.font = `500 ${Math.round(bodyH * 0.14)}px Archivo, system-ui, sans-serif`;
     ctx.fillText("Ridge Lane", x0 + pad, top + bodyH * 0.72);
     ctx.fillStyle = c.raised;
     ctx.beginPath();
@@ -120,7 +120,7 @@ export function drawScreen(
     ctx.fillStyle = ACCENT;
     ctx.fillRect(x0, top + bodyH - bodyH * 0.06, w0 * 0.62 * s.progress, bodyH * 0.06);
     ctx.fillStyle = c.text;
-    ctx.font = `600 ${Math.round(bodyH * 0.12)}px system-ui, sans-serif`;
+    ctx.font = `600 ${Math.round(bodyH * 0.12)}px Archivo, system-ui, sans-serif`;
     ctx.fillText(item.title, x0 + w0 * 0.66, top + bodyH * 0.2);
     for (let i = 0; i < 3; i++) {
       ctx.fillStyle = "rgb(255 255 255 / 0.1)";
@@ -177,7 +177,7 @@ export function drawScreen(
         art(ctx, x0 + pad * 0.6, top + pad * 0.6, bodyH * 0.55, bodyH * 0.55, item.hue);
     });
     ctx.fillStyle = c.text;
-    ctx.font = `600 ${Math.round(bodyH * 0.11)}px system-ui, sans-serif`;
+    ctx.font = `600 ${Math.round(bodyH * 0.11)}px Archivo, system-ui, sans-serif`;
     ctx.fillText(module.name, x0 + pad * 0.6, top + bodyH * 0.82);
   }
 
@@ -188,7 +188,7 @@ export function drawScreen(
     ctx.roundRect(W - pad - W * 0.32, H - pad - H * 0.18, W * 0.32, H * 0.18, H * 0.05);
     ctx.fill();
     ctx.fillStyle = c.onAccent;
-    ctx.font = `600 ${Math.round(H * 0.075)}px system-ui, sans-serif`;
+    ctx.font = `600 ${Math.round(H * 0.075)}px Archivo, system-ui, sans-serif`;
     ctx.fillText("Sent to you", W - pad - W * 0.3, H - pad - H * 0.09);
   }
   ctx.restore();

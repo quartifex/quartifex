@@ -4,45 +4,60 @@
 
 export type Theme = "cabin" | "paper";
 
-/** Colour, per theme. "cabin" is the dark default (car UIs live at night); "paper" is the
- * light theme the documentation reads in. One accent: amber (a deeper step of the same hue on paper, so a fill still
- * stands 3:1 off the page). Red is reserved for SOS. */
+/** Colour, per theme. "cabin" is Night, the default (car interfaces live in the dark);
+ * "paper" is Day, the theme the research and documentation read in. One accent: lane blue.
+ * Ember is the tail-light warmth, used once per view at most. Red is reserved for SOS.
+ * The brand book (the AVENUE design system) names these ground, surface, ink and so on. */
 export const colour = {
   cabin: {
-    bg: "#07080a",
-    surface: "#0f1114",
-    raised: "#171a1f",
-    sunken: "#0b0c0f",
-    control: "#1f2329",
-    line: "rgb(255 255 255 / 0.09)",
-    lineStrong: "rgb(255 255 255 / 0.18)",
-    text: "#edebe7",
-    textMuted: "#a9abb0",
-    textFaint: "#8d9096",
-    accent: "#f0a640",
-    accentText: "#f3b25a",
-    onAccent: "#120c03",
-    danger: "#ff6a5e",
-    onDanger: "#1a0503",
-    focus: "#f3b25a",
+    bg: "#06070a",
+    surface: "#0c0f14",
+    raised: "#141922",
+    sunken: "#090b0f",
+    control: "#1c2230",
+    line: "rgb(255 255 255 / 0.14)",
+    lineStrong: "rgb(255 255 255 / 0.32)",
+    text: "#eef1f6",
+    textMuted: "#8e97a8",
+    textFaint: "#808a9c",
+    accent: "#2d63ee",
+    accentText: "#9cc6ff",
+    onAccent: "#ffffff",
+    danger: "#e0302e",
+    onDanger: "#ffffff",
+    focus: "#9cc6ff",
+    ice: "#9cc6ff",
+    laneDeep: "#0b1f66",
+    ember: "#ff6a2b",
+    emberDeep: "#4a1206",
+    duskSky: "#10203f",
+    duskHaze: "#1a1430",
+    glass: "rgb(20 25 34 / 0.72)",
   },
   paper: {
-    bg: "#f3f2ef",
-    surface: "#fbfaf8",
-    raised: "#ffffff",
-    sunken: "#e9e7e2",
-    control: "#e4e1db",
-    line: "rgb(16 17 20 / 0.12)",
-    lineStrong: "rgb(16 17 20 / 0.24)",
-    text: "#14161a",
-    textMuted: "#4a4d54",
-    textFaint: "#5e6168",
-    accent: "#b06d0a",
-    accentText: "#8a4a00",
-    onAccent: "#120c03",
-    danger: "#b3261e",
+    bg: "#f1f2f4",
+    surface: "#ffffff",
+    raised: "#e7eaef",
+    sunken: "#e2e5ea",
+    control: "#d9dee6",
+    line: "rgb(10 13 18 / 0.16)",
+    lineStrong: "rgb(10 13 18 / 0.4)",
+    text: "#0a0d12",
+    textMuted: "#4b5364",
+    textFaint: "#575f70",
+    accent: "#1f55e0",
+    accentText: "#1f55e0",
+    onAccent: "#ffffff",
+    danger: "#c81e1e",
     onDanger: "#ffffff",
-    focus: "#8a4a00",
+    focus: "#1f55e0",
+    ice: "#6e9bf0",
+    laneDeep: "#c9d8f7",
+    ember: "#c2410c",
+    emberDeep: "#f6d6c6",
+    duskSky: "#c4d6ef",
+    duskHaze: "#f3e3da",
+    glass: "rgb(255 255 255 / 0.72)",
   },
 } as const;
 
@@ -66,11 +81,19 @@ export const colourRoles: Record<ColourToken, string> = {
   danger: "SOS and destructive actions only",
   onDanger: "Text on a danger fill",
   focus: "Keyboard focus ring",
+  ice: "Glow tint: the bright core of the headlight gradient (decorative by day)",
+  laneDeep: "Far end of the headlight gradient",
+  ember: "Tail-light warmth: the Moving state and the driver seat, once per view",
+  emberDeep: "Far end of the tail-light gradient",
+  duskSky: "Top of the dusk wash behind Day sections",
+  duskHaze: "Bottom of the dusk wash: warm haze at the horizon",
+  glass: "The cabin UI's mica layer, under a backdrop blur",
 };
 
 export const font = {
-  display: "var(--font-display), 'Archivo', system-ui, sans-serif",
-  ui: "var(--font-ui), 'Instrument Sans', system-ui, sans-serif",
+  display: "var(--font-display), 'Archivo', 'Helvetica Neue', Arial, sans-serif",
+  ui: "var(--font-display), 'Archivo', 'Helvetica Neue', Arial, sans-serif",
+  narrow: "var(--font-narrow), 'Archivo Narrow', 'Arial Narrow', sans-serif",
   mono: "var(--font-mono), 'DM Mono', ui-monospace, monospace",
 } as const;
 
@@ -78,10 +101,11 @@ export const font = {
  * interface uses the `screen` sizes, in container units so it scales with its screen. */
 export const type = {
   site: {
-    hero: { min: 44, max: 112, line: 0.95, weight: 300, track: -0.01, width: 125 },
-    h1: { min: 34, max: 72, line: 1.02, weight: 300, track: -0.005, width: 118 },
-    h2: { min: 26, max: 44, line: 1.08, weight: 360, track: 0, width: 112 },
-    h3: { min: 19, max: 24, line: 1.2, weight: 500, track: 0, width: 100 },
+    mega: { min: 64, max: 220, line: 0.86, weight: 340, track: 0.06, width: 125 },
+    hero: { min: 40, max: 96, line: 0.96, weight: 400, track: -0.025, width: 100 },
+    h1: { min: 34, max: 72, line: 1.0, weight: 400, track: -0.025, width: 100 },
+    h2: { min: 28, max: 56, line: 1.02, weight: 400, track: -0.02, width: 100 },
+    h3: { min: 20, max: 28, line: 1.15, weight: 450, track: -0.01, width: 100 },
     body: { min: 16, max: 18, line: 1.6, weight: 400, track: 0, width: 100 },
     small: { min: 14, max: 15, line: 1.5, weight: 400, track: 0.005, width: 100 },
     mono: { min: 12, max: 13, line: 1.4, weight: 400, track: 0.04, width: 100 },
@@ -110,15 +134,15 @@ export const space = {
 } as const;
 
 /** Radii. Nested surfaces are concentric: outer = inner + the padding between them. */
-export const radius = { xs: 6, sm: 10, md: 16, lg: 24, xl: 32, pill: 999 } as const;
+export const radius = { xs: 2, sm: 10, md: 14, lg: 24, xl: 32, pill: 999 } as const;
 
 /** Elevation: soft surfaces (a top highlight and a low, wide shadow) rather than hard borders.
  * The hi-fi concept's neumorphism, kept as a feel, restyled so every edge still meets 3:1. */
 export const elevation = {
   0: "none",
-  1: "inset 0 1px 0 rgb(255 255 255 / 0.05), 0 1px 2px rgb(0 0 0 / 0.4)",
-  2: "inset 0 1px 0 rgb(255 255 255 / 0.06), 0 6px 18px -6px rgb(0 0 0 / 0.55)",
-  3: "inset 0 1px 0 rgb(255 255 255 / 0.07), 0 18px 40px -12px rgb(0 0 0 / 0.65)",
+  1: "inset 0 1px 0 rgb(255 255 255 / 0.08), 0 2px 6px rgb(0 0 0 / 0.35)",
+  2: "inset 0 1px 0 rgb(255 255 255 / 0.1), 0 10px 30px rgb(0 0 0 / 0.45)",
+  3: "inset 0 1px 0 rgb(255 255 255 / 0.12), 0 24px 60px rgb(0 0 0 / 0.55)",
   pressed: "inset 0 2px 6px rgb(0 0 0 / 0.5), inset 0 -1px 0 rgb(255 255 255 / 0.04)",
 } as const;
 
@@ -128,15 +152,16 @@ export const motion = {
   ease: {
     // Haptic-like: a fast, decisive start that settles without overshoot.
     press: [0.2, 0, 0, 1],
-    out: [0.16, 1, 0.3, 1],
+    // "Lane": everything that settles.
+    out: [0.22, 1, 0.36, 1],
     inOut: [0.65, 0, 0.35, 1],
   },
   /** A pressed control scales to this. */
-  pressScale: 0.96,
+  pressScale: 0.97,
 } as const;
 
 /** Touch targets, in CSS px. Driver mode while moving uses `driving`. */
-export const target = { min: 44, comfortable: 56, driving: 76 } as const;
+export const target = { min: 48, comfortable: 64, driving: 76 } as const;
 
 /** Colour pairs that must meet WCAG 2.2 AA in both themes: [foreground, background, minimum]. */
 export const contrastPairs: Array<[ColourToken, ColourToken, number]> = [

@@ -102,10 +102,16 @@ function ABChart() {
 
 export function Process() {
   return (
-    <section id="design" className={`section ${s.process}`} aria-labelledby="design-title">
+    <section
+      id="design"
+      data-theme="paper"
+      className={`section dusk ${s.process}`}
+      aria-labelledby="design-title"
+    >
+      <div className="grid-lines" aria-hidden="true" />
       <div className="wrap">
         <header className={s.header}>
-          <p className="eyebrow">How it was designed</p>
+          <p className="eyebrow">R · How it was designed</p>
           <h2 id="design-title" className="h1" data-split>
             Grounded in the people in the back seat.
           </h2>

@@ -1,27 +1,17 @@
-// The footer: the placeholder wordmark, the honest label, where everything came from, and
-// the studio.
-import Image from "next/image";
-import { CREDITS, SITE } from "@/content/site";
+// The footer: the lockup, the honest labels, where every asset came from, and the studio.
+import { CAR_NOTICE, CREDITS, SITE } from "@/content/site";
 import s from "./Footer.module.css";
+import { Lockup } from "./Logo";
 
 export function Footer() {
   return (
     <footer className={s.footer}>
       <div className={`wrap ${s.grid}`}>
         <div className={s.brand}>
-          <Image
-            src="/brand/avenue-logo.svg"
-            alt="AVENUE"
-            width={220}
-            height={25}
-            unoptimized
-            className={s.logo}
-          />
+          <Lockup height={28} />
           <p className={s.honesty}>{SITE.honesty}</p>
-          <p className={s.label}>
-            <span className="mono">{SITE.label}</span>
-          </p>
-          <p>
+          <p className={s.notice}>{CAR_NOTICE}</p>
+          <p className={s.studio}>
             A Quartifex product.{" "}
             <a href={SITE.studio.url} rel="noopener">
               quartifex.com
@@ -40,6 +30,10 @@ export function Footer() {
           </dl>
         </div>
       </div>
+      <p className={`wrap ${s.base}`}>
+        <span className="label">{SITE.label}</span>
+        <span className="label">avenue.quartifex.com</span>
+      </p>
     </footer>
   );
 }

@@ -1,49 +1,23 @@
 "use client";
-// The 3D stage: the AVENUE car at night on three's WebGPURenderer (WebGPU, or WebGL2 where
-// WebGPU is missing), through React Three Fiber. Loaded only after first paint, by Stage.
-//
-// Light: a studio of soft light strips rendered into an environment map (the paint and glass
-// reflections), an overhead pool of light, and volumetric shafts from a high light behind the
-// car (@quartifex/volumetric/tsl). Post: light bloom on the screens and lamps, a vignette.
-// Camera: @quartifex/dolly's rig on the page's scroll, then the demo's seat views.
-import { createRig } from "@quartifex/dolly";
-import type { Understudy } from "@quartifex/understudy";
-import { Governor, useQuality } from "@quartifex/understudy/r3f";
-import { createTslVolumetric, type TslVolumetric } from "@quartifex/volumetric/tsl";
+// The 3D stage: the demo car on a moonlit road. The road is a day photo (Poly Haven, CC0)
+// graded day-for-night and projected onto the ground, so the car sits on real asphalt; its
+// reflections come from the same light. Headlights throw two pools onto the road; the cabin
+// holds AVENUE's four screens, painted live from the demo's state.
+// The camera follows the page: each chapter (camera.ts) has a start and an end pose, scroll
+// says where between them we are, and the camera eases there. The demo takes over the camera
+// for the seat views.
+import { ContactShadows, Environment } from "@react-three/drei";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { gsap } from "gsap";
-import { useEffect, useMemo, useRef } from "react";
-import type { Object3D } from "three";
+import { Suspense, useEffect, useMemo, useRef } from "react";
+import * as THREE from "three";
 import { MeshoptDecoder } from "three/addons/libs/meshopt_decoder.module.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
-import { bloom } from "three/addons/tsl/display/BloomNode.js";
-import {
-  distance,
-  float,
-  length,
-  mix,
-  pass,
-  positionWorld,
-  smoothstep,
-  uniform,
-  uv,
-  vec2,
-  vec3,
-  vec4,
-} from "three/tsl";
-import type { Node } from "three/webgpu";
-import * as THREE from "three/webgpu";
 import { demo } from "@/demo/store";
 import { SEAT_IDS, type SeatId } from "@/demo/system";
-import { DOOR_OPEN, journeyPath, SCREEN_WAKE, SUN, seatView } from "@/stage/paths";
+import { CHAPTER_BY_ID, CHAPTERS, type Pose, poseAt, SCREENS, seatPose } from "@/stage/camera";
 import { drawScreen, screenCanvasSize } from "@/stage/screens";
 import { frame, stage } from "@/stage/state";
-import { CAR, SEATS } from "@/three/shape";
-
-const smooth = (a: number, b: number, x: number) => {
-  const t = Math.min(1, Math.max(0, (x - a) / (b - a)));
-  return t * t * (3 - 2 * t);
-};
 
 /** Fetch the GLB with real byte progress into the stage store, then parse it. */
 async function loadCar(url: string): Promise<THREE.Group> {
@@ -74,157 +48,177 @@ async function loadCar(url: string): Promise<THREE.Group> {
   return gltf.scene as unknown as THREE.Group;
 }
 
-/** A dark studio with soft light strips, rendered once into the environment map. */
-function studio(renderer: THREE.WebGPURenderer): THREE.Texture {
-  const env = new THREE.Scene();
-  env.background = new THREE.Color(0x010102);
-  const strip = (
-    w: number,
-    h: number,
-    pos: [number, number, number],
-    rot: [number, number, number],
-    value: number,
-    warm = false,
-  ) => {
-    const m = new THREE.Mesh(
-      new THREE.PlaneGeometry(w, h),
-      new THREE.MeshBasicMaterial({
-        color: new THREE.Color(warm ? 1 : 0.92, warm ? 0.78 : 0.95, warm ? 0.56 : 1).multiplyScalar(
-          value,
-        ),
-        side: THREE.DoubleSide,
-      }),
-    );
-    m.position.set(...pos);
-    m.rotation.set(...rot);
-    env.add(m);
-  };
-  // Three long strips overhead along the car, a tall soft panel to the left, a low warm strip
-  // behind: the reflections that draw the car's lines in the dark.
-  strip(9, 0.35, [0, 4, 0.9], [Math.PI / 2, 0, 0], 3.2);
-  strip(9, 0.35, [0, 4, -0.9], [Math.PI / 2, 0, 0], 2.6);
-  strip(9, 0.2, [0, 4.2, 0], [Math.PI / 2, 0, 0], 2.0);
-  strip(4, 2.4, [0, 1.6, 6], [0, Math.PI, 0], 0.55);
-  strip(12, 0.25, [0, 0.6, -7], [0, 0, 0], 0.9, true);
-  const pmrem = new THREE.PMREMGenerator(renderer);
-  const target = pmrem.fromScene(env, 0.025);
-  pmrem.dispose();
-  return target.texture;
-}
+type Finish = Partial<THREE.MeshPhysicalMaterialParameters>;
 
-function floor(): THREE.Mesh {
-  const material = new THREE.MeshStandardNodeMaterial({ roughness: 0.42, metalness: 0 });
-  const p = positionWorld.xz;
-  const centre = vec2(CAR.length / 2, 0);
-  // A pool of light under the car, falling off into the dark.
-  const pool = smoothstep(float(9), float(0.5), distance(p, centre));
-  // A soft contact shadow the shape of the car's footprint.
-  const footprint = length(p.sub(centre).div(vec2(CAR.length / 2 + 0.25, 1.15)));
-  const shade = mix(float(0.12), float(1), smoothstep(float(0.62), float(1.25), footprint));
-  // Into the dark: the floor meets the background with no visible edge.
-  const far = smoothstep(float(7), float(22), distance(p, centre));
-  const lit = mix(vec3(0.004, 0.0045, 0.005), vec3(0.05, 0.05, 0.052), pool).mul(shade);
-  material.colorNode = mix(lit, vec3(0), far);
-  material.roughnessNode = mix(float(0.42), float(1), far);
-  const mesh = new THREE.Mesh(new THREE.PlaneGeometry(80, 80), material);
-  mesh.rotation.x = -Math.PI / 2;
-  mesh.position.set(CAR.length / 2, 0, 0);
-  return mesh;
-}
+/** The finishes, by the model's material names. A deep midnight-blue paint with a clear coat. */
+const FINISH: Record<string, Finish> = {
+  PAINT: {
+    color: "#0c1424",
+    metalness: 0.62,
+    roughness: 0.3,
+    clearcoat: 1,
+    clearcoatRoughness: 0.04,
+  },
+  GLASS: { color: "#07090c", metalness: 0.1, roughness: 0.03, transparent: true, opacity: 0.72 },
+  METAL_PIANO: { color: "#040506", metalness: 0.2, roughness: 0.1, clearcoat: 1 },
+  METAL_SATIN: { color: "#8d939c", metalness: 1, roughness: 0.32 },
+  METAL_CHROME: { color: "#d8dce2", metalness: 1, roughness: 0.08 },
+  METAL_GREY: { color: "#4a4e55", metalness: 0.9, roughness: 0.4 },
+  Gar_alu: { color: "#7d828a", metalness: 1, roughness: 0.3 },
+  SOLID_BLACK: { color: "#07080a", metalness: 0, roughness: 0.6 },
+  PLASTIC: { color: "#101216", metalness: 0, roughness: 0.72 },
+  GRILLE: { color: "#15171b", metalness: 0.6, roughness: 0.38 },
+  CARBON: { color: "#0e0f12", metalness: 0.3, roughness: 0.35, clearcoat: 0.8 },
+  RUBBER: { color: "#0a0a0b", metalness: 0, roughness: 0.92 },
+  TIRES: { color: "#0b0b0c", metalness: 0, roughness: 0.9 },
+  WHEELS_FACE: { color: "#23262c", metalness: 1, roughness: 0.28 },
+  WHEELS_METAL: { color: "#5d6168", metalness: 1, roughness: 0.3 },
+  WHEELS_BLACK: { color: "#09090a", metalness: 0.4, roughness: 0.5 },
+  LIGHTS: {
+    color: "#dfe8ff",
+    metalness: 0,
+    roughness: 0.15,
+    emissive: "#cfe0ff",
+    emissiveIntensity: 2.4,
+  },
+};
+
+const smooth = (a: number, b: number, x: number) => {
+  const t = Math.min(1, Math.max(0, (x - a) / (b - a)));
+  return t * t * (3 - 2 * t);
+};
 
 type ScreenSlot = {
   seat: SeatId;
   canvas: HTMLCanvasElement;
   texture: THREE.CanvasTexture;
   material: THREE.MeshBasicMaterial;
+  mesh: THREE.Mesh;
 };
 
 function clock() {
   return new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 }
 
-function Car({ understudy, lite }: { understudy: Understudy; lite: boolean }) {
-  const gl = useThree((s) => s.gl) as unknown as THREE.WebGPURenderer;
+/** Build the four screens as planes with live canvas textures, plus the dash glass bar. */
+function buildScreens(): { group: THREE.Group; slots: ScreenSlot[] } {
+  const group = new THREE.Group();
+  group.name = "avenue-screens";
+  // The black glass the driver and co-pilot screens sit in: one bar from pillar to pillar.
+  const bar = new THREE.Mesh(
+    new THREE.PlaneGeometry(1.18, 0.19),
+    new THREE.MeshPhysicalMaterial({
+      color: "#030406",
+      roughness: 0.06,
+      metalness: 0.3,
+      clearcoat: 1,
+    }),
+  );
+  bar.position.set(-0.03, 1.005, -0.66);
+  bar.rotation.x = SCREENS.driver.tilt;
+  group.add(bar);
+  const slots = SEAT_IDS.map((seat) => {
+    const def = SCREENS[seat];
+    const canvas = document.createElement("canvas");
+    [canvas.width, canvas.height] = screenCanvasSize(seat);
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.colorSpace = THREE.SRGBColorSpace;
+    texture.anisotropy = 8;
+    const material = new THREE.MeshBasicMaterial({ map: texture, toneMapped: false });
+    material.color.setScalar(0);
+    const mesh = new THREE.Mesh(new THREE.PlaneGeometry(def.size[0], def.size[1]), material);
+    mesh.name = `screen-${seat}`;
+    mesh.position.set(...def.center);
+    mesh.rotation.order = "YXZ";
+    mesh.rotation.y = def.yaw;
+    mesh.rotation.x = def.tilt;
+    // Sit just proud of whatever is behind it.
+    mesh.translateZ(0.004);
+    group.add(mesh);
+    return { seat, canvas, texture, material, mesh };
+  });
+  return { group, slots };
+}
+
+/** How bright each screen is per chapter: they wake one after another as the camera enters. */
+function screenWake(seat: SeatId): number {
+  const { chapter, local } = frame;
+  if (chapter === "hero" || chapter === "problem") return 0;
+  if (chapter === "cabin") {
+    const order = SEAT_IDS.indexOf(seat);
+    return smooth(0.55 + order * 0.1, 0.7 + order * 0.1, local);
+  }
+  return 1;
+}
+
+function Car({ lite }: { lite: boolean }) {
   const scene = useThree((s) => s.scene);
   const camera = useThree((s) => s.camera) as THREE.PerspectiveCamera;
   const size = useThree((s) => s.size);
-  const quality = useQuality(understudy);
   const group = useRef<THREE.Group | null>(null);
-  const door = useRef<Object3D | null>(null);
+  const glass = useRef<THREE.MeshPhysicalMaterial[]>([]);
+  const lamps = useRef<THREE.MeshPhysicalMaterial | null>(null);
   const screens = useRef<ScreenSlot[]>([]);
-  const cabinLight = useRef<THREE.PointLight | null>(null);
-  const volumetric = useRef<TslVolumetric | null>(null);
-  const pipeline = useRef<THREE.RenderPipeline | null>(null);
-  const rig = useMemo(
-    () => createRig(journeyPath, { damping: 3.2, reducedMotion: frame.reducedMotion }),
-    [],
-  );
-  // The demo's camera: a pose that GSAP tweens between seat views.
-  const seatPose = useRef({ px: 0, py: 0, pz: 0, tx: 0, ty: 0, tz: 0, fov: 45, w: 0 });
+  const cabinLight = useRef<THREE.PointLight>(null);
+  const hazard = useRef<THREE.Group>(null);
+  const target = useMemo(() => new THREE.Vector3(), []);
+  const goalPos = useMemo(() => new THREE.Vector3(), []);
+  const goalTarget = useMemo(() => new THREE.Vector3(), []);
+  const goalFov = useRef(30);
+  const seatBlend = useRef({ w: 0, pose: seatPose("rearLeft") as Pose });
+  const drewFirst = useRef(false);
 
-  // Scene: environment, floor, lights, the car.
-  // biome-ignore lint/correctness/useExhaustiveDependencies: drawAll reads the latest state when called; the scene is built once per renderer
+  // Load the car, dress it, add the screens.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: built once per model; drawAll reads live state
   useEffect(() => {
     let disposed = false;
-    scene.environment = studio(gl);
-    scene.environmentIntensity = 0.9;
-    scene.background = new THREE.Color(0x000000);
-    const ground = floor();
-    scene.add(ground);
-    const key = new THREE.SpotLight(0xfff1e0, 55, 14, 0.62, 0.9, 2);
-    key.position.set(CAR.length / 2, 6.2, 0.6);
-    key.target.position.set(CAR.length / 2, 0.4, 0);
-    scene.add(key, key.target);
-    const rim = new THREE.DirectionalLight(0xb9c7ff, 0.35);
-    rim.position.set(-6, 3, -8);
-    scene.add(rim);
-    const cabin = new THREE.PointLight(0xffc98a, 0, 2.6, 2);
-    cabin.position.set(3.3, 1.3, 0);
-    scene.add(cabin);
-    cabinLight.current = cabin;
-
-    loadCar(lite ? "/models/avenue-car-lite.glb" : "/models/avenue-car.glb")
+    loadCar(lite ? "/media/avenue-car-mobile.glb" : "/media/avenue-car.glb")
       .then((car) => {
         if (disposed) return;
-        group.current = car;
-        door.current = car.getObjectByName("door-rear-left") ?? null;
+        const seen = new Map<string, THREE.MeshPhysicalMaterial>();
         car.traverse((o) => {
           const mesh = o as THREE.Mesh;
           if (!mesh.isMesh) return;
-          const m = mesh.material as THREE.MeshPhysicalMaterial;
-          if (m.name === "glass") {
-            m.depthWrite = false;
-            m.envMapIntensity = 1.4;
+          mesh.castShadow = false;
+          const old = mesh.material as THREE.MeshStandardMaterial;
+          const name = old.name;
+          let m = seen.get(name);
+          if (!m) {
+            const finish = FINISH[name];
+            m = new THREE.MeshPhysicalMaterial({
+              name,
+              map: old.map ?? null,
+              // The interior atlas reads too light at night: knock it back to espresso and graphite.
+              color: old.map ? "#5e5a57" : "#1a1c20",
+              roughness: old.map ? 0.66 : 0.6,
+              metalness: 0,
+              side: name === "GLASS" ? THREE.DoubleSide : THREE.FrontSide,
+              ...(finish ?? {}),
+            });
+            if (name === "GLASS") {
+              m.depthWrite = false;
+              glass.current.push(m);
+            }
+            if (name === "LIGHTS") lamps.current = m;
+            seen.set(name, m);
           }
-          if (m.name === "paint") m.envMapIntensity = 1.25;
+          mesh.material = m;
+          if (name === "GLASS") mesh.renderOrder = 2;
         });
-        // Swap each screen's material for a live canvas texture.
-        screens.current = SEAT_IDS.map((seat) => {
-          const mesh = car.getObjectByName(`screen-${seat}`) as THREE.Mesh | undefined;
-          const canvas = document.createElement("canvas");
-          [canvas.width, canvas.height] = screenCanvasSize(seat);
-          const texture = new THREE.CanvasTexture(canvas);
-          texture.colorSpace = THREE.SRGBColorSpace;
-          texture.flipY = false;
-          texture.anisotropy = 4;
-          const material = new THREE.MeshBasicMaterial({ map: texture, toneMapped: false });
-          material.color.setScalar(0);
-          if (mesh) mesh.material = material;
-          return { seat, canvas, texture, material };
-        });
+        const built = buildScreens();
+        car.add(built.group);
+        screens.current = built.slots;
+        group.current = car;
         drawAll();
         scene.add(car);
       })
-      .catch(() => understudy.demote("The car model could not be loaded"));
-
+      .catch(() => stage.set({ rung: "poster" }));
     return () => {
       disposed = true;
-      scene.remove(ground, key, key.target, rim, cabin);
       if (group.current) scene.remove(group.current);
     };
-  }, [gl, scene, lite, understudy]);
+  }, [scene, lite]);
 
-  // Redraw the screens whenever the demo's state changes (and each minute for the clock).
   const drawAll = () => {
     const system = demo.get().system;
     const time = clock();
@@ -244,222 +238,257 @@ function Car({ understudy, lite }: { understudy: Understudy; lite: boolean }) {
     };
   });
 
-  // Post-processing: scene pass, volumetric light, bloom, vignette. Off on lower quality steps.
+  // The demo: blend from the journey's camera to a seat view, and between seats.
   useEffect(() => {
-    if (!quality.post) {
-      pipeline.current = null;
-      volumetric.current = null;
-      return;
-    }
-    const rp = new THREE.RenderPipeline(gl);
-    const scenePass = pass(scene, camera);
-    const color = scenePass.getTextureNode("output");
-    const depth = scenePass.getTextureNode("depth");
-    const vol = createTslVolumetric({
-      color,
-      depth,
-      sun: SUN,
-      settings: {
-        density: 0.62,
-        scatter: 0.8,
-        temperature: 5200,
-        drift: frame.reducedMotion ? 0 : 0.35,
-      },
-    });
-    const glow = bloom(color, 0.45, 0.32, 0.78);
-    const centred = uv().sub(0.5).mul(vec2(1.2, 1));
-    const vignette = mix(
-      float(1),
-      float(0.62),
-      smoothstep(float(0.38), float(0.95), length(centred)),
-    );
-    rp.outputNode = vec4(
-      (vol.node as Node<"vec4">).rgb.add((glow as unknown as Node<"vec4">).rgb).mul(vignette),
-      1,
-    );
-    pipeline.current = rp;
-    volumetric.current = vol;
-    return () => {
-      rp.dispose();
-      pipeline.current = null;
-    };
-  }, [gl, scene, camera, quality.post]);
-
-  // The demo: fly to a seat (or cut, under reduced motion).
-  useEffect(() => {
-    const fly = (seat: SeatId, demoOn: boolean) => {
-      const v = seatView(seat);
-      const p = seatPose.current;
-      const goal = {
-        px: v.position[0],
-        py: v.position[1],
-        pz: v.position[2],
-        tx: v.target[0],
-        ty: v.target[1],
-        tz: v.target[2],
-        fov: v.fov,
-        w: demoOn ? 1 : 0,
-      };
-      if (p.w === 0 && demoOn) {
-        // Start the blend from wherever the journey camera is.
-        Object.assign(p, {
-          px: camera.position.x,
-          py: camera.position.y,
-          pz: camera.position.z,
-          tx: rig.state.target[0],
-          ty: rig.state.target[1],
-          tz: rig.state.target[2],
-          fov: camera.fov,
-        });
-      }
-      gsap.killTweensOf(p);
+    let last = { demo: stage.get().demo, seat: stage.get().seat };
+    const go = (seat: SeatId, on: boolean) => {
+      const b = seatBlend.current;
+      gsap.killTweensOf(b);
+      const to = seatPose(seat);
       if (frame.reducedMotion) {
-        Object.assign(p, goal);
+        b.pose = to;
+        b.w = on ? 1 : 0;
         stage.set({ moving: false });
         return;
       }
       stage.set({ moving: true });
-      gsap.to(p, {
-        ...(demoOn ? goal : { w: 0 }),
-        duration: 1.1,
-        ease: "power2.inOut",
-        onComplete: () => stage.set({ moving: false }),
-      });
+      if (on && b.w > 0.01) {
+        // Seat to seat: let the damped camera do the flying.
+        b.pose = to;
+        gsap.delayedCall(1.1, () => stage.set({ moving: false }));
+      } else {
+        b.pose = to;
+        gsap.to(b, {
+          w: on ? 1 : 0,
+          duration: 1.2,
+          ease: "power3.inOut",
+          onComplete: () => stage.set({ moving: false }),
+        });
+      }
     };
-    let last = { demo: stage.get().demo, seat: stage.get().seat };
-    if (last.demo) fly(last.seat, true);
-    const off = stage.subscribe(() => {
+    if (last.demo) go(last.seat, true);
+    return stage.subscribe(() => {
       const { demo: d, seat } = stage.get();
-      if (d !== last.demo || seat !== last.seat) fly(seat, d);
+      if (d !== last.demo || seat !== last.seat) go(seat, d);
       last = { demo: d, seat };
     });
-    return () => {
-      off();
-    };
-  }, [camera, rig]);
+  }, []);
 
-  const look = useMemo(() => new THREE.Vector3(), []);
   const corners = useMemo(
     () => [new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3()],
     [],
   );
-  const drewFirst = useRef(false);
 
   useFrame((state, dt) => {
-    const p = frame.progress;
     frame.time += dt;
-    const aspect = size.width / Math.max(1, size.height);
-    const j = rig.update(p, Math.min(dt, 0.1), aspect, stage.get().bucket);
-    const sp = seatPose.current;
-    const w = sp.w;
-    // Journey camera, blended towards the seat view as the demo takes over.
-    const idle = frame.reducedMotion
-      ? 0
-      : Math.sin(frame.time * 0.18) * 0.12 * (1 - smooth(0, 0.2, p));
-    camera.position.set(
-      j.position[0] + (sp.px - j.position[0]) * w + idle,
-      j.position[1] + (sp.py - j.position[1]) * w,
-      j.position[2] + (sp.pz - j.position[2]) * w,
+    const chapter = CHAPTER_BY_ID[frame.chapter] ?? CHAPTERS[0];
+    if (!chapter) return;
+    const journey = poseAt(chapter, frame.local);
+    const b = seatBlend.current;
+    const w = b.w;
+    const mix = (a: number, c: number) => a + (c - a) * w;
+    // A breath of drift and pointer parallax outside the car only.
+    const outside = !chapter.inside && w < 0.5;
+    const drift = frame.reducedMotion || !outside ? 0 : Math.sin(frame.time * 0.16) * 0.12;
+    const px = outside && !frame.reducedMotion ? frame.pointer.x * 0.25 : 0;
+    const py = outside && !frame.reducedMotion ? frame.pointer.y * 0.08 : 0;
+    goalPos.set(
+      mix(journey.pos[0] + drift + px, b.pose.pos[0]),
+      mix(journey.pos[1] + py, b.pose.pos[1]),
+      mix(journey.pos[2], b.pose.pos[2]),
     );
-    look.set(
-      j.target[0] + (sp.tx - j.target[0]) * w,
-      j.target[1] + (sp.ty - j.target[1]) * w,
-      j.target[2] + (sp.tz - j.target[2]) * w,
+    goalTarget.set(
+      mix(journey.target[0], b.pose.target[0]),
+      mix(journey.target[1], b.pose.target[1]),
+      mix(journey.target[2], b.pose.target[2]),
     );
-    camera.fov = j.fov + (sp.fov - j.fov) * w;
-    camera.lookAt(look);
+    goalFov.current = mix(journey.fov, b.pose.fov);
+    // Ease towards the goal (critically damped feel); cut under reduced motion.
+    const k = frame.reducedMotion ? 1 : 1 - Math.exp(-dt * (w > 0.01 ? 3.2 : 5.5));
+    if (!drewFirst.current) {
+      camera.position.copy(goalPos);
+      target.copy(goalTarget);
+    } else {
+      camera.position.lerp(goalPos, k);
+      target.lerp(goalTarget, k);
+    }
+    camera.fov += (goalFov.current - camera.fov) * k;
+    camera.lookAt(target);
     camera.updateProjectionMatrix();
 
-    if (door.current)
-      door.current.rotation.y = smooth(DOOR_OPEN.from, DOOR_OPEN.to, p) * DOOR_OPEN.angle * (1 - w);
+    // Inside: glass turns see-through so the road shows; the cabin light comes up.
+    const inside = chapter.inside || w > 0.5 ? 1 : 0;
+    for (const g of glass.current)
+      g.opacity += ((inside ? 0.28 : 0.72) - g.opacity) * Math.min(1, dt * 4);
+    if (cabinLight.current) {
+      const ambient = demo.get().system.ambient;
+      cabinLight.current.intensity +=
+        ((inside ? 0.18 + ambient * 0.55 : 0) - cabinLight.current.intensity) * Math.min(1, dt * 3);
+    }
+    // Screens: wake with the story, follow each seat's brightness.
     const system = demo.get().system;
     for (const slot of screens.current) {
-      const [a, b] = SCREEN_WAKE[slot.seat];
-      const wake = Math.max(smooth(a, b, p), w);
+      const wake = Math.max(screenWake(slot.seat), w);
       slot.material.color.setScalar(
-        wake * (0.35 + 0.65 * system.seats[slot.seat].brightness) * 1.6,
+        wake * (0.45 + 0.55 * system.seats[slot.seat].brightness) * 1.25,
       );
     }
-    if (cabinLight.current)
-      cabinLight.current.intensity = smooth(0.62, 0.86, p) * (0.4 + system.ambient * 2.2);
-    if (volumetric.current) {
-      volumetric.current.setSettings({ density: 0.62 * (1 - smooth(0.3, 0.55, p)) });
-      volumetric.current.update(camera, frame.time);
+    // Hazard lights in the SOS chapter, or while SOS runs in the demo.
+    if (hazard.current) {
+      const on = frame.chapter === "sos" || system.sos.state !== "idle";
+      const blink = on && Math.sin(frame.time * Math.PI * 2 * 1.3) > 0 ? 1 : 0;
+      for (const l of hazard.current.children) (l as THREE.PointLight).intensity = blink * 6;
     }
 
     // The selected screen's rectangle on the page, for the demo panel to grow from.
     if (stage.get().demo) {
-      const sc = SEATS[stage.get().seat].screen;
-      const [cx, cy, cz] = sc.center;
-      const [sw, sh] = sc.size;
-      const cs = Math.cos(sc.tilt);
-      const sn = Math.sin(sc.tilt);
-      let i = 0;
-      for (const [a, b] of [
-        [-1, -1],
-        [1, -1],
-        [1, 1],
-        [-1, 1],
-      ] as const) {
-        const up = (b * sh) / 2;
-        corners[i++]?.set(cx - up * sn, cy + up * cs, cz - (a * sw) / 2).project(camera);
+      const slot = screens.current.find((s) => s.seat === stage.get().seat);
+      if (slot) {
+        const geo = slot.mesh.geometry as THREE.PlaneGeometry;
+        const { width: sw, height: sh } = geo.parameters;
+        let i = 0;
+        for (const [a, c] of [
+          [-1, -1],
+          [1, -1],
+          [1, 1],
+          [-1, 1],
+        ] as const) {
+          const v = corners[i++];
+          if (!v) continue;
+          v.set((a * sw) / 2, (c * sh) / 2, 0);
+          slot.mesh.localToWorld(v);
+          v.project(camera);
+        }
+        const xs = corners.map((v) => ((v.x + 1) / 2) * size.width);
+        const ys = corners.map((v) => ((1 - v.y) / 2) * size.height);
+        const r = frame.rect;
+        r.x = Math.min(...xs);
+        r.y = Math.min(...ys);
+        r.width = Math.max(...xs) - r.x;
+        r.height = Math.max(...ys) - r.y;
+        r.visible = corners.every((v) => v.z < 1);
+        frame.onRect?.(r);
       }
-      const xs = corners.map((v) => ((v.x + 1) / 2) * size.width);
-      const ys = corners.map((v) => ((1 - v.y) / 2) * size.height);
-      const r = frame.rect;
-      r.x = Math.min(...xs);
-      r.y = Math.min(...ys);
-      r.width = Math.max(...xs) - r.x;
-      r.height = Math.max(...ys) - r.y;
-      r.visible = corners.every((v) => v.z < 1);
-      frame.onRect?.(r);
     }
 
-    if (pipeline.current) pipeline.current.render();
-    else gl.render(state.scene, camera);
+    state.gl.render(state.scene, camera);
     if (!drewFirst.current && group.current) {
       drewFirst.current = true;
       stage.set({ ready: true });
     }
   }, 1);
 
-  return <Governor understudy={understudy} />;
+  return (
+    <>
+      {/* Moonlight from high behind, cool; a soft fill from the other side. */}
+      <directionalLight position={[6, 9, 8]} intensity={0.9} color="#bcd0ff" />
+      <directionalLight position={[-8, 4, -6]} intensity={0.25} color="#8fa7d8" />
+      {/* Headlights: two pools on the road ahead of the nose. */}
+      <spotLight
+        position={[-0.62, 0.7, -2.45]}
+        target-position={[-0.9, 0, -9]}
+        angle={0.42}
+        penumbra={0.9}
+        intensity={60}
+        distance={18}
+        decay={1.6}
+        color="#e6eeff"
+      />
+      <spotLight
+        position={[0.62, 0.7, -2.45]}
+        target-position={[0.9, 0, -9]}
+        angle={0.42}
+        penumbra={0.9}
+        intensity={60}
+        distance={18}
+        decay={1.6}
+        color="#e6eeff"
+      />
+      {/* Tail-lights glow on the road behind. */}
+      <pointLight
+        position={[0, 0.8, 2.75]}
+        intensity={2.2}
+        distance={3.5}
+        decay={2}
+        color="#ff2a1a"
+      />
+      <group ref={hazard}>
+        <pointLight
+          position={[-0.8, 0.75, -2.5]}
+          intensity={0}
+          distance={3}
+          decay={2}
+          color="#ffa040"
+        />
+        <pointLight
+          position={[0.8, 0.75, -2.5]}
+          intensity={0}
+          distance={3}
+          decay={2}
+          color="#ffa040"
+        />
+        <pointLight
+          position={[-0.75, 0.85, 2.5]}
+          intensity={0}
+          distance={3}
+          decay={2}
+          color="#ffa040"
+        />
+        <pointLight
+          position={[0.75, 0.85, 2.5]}
+          intensity={0}
+          distance={3}
+          decay={2}
+          color="#ffa040"
+        />
+      </group>
+      {/* The cabin's ambient light, warm, from the roof lining. */}
+      <pointLight
+        ref={cabinLight}
+        position={[0, 1.25, 0.4]}
+        intensity={0}
+        distance={2.2}
+        decay={2}
+        color="#ffe2c8"
+      />
+      <ContactShadows
+        position={[0, 0.005, 0]}
+        scale={[3.2, 6.4]}
+        resolution={512}
+        blur={2.4}
+        opacity={0.85}
+        far={1.4}
+        frames={1}
+      />
+    </>
+  );
 }
 
-/** The R3F canvas on three's WebGPURenderer, which falls back to WebGL2 by itself. */
-export default function Scene({
-  understudy,
-  lite,
-  active,
-}: {
-  understudy: Understudy;
-  lite: boolean;
-  active: boolean;
-}) {
+/** The R3F canvas. `active` pauses rendering when the stage is off screen. */
+export default function Scene({ lite, active }: { lite: boolean; active: boolean }) {
   return (
     <Canvas
       frameloop={active ? "always" : "never"}
-      dpr={[1, 2]}
-      camera={{ fov: 26, near: 0.05, far: 80, position: [2.7, 0.78, 9.6] }}
-      gl={async (props) => {
-        const renderer = new THREE.WebGPURenderer({
-          canvas: props.canvas as HTMLCanvasElement,
-          antialias: true,
-          alpha: false,
-          powerPreference: "high-performance",
-        });
-        await renderer.init();
-        renderer.toneMapping = THREE.ACESFilmicToneMapping;
-        renderer.toneMappingExposure = 1.05;
-        const backend = (renderer.backend as { isWebGPUBackend?: boolean }).isWebGPUBackend
-          ? "webgpu"
-          : "webgl";
-        stage.set({ backend });
-        return renderer as unknown as import("three").WebGLRenderer;
+      dpr={[1, lite ? 1.5 : 1.75]}
+      camera={{ fov: 30, near: 0.03, far: 200, position: [-3.9, 0.62, -5.6] }}
+      gl={{ antialias: true, powerPreference: "high-performance", alpha: false }}
+      onCreated={({ gl }) => {
+        gl.toneMapping = THREE.ACESFilmicToneMapping;
+        gl.toneMappingExposure = 1.25;
+        stage.set({ rung: "3d" });
       }}
       aria-hidden="true"
     >
-      <Car understudy={understudy} lite={lite} />
+      <Suspense fallback={null}>
+        <Environment
+          files="/media/road-night.hdr"
+          background
+          ground={{ height: 1.6, radius: 42, scale: 90 }}
+          environmentIntensity={1.4}
+          backgroundIntensity={1.0}
+        />
+      </Suspense>
+      <Car lite={lite} />
     </Canvas>
   );
 }

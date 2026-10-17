@@ -48,3 +48,8 @@ assets/fonts/
 # Stamps written by app asset scripts next to their generated (ignored) output.
 apps/*/public/**/.stamp
 apps/avenue/src/app/generated/
+
+# AVENUE: the third-party demo car (CC-BY 4.0, emblems removed) and CC0 HDRIs ship from the repo
+# until a media host is set up (see apps/avenue/public/media/LICENSES.md).
+!apps/avenue/public/media/*.glb
+!apps/avenue/public/media/*.hdr

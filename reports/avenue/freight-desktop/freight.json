@@ -1,12 +1,12 @@
 {
   "file": "avenue-car.glb",
   "before": {
-    "triangles": 69818,
-    "vertices": 56634,
-    "meshes": 16,
-    "drawCalls": 21,
-    "materials": 10,
-    "nodes": 28,
+    "triangles": 91714,
+    "vertices": 68226,
+    "meshes": 18,
+    "drawCalls": 23,
+    "materials": 12,
+    "nodes": 30,
     "animations": 0,
     "textures": [],
     "textureBytes": 0,
@@ -15,16 +15,16 @@
       "KHR_materials_clearcoat",
       "KHR_materials_emissive_strength"
     ],
-    "bytes": 2434804
+    "bytes": 3070356
   },
   "after": {
-    "bytes": 345380,
-    "triangles": 69818,
-    "vertices": 36666,
-    "meshes": 16,
-    "drawCalls": 21,
-    "materials": 10,
-    "nodes": 28,
+    "bytes": 476256,
+    "triangles": 91714,
+    "vertices": 48258,
+    "meshes": 18,
+    "drawCalls": 23,
+    "materials": 12,
+    "nodes": 30,
     "animations": 0,
     "textures": [],
     "textureBytes": 0,
@@ -76,25 +76,25 @@
     "checks": [
       {
         "metric": "bytes",
-        "value": 345380,
+        "value": 476256,
         "limit": 4000000,
         "pass": true
       },
       {
         "metric": "triangles",
-        "value": 69818,
+        "value": 91714,
         "limit": 260000,
         "pass": true
       },
       {
         "metric": "drawCalls",
-        "value": 21,
+        "value": 23,
         "limit": 40,
         "pass": true
       },
       {
         "metric": "materials",
-        "value": 10,
+        "value": 12,
         "limit": 12,
         "pass": true
       }

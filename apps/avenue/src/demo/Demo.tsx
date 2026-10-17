@@ -4,10 +4,10 @@
 // screen's rectangle on the page). The seat switcher folds the panel back into its screen,
 // flies the camera to the next seat, and grows that seat's screen out. Under reduced motion,
 // or without real-time 3D, it cuts instead. The Parked / Moving switch shows the driver lockout.
-import { useStillness } from "@quartifex/stillness/react";
 import { gsap } from "gsap";
 import { Flip } from "gsap/Flip";
 import { type KeyboardEvent, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useReducedMotion } from "@/lib/scroll";
 import { useStore } from "@/lib/store";
 import { frame, stage } from "@/stage/state";
 import s from "./demo.module.css";
@@ -36,7 +36,7 @@ function useTicker() {
 function SeatSwitcher({ seat, onSelect }: { seat: SeatId; onSelect: (s: SeatId) => void }) {
   const refs = useRef<Array<HTMLButtonElement | null>>([]);
   const indicator = useRef<HTMLSpanElement>(null);
-  const { level } = useStillness();
+  const level = useReducedMotion() ? "reduced" : "full";
   const previous = useRef<ReturnType<typeof Flip.getState> | null>(null);
   // The selection pill slides to the chosen seat (Flip), or moves at once under reduced motion.
   // biome-ignore lint/correctness/useExhaustiveDependencies: runs after each seat change, when the new pill has rendered
@@ -202,8 +202,8 @@ export function Demo() {
   const panel = useRef<HTMLDivElement>(null);
   const anchor = useRef<HTMLDivElement>(null);
   const [shownSeat, setShownSeat] = useState<SeatId>(seat);
-  const { level } = useStillness();
-  const flying = rung === "webgl" && ready && level === "full";
+  const level = useReducedMotion() ? "reduced" : "full";
+  const flying = rung === "3d" && ready && level === "full";
   useTicker();
 
   // The anchor follows the selected screen on the page, every frame, without re-rendering.
@@ -279,12 +279,17 @@ export function Demo() {
   };
 
   return (
-    <section id="demo" className={`section ${s.demo}`} aria-labelledby="demo-title">
+    <section
+      id="demo"
+      data-chapter="demo"
+      className={`section ${s.demo}`}
+      aria-labelledby="demo-title"
+    >
       <div className={`wrap ${s.head}`}>
         <div>
-          <p className="eyebrow">The live demo</p>
-          <h2 id="demo-title" className="h2">
-            Take any seat.
+          <p className="eyebrow">D · The live demo</p>
+          <h2 id="demo-title" className="h1">
+            Take any seat. <span className="muted">Every screen is real.</span>
           </h2>
         </div>
         <p className={s.intro}>

@@ -1,0 +1,629 @@
+/* The chapters over the 3D stage. Each is a tall section with a sticky, full-height frame;
+   the stage behind it is sticky too, so the words hold while the camera moves. */
+
+.chapter {
+  position: relative;
+  z-index: 1;
+  height: 220lvh;
+}
+
+.sticky {
+  position: sticky;
+  top: 0;
+  height: 100lvh;
+  overflow: hidden;
+  display: grid;
+  pointer-events: none;
+}
+
+.sticky a,
+.sticky button,
+.sticky [class*="btn"] {
+  pointer-events: auto;
+}
+
+/* A scrim so words read over any frame of the 3D. */
+.sticky::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(90deg, rgb(4 5 8 / 0.78) 0%, rgb(4 5 8 / 0.35) 38%, transparent 62%);
+}
+
+/* ---------- 00 Hero ---------- */
+
+.hero {
+  height: 170lvh;
+}
+
+.hero .sticky::before {
+  background:
+    linear-gradient(180deg, rgb(4 5 8 / 0.55) 0%, transparent 28%),
+    linear-gradient(0deg, rgb(4 5 8 / 0.82) 0%, rgb(4 5 8 / 0.25) 34%, transparent 55%);
+}
+
+.heroMega {
+  position: absolute;
+  inset: 22vh 0 auto;
+  margin: 0;
+  text-align: center;
+  white-space: nowrap;
+  color: transparent;
+  -webkit-text-stroke: 1px rgb(238 241 246 / 0.14);
+  font-size: clamp(4.5rem, 1rem + 15vw, 17rem);
+  letter-spacing: 0.08em;
+  translate: 0 calc(var(--p, 0) * -6vh);
+}
+
+.heroBody {
+  position: relative;
+  align-self: end;
+  display: grid;
+  gap: 1.25rem;
+  padding-bottom: clamp(6.5rem, 4rem + 6vh, 9rem);
+}
+
+.heroBody .heroTitle {
+  max-width: 14ch;
+  font-size: clamp(2.5rem, 1.4rem + 4.2vw, 5rem);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.heroFoot {
+  position: absolute;
+  inset: auto 0 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding-top: 1rem;
+  border-top: 1px dashed var(--c-line);
+}
+
+.scrollHint {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-narrow), sans-serif;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--c-text-muted);
+}
+
+.scrollHint i {
+  position: relative;
+  width: 1px;
+  height: 1.5rem;
+  background: var(--c-line-strong);
+  overflow: hidden;
+}
+
+.scrollHint i::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: -40%;
+  width: 1px;
+  height: 40%;
+  background: var(--c-ice);
+  animation: drop 1.8s var(--ease-out) infinite;
+}
+
+@keyframes drop {
+  to {
+    top: 100%;
+  }
+}
+
+.credit {
+  text-align: right;
+}
+
+/* ---------- 01 Problem ---------- */
+
+.left {
+  align-self: center;
+  display: grid;
+  gap: 1.5rem;
+  max-width: min(46rem, 100%);
+  margin-inline: max(var(--margin), calc(50vw - 720px + var(--margin))) auto;
+  width: auto;
+}
+
+.problem {
+  height: 200lvh;
+}
+
+/* ---------- 02 Into the cabin ---------- */
+
+.cabin {
+  height: 260lvh;
+}
+
+.cabin .sticky::before {
+  background:
+    linear-gradient(180deg, rgb(4 5 8 / 0.7) 0%, transparent 30%),
+    linear-gradient(0deg, rgb(4 5 8 / 0.85) 0%, transparent 40%);
+}
+
+.cabinHead {
+  align-self: start;
+  display: grid;
+  gap: 1rem;
+  padding-top: 7rem;
+  opacity: calc(1 - max(0, var(--p, 0) - 0.3) * 6);
+}
+
+.seatRow {
+  position: absolute;
+  inset: auto 0 1.5rem;
+  list-style: none;
+  padding: 0;
+  margin-inline: auto;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0;
+}
+
+.seatCell {
+  display: grid;
+  gap: 0.35rem;
+  align-content: start;
+  padding: 1rem 1.1rem 1.1rem;
+  background-color: rgb(6 7 10 / 0.55);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  opacity: clamp(0, (var(--p, 0) - 0.62 - var(--i) * 0.06) * 10, 1);
+  translate: 0 calc((1 - clamp(0, (var(--p, 0) - 0.62 - var(--i) * 0.06) * 10, 1)) * 1rem);
+}
+
+.seatCell .tag {
+  justify-self: start;
+  margin-top: 0.4rem;
+}
+
+.seatMode {
+  font-size: clamp(1.25rem, 1rem + 0.8vw, 1.75rem);
+  letter-spacing: -0.01em;
+}
+
+.seatNote {
+  font-size: 0.875rem;
+  color: var(--c-text-muted);
+}
+
+@media (max-width: 760px) {
+  .seatRow {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* ---------- Feature chapters ---------- */
+
+.feature .sticky::before {
+  background: linear-gradient(90deg, rgb(4 5 8 / 0.82) 0%, rgb(4 5 8 / 0.4) 36%, transparent 58%);
+}
+
+.feature[data-side="right"] .sticky::before {
+  background: linear-gradient(270deg, rgb(4 5 8 / 0.82) 0%, rgb(4 5 8 / 0.4) 36%, transparent 58%);
+}
+
+/* The oversized word behind the scene, outlined, drifting with the chapter. */
+.word {
+  position: absolute;
+  inset: auto 0 6vh;
+  margin: 0;
+  white-space: nowrap;
+  color: transparent;
+  -webkit-text-stroke: 1px rgb(238 241 246 / 0.16);
+  font-size: clamp(4rem, 0.5rem + 14vw, 15rem);
+  translate: calc((0.5 - var(--p, 0)) * 18vw) 0;
+  text-align: center;
+}
+
+.featureGrid {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  grid-template-rows: 1fr auto;
+  column-gap: var(--gutter);
+  padding-block: 6.5rem 2rem;
+}
+
+.featureHead {
+  grid-column: 1 / span 5;
+  align-self: center;
+  display: grid;
+  gap: 1.25rem;
+}
+
+.feature[data-side="right"] .featureHead {
+  grid-column: 8 / span 5;
+}
+
+.featureMeta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1rem;
+}
+
+.notes {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.note {
+  max-width: 30ch;
+  display: grid;
+  gap: 0.45rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--c-line-strong);
+  opacity: clamp(0, (var(--p, 0) - 0.18 - var(--n) * 0.22) * 8, 1);
+  translate: 0 calc((1 - clamp(0, (var(--p, 0) - 0.18 - var(--n) * 0.22) * 8, 1)) * 0.75rem);
+}
+
+.note p {
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+.ids {
+  position: absolute;
+  right: 0;
+  top: 6.5rem;
+  display: flex;
+  gap: 2px;
+}
+
+.feature[data-side="right"] .ids {
+  right: auto;
+  left: 0;
+}
+
+.ids a {
+  display: grid;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border: 1px solid var(--c-line-strong);
+  color: var(--c-accent-text);
+  text-decoration: none;
+  background: rgb(6 7 10 / 0.5);
+}
+
+.ids a:hover {
+  background: var(--c-accent);
+  color: var(--c-on-accent);
+  border-color: var(--c-accent);
+}
+
+@media (max-width: 900px) {
+  .featureHead,
+  .feature[data-side="right"] .featureHead {
+    grid-column: 1 / -1;
+    align-self: start;
+  }
+
+  .feature .sticky::before,
+  .feature[data-side="right"] .sticky::before {
+    background:
+      linear-gradient(180deg, rgb(4 5 8 / 0.85) 0%, rgb(4 5 8 / 0.3) 45%, transparent 60%),
+      linear-gradient(0deg, rgb(4 5 8 / 0.8) 0%, transparent 35%);
+  }
+
+  .notes {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .ids {
+    display: none;
+  }
+
+  .featureHead :global(.lede) {
+    display: none;
+  }
+}
+
+/* ---------- Live parts ---------- */
+
+/* A2: Parked / Moving. */
+.drive {
+  position: absolute;
+  left: 50%;
+  top: 6.4rem;
+  translate: -50% 0;
+  display: flex;
+  gap: 2px;
+}
+
+.drive span {
+  padding: 0.6rem 1rem;
+  font-family: var(--font-narrow), sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: var(--c-glass);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  color: var(--c-text-muted);
+  transition:
+    background-color 300ms var(--ease-out),
+    color 300ms var(--ease-out);
+}
+
+.feature[data-moving="false"] .drive [data-state="parked"] {
+  background: var(--c-text);
+  color: var(--c-bg);
+}
+
+.feature[data-moving="true"] .drive [data-state="moving"] {
+  background: var(--c-ember);
+  color: #1a0700;
+}
+
+/* A3: a film travelling to the back. */
+.share {
+  position: absolute;
+  left: 66%;
+  top: 46%;
+  display: grid;
+  gap: 2px;
+  width: min(22rem, 80vw);
+  translate: calc(-50% + (1 - clamp(0, (var(--p, 0) - 0.25) * 2.2, 1)) * 14vw)
+    calc(-50% + (clamp(0, (var(--p, 0) - 0.25) * 2.2, 1) - 0.5) * 16vh);
+  opacity: clamp(0, (var(--p, 0) - 0.15) * 8, 1);
+}
+
+.shareCard {
+  display: flex;
+  gap: 0.9rem;
+  align-items: center;
+  padding: 0.9rem;
+  border-radius: 20px 20px 4px 4px;
+  background: var(--c-glass);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  backdrop-filter: blur(18px) saturate(140%);
+  box-shadow: var(--e-2);
+}
+
+.shareCard b {
+  display: block;
+  font-weight: 500;
+  font-size: 1.05rem;
+}
+
+.shareCard small {
+  color: var(--c-text-muted);
+}
+
+.shareArt {
+  flex: none;
+  width: 3.25rem;
+  height: 3.25rem;
+  border-radius: 12px;
+  background:
+    radial-gradient(80% 80% at 30% 20%, #ffb36b55, transparent 60%),
+    linear-gradient(140deg, #2a3f7a, #0b1430);
+}
+
+.shareActions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+  opacity: clamp(0, (var(--p, 0) - 0.62) * 8, 1);
+}
+
+.shareActions span {
+  padding: 0.8rem;
+  text-align: center;
+  font-weight: 500;
+  background: var(--c-glass);
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+}
+
+.shareActions span:first-child {
+  border-radius: 4px 4px 4px 20px;
+}
+
+.shareActions span[data-primary] {
+  border-radius: 4px 4px 20px 4px;
+  background: var(--c-accent);
+  color: var(--c-on-accent);
+}
+
+/* A4: the four climate zones as a glass card, Fluent-style, beside the car. */
+.zones {
+  position: absolute;
+  left: max(var(--margin), calc(50vw - 720px + var(--margin)));
+  top: 50%;
+  translate: 0 -50%;
+  width: min(24rem, 86vw);
+  margin: 0;
+  padding: 0.75rem;
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  border-radius: 28px;
+  background: var(--c-glass);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  backdrop-filter: blur(20px) saturate(140%);
+  box-shadow: var(--e-3);
+  opacity: clamp(0, (var(--p, 0) - 0.2) * 6, 1);
+}
+
+.zones li {
+  display: grid;
+  gap: 0.35rem;
+  padding: 1rem 1.1rem;
+  border-radius: 20px;
+  background: var(--c-raised);
+  box-shadow: var(--e-1);
+}
+
+.zoneTemp {
+  font-family: var(--font-mono), monospace;
+  font-size: clamp(1.75rem, 1.3rem + 1.4vw, 2.5rem);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+.zones li:first-child .zoneTemp {
+  color: var(--c-ember);
+}
+
+/* A5: places over the road ahead, and the ETA. */
+.ar {
+  position: absolute;
+  inset: 0;
+  opacity: clamp(0, (var(--p, 0) - 0.25) * 6, 1);
+}
+
+.poi {
+  position: absolute;
+  display: grid;
+  gap: 0.15rem;
+  padding: 0.55rem 0.8rem;
+  border-radius: 14px;
+  background: var(--c-glass);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  box-shadow: var(--e-1);
+  translate: -50% -100%;
+}
+
+.poi::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  width: 1px;
+  height: 7vh;
+  background: linear-gradient(var(--c-ice), transparent);
+}
+
+.poi b {
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.poi small {
+  color: var(--c-text-muted);
+  font-size: 0.8rem;
+}
+
+.eta {
+  position: absolute;
+  right: max(var(--margin), calc(50vw - 720px + var(--margin)));
+  bottom: 22vh;
+  display: grid;
+  gap: 0.1rem;
+  padding: 1rem 1.25rem;
+  border-radius: 20px;
+  background: var(--c-glass);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+}
+
+.eta b {
+  font-family: var(--font-mono), monospace;
+  font-size: 2.25rem;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+
+.eta small {
+  color: var(--c-text-muted);
+  font-size: 0.8rem;
+}
+
+/* A6: the SOS countdown. */
+.sos {
+  position: absolute;
+  left: 36%;
+  top: 50%;
+  translate: -50% -50%;
+  display: grid;
+  justify-items: center;
+  gap: 1rem;
+  padding: 1.75rem 2rem;
+  border-radius: 32px;
+  background: var(--c-glass);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  box-shadow: var(--e-3);
+  opacity: clamp(0, (var(--p, 0) - 0.15) * 6, 1);
+}
+
+.sosLabel {
+  font-family: var(--font-narrow), sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.sosCount {
+  display: grid;
+  place-items: center;
+  width: 8rem;
+  height: 8rem;
+  border-radius: 50%;
+  border: 2px solid var(--c-danger);
+  font-family: var(--font-mono), monospace;
+  font-size: 4rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.sosCancel {
+  padding: 0.9rem 2rem;
+  border-radius: 999px;
+  background: var(--c-danger);
+  color: var(--c-on-danger);
+  font-weight: 600;
+}
+
+@media (max-width: 900px) {
+  .sos {
+    left: 50%;
+    top: auto;
+    bottom: 16vh;
+    translate: -50% 0;
+    padding: 1rem 1.25rem;
+  }
+
+  .sosCount {
+    width: 5rem;
+    height: 5rem;
+    font-size: 2.5rem;
+  }
+
+  .eta {
+    bottom: 26vh;
+  }
+}
+
+/* Reduced motion: nothing drifts; the parts are simply there. */
+:global(html[data-motion="reduced"]) .word,
+:global(html[data-motion="reduced"]) .heroMega {
+  translate: none;
+}
+
+:global(html[data-motion="reduced"]) .scrollHint i::after {
+  animation: none;
+}

@@ -3,9 +3,8 @@
   inset: 0;
   z-index: 80;
   display: grid;
-  place-items: end start;
-  padding: clamp(1.5rem, 5vw, 4rem);
-  background: #050506;
+  place-items: center;
+  background: #050608;
   pointer-events: none;
   transition-property: opacity, visibility;
   transition-duration: 0.9s;
@@ -17,45 +16,51 @@
   visibility: hidden;
 }
 
-.inner {
-  display: grid;
-  gap: var(--s-3);
-  width: min(100%, 26rem);
+/* The mark's lanes, stop line and centre dashes light one after another as bytes arrive. */
+.mark {
+  width: clamp(4rem, 8vw, 6rem);
+  height: auto;
+  fill: var(--c-text);
+}
+
+.mark path {
+  opacity: clamp(0.12, (var(--p) * 7 - var(--i)) * 1, 1);
+  transition: opacity 300ms var(--ease-out);
+}
+
+.readout {
+  position: absolute;
+  left: max(var(--margin), calc(50vw - 720px + var(--margin)));
+  right: max(var(--margin), calc(50vw - 720px + var(--margin)));
+  bottom: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 1rem;
+  padding-top: 1rem;
+  border-top: 1px dashed var(--c-line);
 }
 
 .pct {
   font-family: var(--font-mono), monospace;
-  font-size: clamp(4.5rem, 3rem + 8vw, 9rem);
+  font-size: clamp(2.5rem, 1.5rem + 4vw, 5rem);
   line-height: 0.9;
-  font-weight: 300;
-  letter-spacing: -0.04em;
   font-variant-numeric: tabular-nums;
+  letter-spacing: -0.04em;
   color: var(--c-text);
 }
 
 .pct small {
-  font-size: 0.32em;
+  font-size: 0.35em;
   margin-left: 0.15em;
   color: var(--c-text-muted);
 }
 
 .label {
-  font-family: var(--font-mono), monospace;
-  font-size: var(--t-mono);
-  letter-spacing: 0.06em;
+  font-family: var(--font-narrow), sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
   color: var(--c-text-muted);
-}
-
-.bar {
-  height: 1px;
-  background: var(--c-line);
-  overflow: hidden;
-}
-
-.bar i {
-  display: block;
-  height: 100%;
-  background: var(--c-accent);
-  transform-origin: 0 50%;
-  transition: transform 0.25s linear;
 }

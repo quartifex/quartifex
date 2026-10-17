@@ -1,7 +1,15 @@
 .partner {
-  background:
-    radial-gradient(60% 50% at 85% 0%, rgb(240 166 64 / 0.07), transparent 70%), var(--c-bg);
-  border-top: 1px solid var(--c-line);
+  --r-xs: 0px;
+  --r-sm: 0px;
+  --r-md: 0px;
+  --r-lg: 0px;
+  background: var(--c-bg);
+  overflow: hidden;
+}
+
+.partner > :global(.wrap) {
+  position: relative;
+  z-index: 1;
 }
 
 .grid {

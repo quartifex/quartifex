@@ -1,76 +1,65 @@
 .footer {
   position: relative;
-  z-index: 1;
-  padding-block: clamp(4rem, 8vw, 6rem) var(--s-7);
+  padding-block: 5rem 2rem;
+  border-top: 1px dashed var(--c-line);
   background: var(--c-bg);
-  border-top: 1px solid var(--c-line);
-  font-size: 0.9375rem;
 }
 
 .grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: var(--s-7);
-}
-
-@media (min-width: 900px) {
-  .grid {
-    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
-  }
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: 3rem var(--gutter);
 }
 
 .brand {
   display: grid;
-  gap: var(--s-3);
   align-content: start;
-}
-
-.logo {
-  width: 220px;
-  height: auto;
-  filter: invert(94%);
-}
-
-.honesty {
-  max-width: 28rem;
+  gap: 1rem;
   color: var(--c-text);
 }
 
-.label {
-  color: var(--c-text-muted);
+.honesty {
+  font-size: 1.125rem;
+  max-width: 34ch;
 }
 
-.brand a {
+.notice,
+.studio {
+  color: var(--c-text-muted);
+  font-size: 0.9375rem;
+  max-width: 40ch;
+}
+
+.studio a {
   color: var(--c-accent-text);
 }
 
 .heading {
-  margin-bottom: var(--s-3);
-  font-family: var(--font-mono), monospace;
-  font-size: var(--t-mono);
-  font-weight: 400;
+  font-family: var(--font-narrow), sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--c-text-muted);
+  margin-bottom: 1rem;
 }
 
 .credits {
-  display: grid;
-  gap: 0;
   margin: 0;
+  display: grid;
 }
 
 .credits > div {
   display: grid;
-  grid-template-columns: minmax(0, 11rem) minmax(0, 1fr);
-  gap: var(--s-4);
-  padding: var(--s-3) 0;
-  border-top: 1px solid var(--c-line);
+  grid-template-columns: 11rem minmax(0, 1fr);
+  gap: 1rem;
+  padding-block: 0.8rem;
+  border-top: 1px dashed var(--c-line);
+  font-size: 0.875rem;
 }
 
 .credits dt {
-  color: var(--c-text);
-  font-weight: 560;
+  font-weight: 500;
 }
 
 .credits dd {
@@ -78,9 +67,22 @@
   color: var(--c-text-muted);
 }
 
-@media (max-width: 520px) {
+.base {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 4rem;
+  padding-top: 1rem;
+  border-top: 1px dashed var(--c-line);
+}
+
+@media (max-width: 800px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
   .credits > div {
-    grid-template-columns: minmax(0, 1fr);
-    gap: var(--s-1);
+    grid-template-columns: 1fr;
+    gap: 0.25rem;
   }
 }

@@ -1,33 +1,33 @@
-/* A sticky full-viewport layer: the sections scroll over it. */
 .stage {
   position: sticky;
   top: 0;
-  z-index: 0;
   height: 100lvh;
+  width: 100%;
   margin-bottom: -100lvh;
+  z-index: 0;
   overflow: hidden;
-  background: #030304;
-  contain: strict;
+  background: var(--c-bg);
 }
 
-.poster,
-.sequence,
+/* The first paint, and the whole picture without WebGL: moonlight above a dark road, the
+   headlight glow low in the frame. No image, so it costs nothing. */
+.poster {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(60% 38% at 50% 78%, rgb(156 198 255 / 0.18), transparent 70%),
+    radial-gradient(40% 30% at 62% 18%, rgb(188 208 255 / 0.14), transparent 70%),
+    linear-gradient(180deg, #0a1020 0%, #070a12 48%, #0b0d12 62%, #050608 100%);
+  transition: opacity 1.2s var(--ease-out);
+}
+
+.stage[data-ready] .poster {
+  opacity: 0;
+}
+
 .canvas {
   position: absolute;
   inset: 0;
-}
-
-.poster :global(svg) {
-  width: 100%;
-  height: 100%;
-}
-
-.sequence {
-  width: 100%;
-  height: 100%;
-}
-
-.canvas {
   opacity: 0;
   transition: opacity 1.4s var(--ease-out);
 }
@@ -36,17 +36,36 @@
   opacity: 1;
 }
 
-.stage[data-ready] .poster {
-  opacity: 0;
-  transition: opacity 1.4s var(--ease-out);
+.canvas canvas {
+  display: block;
 }
 
-/* A soft darkening where the copy sits, so text never relies on the picture for contrast. */
-.shade {
+/* Letterbox bars (AVARA's cinema frame) in the hero only; scroll lifts them. */
+.letterbox {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background:
-    linear-gradient(180deg, rgb(3 3 4 / 0.72) 0%, rgb(3 3 4 / 0) 34%),
-    linear-gradient(0deg, rgb(3 3 4 / 0.6) 0%, rgb(3 3 4 / 0) 22%);
+  box-shadow:
+    inset 0 calc(var(--letterbox, 0) * 7vh) 0 0 #000,
+    inset 0 calc(var(--letterbox, 0) * -7vh) 0 0 #000;
+}
+
+/* The blink as the camera passes through the car's body into the cabin. */
+.blink {
+  position: absolute;
+  inset: 0;
+  background: #000;
+  opacity: var(--blink, 0);
+  pointer-events: none;
+}
+
+/* Grain over the picture, so dark gradients never band. */
+.stage::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.06;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }

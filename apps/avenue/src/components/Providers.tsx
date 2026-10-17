@@ -1,50 +1,60 @@
 "use client";
-// Smooth scroll and ScrollTrigger through spine (Lenis, refreshed only on settled layout
-// changes via plumb), and the reduced-motion policy through stillness. Under reduced motion
-// spine scrolls natively and stillness runs each effect's still version.
-import { createPlumb } from "@quartifex/plumb";
-import { SpineProvider } from "@quartifex/spine/react";
-import { StillnessProvider, useStillness } from "@quartifex/stillness/react";
+// Smooth scroll and scroll-driven motion: Lenis drives the scroll, GSAP's ticker drives Lenis,
+// and ScrollTrigger updates on every Lenis scroll, so pinned scenes and the camera stay in step.
+// Under reduced motion there is no Lenis (native scrolling) and `data-motion="reduced"` tells
+// the CSS and the scenes to cut instead of move.
 import { gsap } from "gsap";
 import { Flip } from "gsap/Flip";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
 import Lenis from "lenis";
 import "lenis/dist/lenis.css";
-import { type ReactNode, useEffect, useState } from "react";
+import { type ReactNode, useEffect } from "react";
+import { setLenis } from "@/lib/scroll";
 import { frame } from "@/stage/state";
 
 gsap.registerPlugin(ScrollTrigger, Flip, SplitText);
 
-function MotionBridge() {
-  const { level } = useStillness();
-  useEffect(() => {
-    frame.reducedMotion = level !== "full";
-    document.documentElement.dataset.motion = level;
-  }, [level]);
-  return null;
-}
-
 export function Providers({ children }: { children: ReactNode }) {
-  // plumb listens to the window: create it only in the browser.
-  const [plumb] = useState(() => (typeof window === "undefined" ? undefined : createPlumb()));
-  const [reduced] = useState(
-    () =>
-      typeof matchMedia === "function" && matchMedia("(prefers-reduced-motion: reduce)").matches,
-  );
-  return (
-    <StillnessProvider>
-      <MotionBridge />
-      <SpineProvider
-        gsap={gsap}
-        ScrollTrigger={ScrollTrigger}
-        Lenis={Lenis}
-        {...(plumb ? { plumb } : {})}
-        reducedMotion={reduced}
-        lenis={{ lerp: 0.12, smoothWheel: true }}
-      >
-        {children}
-      </SpineProvider>
-    </StillnessProvider>
-  );
+  useEffect(() => {
+    const query = matchMedia("(prefers-reduced-motion: reduce)");
+    let lenis: Lenis | null = null;
+    let tick: ((time: number) => void) | null = null;
+
+    const apply = () => {
+      const reduced = query.matches;
+      frame.reducedMotion = reduced;
+      document.documentElement.dataset.motion = reduced ? "reduced" : "full";
+      if (reduced && lenis) {
+        if (tick) gsap.ticker.remove(tick);
+        lenis.destroy();
+        lenis = null;
+        setLenis(null);
+      }
+      if (!reduced && !lenis) {
+        lenis = new Lenis({ lerp: 0.11, smoothWheel: true, syncTouch: false });
+        lenis.on("scroll", ScrollTrigger.update);
+        const l = lenis;
+        tick = (time) => l.raf(time * 1000);
+        gsap.ticker.add(tick);
+        gsap.ticker.lagSmoothing(0);
+        setLenis(lenis);
+      }
+      ScrollTrigger.refresh();
+    };
+    apply();
+    query.addEventListener("change", apply);
+
+    // Layout settles after fonts load: measure the pinned scenes again then.
+    void document.fonts?.ready.then(() => ScrollTrigger.refresh());
+
+    return () => {
+      query.removeEventListener("change", apply);
+      if (tick) gsap.ticker.remove(tick);
+      lenis?.destroy();
+      setLenis(null);
+    };
+  }, []);
+
+  return <>{children}</>;
 }

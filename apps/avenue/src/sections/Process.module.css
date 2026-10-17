@@ -1,6 +1,16 @@
+/* Day: square-cut cells on the visible grid, under the dusk wash. */
 .process {
-  background: var(--c-bg);
-  border-top: 1px solid var(--c-line);
+  --r-xs: 0px;
+  --r-sm: 0px;
+  --r-md: 0px;
+  --r-lg: 0px;
+  --r-xl: 0px;
+  isolation: isolate;
+}
+
+.process > :global(.wrap) {
+  position: relative;
+  z-index: 1;
 }
 
 .header {
@@ -16,8 +26,7 @@
   margin: clamp(3rem, 7vw, 5rem) 0 0;
   padding: 0;
   list-style: none;
-  border: 1px solid var(--c-line);
-  border-radius: var(--r-lg);
+  border: 1px dashed var(--c-line-strong);
   background: var(--c-line);
   overflow: hidden;
 }
@@ -27,7 +36,7 @@
   gap: var(--s-3);
   align-content: start;
   padding: var(--s-6) var(--s-5);
-  background: var(--c-bg);
+  background: var(--c-surface);
 }
 
 .step p {

@@ -23,37 +23,40 @@ export function isNeeded(value: string): boolean {
 /** Provenance of everything on the page that is not text or code. */
 export const CREDITS: ReadonlyArray<{ item: string; credit: string }> = [
   {
-    item: "3D car",
+    item: "Car model",
     credit:
-      "Original concept car modelled in code for this page by Quartifex (src/three/shape.ts); no third-party model, no real marque.",
+      "“mersedes cls63” by DZST ALG STREET on Sketchfab, CC BY 4.0. Used for demonstration only: maker emblems, badges and plate removed, textures retouched, rescaled and compressed by Quartifex. AVENUE is not affiliated with any carmaker.",
   },
   {
-    item: "Lighting and reflections",
-    credit:
-      "Studio environment built in code at run time (light strips rendered into an environment map); no downloaded HDRI.",
+    item: "Night road",
+    credit: "“Rural Asphalt Road” by Poly Haven, CC0; graded day-for-night by Quartifex.",
   },
   {
-    item: "Textures",
-    credit: "None downloaded: screen contents are drawn live in the browser from the demo's state.",
+    item: "Reflections",
+    credit: "“Qwantani Moonrise” by Poly Haven, CC0.",
+  },
+  {
+    item: "Cabin screens",
+    credit:
+      "Drawn live in the browser from the demo's state; the AVENUE screens are added to the model in code.",
   },
   {
     item: "Interface sounds",
     credit: "Synthesised in the browser with the Web Audio API; off by default. No sound files.",
   },
   {
-    item: "Image-sequence fallback and poster",
-    credit: "Drawn in code from the same car geometry and encoded at build time.",
-  },
-  {
     item: "Type",
     credit:
-      "Archivo (Omnibus-Type), Instrument Sans (Instrument) and DM Mono (Colophon), all SIL Open Font License 1.1, self-hosted.",
+      "Archivo and Archivo Narrow (Omnibus-Type) and DM Mono (Colophon), SIL Open Font License 1.1, self-hosted.",
   },
   {
     item: "Sample content in the demo",
     credit: "Titles, places, news and people in the demo are invented for illustration.",
   },
 ];
+
+export const CAR_NOTICE =
+  "Vehicle model used for demonstration only. AVENUE is not affiliated with any carmaker.";
 
 export const SOURCES = {
   nhtsa: {

@@ -38,10 +38,15 @@ const GETS = [
 
 export function Collaborate() {
   return (
-    <section id="partner" className={`section ${s.partner}`} aria-labelledby="partner-title">
+    <section
+      id="partner"
+      className={`section headlight ${s.partner}`}
+      aria-labelledby="partner-title"
+    >
+      <div className="grid-lines" aria-hidden="true" />
       <div className={`wrap ${s.grid}`}>
         <div className={s.copy}>
-          <p className="eyebrow">Partner with us</p>
+          <p className="eyebrow">P · Partner with us</p>
           <h2 id="partner-title" className="h1" data-split>
             Build the whole-car screen with us.
           </h2>

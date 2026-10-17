@@ -813,7 +813,7 @@
   padding: 0.6em 0.9em;
   border-left: 3px solid var(--c-accent);
   border-radius: 4px;
-  background: rgb(240 166 64 / 0.08);
+  background: rgb(45 99 238 / 0.1);
   color: var(--c-text);
   font-size: 0.92em;
 }
@@ -1241,7 +1241,7 @@
   aspect-ratio: 16 / 9;
   border-radius: var(--rad);
   background:
-    radial-gradient(80% 90% at 50% 100%, rgb(240 166 64 / 0.16), transparent 60%),
+    radial-gradient(80% 90% at 50% 100%, rgb(45 99 238 / 0.18), transparent 60%),
     linear-gradient(160deg, #1a1d22, #0b0c0e);
 }
 
@@ -1451,4 +1451,247 @@
   font-size: var(--u);
   line-height: 1.35;
   color: var(--c-text);
+}
+
+/* ================================================================ Fluent layer
+   The cabin UI after the brand book: light, material and depth, made for touch in a car.
+   Mica surfaces with grain, tiles that rise with a lit top edge, a floating navigation rail
+   with a lane indicator, a dock for quick actions, large radii, generous targets.
+   (Iterated from the AVENUE wireframes: top bar, side rail, widget home, quick bar.) */
+
+.os {
+  --rad: calc(var(--u) * 1.4);
+  --tile-rad: calc(var(--u) * 1.9);
+  border: 0;
+  border-radius: 36px;
+  background:
+    radial-gradient(90% 70% at 85% 110%, rgb(45 99 238 / 0.16), transparent 60%),
+    radial-gradient(70% 60% at 0% 0%, rgb(255 255 255 / 0.05), transparent 60%),
+    linear-gradient(180deg, #0f131a 0%, #0a0d12 100%);
+  box-shadow:
+    0 0 0 1px rgb(255 255 255 / 0.08),
+    0 0 0 8px #020305,
+    0 0 0 9px rgb(255 255 255 / 0.06),
+    0 50px 140px -30px rgb(0 0 0 / 0.95);
+}
+
+/* Grain on the mica, so the glow never bands. */
+.os::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.os > * {
+  position: relative;
+  z-index: 1;
+}
+
+.os[data-driving] {
+  background:
+    radial-gradient(90% 70% at 85% 110%, rgb(255 106 43 / 0.14), transparent 60%),
+    linear-gradient(180deg, #11141a 0%, #0a0c10 100%);
+}
+
+/* Status bar: quiet, no rule under it. */
+.status {
+  border-bottom: 0;
+  padding: calc(var(--pad) * 0.9) calc(var(--pad) * 1.2) calc(var(--pad) * 0.4);
+}
+
+.seatName {
+  font-weight: 600;
+  letter-spacing: -0.005em;
+}
+
+.drivingBadge {
+  background: var(--c-ember);
+  color: #1a0700;
+}
+
+/* The rail floats on a glass column; the current item is a raised pill with a lane bar. */
+.rail {
+  border-right: 0;
+  margin: calc(var(--pad) * 0.4) 0 calc(var(--pad) * 0.4) calc(var(--pad) * 0.9);
+  padding: calc(var(--pad) * 0.5);
+  border-radius: calc(var(--tile-rad) + 4px);
+  background: rgb(255 255 255 / 0.035);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.05);
+  gap: calc(var(--gap) * 0.35);
+}
+
+.railItem {
+  position: relative;
+  border-radius: var(--rad);
+  color: var(--c-text-muted);
+  font-weight: 500;
+}
+
+.railItem[aria-current="page"] {
+  background: var(--c-raised);
+  color: var(--c-text);
+  box-shadow: var(--e-2);
+}
+
+.railItem[aria-current="page"]::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 28%;
+  bottom: 28%;
+  width: 3px;
+  border-radius: 3px;
+  background: var(--c-accent);
+}
+
+/* Two-tone icons: the glyph in ink with a soft top highlight. */
+.railItem svg,
+.iconButton svg {
+  filter: drop-shadow(0 1px 0 rgb(255 255 255 / 0.08));
+}
+
+.main {
+  padding: calc(var(--pad) * 0.6) calc(var(--pad) * 1.1) var(--pad);
+}
+
+/* Tiles rise: raised surface, large radius, a lit top edge, no hard border. */
+.card {
+  border-radius: var(--tile-rad);
+  background: linear-gradient(180deg, rgb(255 255 255 / 0.035), transparent 40%), var(--c-raised);
+  box-shadow: var(--e-2);
+}
+
+.tileButton {
+  border-radius: calc(var(--tile-rad) * 0.75);
+}
+
+.tileButton[aria-pressed="true"] {
+  background: linear-gradient(180deg, rgb(156 198 255 / 0.12), transparent 70%), var(--c-control);
+  box-shadow:
+    var(--e-1),
+    inset 0 0 0 1.5px var(--c-accent);
+}
+
+.map {
+  border-radius: calc(var(--tile-rad) * 0.7);
+}
+
+/* Chips and buttons: pills and soft rectangles that press in. */
+.chip {
+  background: var(--c-control);
+  box-shadow: var(--e-1);
+}
+
+.press[data-variant="accent"] {
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.22),
+    0 6px 18px -6px rgb(45 99 238 / 0.7);
+}
+
+.press[data-variant="danger"] {
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.2),
+    0 6px 18px -6px rgb(224 48 46 / 0.6);
+}
+
+.press:focus-visible,
+.switch:focus-visible,
+.seatOption:focus-visible {
+  outline: 2px solid var(--c-focus);
+  outline-offset: 2px;
+}
+
+/* The quick bar is a dock: a glass pill floating above the bottom edge. */
+.quick {
+  margin: 0 calc(var(--pad) * 0.9) calc(var(--pad) * 0.9);
+  padding: calc(var(--pad) * 0.45) calc(var(--pad) * 0.6);
+  border-top: 0;
+  border-radius: calc(var(--tile-rad) + 6px);
+  background: rgb(255 255 255 / 0.05);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  backdrop-filter: blur(18px) saturate(140%);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.07),
+    0 12px 30px -12px rgb(0 0 0 / 0.6);
+}
+
+.clipButton {
+  background: var(--c-raised);
+  box-shadow: var(--e-1);
+}
+
+/* Sheets: the share waiting for a yes, and SOS. */
+.toast {
+  border-radius: calc(var(--tile-rad) + 4px);
+  background: var(--c-glass);
+  -webkit-backdrop-filter: blur(24px) saturate(150%);
+  backdrop-filter: blur(24px) saturate(150%);
+  box-shadow: var(--e-3);
+}
+
+.sos {
+  background:
+    radial-gradient(70% 60% at 50% 40%, rgb(224 48 46 / 0.28), transparent 70%), rgb(12 4 4 / 0.94);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+}
+
+/* ---------- The demo's own controls, in the cabin kit ---------- */
+
+.switcher {
+  border: 0;
+  border-radius: var(--r-pill);
+  padding: 5px;
+  background: var(--c-glass);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.06),
+    0 0 0 1px var(--c-line);
+}
+
+.seatOption {
+  border-radius: var(--r-pill);
+  padding-inline: 1.1rem;
+}
+
+.seatIndicator {
+  border-radius: var(--r-pill);
+  background: var(--c-raised);
+  box-shadow:
+    var(--e-2),
+    inset 0 0 0 1px rgb(156 198 255 / 0.5);
+}
+
+.seatOptionTag {
+  font-family: var(--font-narrow), sans-serif;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.controlLabel {
+  font-family: var(--font-narrow), sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+}
+
+.stripItem {
+  border: 1px dashed var(--c-line);
+  border-radius: 0;
+  background: rgb(6 7 10 / 0.6);
+}
+
+.stripItem[aria-current="true"] {
+  border-style: solid;
+  border-color: var(--c-accent);
+}
+
+.stripSeat {
+  font-family: var(--font-narrow), sans-serif;
+  font-weight: 600;
 }

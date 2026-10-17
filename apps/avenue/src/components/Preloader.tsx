@@ -1,11 +1,12 @@
 "use client";
-// The preloader: a truthful percentage of the car model's bytes as they arrive (the bytes the
-// 3D needs before it can draw), then the engine starting. It lifts when the first frame is
-// drawn, when there is nothing to load (no real-time 3D on this device), or after a few
-// seconds whatever happens (the poster is already there underneath). Skipped on repeat visits.
+// The preloader: the lane mark drawing itself, and a truthful percentage of the car model's
+// bytes as they arrive. It lifts on the first drawn frame, at once when the device gets no
+// real-time 3D, and after five seconds whatever happens (the poster is already painted
+// beneath). Skipped on repeat visits.
 import { useEffect, useState } from "react";
 import { useStore } from "@/lib/store";
 import { stage } from "@/stage/state";
+import { MARK } from "./logo-paths";
 import s from "./Preloader.module.css";
 
 const KEY = "avenue-visited";
@@ -24,13 +25,13 @@ export function Preloader() {
     } catch {
       // Storage blocked: show the preloader.
     }
-    const t = window.setTimeout(() => setGone(true), 4500);
+    const t = window.setTimeout(() => setGone(true), 5000);
     return () => window.clearTimeout(t);
   }, []);
 
   useEffect(() => {
-    if (ready || (rung && rung !== "webgl")) {
-      const t = window.setTimeout(() => setGone(true), ready ? 450 : 0);
+    if (ready || rung === "poster") {
+      const t = window.setTimeout(() => setGone(true), ready ? 500 : 0);
       try {
         localStorage.setItem(KEY, "1");
       } catch {
@@ -45,23 +46,28 @@ export function Preloader() {
   const label = ready
     ? "Ready"
     : total && loaded >= total
-      ? "Starting the renderer"
+      ? "Starting the engine"
       : total
-        ? `Loading the cabin, ${(loaded / 1024).toFixed(0)} of ${(total / 1024).toFixed(0)} kB`
-        : rung === "webgl"
-          ? "Loading the 3D engine"
-          : "Loading";
+        ? `Loading the car · ${(loaded / 1024).toFixed(0)} of ${(total / 1024).toFixed(0)} kB`
+        : "Warming up";
   return (
     <div className={s.preloader} data-gone={gone || skip ? "" : undefined} aria-hidden="true">
-      <div className={s.inner}>
+      <svg
+        aria-hidden="true"
+        className={s.mark}
+        viewBox="10 6 100 106"
+        style={{ "--p": shown / 100 } as React.CSSProperties}
+      >
+        {MARK.map((d, i) => (
+          <path key={d} d={d} style={{ "--i": i } as React.CSSProperties} />
+        ))}
+      </svg>
+      <div className={s.readout}>
         <span className={s.pct}>
           {String(shown).padStart(2, "0")}
           <small>%</small>
         </span>
         <span className={s.label}>{label}</span>
-        <span className={s.bar}>
-          <i style={{ transform: `scaleX(${shown / 100})` }} />
-        </span>
       </div>
     </div>
   );

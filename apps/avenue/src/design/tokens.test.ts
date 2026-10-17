@@ -16,7 +16,7 @@ describe("tokens", () => {
 
   it("writes every colour as a custom property in both themes", () => {
     const css = tokensCss();
-    expect(css).toContain("--c-text-muted:#a9abb0;");
+    expect(css).toContain("--c-text-muted:#8e97a8;");
     expect(css).toContain('[data-theme="paper"]');
     expect(css).toMatch(/--t-hero:clamp\(/);
   });

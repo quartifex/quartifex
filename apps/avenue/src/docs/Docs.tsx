@@ -31,7 +31,7 @@ export function Docs() {
     <section id="docs" className={s.docs} data-theme="paper" aria-labelledby="docs-title">
       <div className={`wrap ${s.layout}`}>
         <header className={s.header}>
-          <p className="eyebrow">Documentation</p>
+          <p className="eyebrow">DOC · Documentation</p>
           <h2 id="docs-title" className="h1">
             The system, written down.
           </h2>
