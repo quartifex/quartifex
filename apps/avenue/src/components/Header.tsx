@@ -53,9 +53,19 @@ export function Header() {
         under?.closest("[data-theme]")?.getAttribute("data-theme") === "paper" ? "paper" : "cabin",
       );
     };
+    // Check again once scrolling settles: section wipes can still be opening at the last event.
+    let settle = 0;
+    const onScroll = () => {
+      on();
+      window.clearTimeout(settle);
+      settle = window.setTimeout(on, 400);
+    };
     on();
-    window.addEventListener("scroll", on, { passive: true });
-    return () => window.removeEventListener("scroll", on);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.clearTimeout(settle);
+      window.removeEventListener("scroll", onScroll);
+    };
   }, []);
 
   // Close the menu once a section link has been followed.
