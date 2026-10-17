@@ -61,6 +61,7 @@ export function Collaborate() {
             ))}
           </ul>
         </div>
+        <PartnerForm models={MODELS.map(({ id, name }) => ({ id, name }))} />
         <div className={s.models}>
           {MODELS.map((m, i) => (
             <article key={m.id} className={s.model}>
@@ -81,7 +82,6 @@ export function Collaborate() {
             ))}
           </dl>
         </div>
-        <PartnerForm models={MODELS.map(({ id, name }) => ({ id, name }))} />
       </div>
     </section>
   );

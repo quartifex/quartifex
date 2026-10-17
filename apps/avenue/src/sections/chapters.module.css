@@ -616,6 +616,10 @@
   .eta {
     bottom: 26vh;
   }
+
+  .drive {
+    top: 46%;
+  }
 }
 
 /* Reduced motion: nothing drifts; the parts are simply there. */

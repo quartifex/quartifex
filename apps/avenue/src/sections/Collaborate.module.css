@@ -3,6 +3,7 @@
   --r-sm: 0px;
   --r-md: 0px;
   --r-lg: 0px;
+  --r-xl: 0px;
   background: var(--c-bg);
   overflow: hidden;
 }
@@ -23,7 +24,8 @@
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     column-gap: clamp(3rem, 6vw, 6rem);
   }
-  .models {
+  .models,
+  .gets {
     grid-column: 1 / -1;
   }
 }
@@ -120,10 +122,11 @@
   display: grid;
   gap: var(--s-4);
   padding: clamp(1.25rem, 3vw, 2rem);
+  align-self: start;
   border: 1px solid var(--c-line-strong);
-  border-radius: var(--r-xl);
-  background: var(--c-surface);
-  box-shadow: var(--e-3);
+  background: var(--c-glass);
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
 }
 
 .fields {
