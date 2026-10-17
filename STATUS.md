@@ -264,6 +264,45 @@ Deviations from the P6 brief:
   (most today), and the page says so; the WebP numbers are real bytes.
 - halcyon's on-page results are from a local run until CI's first publish on `main`.
 
+## PAV: AVENUE (avenue.quartifex.com)
+
+AVENUE is a whole-car infotainment concept: a playable demo in a 3D cabin, a product page for
+partners, and the system's documentation, on one page. Built on the `avenue` branch; preview at
+https://avenue-git-avenue-quartifex.vercel.app (Vercel login while the team's preview protection
+is on). Not yet on the production domain.
+
+| Item | State | What is on the page | Tests | Gate |
+| --- | --- | --- | --- | --- |
+| `avenue` (S20) | in progress (preview live) | Night hero on a moonlit road (the demo car, day-for-night HDRI, headlights, letterbox), the problem beat, the way into the cabin, six scrollytelling feature chapters (every seat, driver lockout at the 2 s glance, send to the back, climate per seat, the road with AR places and ETA, SOS from any seat), the live demo (four seats, Parked / Moving, share, SOS), research in the Day theme (process, the 25 Volere requirements, the A/B ratings as recorded), MDX docs, the partner form, provenance | 14 unit, 12 Playwright | LCP 1.33 s and CLS 0 on the throttled-phone gate; axe 0 violations in 5 states; Lighthouse mobile: accessibility, best practices and SEO 100, performance 83 (simulated LCP 3.0 to 3.5 s) |
+
+How it was rebuilt (17 Oct 2026, Nitesh's instructions): a new brand (the AVENUE design system:
+the lane mark, night-first palette, Archivo, a visible dashed grid, a Fluent-style cabin UI),
+the third-party demo car he supplied, his three HDRIs, and no workspace (lab) libraries in the
+site until it is live: Lenis, GSAP ScrollTrigger and React Three Fiber directly.
+
+| Check | Result |
+| --- | --- |
+| typecheck (app) | pass |
+| lint (app) | 0 errors; warnings are `!important` in reduced-motion overrides and selector order in the demo stylesheet |
+| unit tests (app) | 3 files, 14 tests pass (tokens contrast in both themes, demo reducer, partner endpoint) |
+| `next build` | pass |
+| Playwright (12) | all pass, including the launch gate: LCP 1332 ms, CLS 0.000 (Pixel 7 size, 4x CPU, Lighthouse mobile network) |
+| axe (WCAG 2.0 to 2.2 A and AA) | 0 violations in all five states (as loaded, driver moving, share waiting, SOS, requirement open) |
+| Lighthouse (default mobile, local) | accessibility 100, best practices 100, SEO 100, performance 83; LCP 3.5 s simulated, CLS 0.014, TBT 291 ms |
+| heft, contactsheet | not run: Nitesh asked for no lab tools until the site is live |
+
+Deviations and known gaps:
+
+- Lighthouse's simulated mobile LCP (3.0 to 3.5 s) is over 2.5 s; the measured throttled-phone
+  gate passes at 1.3 s. The simulation charges the hero for the 3D code requested early.
+- The cabin's interior comes from the supplied model (a 2012-era dashboard); AVENUE's screens are
+  added in code across the dash and in the front seat backs.
+- The media files (car models, HDRIs, about 4.2 MB) are committed under
+  `apps/avenue/public/media/` with a `.gitignore` exception, against the rule that binaries live
+  on Cloudinary, so the site deploys from git. Move them when a media host is set up.
+- The old generated folder `apps/avenue/public/sequences/cabin` (git-ignored build output) and the
+  emptied `apps/avenue/src/three` were removed during the rebuild.
+
 ## Known issues
 
 - The safeframe page's own contactsheet flags come from its scaled preview of other devices and
@@ -382,6 +421,12 @@ Things only Nitesh can supply or decide. None of them blocks the library work.
 | 9 | **Optional: KTX-Software.** Install `toktx` (KTX-Software 4) on this machine and in CI if you want freight's KTX2 path exercised; without it freight writes WebP and says so. | freight KTX2 |
 | 10 | **NutriMuscle (optional).** The plan describes sleeve as extracted from the NutriMuscle jar work. No jar model or label art is in `assets-private`, and it is client work, so sleeve was built generically with a fictional demo brand. If NutriMuscle should appear (a case study, a demo), supply the model and label and confirm the client's permission in writing. | Any NutriMuscle showcase |
 | 11 | **reelhouse and halcyon on Vercel.** Create a Vercel project for each (root directory `apps/reelhouse` and `apps/halcyon`; `vercel.json` does the rest) and point `reelhouse.quartifex.com` and `halcyon.quartifex.com` at them; set `QX_FONT_ORIGIN` there too (input 4). halcyon's CI job commits its audit back to `main`: if the repository's Actions settings limit the workflow token to read-only, allow read and write (Settings, Actions, General, Workflow permissions), or the page keeps showing the local run. | reelhouse and halcyon going live; CI figures on halcyon |
+| 12 | ~~AVENUE: the demo car~~ Decided 17 Oct 2026: use the supplied model with a "demonstration only, not affiliated" notice. For the record, its part names suggest it came from a game, so the CC BY grant may not be the uploader's to give; an unbranded model would remove that risk. | noted |
+| 13 | **AVENUE: domain.** Add `avenue.quartifex.com` to the Vercel project `avenue` (team Quartifex) and, on Cloudflare, a CNAME `avenue` to `cname.vercel-dns.com`, DNS only (grey cloud). Then set the project's production branch, or merge `avenue` into `main`. | AVENUE going live |
+| 14 | **AVENUE: partner form.** The contact inbox and a Resend API key (`RESEND_API_KEY`, `PARTNER_TO`, `PARTNER_FROM` in the Vercel project). Until then the form answers 503 with a plain message. | Partner enquiries |
+| 15 | **AVENUE: facts still marked "To be confirmed".** The physical-effort net difference (-0.75 or -1.15), the participant count and how the A/B test was run, the project year and label, the Figma hi-fi link if there is one beyond the wireframes. | The research section |
+| 16 | **AVENUE: the final logo.** A lane mark was designed for this pass (`apps/avenue/public/brand/`, generated by `scripts/brand.py`); replace it if you have your own. | Brand |
+| 17 | **AVENUE: preview access.** Previews are behind Vercel Authentication; turn it off for the project (Settings, Deployment Protection) to share preview links outside the team. | Sharing previews |
 
 ## Open questions
 
@@ -593,3 +638,12 @@ Next prompt: **P6** (gate M6), the proof sites `reelhouse` and `halcyon`, now at
 visual bar with `volumetric` available, or **PF** (the flagship quartifex.com), per the order in
 `docs/code-prompts.md`. From P8 on, see the positioning
 note in `DECISIONS.md` (general-purpose libraries built to stand on their own).
+
+### 2026-10-17, PAV (AVENUE)
+
+Built AVENUE, then rebuilt it the same day on Nitesh's review ("looks AI generated"; use his car
+model and HDRIs; follow a UI kit; no lab tools until live). New brand book (AVENUE design system
+artifact), lane-mark logo, the supplied car with emblems removed, a day-for-night road, six
+scrollytelling chapters, a Fluent-style cabin UI iterated from the Figma wireframes, research in
+a Day theme. Checks above. Preview deployed on Vercel from the `avenue` branch.
+

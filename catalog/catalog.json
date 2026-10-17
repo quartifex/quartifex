@@ -922,7 +922,7 @@
   "effort": "L",
   "order": 20,
   "deps": [],
-  "libs": "L04, L28, L26, L07, L30, L12, L29, L06, L09, L03, L27",
+  "libs": null,
   "label": "Personal Concept",
   "prompt": "PAV",
   "state": "in progress",

@@ -38,11 +38,13 @@ export function Stage() {
 
   // Start after first paint and an idle moment, so the hero's words paint first.
   useEffect(() => {
-    if (!hasWebGL()) {
+    // `?rung=poster` forces the still picture (tests and reviews); `?rung=3d` skips the checks.
+    const forced = new URLSearchParams(location.search).get("rung");
+    if (forced === "poster" || (forced !== "3d" && !hasWebGL())) {
       stage.set({ rung: "poster" });
       return;
     }
-    setLite(wantsLite());
+    setLite(forced !== "3d" && wantsLite());
     const go = () => setBoot(true);
     const w = window as Window & {
       requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => number;

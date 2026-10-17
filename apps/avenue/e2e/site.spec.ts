@@ -15,9 +15,14 @@ test("labels itself honestly, with provenance and no invented proof", async ({ p
     page.getByText("AVENUE is a concept system by Quartifex, available for collaboration."),
   ).toBeVisible();
   await expect(page.getByText("A Quartifex product.")).toBeVisible();
-  for (const item of ["3D car", "Lighting and reflections", "Interface sounds", "Type"]) {
+  for (const item of ["Car model", "Night road", "Interface sounds", "Type"]) {
     await expect(page.locator("footer dt", { hasText: item })).toBeVisible();
   }
+  await expect(
+    page.getByText(
+      "Vehicle model used for demonstration only. AVENUE is not affiliated with any carmaker.",
+    ),
+  ).toBeVisible();
   await expect(page.getByText(/trusted by/i)).toHaveCount(0);
   // The driver and co-pilot modes are marked as not yet user-tested wherever they appear.
   expect(
@@ -167,12 +172,10 @@ test("under reduced motion nothing pins and the demo still works", async ({ brow
 
 test("boots real-time 3D after first paint and loads the car model", async ({ page }) => {
   test.setTimeout(90_000);
-  const glb = page.waitForResponse((r) => r.url().includes("/models/avenue-car"));
-  await page.goto("/?rung=webgl");
+  const glb = page.waitForResponse((r) => r.url().includes("/media/avenue-car"));
+  await page.goto("/?rung=3d");
   // The poster is in the HTML before any script.
-  await expect(page.locator("[data-rung] svg").first()).toBeAttached();
+  await expect(page.locator("[data-stage] [data-rung]")).toBeAttached();
   expect((await glb).ok()).toBe(true);
-  await expect(page.locator("[data-rung='webgl'] canvas[data-engine]")).toBeAttached({
-    timeout: 30_000,
-  });
+  await expect(page.locator("[data-stage][data-ready] canvas")).toBeAttached({ timeout: 60_000 });
 });

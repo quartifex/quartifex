@@ -6,11 +6,6 @@
   padding-block: clamp(5rem, 10vw, 8rem);
   background: var(--c-bg);
   color: var(--c-text);
-  /* About half the page's elements live here, far below the fold: skip their layout and
-     paint until they are near. The placeholder is shorter than the real section at every
-     width (14,000 px and up), so scroll-triggered reveals below it fire early, never late. */
-  content-visibility: auto;
-  contain-intrinsic-size: auto 12000px;
 }
 
 .layout {
@@ -40,6 +35,7 @@
   top: 4.5rem;
   z-index: 2;
   align-self: start;
+  background: var(--c-bg);
 }
 
 .nav ol {
