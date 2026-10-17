@@ -24,9 +24,15 @@ export type MediaItem = {
   /** Art: a hue (degrees) and a pattern seed, drawn in code. */
   hue: number;
   seed: number;
+  /** Music only: the AVENUE Radio station that generates it. */
+  station?: Station;
 };
 
-// Invented titles and makers, for illustration.
+export type Station = "edm" | "lofi";
+export const STATION_NAME: Record<Station, string> = { edm: "EDM", lofi: "Lo-fi" };
+
+// Invented titles and makers, for illustration. Music is generated live in the browser by
+// AVENUE Radio (radio.ts): each track is a seed for one of two stations, EDM or lo-fi.
 export const LIBRARY: readonly MediaItem[] = [
   {
     id: "slow-roads",
@@ -99,24 +105,48 @@ export const LIBRARY: readonly MediaItem[] = [
     seed: 7,
   },
   {
-    id: "late-light",
-    title: "Late Light",
-    by: "Hollow Pines",
+    id: "neon-causeway",
+    title: "Neon Causeway",
+    by: "AVENUE Radio · EDM",
     kind: "music",
-    minutes: 44,
+    minutes: 6,
     video: false,
-    hue: 34,
+    hue: 222,
     seed: 8,
+    station: "edm",
   },
   {
-    id: "low-tide",
-    title: "Low Tide Sessions",
-    by: "Marram",
+    id: "sea-link",
+    title: "Sea Link at 2 AM",
+    by: "AVENUE Radio · EDM",
     kind: "music",
-    minutes: 38,
+    minutes: 6,
     video: false,
-    hue: 205,
+    hue: 280,
     seed: 9,
+    station: "edm",
+  },
+  {
+    id: "late-light",
+    title: "Late Light",
+    by: "AVENUE Radio · Lo-fi",
+    kind: "music",
+    minutes: 5,
+    video: false,
+    hue: 34,
+    seed: 10,
+    station: "lofi",
+  },
+  {
+    id: "monsoon-window",
+    title: "Monsoon Window",
+    by: "AVENUE Radio · Lo-fi",
+    kind: "music",
+    minutes: 5,
+    video: false,
+    hue: 190,
+    seed: 11,
+    station: "lofi",
   },
   {
     id: "field-notes",
@@ -126,7 +156,7 @@ export const LIBRARY: readonly MediaItem[] = [
     minutes: 45,
     video: false,
     hue: 24,
-    seed: 10,
+    seed: 12,
   },
   {
     id: "long-table",
@@ -136,7 +166,7 @@ export const LIBRARY: readonly MediaItem[] = [
     minutes: 52,
     video: false,
     hue: 220,
-    seed: 11,
+    seed: 13,
   },
 ];
 
@@ -145,18 +175,22 @@ export const MEDIA_BY_ID = Object.fromEntries(LIBRARY.map((m) => [m.id, m])) as 
   MediaItem
 >;
 
+// The demo journey, across Mumbai on the coastal road (the map is a Google Maps capture).
 export const JOURNEY = {
-  from: "Harbour Road",
-  to: "Old Town Quay",
-  etaMinutes: 42,
-  km: 31,
-  nextTurn: "In 600 m, bear left onto Ridge Lane",
+  from: "Bandra West",
+  to: "Colaba",
+  via: "Coastal Road",
+  etaMinutes: 33,
+  arrive: "21:48",
+  km: 19.9,
+  nextTurn: "In 600 m, keep left for Coastal Road",
+  next: { distance: "600 m", action: "Keep left", road: "Coastal Road" },
   places: [
     { id: "lumen", name: "Café Lumen", kind: "Café", distance: "300 m", side: "left" as const },
     {
       id: "charge",
       name: "Charging hub",
-      kind: "8 chargers free",
+      kind: "6 chargers free",
       distance: "1.2 km",
       side: "right" as const,
     },
@@ -168,6 +202,16 @@ export const JOURNEY = {
       side: "left" as const,
     },
   ],
+};
+
+/** What the car reports to the driver's cluster (illustrative values). */
+export const VEHICLE = {
+  speedLimit: 80,
+  setSpeed: 80,
+  rangeKm: 312,
+  battery: 0.74,
+  gear: "D",
+  outside: 29,
 };
 
 export type Share = {
@@ -216,6 +260,14 @@ export type System = {
     captions: boolean;
   };
   sound: boolean;
+  /** Cab mode: the rear screens become a rider's screen (trip, pull over, help, quiet ride). */
+  fleet: boolean;
+  ride: { quiet: boolean; stop: "none" | "requested"; help: boolean };
+  /** The co-pilot's privacy shield: their screen cannot be seen from the driver's seat. */
+  shield: boolean;
+  heat: Record<SeatId, number>;
+  vent: Record<SeatId, number>;
+  volume: Record<SeatId, number>;
   /** The latest message for the live region, with a counter so repeats are announced. */
   notice: { text: string; seat: SeatId | "all"; n: number };
 };
@@ -233,12 +285,12 @@ const seat = (module: ModuleId, nowPlaying: string | null, playing = false): Sea
 
 export function initialSystem(): System {
   return {
-    moving: false,
+    moving: true,
     seats: {
       driver: seat("home", "late-light", true),
-      copilot: seat("journey", "late-light", true),
+      copilot: seat("journey", "neon-causeway", true),
       rearLeft: seat("media", "cartographers", true),
-      rearRight: seat("home", "field-notes"),
+      rearRight: seat("home", "monsoon-window", true),
     },
     zones: {
       driver: { temp: 21, fan: 2 },
@@ -292,6 +344,12 @@ export function initialSystem(): System {
       captions: true,
     },
     sound: false,
+    fleet: false,
+    ride: { quiet: false, stop: "none", help: false },
+    shield: true,
+    heat: { driver: 0, copilot: 1, rearLeft: 0, rearRight: 0 },
+    vent: { driver: 1, copilot: 0, rearLeft: 0, rearRight: 0 },
+    volume: { driver: 0.6, copilot: 0.55, rearLeft: 0.7, rearRight: 0.5 },
     notice: { text: "", seat: "all", n: 0 },
   };
 }
@@ -324,6 +382,14 @@ export type Action =
   | { type: "text-scale"; seat: SeatId; to: SeatState["textScale"] }
   | { type: "brightness"; seat: SeatId; to: number }
   | { type: "sound"; on: boolean }
+  | { type: "fleet"; on: boolean }
+  | { type: "quiet"; on: boolean }
+  | { type: "pull-over" }
+  | { type: "help"; on: boolean }
+  | { type: "shield"; on: boolean }
+  | { type: "heat"; seat: SeatId; to: number }
+  | { type: "vent"; seat: SeatId; to: number }
+  | { type: "volume"; seat: SeatId; to: number }
   | { type: "tick"; seconds: number };
 
 /** Modules the driver cannot open while the car is moving. */
@@ -331,7 +397,12 @@ export const DRIVER_LOCKED_MODULES: readonly ModuleId[] = ["clips", "settings"];
 
 /** Whether an item may play on a seat's screen right now. */
 export function canPlay(state: System, seatId: SeatId, item: MediaItem): boolean {
-  return !(seatId === "driver" && state.moving && item.video);
+  if (!state.moving || !item.video) return true;
+  if (seatId === "driver") return false;
+  // The co-pilot's video needs the privacy shield while moving (as in production cars with a
+  // passenger screen), so it never plays in the driver's line of sight.
+  if (seatId === "copilot") return state.shield;
+  return true;
 }
 
 export function canOpen(state: System, seatId: SeatId, module: ModuleId): boolean {
@@ -589,6 +660,79 @@ export function reduce(state: System, action: Action): System {
       };
     case "sound":
       return { ...state, sound: action.on };
+    case "fleet":
+      return {
+        ...state,
+        fleet: action.on,
+        ride: { quiet: false, stop: "none", help: false },
+        notice: notice(
+          state,
+          action.on
+            ? "Cab mode. The rear screens are now the rider's screens."
+            : "Private car mode.",
+        ),
+      };
+    case "quiet":
+      return {
+        ...state,
+        ride: { ...state.ride, quiet: action.on },
+        notice: notice(
+          state,
+          action.on ? "Quiet ride requested. The driver has been told." : "Quiet ride off.",
+        ),
+      };
+    case "pull-over":
+      if (state.ride.stop === "requested")
+        return {
+          ...state,
+          ride: { ...state.ride, stop: "none" },
+          notice: notice(state, "Pull over cancelled. Continuing to " + JOURNEY.to + "."),
+        };
+      return {
+        ...state,
+        ride: { ...state.ride, stop: "requested" },
+        notice: notice(state, "Pulling over at the next safe place, in about 200 m."),
+      };
+    case "help":
+      return {
+        ...state,
+        ride: { ...state.ride, help: action.on },
+        notice: notice(
+          state,
+          action.on
+            ? "Connecting you to rider support. This is a demo: no call is placed."
+            : "Support call ended.",
+        ),
+      };
+    case "shield": {
+      const co = state.seats.copilot;
+      const video = co.nowPlaying ? Boolean(MEDIA_BY_ID[co.nowPlaying]?.video) : false;
+      const pause = !action.on && state.moving && video && co.playing;
+      return {
+        ...state,
+        ...(pause ? { seats: patchSeat(state, "copilot", { playing: false }) } : {}),
+        shield: action.on,
+        notice: notice(
+          state,
+          action.on
+            ? "Privacy shield on: the co-pilot screen is hidden from the driver's seat."
+            : "Privacy shield off: video pauses on the co-pilot screen while moving.",
+          "copilot",
+        ),
+      };
+    }
+    case "heat":
+      return {
+        ...state,
+        heat: { ...state.heat, [action.seat]: clamp(Math.round(action.to), 0, 3) },
+      };
+    case "vent":
+      return {
+        ...state,
+        vent: { ...state.vent, [action.seat]: clamp(Math.round(action.to), 0, 3) },
+      };
+    case "volume":
+      return { ...state, volume: { ...state.volume, [action.seat]: clamp(action.to, 0, 1) } };
     case "tick": {
       // Advance whatever is playing, everywhere.
       let changed = false;

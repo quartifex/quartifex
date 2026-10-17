@@ -19,28 +19,44 @@ const withLighthouse = !process.argv.includes("--no-lighthouse");
 const TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"];
 const channel = process.env.PW_CHANNEL ? { channel: process.env.PW_CHANNEL } : {};
 
+const enter = (page) => page.getByRole("button", { name: "Enter quietly" }).click();
+
 const STATES = {
-  "page as loaded": async () => {},
+  "page as loaded (the gate)": async () => {},
+  "page entered": async (page) => {
+    await enter(page);
+  },
   "driver, moving": async (page) => {
+    await enter(page);
     await page.locator("#demo").scrollIntoViewIfNeeded();
     await page.getByRole("radio", { name: /^Driver/ }).click();
-    await page.getByRole("radio", { name: "Moving" }).click();
   },
   "rear screen, share waiting": async (page) => {
+    await enter(page);
     await page.locator("#demo").scrollIntoViewIfNeeded();
+    await page.getByRole("radio", { name: /^Rear left/ }).click();
     await page
-      .locator("#demo footer")
+      .locator("#demo main")
       .getByRole("button", { name: /Send to another screen/ })
       .first()
       .click();
     await page.locator("#demo").getByRole("button", { name: "Rear right" }).first().click();
     await page.getByRole("radio", { name: /^Rear right/ }).click();
   },
+  "rear screen, cab mode": async (page) => {
+    await enter(page);
+    await page.locator("#demo").scrollIntoViewIfNeeded();
+    await page.getByRole("radio", { name: /^Rear left/ }).click();
+    await page.getByRole("radio", { name: "Cab" }).click();
+    await page.locator("nav[aria-label='Rear left screen'] button", { hasText: "Home" }).click();
+  },
   "SOS countdown": async (page) => {
+    await enter(page);
     await page.locator("#demo").scrollIntoViewIfNeeded();
     await page.locator("#demo").getByRole("button", { name: "Emergency SOS" }).click();
   },
   "requirement card open": async (page) => {
+    await enter(page);
     await page.locator("#requirements").scrollIntoViewIfNeeded();
     await page.getByRole("button", { name: /Card A:/ }).click();
   },

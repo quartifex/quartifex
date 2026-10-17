@@ -10,16 +10,16 @@ export type Theme = "cabin" | "paper";
  * The brand book (the AVENUE design system) names these ground, surface, ink and so on. */
 export const colour = {
   cabin: {
-    bg: "#06070a",
-    surface: "#0c0f14",
-    raised: "#141922",
-    sunken: "#090b0f",
-    control: "#1c2230",
+    bg: "#0b1019",
+    surface: "#121927",
+    raised: "#1b2435",
+    sunken: "#0e131d",
+    control: "#243049",
     line: "rgb(255 255 255 / 0.14)",
     lineStrong: "rgb(255 255 255 / 0.32)",
     text: "#eef1f6",
-    textMuted: "#8e97a8",
-    textFaint: "#808a9c",
+    textMuted: "#9aa4b7",
+    textFaint: "#8a95a9",
     accent: "#2d63ee",
     accentText: "#9cc6ff",
     onAccent: "#ffffff",
@@ -32,7 +32,7 @@ export const colour = {
     emberDeep: "#4a1206",
     duskSky: "#10203f",
     duskHaze: "#1a1430",
-    glass: "rgb(20 25 34 / 0.72)",
+    glass: "rgb(27 36 53 / 0.7)",
   },
   paper: {
     bg: "#f1f2f4",

@@ -9,13 +9,15 @@ import { Lockup, Mark } from "./Logo";
 
 const LINKS = [
   { href: "#demo", label: "Demo" },
+  { href: "#fleets", label: "Fleets" },
+  { href: "#platform", label: "Platform" },
   { href: "#design", label: "Research" },
   { href: "#docs", label: "Docs" },
 ];
 
 /** The chapters the rail shows, in page order, with the anchor each dot jumps to. */
 const RAIL = [
-  { id: "hero", label: "Night drive", href: "#top" },
+  { id: "hero", label: "Blue hour", href: "#top" },
   { id: "cabin", label: "Into the cabin", href: "#ch-cabin" },
   { id: "seats", label: "Every seat", href: "#ch-seats" },
   { id: "driver", label: "Driver", href: "#ch-driver" },

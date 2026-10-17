@@ -105,6 +105,7 @@ export function Process() {
     <section
       id="design"
       data-theme="paper"
+      data-wipe
       className={`section dusk ${s.process}`}
       aria-labelledby="design-title"
     >

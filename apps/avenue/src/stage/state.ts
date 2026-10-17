@@ -16,7 +16,9 @@ export const stage = createStore({
   ready: false,
   /** The demo has taken over the camera, on this seat. */
   demo: false,
-  seat: "rearLeft" as SeatId,
+  seat: "driver" as SeatId,
+  /** The visitor has passed the preloader's gate. */
+  entered: false,
   /** A seat change in flight. */
   moving: false,
 });

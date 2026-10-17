@@ -17,12 +17,14 @@ export function Hero() {
           Avenue
         </p>
         <div className={`wrap ${s.heroBody}`}>
-          <p className="eyebrow">A Quartifex concept · available for collaboration</p>
-          <h1 id="hero-title" className={`display ${s.heroTitle}`}>
-            Every seat gets a first&#8209;class screen.{" "}
+          <p className="eyebrow" data-hero-after>
+            A Quartifex concept · available for collaboration
+          </p>
+          <h1 id="hero-title" className={`display ${s.heroTitle}`} data-hero-split>
+            Every seat gets a <span className="kw">first&#8209;class</span> screen.{" "}
             <span className="muted">And the screens work together.</span>
           </h1>
-          <div className={s.actions}>
+          <div className={s.actions} data-hero-after>
             <Btn href="#partner">Partner with us</Btn>
             <Btn href="#demo" variant="quiet">
               Try the demo
@@ -30,7 +32,7 @@ export function Hero() {
           </div>
         </div>
         <div className={`wrap ${s.heroFoot}`}>
-          <span className="label">00 · Night drive</span>
+          <span className="label">00 · Blue hour</span>
           <span className={s.scrollHint} aria-hidden="true">
             <i />
             Scroll to drive

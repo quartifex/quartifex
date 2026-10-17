@@ -1,12 +1,12 @@
 "use client";
-// The 3D stage: the demo car on a moonlit road. The road is a day photo (Poly Haven, CC0)
-// graded day-for-night and projected onto the ground, so the car sits on real asphalt; its
-// reflections come from the same light. Headlights throw two pools onto the road; the cabin
-// holds AVENUE's four screens, painted live from the demo's state.
+// The 3D stage: the demo car in a dusk-blue studio. A cyclorama gradient and a floor that fades
+// into it keep the car in clean space; its reflections come from a real sky (Poly Haven, CC0),
+// so the paint and glass read as they would outdoors. The cabin holds AVENUE's four screens,
+// painted live from the demo's state.
 // The camera follows the page: each chapter (camera.ts) has a start and an end pose, scroll
 // says where between them we are, and the camera eases there. The demo takes over the camera
 // for the seat views.
-import { ContactShadows, Environment } from "@react-three/drei";
+import { Environment } from "@react-three/drei";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { gsap } from "gsap";
 import { Suspense, useEffect, useMemo, useRef } from "react";
@@ -48,39 +48,56 @@ async function loadCar(url: string): Promise<THREE.Group> {
   return gltf.scene as unknown as THREE.Group;
 }
 
-type Finish = Partial<THREE.MeshPhysicalMaterialParameters>;
+type Finish = Partial<THREE.MeshPhysicalMaterialParameters> & { keepMap?: boolean };
 
-/** The finishes, by the model's material names. A deep midnight-blue paint with a clear coat. */
+/** The finishes, by the model's material names; anything not listed keeps its own textures. */
 const FINISH: Record<string, Finish> = {
-  PAINT: {
-    color: "#0c1424",
-    metalness: 0.62,
-    roughness: 0.3,
+  // Pearl white with a clear coat: holds the sky's highlights, so the car reads on dark pages.
+  body: {
+    color: "#e4e8ee",
+    metalness: 0.3,
+    roughness: 0.26,
     clearcoat: 1,
-    clearcoatRoughness: 0.04,
+    clearcoatRoughness: 0.03,
+    keepMap: false,
   },
-  GLASS: { color: "#07090c", metalness: 0.1, roughness: 0.03, transparent: true, opacity: 0.72 },
-  METAL_PIANO: { color: "#040506", metalness: 0.2, roughness: 0.1, clearcoat: 1 },
-  METAL_SATIN: { color: "#8d939c", metalness: 1, roughness: 0.32 },
-  METAL_CHROME: { color: "#d8dce2", metalness: 1, roughness: 0.08 },
-  METAL_GREY: { color: "#4a4e55", metalness: 0.9, roughness: 0.4 },
-  Gar_alu: { color: "#7d828a", metalness: 1, roughness: 0.3 },
-  SOLID_BLACK: { color: "#07080a", metalness: 0, roughness: 0.6 },
-  PLASTIC: { color: "#101216", metalness: 0, roughness: 0.72 },
-  GRILLE: { color: "#15171b", metalness: 0.6, roughness: 0.38 },
-  CARBON: { color: "#0e0f12", metalness: 0.3, roughness: 0.35, clearcoat: 0.8 },
-  RUBBER: { color: "#0a0a0b", metalness: 0, roughness: 0.92 },
-  TIRES: { color: "#0b0b0c", metalness: 0, roughness: 0.9 },
-  WHEELS_FACE: { color: "#23262c", metalness: 1, roughness: 0.28 },
-  WHEELS_METAL: { color: "#5d6168", metalness: 1, roughness: 0.3 },
-  WHEELS_BLACK: { color: "#09090a", metalness: 0.4, roughness: 0.5 },
-  LIGHTS: {
-    color: "#dfe8ff",
+  black_ext: {
+    color: "#0a0b0d",
+    metalness: 0.1,
+    roughness: 0.28,
+    clearcoat: 0.8,
+    clearcoatRoughness: 0.08,
+  },
+  black_ext_ao: {
+    color: "#0a0b0d",
+    metalness: 0.1,
+    roughness: 0.32,
+    clearcoat: 0.6,
+    clearcoatRoughness: 0.1,
+  },
+  carbono: { metalness: 0.2, roughness: 0.3, clearcoat: 1 },
+  glass: {
+    color: "#141a22",
     metalness: 0,
-    roughness: 0.15,
-    emissive: "#cfe0ff",
-    emissiveIntensity: 2.4,
+    roughness: 0.02,
+    transparent: true,
+    opacity: 0.62,
+    envMapIntensity: 1.4,
   },
+  caliper: { metalness: 0.4, roughness: 0.35 },
+  tires: { metalness: 0, roughness: 0.88 },
+  rim1: { metalness: 1, roughness: 0.28 },
+  rim2: { metalness: 1, roughness: 0.35 },
+  bmwlogo: { metalness: 0.7, roughness: 0.35 },
+  disc: { metalness: 0.9, roughness: 0.45 },
+  metallic_int: { metalness: 1, roughness: 0.3 },
+  black_m: { color: "#d8dbe0", metalness: 1, roughness: 0.18 },
+  // Door mirrors.
+  Material__44: { color: "#ffffff", metalness: 1, roughness: 0.02, keepMap: false },
+  Material__45: { color: "#ffffff", metalness: 1, roughness: 0.02, keepMap: false },
+  Material__46: { color: "#ffffff", metalness: 1, roughness: 0.02, keepMap: false },
+  Front: { roughness: 0.45 },
+  license: { roughness: 0.45 },
 };
 
 const smooth = (a: number, b: number, x: number) => {
@@ -104,19 +121,6 @@ function clock() {
 function buildScreens(): { group: THREE.Group; slots: ScreenSlot[] } {
   const group = new THREE.Group();
   group.name = "avenue-screens";
-  // The black glass the driver and co-pilot screens sit in: one bar from pillar to pillar.
-  const bar = new THREE.Mesh(
-    new THREE.PlaneGeometry(1.18, 0.19),
-    new THREE.MeshPhysicalMaterial({
-      color: "#030406",
-      roughness: 0.06,
-      metalness: 0.3,
-      clearcoat: 1,
-    }),
-  );
-  bar.position.set(-0.03, 1.005, -0.66);
-  bar.rotation.x = SCREENS.driver.tilt;
-  group.add(bar);
   const slots = SEAT_IDS.map((seat) => {
     const def = SCREENS[seat];
     const canvas = document.createElement("canvas");
@@ -160,12 +164,13 @@ function Car({ lite }: { lite: boolean }) {
   const lamps = useRef<THREE.MeshPhysicalMaterial | null>(null);
   const screens = useRef<ScreenSlot[]>([]);
   const cabinLight = useRef<THREE.PointLight>(null);
+  const cabinFill = useRef<THREE.PointLight>(null);
   const hazard = useRef<THREE.Group>(null);
   const target = useMemo(() => new THREE.Vector3(), []);
   const goalPos = useMemo(() => new THREE.Vector3(), []);
   const goalTarget = useMemo(() => new THREE.Vector3(), []);
   const goalFov = useRef(30);
-  const seatBlend = useRef({ w: 0, pose: seatPose("rearLeft") as Pose });
+  const seatBlend = useRef({ w: 0, pose: seatPose("driver") as Pose });
   const drewFirst = useRef(false);
 
   // Load the car, dress it, add the screens.
@@ -179,31 +184,39 @@ function Car({ lite }: { lite: boolean }) {
         car.traverse((o) => {
           const mesh = o as THREE.Mesh;
           if (!mesh.isMesh) return;
-          mesh.castShadow = false;
           const old = mesh.material as THREE.MeshStandardMaterial;
           const name = old.name;
           let m = seen.get(name);
           if (!m) {
-            const finish = FINISH[name];
+            const { keepMap = true, ...finish } = FINISH[name] ?? {};
             m = new THREE.MeshPhysicalMaterial({
               name,
-              map: old.map ?? null,
-              // The interior atlas reads too light at night: knock it back to espresso and graphite.
-              color: old.map ? "#5e5a57" : "#1a1c20",
-              roughness: old.map ? 0.66 : 0.6,
-              metalness: 0,
-              side: name === "GLASS" ? THREE.DoubleSide : THREE.FrontSide,
-              ...(finish ?? {}),
+              map: keepMap ? (old.map ?? null) : null,
+              normalMap: old.normalMap ?? null,
+              color: old.color,
+              roughness: old.roughness,
+              metalness: old.metalness,
+              transparent: old.transparent,
+              alphaTest: old.alphaTest,
+              side: name === "glass" ? THREE.DoubleSide : THREE.FrontSide,
+              ...finish,
             });
-            if (name === "GLASS") {
+            if (name === "glass") {
               m.depthWrite = false;
               glass.current.push(m);
             }
-            if (name === "LIGHTS") lamps.current = m;
+            if (name === "lights") {
+              // The lamp atlas glows a little: white for the headlamps, red for the tails.
+              m.emissiveMap = m.map;
+              m.emissive.set("#ffffff");
+              m.emissiveIntensity = 0.35;
+              lamps.current = m;
+            }
             seen.set(name, m);
           }
           mesh.material = m;
-          if (name === "GLASS") mesh.renderOrder = 2;
+          if (name === "glass") mesh.renderOrder = 2;
+          mesh.castShadow = !/glass/.test(name);
         });
         const built = buildScreens();
         car.add(built.group);
@@ -319,11 +332,14 @@ function Car({ lite }: { lite: boolean }) {
     // Inside: glass turns see-through so the road shows; the cabin light comes up.
     const inside = chapter.inside || w > 0.5 ? 1 : 0;
     for (const g of glass.current)
-      g.opacity += ((inside ? 0.28 : 0.72) - g.opacity) * Math.min(1, dt * 4);
+      g.opacity += ((inside ? 0.22 : 0.62) - g.opacity) * Math.min(1, dt * 4);
+    if (cabinFill.current)
+      cabinFill.current.intensity +=
+        ((inside ? 0.9 : 0) - cabinFill.current.intensity) * Math.min(1, dt * 3);
     if (cabinLight.current) {
       const ambient = demo.get().system.ambient;
       cabinLight.current.intensity +=
-        ((inside ? 0.18 + ambient * 0.55 : 0) - cabinLight.current.intensity) * Math.min(1, dt * 3);
+        ((inside ? 1.1 + ambient * 1.6 : 0) - cabinLight.current.intensity) * Math.min(1, dt * 3);
     }
     // Screens: wake with the story, follow each seat's brightness.
     const system = demo.get().system;
@@ -380,62 +396,51 @@ function Car({ lite }: { lite: boolean }) {
 
   return (
     <>
-      {/* Moonlight from high behind, cool; a soft fill from the other side. */}
-      <directionalLight position={[6, 9, 8]} intensity={0.9} color="#bcd0ff" />
-      <directionalLight position={[-8, 4, -6]} intensity={0.25} color="#8fa7d8" />
-      {/* Headlights: two pools on the road ahead of the nose. */}
-      <spotLight
-        position={[-0.62, 0.7, -2.45]}
-        target-position={[-0.9, 0, -9]}
-        angle={0.42}
-        penumbra={0.9}
-        intensity={60}
-        distance={18}
-        decay={1.6}
-        color="#e6eeff"
-      />
-      <spotLight
-        position={[0.62, 0.7, -2.45]}
-        target-position={[0.9, 0, -9]}
-        angle={0.42}
-        penumbra={0.9}
-        intensity={60}
-        distance={18}
-        decay={1.6}
-        color="#e6eeff"
-      />
-      {/* Tail-lights glow on the road behind. */}
-      <pointLight
-        position={[0, 0.8, 2.75]}
+      {/* Key: high and soft from the front left, as a photographer lights a car at dusk;
+          a cool rim behind draws the roofline; a low fill lifts the sills. */}
+      <directionalLight
+        position={[-6, 8, -5]}
         intensity={2.2}
-        distance={3.5}
-        decay={2}
-        color="#ff2a1a"
+        color="#fff6ea"
+        castShadow
+        shadow-mapSize={[2048, 2048]}
+        shadow-camera-left={-4.5}
+        shadow-camera-right={4.5}
+        shadow-camera-top={4.5}
+        shadow-camera-bottom={-4.5}
+        shadow-camera-near={1}
+        shadow-camera-far={24}
+        shadow-bias={-0.0004}
+        shadow-normalBias={0.02}
+        shadow-radius={6}
       />
+      <directionalLight position={[6, 5, 7]} intensity={1.2} color="#a9c6ff" />
+      <directionalLight position={[5, 1.2, -6]} intensity={0.5} color="#c8d6ff" />
+      <hemisphereLight args={["#b9c9ea", "#1c2433", 0.45]} />
       <group ref={hazard}>
         <pointLight
-          position={[-0.8, 0.75, -2.5]}
+          position={[-0.76, 0.95, -2.42]}
           intensity={0}
           distance={3}
           decay={2}
           color="#ffa040"
         />
         <pointLight
-          position={[0.8, 0.75, -2.5]}
+          position={[0.76, 0.95, -2.42]}
           intensity={0}
           distance={3}
           decay={2}
           color="#ffa040"
         />
         <pointLight
-          position={[-0.75, 0.85, 2.5]}
+          position={[-0.8, 1.0, 2.4]}
           intensity={0}
           distance={3}
           decay={2}
           color="#ffa040"
         />
         <pointLight
-          position={[0.75, 0.85, 2.5]}
+          position={[0.8, 1.0, 2.4]}
           intensity={0}
           distance={3}
           decay={2}
@@ -445,21 +450,103 @@ function Car({ lite }: { lite: boolean }) {
       {/* The cabin's ambient light, warm, from the roof lining. */}
       <pointLight
         ref={cabinLight}
-        position={[0, 1.25, 0.4]}
+        position={[0, 1.48, 0.1]}
         intensity={0}
-        distance={2.2}
+        distance={3.4}
         decay={2}
         color="#ffe2c8"
       />
-      <ContactShadows
-        position={[0, 0.005, 0]}
-        scale={[3.2, 6.4]}
-        resolution={512}
-        blur={2.4}
-        opacity={0.85}
-        far={1.4}
-        frames={1}
+      {/* A cool fill over the rear bench, so the seats and the dash read from the back. */}
+      <pointLight
+        ref={cabinFill}
+        position={[0, 1.42, 0.95]}
+        intensity={0}
+        distance={3}
+        decay={1.6}
+        color="#dfe8ff"
       />
+    </>
+  );
+}
+
+/** The studio: a dusk-blue cyclorama (a gradient from deep night at the top to a lit horizon)
+ *  and a floor that fades into it, so the car stands in clean space like a showroom shot. */
+function Studio() {
+  const scene = useThree((s) => s.scene);
+  const floor = useMemo(() => {
+    const c = document.createElement("canvas");
+    c.width = c.height = 256;
+    const g = c.getContext("2d");
+    if (g) {
+      const r = g.createRadialGradient(128, 128, 0, 128, 128, 128);
+      r.addColorStop(0, "#fff");
+      r.addColorStop(0.38, "#fff");
+      r.addColorStop(1, "#000");
+      g.fillStyle = r;
+      g.fillRect(0, 0, 256, 256);
+    }
+    return new THREE.CanvasTexture(c);
+  }, []);
+  useEffect(() => {
+    const c = document.createElement("canvas");
+    c.width = 4;
+    c.height = 512;
+    const g = c.getContext("2d");
+    if (g) {
+      const l = g.createLinearGradient(0, 0, 0, 512);
+      l.addColorStop(0, "#0a0e17");
+      l.addColorStop(0.45, "#18233a");
+      l.addColorStop(0.62, "#2e3c58");
+      l.addColorStop(1, "#2e3c58");
+      g.fillStyle = l;
+      g.fillRect(0, 0, 4, 512);
+    }
+    const t = new THREE.CanvasTexture(c);
+    t.colorSpace = THREE.SRGBColorSpace;
+    scene.background = t;
+    return () => {
+      scene.background = null;
+      t.dispose();
+    };
+  }, [scene]);
+  // A soft contact shadow under the car, drawn once: darkest under the sills, fading out.
+  const blob = useMemo(() => {
+    const c = document.createElement("canvas");
+    c.width = 128;
+    c.height = 256;
+    const g = c.getContext("2d");
+    if (g) {
+      g.translate(64, 128);
+      g.scale(1, 2.1);
+      const r = g.createRadialGradient(0, 0, 0, 0, 0, 62);
+      r.addColorStop(0, "rgba(2,4,9,0.95)");
+      r.addColorStop(0.55, "rgba(2,4,9,0.7)");
+      r.addColorStop(1, "rgba(2,4,9,0)");
+      g.fillStyle = r;
+      g.fillRect(-64, -64, 128, 128);
+    }
+    return new THREE.CanvasTexture(c);
+  }, []);
+  return (
+    <>
+      <mesh rotation-x={-Math.PI / 2} position-y={0.003} renderOrder={1}>
+        <planeGeometry args={[2.9, 5.9]} />
+        <meshBasicMaterial map={blob} transparent depthWrite={false} toneMapped={false} />
+      </mesh>
+      <mesh rotation-x={-Math.PI / 2} position-y={0.002} receiveShadow renderOrder={0}>
+        <planeGeometry args={[18, 18]} />
+        <shadowMaterial transparent opacity={0.42} color="#03050b" depthWrite={false} />
+      </mesh>
+      <mesh rotation-x={-Math.PI / 2} position-y={-0.01} renderOrder={-1}>
+        <circleGeometry args={[16, 96]} />
+        <meshBasicMaterial
+          color="#2e3c58"
+          alphaMap={floor}
+          transparent
+          depthWrite={false}
+          toneMapped={false}
+        />
+      </mesh>
     </>
   );
 }
@@ -468,26 +555,26 @@ function Car({ lite }: { lite: boolean }) {
 export default function Scene({ lite, active }: { lite: boolean; active: boolean }) {
   return (
     <Canvas
+      shadows
       frameloop={active ? "always" : "never"}
       dpr={[1, lite ? 1.5 : 1.75]}
-      camera={{ fov: 30, near: 0.03, far: 200, position: [-3.9, 0.62, -5.6] }}
+      camera={{ fov: 28, near: 0.03, far: 200, position: [-5.6, 1.15, -5.4] }}
       gl={{ antialias: true, powerPreference: "high-performance", alpha: false }}
       onCreated={({ gl }) => {
         gl.toneMapping = THREE.ACESFilmicToneMapping;
-        gl.toneMappingExposure = 1.25;
+        gl.toneMappingExposure = 1;
         stage.set({ rung: "3d" });
       }}
       aria-hidden="true"
     >
       <Suspense fallback={null}>
         <Environment
-          files="/media/road-night.hdr"
-          background
-          ground={{ height: 1.6, radius: 42, scale: 90 }}
-          environmentIntensity={1.4}
-          backgroundIntensity={1.0}
+          files="/media/sky.hdr"
+          environmentIntensity={1}
+          environmentRotation={[0, 1.2, 0]}
         />
       </Suspense>
+      <Studio />
       <Car lite={lite} />
     </Canvas>
   );

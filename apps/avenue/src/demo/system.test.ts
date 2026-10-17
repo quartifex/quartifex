@@ -5,8 +5,16 @@ const run = (state: System, ...actions: Parameters<typeof reduce>[1][]) =>
   actions.reduce(reduce, state);
 
 describe("driver lockout", () => {
+  it("starts moving, so the driver's screen opens in glance mode", () => {
+    expect(initialSystem().moving).toBe(true);
+  });
+
   it("pauses video on the driver's screen when the car moves, and says why", () => {
-    let s = run(initialSystem(), { type: "play", seat: "driver", id: "northbound" });
+    let s = run(
+      initialSystem(),
+      { type: "moving", on: false },
+      { type: "play", seat: "driver", id: "northbound" },
+    );
     expect(s.seats.driver.playing).toBe(true);
     s = run(s, { type: "moving", on: true });
     expect(s.seats.driver.playing).toBe(false);
@@ -33,6 +41,26 @@ describe("driver lockout", () => {
     );
     expect(s.seats.driver.nowPlaying).toBe("field-notes");
     expect(s.seats.driver.playing).toBe(true);
+  });
+});
+
+describe("co-pilot privacy shield", () => {
+  it("lets the co-pilot watch video while moving only with the shield on", () => {
+    const film = MEDIA_BY_ID.northbound;
+    let s = initialSystem();
+    expect(film && canPlay(s, "copilot", film)).toBe(true);
+    s = run(s, { type: "play", seat: "copilot", id: "northbound" }, { type: "shield", on: false });
+    expect(s.seats.copilot.playing).toBe(false);
+    expect(film && canPlay(s, "copilot", film)).toBe(false);
+  });
+});
+
+describe("cab mode", () => {
+  it("handles a pull-over request and its cancellation", () => {
+    let s = run(initialSystem(), { type: "fleet", on: true }, { type: "pull-over" });
+    expect(s.ride.stop).toBe("requested");
+    s = run(s, { type: "pull-over" });
+    expect(s.ride.stop).toBe("none");
   });
 });
 

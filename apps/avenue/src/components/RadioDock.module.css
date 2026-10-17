@@ -1,0 +1,157 @@
+/* AVENUE Radio's dock: a glass bar at the bottom left, in the cabin's language. */
+.dock {
+  position: fixed;
+  left: max(1rem, calc(50vw - 720px + var(--margin)));
+  bottom: 1rem;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  max-width: calc(100vw - 2rem);
+  padding: 0.4rem 0.5rem 0.4rem 0.4rem;
+  border: 1px solid rgb(255 255 255 / 0.14);
+  border-radius: 999px;
+  background: rgb(12 15 22 / 0.94);
+  color: #eef1f6;
+  box-shadow:
+    0 18px 50px -20px rgb(0 0 0 / 0.7),
+    inset 0 1px 0 rgb(255 255 255 / 0.06);
+  backdrop-filter: blur(18px) saturate(1.4);
+  -webkit-backdrop-filter: blur(18px) saturate(1.4);
+  opacity: 0;
+  translate: 0 24px;
+  pointer-events: none;
+  transition:
+    opacity 600ms var(--ease-out) 400ms,
+    translate 800ms var(--ease-out) 400ms;
+}
+
+.dock[data-shown] {
+  opacity: 1;
+  translate: 0 0;
+  pointer-events: auto;
+}
+
+.dock button {
+  display: inline-grid;
+  place-items: center;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+  transition:
+    scale 160ms var(--ease-out),
+    background-color 160ms;
+}
+
+.dock button:active {
+  scale: 0.94;
+}
+
+.dock button:focus-visible {
+  outline: 2px solid #9cc6ff;
+  outline-offset: 2px;
+}
+
+.dock svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.play {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #2d63ee;
+}
+
+.play svg {
+  fill: currentColor;
+}
+
+.meta {
+  display: grid;
+  min-width: 0;
+  line-height: 1.2;
+}
+
+.kicker {
+  font-family: var(--font-narrow), sans-serif;
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #b3bccb;
+  white-space: nowrap;
+}
+
+.title {
+  max-width: 14rem;
+  overflow: hidden;
+  font-size: 0.8125rem;
+  font-weight: 560;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vis {
+  width: 84px;
+  height: 28px;
+}
+
+.stations {
+  display: flex;
+  gap: 2px;
+  padding: 2px;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.06);
+}
+
+.station {
+  min-height: 32px;
+  padding: 0 0.75rem;
+  border-radius: 999px;
+  background: transparent;
+  font-family: var(--font-narrow), sans-serif;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #d0d6e0 !important;
+}
+
+.station[aria-pressed="true"] {
+  background: #eef1f6;
+  color: #06070a !important;
+}
+
+.mute {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 0.06);
+}
+
+@media (max-width: 640px) {
+  .vis,
+  .meta .kicker {
+    display: none;
+  }
+  .title {
+    max-width: 7rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dock {
+    transition-duration: 0.01ms;
+  }
+}
+
+.visWrap {
+  display: inline-flex;
+}

@@ -273,7 +273,7 @@ is on). Not yet on the production domain.
 
 | Item | State | What is on the page | Tests | Gate |
 | --- | --- | --- | --- | --- |
-| `avenue` (S20) | in progress (preview live) | Night hero on a moonlit road (the demo car, day-for-night HDRI, headlights, letterbox), the problem beat, the way into the cabin, six scrollytelling feature chapters (every seat, driver lockout at the 2 s glance, send to the back, climate per seat, the road with AR places and ETA, SOS from any seat), the live demo (four seats, Parked / Moving, share, SOS), research in the Day theme (process, the 25 Volere requirements, the A/B ratings as recorded), MDX docs, the partner form, provenance | 14 unit, 12 Playwright | LCP 1.33 s and CLS 0 on the throttled-phone gate; axe 0 violations in 5 states; Lighthouse mobile: accessibility, best practices and SEO 100, performance 83 (simulated LCP 3.0 to 3.5 s) |
+| `avenue` (S20) | in progress (preview live) | Preloader with an enter-with-sound gate; blue-hour studio hero with the new demo car (pearl white, real-sky reflections, key-light shadows); the problem beat; into the cabin; six scrollytelling chapters; the live demo, moving by default (driver drive view: speed, ADAS, turn-by-turn on a Google Maps capture of Mumbai; co-pilot navigator with privacy shield; rear lounge; cab mode for the rider: trip, pull over, rider support, quiet ride; AR view; climate with seat heat and ventilation; AVENUE Radio, EDM and lo-fi generated live); For fleets; The platform (Android Automotive OS 15 and reference hardware, cited); research; docs; partner form; provenance | 17 unit, 14 Playwright | CLS 0.015; axe 0 violations in 7 states; Lighthouse mobile: accessibility, best practices and SEO 100, performance 76 (simulated LCP 3.5 s) |
 
 How it was rebuilt (17 Oct 2026, Nitesh's instructions): a new brand (the AVENUE design system:
 the lane mark, night-first palette, Archivo, a visible dashed grid, a Fluent-style cabin UI),
@@ -284,20 +284,25 @@ site until it is live: Lenis, GSAP ScrollTrigger and React Three Fiber directly.
 | --- | --- |
 | typecheck (app) | pass |
 | lint (app) | 0 errors; warnings are `!important` in reduced-motion overrides and selector order in the demo stylesheet |
-| unit tests (app) | 3 files, 14 tests pass (tokens contrast in both themes, demo reducer, partner endpoint) |
+| unit tests (app) | 3 files, 17 tests pass (tokens contrast in both themes, demo reducer incl. moving default, privacy shield and cab mode, partner endpoint) |
 | `next build` | pass |
-| Playwright (12) | all pass, including the launch gate: LCP 1332 ms, CLS 0.000 (Pixel 7 size, 4x CPU, Lighthouse mobile network) |
-| axe (WCAG 2.0 to 2.2 A and AA) | 0 violations in all five states (as loaded, driver moving, share waiting, SOS, requirement open) |
-| Lighthouse (default mobile, local) | accessibility 100, best practices 100, SEO 100, performance 83; LCP 3.5 s simulated, CLS 0.014, TBT 291 ms |
+| Playwright (14) | all pass, including the launch gate (Pixel 7 size, 4x CPU, Lighthouse mobile network), cab mode and the platform facts |
+| axe (WCAG 2.0 to 2.2 A and AA) | 0 violations in all seven states (the gate, entered, driver moving, share waiting, cab mode, SOS, requirement open) |
+| Lighthouse (default mobile, local) | accessibility 100, best practices 100, SEO 100, performance 76; LCP 3.5 s simulated, CLS 0.015, TBT 530 ms |
 | heft, contactsheet | not run: Nitesh asked for no lab tools until the site is live |
 
 Deviations and known gaps:
 
 - Lighthouse's simulated mobile LCP (3.0 to 3.5 s) is over 2.5 s; the measured throttled-phone
   gate passes at 1.3 s. The simulation charges the hero for the 3D code requested early.
-- The cabin's interior comes from the supplied model (a 2012-era dashboard); AVENUE's screens are
-  added in code across the dash and in the front seat backs.
-- The media files (car models, HDRIs, about 4.2 MB) are committed under
+- The demo car is now the BMW X6 M model Nitesh supplied (18 Oct 2026): desktop 4.4 MB, mobile
+  3.7 MB (from 32 MB; the paint and glass keep their full detail because reflections show every
+  simplification dent). That is about three times the old car: the preloader shows the bytes,
+  and a lighter build (KTX2 textures, quantised UVs) is the next step if the weight matters.
+- Lighthouse performance fell from 83 to 76 with the heavier car and the sky reflections.
+- The AR view's camera frame is a country road from Poly Haven, not Mumbai; swap in a Street View
+  capture of the route when one is supplied.
+- The media files (car models, sky, maps, about 10 MB) are committed under
   `apps/avenue/public/media/` with a `.gitignore` exception, against the rule that binaries live
   on Cloudinary, so the site deploys from git. Move them when a media host is set up.
 - The old generated folder `apps/avenue/public/sequences/cabin` (git-ignored build output) and the
@@ -426,6 +431,8 @@ Things only Nitesh can supply or decide. None of them blocks the library work.
 | 14 | **AVENUE: partner form.** The contact inbox and a Resend API key (`RESEND_API_KEY`, `PARTNER_TO`, `PARTNER_FROM` in the Vercel project). Until then the form answers 503 with a plain message. | Partner enquiries |
 | 15 | **AVENUE: facts still marked "To be confirmed".** The physical-effort net difference (-0.75 or -1.15), the participant count and how the A/B test was run, the project year and label, the Figma hi-fi link if there is one beyond the wireframes. | The research section |
 | 16 | **AVENUE: the final logo.** A lane mark was designed for this pass (`apps/avenue/public/brand/`, generated by `scripts/brand.py`); replace it if you have your own. | Brand |
+| 18 | **AVENUE: the demo car's terms.** The BMW X6 M model's Sketchfab page lists CC BY 4.0 but also says the uploader's models are "provided solely for educational, research, and reference purposes" and that commercial use is prohibited. A partner-facing product page may count as commercial use. Decide whether to ask the uploader (vecarz) for permission, or replace the model with one whose licence is clear, before going live. | AVENUE going live |
+| 19 | **AVENUE: Street View for the AR view (optional).** A screenshot of Google Street View on the demo route (Coastal Road or Marine Drive), to replace the country-road frame in the AR view. | AR view realism |
 | 17 | **AVENUE: preview access.** Previews are behind Vercel Authentication; turn it off for the project (Settings, Deployment Protection) to share preview links outside the team. | Sharing previews |
 
 ## Open questions

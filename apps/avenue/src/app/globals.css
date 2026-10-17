@@ -212,6 +212,7 @@ textarea {
 }
 
 .display {
+  font-stretch: 108%;
   font-size: var(--t-hero);
   line-height: var(--lh-hero);
   letter-spacing: var(--tr-hero);
@@ -219,6 +220,7 @@ textarea {
 }
 
 .h1 {
+  font-stretch: 106%;
   font-size: var(--t-h1);
   line-height: var(--lh-h1);
   letter-spacing: var(--tr-h1);
@@ -279,7 +281,47 @@ textarea {
 }
 
 .split-line {
-  padding-bottom: 0.06em;
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
+}
+
+.split-word {
+  will-change: transform, filter;
+}
+
+/* A keyword inside a headline: wide, upper-case and lit, ice to lane blue. */
+.kw {
+  font-stretch: 125%;
+  font-weight: 450;
+  font-size: 0.84em;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  background: linear-gradient(100deg, var(--c-text) 0%, var(--c-ice) 45%, var(--c-accent) 100%);
+  background-size: 200% 100%;
+  background-position: 100% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: kw 6s var(--ease-out) 1.2s both;
+}
+
+/* SplitText wraps words in the keyword: carry the light into each word. */
+.kw .split-word {
+  background: inherit;
+  background-size: inherit;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+[data-theme="paper"] .kw {
+  background-image: linear-gradient(100deg, var(--c-text) 0%, var(--c-accent) 70%, #0b1f66 100%);
+}
+
+@keyframes kw {
+  from {
+    background-position: 0% 0;
+  }
 }
 
 /* ---------- Buttons: a label block and an arrow tile, joined by a 2px seam ---------- */

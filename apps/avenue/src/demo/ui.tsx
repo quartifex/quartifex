@@ -3,7 +3,7 @@
 // to 0.96 with the tokens' press easing), says what it is to a screen reader, and works from
 // the keyboard. Sound, when the visitor has turned it on, comes from here.
 import { type KeyboardEvent, type ReactNode, useId, useRef } from "react";
-import s from "./demo.module.css";
+import s from "./cabin.module.css";
 import { Icon, type IconName } from "./Icon";
 import { type Cue, play } from "./sound";
 import { demo } from "./store";
@@ -37,6 +37,7 @@ export function Press({
   "aria-haspopup"?: "dialog";
   "aria-controls"?: string;
   id?: string;
+  [data: `data-${string}`]: string | undefined;
 }) {
   return (
     <button
@@ -265,7 +266,7 @@ export function Card({
     <section className={`${s.card} ${className ?? ""}`} aria-label={title}>
       {title || action ? (
         <header className={s.cardHead}>
-          {title ? <h4 className={s.cardTitle}>{title}</h4> : <span />}
+          {title ? <p className={s.cardTitle}>{title}</p> : <span />}
           {action}
         </header>
       ) : null}
@@ -279,16 +280,19 @@ export function Art({
   hue,
   seed,
   className,
+  video,
 }: {
   hue: number;
   seed: number;
   className?: string | undefined;
+  video?: boolean;
 }) {
   const r = (n: number) => ((Math.sin(seed * 97.13 + n * 13.7) + 1) / 2) * 100;
   return (
     <span
       className={`${s.art} ${className ?? ""}`}
       aria-hidden="true"
+      data-video={video ? "" : undefined}
       style={
         {
           "--h": hue,

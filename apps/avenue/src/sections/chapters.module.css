@@ -28,7 +28,7 @@
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background: linear-gradient(90deg, rgb(4 5 8 / 0.78) 0%, rgb(4 5 8 / 0.35) 38%, transparent 62%);
+  background: linear-gradient(90deg, rgb(4 5 8 / 0.62) 0%, rgb(4 5 8 / 0.22) 36%, transparent 58%);
 }
 
 /* ---------- 00 Hero ---------- */
@@ -39,8 +39,8 @@
 
 .hero .sticky::before {
   background:
-    linear-gradient(180deg, rgb(4 5 8 / 0.55) 0%, transparent 28%),
-    linear-gradient(0deg, rgb(4 5 8 / 0.82) 0%, rgb(4 5 8 / 0.25) 34%, transparent 55%);
+    linear-gradient(180deg, rgb(4 5 8 / 0.4) 0%, transparent 22%),
+    linear-gradient(0deg, rgb(4 5 8 / 0.7) 0%, rgb(4 5 8 / 0.15) 32%, transparent 50%);
 }
 
 .heroMega {
@@ -210,11 +210,11 @@
 /* ---------- Feature chapters ---------- */
 
 .feature .sticky::before {
-  background: linear-gradient(90deg, rgb(4 5 8 / 0.82) 0%, rgb(4 5 8 / 0.4) 36%, transparent 58%);
+  background: linear-gradient(90deg, rgb(4 5 8 / 0.7) 0%, rgb(4 5 8 / 0.28) 34%, transparent 54%);
 }
 
 .feature[data-side="right"] .sticky::before {
-  background: linear-gradient(270deg, rgb(4 5 8 / 0.82) 0%, rgb(4 5 8 / 0.4) 36%, transparent 58%);
+  background: linear-gradient(270deg, rgb(4 5 8 / 0.7) 0%, rgb(4 5 8 / 0.28) 34%, transparent 54%);
 }
 
 /* The oversized word behind the scene, outlined, drifting with the chapter. */

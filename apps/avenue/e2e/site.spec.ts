@@ -3,19 +3,25 @@ import { expect, type Page, test } from "@playwright/test";
 // Behaviour tests against the production build. The stage is forced to the poster rung
 // (?rung=poster) unless a test is about the 3D, so runs do not depend on a GPU.
 
+/** Load the page and pass the preloader's gate quietly. */
+async function open(page: Page, query = "?rung=poster") {
+  await page.goto(`/${query}`);
+  await page.getByRole("button", { name: "Enter quietly" }).click();
+}
+
 async function toDemo(page: Page) {
-  await page.goto("/?rung=poster");
+  await open(page);
   await page.locator("#demo").scrollIntoViewIfNeeded();
   await expect(page.locator("#demo [class*='os']").first()).toBeVisible();
 }
 
 test("labels itself honestly, with provenance and no invented proof", async ({ page }) => {
-  await page.goto("/?rung=poster");
+  await open(page);
   await expect(
     page.getByText("AVENUE is a concept system by Quartifex, available for collaboration."),
   ).toBeVisible();
   await expect(page.getByText("A Quartifex product.")).toBeVisible();
-  for (const item of ["Car model", "Night road", "Interface sounds", "Type"]) {
+  for (const item of ["Car model", "Sky", "Maps", "Music", "Type"]) {
     await expect(page.locator("footer dt", { hasText: item })).toBeVisible();
   }
   await expect(
@@ -38,7 +44,7 @@ test("labels itself honestly, with provenance and no invented proof", async ({ p
 test("publishes the A/B ratings as recorded and withholds the unresolved net figure", async ({
   page,
 }) => {
-  await page.goto("/?rung=poster");
+  await open(page);
   const row = page.locator("#testing tr", { hasText: "Physical effort" });
   await expect(row).toContainText("3");
   await expect(row).toContainText("2.25");
@@ -52,9 +58,11 @@ test("the driver's screen locks video and settings while moving, and says why", 
   page,
 }) => {
   await toDemo(page);
+  // The car is moving by default: the driver's screen opens in glance mode.
   await page.getByRole("radio", { name: /^Driver/ }).click();
-  await page.getByRole("radio", { name: "Moving" }).click();
   await expect(page.getByText("Moving: glance mode")).toBeVisible();
+  await page.getByRole("radio", { name: "Parked" }).click();
+  await page.getByRole("radio", { name: "Moving" }).click();
   await expect(page.getByRole("status").filter({ hasText: /Moving/ })).toHaveCount(1);
   const settings = page.locator("nav[aria-label='Driver screen'] button", { hasText: "Settings" });
   await expect(settings).toHaveAttribute("aria-disabled", "true");
@@ -74,9 +82,10 @@ test("the driver's screen locks video and settings while moving, and says why", 
 
 test("content goes to another screen only when its passenger accepts", async ({ page }) => {
   await toDemo(page);
+  await page.getByRole("radio", { name: /^Rear left/ }).click();
   await page
-    .locator("#demo footer")
-    .getByRole("button", { name: /Send to another screen/ })
+    .locator("#demo main")
+    .getByRole("button", { name: /Send to another screen: The Cartographers/ })
     .first()
     .click();
   await page.locator("#demo").getByRole("button", { name: "Rear right" }).first().click();
@@ -99,10 +108,29 @@ test("SOS counts down with a cancel, from any screen", async ({ page }) => {
   await expect(sos).toHaveCount(0);
 });
 
+test("cab mode turns the rear screens into the rider's screen", async ({ page }) => {
+  await toDemo(page);
+  await page.getByRole("radio", { name: /^Rear left/ }).click();
+  await page.getByRole("radio", { name: "Cab" }).click();
+  await page.locator("nav[aria-label='Rear left screen'] button", { hasText: "Home" }).click();
+  const screen = page.locator("#demo main").first();
+  await expect(screen).toContainText("Welcome aboard");
+  await screen.getByRole("button", { name: /Pull over/ }).click();
+  await expect(screen).toContainText("Pulling over at the next safe place");
+});
+
+test("the platform section states the target OS and hardware, as a reference", async ({ page }) => {
+  await open(page);
+  const platform = page.locator("#platform");
+  await expect(platform).toContainText("Android Automotive OS 15");
+  await expect(platform).toContainText("Snapdragon SA8295P class");
+  await expect(platform).toContainText("Not a shipping product.");
+});
+
 test("the seat switcher and option groups work from the keyboard", async ({ page }) => {
   await toDemo(page);
-  await page.getByRole("radio", { name: /^Rear left/ }).focus();
-  await page.keyboard.press("ArrowLeft");
+  await page.getByRole("radio", { name: /^Driver/ }).focus();
+  await page.keyboard.press("ArrowRight");
   await expect(page.getByRole("radio", { name: /^Co-pilot/ })).toHaveAttribute(
     "aria-checked",
     "true",
@@ -112,7 +140,7 @@ test("the seat switcher and option groups work from the keyboard", async ({ page
 });
 
 test("the requirement explorer filters by priority and opens a card", async ({ page }) => {
-  await page.goto("/?rung=poster");
+  await open(page);
   await page.locator("#requirements").scrollIntoViewIfNeeded();
   await expect(page.getByText("Showing 25 of 25")).toBeVisible();
   await page.locator("#requirements label", { hasText: "Must have" }).click();
@@ -124,7 +152,7 @@ test("the requirement explorer filters by priority and opens a card", async ({ p
 });
 
 test("the docs are one page with a working sub-navigation and live tokens", async ({ page }) => {
-  await page.goto("/?rung=poster");
+  await open(page);
   await page
     .locator("nav[aria-label='Documentation'] a", { hasText: "Safety and distraction" })
     .click();
@@ -140,7 +168,7 @@ test("the partner form validates, and its endpoint drops bots and refuses withou
   page,
   request,
 }) => {
-  await page.goto("/?rung=poster");
+  await open(page);
   await page.locator("#partner").scrollIntoViewIfNeeded();
   await page.locator("#partner").getByRole("button", { name: "Send" }).click();
   await expect(page.locator("#partner").getByText("Enter your name.")).toBeVisible();
@@ -163,6 +191,7 @@ test("under reduced motion nothing pins and the demo still works", async ({ brow
   const context = await browser.newContext({ reducedMotion: "reduce" });
   const page = await context.newPage();
   await page.goto("/?rung=poster");
+  await page.getByRole("button", { name: "Enter quietly" }).click();
   await expect(page.locator(".pin-spacer")).toHaveCount(0);
   await page.locator("#demo").scrollIntoViewIfNeeded();
   await page.getByRole("radio", { name: /^Driver/ }).click();

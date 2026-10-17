@@ -1,7 +1,7 @@
 "use client";
 // The core components, live: the same code the demo uses, in the cabin theme.
 import { useState } from "react";
-import kit from "@/demo/demo.module.css";
+import kit from "@/demo/cabin.module.css";
 import { Icon } from "@/demo/Icon";
 import { Card, IconButton, Press, Range, Segmented, Switch } from "@/demo/ui";
 import s from "./docs.module.css";

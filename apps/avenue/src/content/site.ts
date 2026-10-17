@@ -25,15 +25,17 @@ export const CREDITS: ReadonlyArray<{ item: string; credit: string }> = [
   {
     item: "Car model",
     credit:
-      "“mersedes cls63” by DZST ALG STREET on Sketchfab, CC BY 4.0. Used for demonstration only: maker emblems, badges and plate removed, textures retouched, rescaled and compressed by Quartifex. AVENUE is not affiliated with any carmaker.",
+      "“BMW X6M Competition Assetto” by vecarz on Sketchfab, CC BY 4.0. Used for demonstration only: every maker's badge, roundel and lettering removed, tyre lettering and plates replaced, screens blanked, simplified and compressed by Quartifex. AVENUE is not affiliated with any carmaker.",
   },
   {
-    item: "Night road",
-    credit: "“Rural Asphalt Road” by Poly Haven, CC0; graded day-for-night by Quartifex.",
+    item: "Sky",
+    credit:
+      "“Kloofendal 48d Partly Cloudy (Pure Sky)” by Poly Haven, CC0; reduced for reflections.",
   },
   {
-    item: "Reflections",
-    credit: "“Qwantani Moonrise” by Poly Haven, CC0.",
+    item: "Maps",
+    credit:
+      "Navigation views use a Google Maps capture of Mumbai (Map data ©2026 Google), shown as a concept illustration; the route is drawn by AVENUE. The AR view uses a road frame from Poly Haven (CC0).",
   },
   {
     item: "Cabin screens",
@@ -43,6 +45,11 @@ export const CREDITS: ReadonlyArray<{ item: string; credit: string }> = [
   {
     item: "Interface sounds",
     credit: "Synthesised in the browser with the Web Audio API; off by default. No sound files.",
+  },
+  {
+    item: "Music",
+    credit:
+      "AVENUE Radio (EDM and lo-fi) is generated live in the browser with the Web Audio API: no recordings, no samples, no licensed tracks.",
   },
   {
     item: "Type",

@@ -1,14 +1,13 @@
 "use client";
 // Interface sounds, synthesised with the Web Audio API (no files): a soft tick on press, a
 // rising pair for confirmations, a low pulse for the SOS countdown. Off unless the visitor
-// turns them on; the context is created on that first, user-initiated toggle.
+// turns sound on; the audio context (shared with AVENUE Radio) is created on that gesture.
+import { audioContext } from "./radio";
+
 let ctx: AudioContext | null = null;
 
 export function enableSound() {
-  const AC =
-    window.AudioContext ??
-    (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
-  if (!ctx && AC) ctx = new AC();
+  ctx = audioContext();
   void ctx?.resume();
 }
 

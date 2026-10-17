@@ -1,11 +1,15 @@
 "use client";
-// The seven modules of a seat's screen. Every rule about what the driver may do while moving
-// comes from system.ts (canPlay, canOpen); these views only show the result and say why.
-import { type ReactElement, useEffect, useState } from "react";
-import s from "./demo.module.css";
-import { Icon } from "./Icon";
+// The modules of a seat's screen, per seat. Each seat gets the home it needs, as production
+// cars and robotaxis lay them out: the driver a drive view (speed, ADAS, the next turn, the
+// map, one media tile), the co-pilot a navigator with a privacy shield, the rear a lounge, or
+// in cab mode a rider's screen (trip, pull over, help, quiet ride). Every driving rule comes
+// from system.ts (canPlay, canOpen); these views only show the result and say why.
+import { type ReactNode, useEffect, useState } from "react";
+import s from "./cabin.module.css";
+import { Icon, type IconName } from "./Icon";
 import { dispatch, useSystem } from "./store";
 import {
+  canPlay,
   formatTime,
   JOURNEY,
   LIBRARY,
@@ -14,14 +18,52 @@ import {
   SEAT_IDS,
   SEAT_NAME,
   type SeatId,
+  STATION_NAME,
+  type Station,
+  VEHICLE,
 } from "./system";
 import { Art, Card, IconButton, Press, Range, Segmented, Switch } from "./ui";
 
 const WHEN_PARKED = "available when parked";
+const MAP = "/media/maps/mumbai-route.webp";
+const AR = "/media/maps/ar-road.webp";
 
 function useDriving(seat: SeatId) {
   return useSystem((st) => seat === "driver" && st.moving);
 }
+
+/** A live clock for the screens: renders empty on the server, so it never mismatches. */
+export function useClock() {
+  const [now, setNow] = useState("");
+  useEffect(() => {
+    const tick = () =>
+      setNow(new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }));
+    tick();
+    const id = window.setInterval(tick, 15_000);
+    return () => window.clearInterval(id);
+  }, []);
+  return now;
+}
+
+/** The car's speed while moving: a gentle, believable wander around 62 km/h. */
+function useSpeed(moving: boolean) {
+  const [v, setV] = useState(moving ? 62 : 0);
+  useEffect(() => {
+    if (!moving) {
+      setV(0);
+      return;
+    }
+    let t = 0;
+    const id = window.setInterval(() => {
+      t += 1;
+      setV(Math.round(62 + Math.sin(t / 3) * 4 + Math.sin(t / 1.7) * 1.5));
+    }, 1000);
+    return () => window.clearInterval(id);
+  }, [moving]);
+  return v;
+}
+
+// ---------------------------------------------------------------- shared parts
 
 /** Send something from this seat to another: the targets, as a small menu of buttons. */
 export function SendTo({
@@ -30,18 +72,20 @@ export function SendTo({
   refId,
   title,
   compact,
+  below,
 }: {
   seat: SeatId;
   kind: "media" | "place" | "clip";
   refId: string;
   title: string;
   compact?: boolean;
+  below?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   return (
     <div className={s.sendTo}>
       <Press
-        className={s.chip}
+        className={`${s.chip} ${compact ? s.iconButton : ""}`}
         onPress={() => setOpen((o) => !o)}
         label={`Send to another screen: ${title}`}
         pressed={open}
@@ -50,7 +94,7 @@ export function SendTo({
         {compact ? null : <span>Send to</span>}
       </Press>
       {open ? (
-        <div className={s.sendMenu}>
+        <div className={s.sendMenu} data-below={below ? "" : undefined}>
           {SEAT_IDS.filter((t) => t !== seat).map((t) => (
             <Press
               key={t}
@@ -70,175 +114,544 @@ export function SendTo({
   );
 }
 
+function Eq() {
+  return (
+    <span className={s.eq} aria-hidden="true">
+      <i />
+      <i />
+      <i />
+    </span>
+  );
+}
+
+/** Play / pause / next for a seat, with the driving lock applied. */
+function Transport({ seat, big }: { seat: SeatId; big?: boolean }) {
+  const id = useSystem((st) => st.seats[seat].nowPlaying);
+  const playing = useSystem((st) => st.seats[seat].playing);
+  const state = useSystem((st) => st);
+  const item = id ? MEDIA_BY_ID[id] : undefined;
+  if (!item) return null;
+  const locked = !playing && !canPlay(state, seat, item) ? WHEN_PARKED : undefined;
+  const next = () => {
+    const pool = LIBRARY.filter(
+      (m) => m.kind === item.kind && (item.station ? m.station === item.station : true),
+    );
+    const n = pool[(pool.findIndex((m) => m.id === item.id) + 1) % pool.length];
+    if (n && n.id !== item.id) dispatch({ type: "play", seat, id: n.id });
+  };
+  return (
+    <div className={s.transport}>
+      <IconButton
+        icon="prev"
+        label="Restart"
+        onPress={() => dispatch({ type: "seek", seat, to: 0 })}
+        variant="quiet"
+      />
+      <IconButton
+        icon={playing ? "pause" : "play"}
+        label={playing ? "Pause" : "Play"}
+        onPress={() => dispatch({ type: "toggle-play", seat })}
+        {...(locked ? { locked } : {})}
+        variant="accent"
+        filled={!playing}
+      />
+      <IconButton icon="next" label="Next" onPress={next} variant="quiet" />
+      {big ? null : <SendTo seat={seat} kind="media" refId={item.id} title={item.title} compact />}
+    </div>
+  );
+}
+
 function NowPlaying({ seat, size = "large" }: { seat: SeatId; size?: "large" | "small" }) {
   const id = useSystem((st) => st.seats[seat].nowPlaying);
   const playing = useSystem((st) => st.seats[seat].playing);
   const progress = useSystem((st) => st.seats[seat].progress);
-  const moving = useSystem((st) => st.moving);
+  const state = useSystem((st) => st);
   const item = id ? MEDIA_BY_ID[id] : undefined;
   if (!item) return <p className={s.muted}>Nothing playing.</p>;
-  const locked = seat === "driver" && moving && item.video;
+  const blocked = !canPlay(state, seat, item);
   return (
-    <div className={s.nowPlaying} data-size={size}>
-      <Art hue={item.hue} seed={item.seed} className={s.nowArt} />
-      <div className={s.nowMeta}>
-        <p className={s.kicker}>
-          {locked ? "Paused while moving" : playing ? "Now playing" : "Paused"}
+    <div className={s.nowCard}>
+      {size === "large" ? (
+        <Art
+          hue={item.hue}
+          seed={item.seed}
+          className={s.nowArt}
+          {...(item.video ? { video: true } : {})}
+        />
+      ) : null}
+      <div className={s.bigMediaTop}>
+        {size === "small" ? <Art hue={item.hue} seed={item.seed} className={s.bigArt} /> : null}
+        <div>
+          <p className={s.kicker}>
+            {blocked ? "Paused while moving" : playing ? "Now playing" : "Paused"}
+            {playing && !blocked ? <Eq /> : null}
+          </p>
+          <p className={s.nowTitle}>{item.title}</p>
+          <p className={s.muted}>{item.by}</p>
+        </div>
+      </div>
+      <div className={s.progress} role="presentation">
+        <span style={{ width: `${Math.round(progress * 100)}%` }} />
+      </div>
+      <Transport seat={seat} />
+    </div>
+  );
+}
+
+/** Route on the Google Maps capture: Bandra West to Colaba along the coast. */
+const ROUTE = [
+  [330, 58],
+  [318, 75],
+  [303, 96],
+  [296, 130],
+  [300, 170],
+  [291, 205],
+  [276, 240],
+  [262, 282],
+  [256, 318],
+  [268, 338],
+  [286, 352],
+  [298, 378],
+  [304, 410],
+  [316, 445],
+  [322, 468],
+  [312, 500],
+  [298, 522],
+] as const;
+const ROUTE_D = `M${ROUTE.map(([x, y]) => `${x} ${y}`).join(" L")}`;
+const HERE = ROUTE[6];
+
+function MapView({
+  label,
+  banner,
+  eta,
+  zoom = 1.35,
+  focus = "44% 34%",
+  className,
+}: {
+  label: string;
+  banner?: boolean;
+  eta?: boolean;
+  zoom?: number;
+  focus?: string;
+  className?: string | undefined;
+}) {
+  return (
+    <figure
+      className={`${s.mapFrame} ${className ?? ""}`}
+      style={{ "--zoom": zoom, "--focus": focus } as React.CSSProperties}
+    >
+      <div style={{ position: "absolute", inset: 0, scale: zoom, transformOrigin: focus }}>
+        {/* biome-ignore lint/performance/noImgElement: a static map capture, sized by CSS */}
+        <img className={s.mapImg} style={{ scale: 1 }} src={MAP} alt="" loading="lazy" />
+        <svg
+          className={s.mapRoute}
+          viewBox="0 0 700 640"
+          preserveAspectRatio="xMidYMid slice"
+          role="img"
+          aria-label={label}
+        >
+          <path
+            d={ROUTE_D}
+            fill="none"
+            stroke="#0b1a3a"
+            strokeWidth="11"
+            strokeLinejoin="round"
+            strokeLinecap="round"
+            opacity="0.5"
+          />
+          <path
+            d={ROUTE_D}
+            fill="none"
+            stroke="#5b8cff"
+            strokeWidth="6.5"
+            strokeLinejoin="round"
+            strokeLinecap="round"
+          />
+          <circle
+            cx={ROUTE[16][0]}
+            cy={ROUTE[16][1]}
+            r="9"
+            fill="#fff"
+            stroke="#2d63ee"
+            strokeWidth="4"
+          />
+          <g transform={`translate(${HERE[0]} ${HERE[1]}) rotate(200)`}>
+            <circle r="16" fill="rgb(91 140 255 / 0.25)" />
+            <path d="M0 -10 L7 8 L0 4 L-7 8 Z" fill="#fff" stroke="#2d63ee" strokeWidth="2" />
+          </g>
+        </svg>
+      </div>
+      {banner ? (
+        <div className={s.turnBanner}>
+          <Icon name="turn" />
+          <div>
+            <span className={s.turnDist}>{JOURNEY.next.distance}</span>
+            <p className={s.turnRoad}>
+              {JOURNEY.next.action}
+              <strong>{JOURNEY.next.road}</strong>
+            </p>
+          </div>
+        </div>
+      ) : null}
+      {eta ? (
+        <div className={s.etaBar}>
+          <strong>{JOURNEY.arrive}</strong>
+          <span className={s.muted}>
+            {JOURNEY.etaMinutes} min · {JOURNEY.km} km
+          </span>
+        </div>
+      ) : null}
+      <figcaption className={s.mapAttribution}>Map data ©2026 Google</figcaption>
+    </figure>
+  );
+}
+
+const PLACE_ICON: Record<string, IconName> = { lumen: "coffee", charge: "bolt", sorrel: "bread" };
+const POI_AT: Record<string, [string, string]> = {
+  lumen: ["30%", "52%"],
+  charge: ["74%", "50%"],
+  sorrel: ["45%", "57%"],
+};
+
+function ArView({ seat }: { seat: SeatId }) {
+  return (
+    <div className={s.ar}>
+      {/* biome-ignore lint/performance/noImgElement: a static camera frame, sized by CSS */}
+      <img src={AR} alt="" loading="lazy" />
+      <svg
+        className={s.arOverlay}
+        viewBox="0 0 1280 720"
+        preserveAspectRatio="xMidYMid slice"
+        role="img"
+        aria-label="Augmented-reality view of the road ahead, with the route and places marked"
+      >
+        <defs>
+          <linearGradient id="arLane" x1="0" y1="1" x2="0" y2="0">
+            <stop offset="0" stopColor="#5b8cff" stopOpacity="0.7" />
+            <stop offset="1" stopColor="#5b8cff" stopOpacity="0" />
+          </linearGradient>
+        </defs>
+        <path d="M420 720 L610 495 L680 495 L900 720 Z" fill="url(#arLane)" />
+        {[0, 1, 2].map((i) => (
+          <path
+            key={i}
+            className={s.chevron}
+            style={{ animationDelay: `${i * -0.5}s` }}
+            d={`M${600 - i * 30} ${560 + i * 50} L640 ${535 + i * 50} L${680 + i * 30} ${560 + i * 50}`}
+            fill="none"
+            stroke="#fff"
+            strokeWidth={6 + i * 2}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        ))}
+      </svg>
+      <ul className={s.pois}>
+        {JOURNEY.places.map((p) => {
+          const [left, top] = POI_AT[p.id] ?? ["50%", "50%"];
+          return (
+            <li key={p.id} className={s.poi} style={{ left, top }}>
+              <Icon name={PLACE_ICON[p.id] ?? "pin"} />
+              <span>
+                <strong>{p.name}</strong>
+                <small>
+                  {p.kind} · {p.distance}
+                </small>
+              </span>
+              <SendTo seat={seat} kind="place" refId={p.id} title={p.name} compact below />
+            </li>
+          );
+        })}
+      </ul>
+      <p className={s.mapAttribution}>Camera view, illustrative</p>
+    </div>
+  );
+}
+
+function Trip({ compact }: { compact?: boolean }) {
+  const done = 0.36;
+  return (
+    <div className={s.trip}>
+      <div className={s.tripEnds}>
+        <span>
+          <span className={s.kicker}>From</span>
+          <strong>{JOURNEY.from}</strong>
+        </span>
+        <span style={{ textAlign: "right" }}>
+          <span className={s.kicker}>To</span>
+          <strong>{JOURNEY.to}</strong>
+        </span>
+      </div>
+      <div className={s.tripBar} role="presentation">
+        <span style={{ width: `${done * 100}%` }} />
+        <i style={{ left: `${done * 100}%` }} />
+      </div>
+      {compact ? null : (
+        <div className={s.row} style={{ justifyContent: "space-between" }}>
+          <p className={s.bigStat}>
+            <b>{JOURNEY.etaMinutes}</b>
+            <span>min · arrive {JOURNEY.arrive}</span>
+          </p>
+          <span className={s.badge} data-tone="ok">
+            Light traffic · via {JOURNEY.via}
+          </span>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function ZoneStepper({ seat }: { seat: SeatId }) {
+  const zone = useSystem((st) => st.zones[seat]);
+  return (
+    <div className={s.stepper}>
+      <IconButton
+        icon="minus"
+        label="Cooler"
+        onPress={() => dispatch({ type: "temp", seat, by: -0.5 })}
+      />
+      <output className={s.temp} aria-live="polite" aria-label={`${zone.temp.toFixed(1)} degrees`}>
+        {zone.temp.toFixed(1)}
+        <sup>°C</sup>
+      </output>
+      <IconButton
+        icon="plus"
+        label="Warmer"
+        onPress={() => dispatch({ type: "temp", seat, by: 0.5 })}
+      />
+    </div>
+  );
+}
+
+function Levels({ value, cool }: { value: number; cool?: boolean }) {
+  return (
+    <span className={s.levels} aria-hidden="true">
+      {[1, 2, 3].map((i) => (
+        <i
+          key={i}
+          className={s.level}
+          data-on={value >= i ? "" : undefined}
+          data-cool={cool ? "" : undefined}
+        />
+      ))}
+    </span>
+  );
+}
+
+function ViewHead({ title, children }: { title: ReactNode; children?: ReactNode }) {
+  return (
+    <div className={s.viewHead}>
+      <h3 className={s.title}>{title}</h3>
+      {children}
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------- home, per seat
+
+/** The driver: a drive view. Moving, it is glance-only: big type, no lists, no video. */
+function DriveHome() {
+  const moving = useSystem((st) => st.moving);
+  const speed = useSpeed(moving);
+  return (
+    <div className={`${s.view} ${s.drive}`}>
+      <Card className={s.cluster}>
+        <div className={s.speedRow}>
+          <p className={s.speed}>
+            <b>{speed}</b>
+            <span>km/h</span>
+          </p>
+          <span className={s.limit} role="img" aria-label={`Speed limit ${VEHICLE.speedLimit}`}>
+            {VEHICLE.speedLimit}
+          </span>
+        </div>
+        <p className={s.gears}>
+          <span className="sr-only">Gear {moving ? "D" : "P"}: </span>
+          {["P", "R", "N", "D"].map((g) => (
+            <span key={g} data-on={(moving ? g === "D" : g === "P") ? "" : undefined}>
+              {g}
+            </span>
+          ))}
         </p>
-        <p className={s.nowTitle}>{item.title}</p>
-        <p className={s.muted}>{item.by}</p>
-        <div className={s.progress} role="presentation">
-          <span style={{ width: `${Math.round(progress * 100)}%` }} />
+        <div className={s.adas}>
+          <svg
+            viewBox="0 0 200 120"
+            role="img"
+            aria-label="Driver assistance: lane keeping on, a car ahead at a safe distance"
+          >
+            <path
+              d="M70 120 L95 20"
+              stroke="#5b8cff"
+              strokeWidth="3"
+              strokeLinecap="round"
+              opacity={moving ? 1 : 0.35}
+            />
+            <path
+              d="M130 120 L105 20"
+              stroke="#5b8cff"
+              strokeWidth="3"
+              strokeLinecap="round"
+              opacity={moving ? 1 : 0.35}
+            />
+            <path
+              d="M20 120 L80 20"
+              stroke="rgb(255 255 255 / 0.18)"
+              strokeWidth="2"
+              strokeDasharray="8 8"
+            />
+            <path
+              d="M180 120 L120 20"
+              stroke="rgb(255 255 255 / 0.18)"
+              strokeWidth="2"
+              strokeDasharray="8 8"
+            />
+            {moving ? (
+              <>
+                <path d="M84 70 h32 l-3 -14 h-26 Z" fill="rgb(255 255 255 / 0.55)" />
+                <path d="M88 84 h24" stroke="#5b8cff" strokeWidth="2" opacity="0.7" />
+              </>
+            ) : null}
+            <path d="M80 118 h40 l-5 -22 h-30 Z" fill="#fff" />
+          </svg>
         </div>
-        <div className={s.transport}>
-          <IconButton
-            icon="prev"
-            label="Restart"
-            onPress={() => dispatch({ type: "seek", seat, to: 0 })}
-            variant="quiet"
-          />
-          <IconButton
-            icon={playing ? "pause" : "play"}
-            label={playing ? "Pause" : "Play"}
-            onPress={() => dispatch({ type: "toggle-play", seat })}
-            {...(locked ? { locked: WHEN_PARKED } : {})}
-            variant="accent"
-            filled={!playing}
-          />
-          <IconButton
-            icon="next"
-            label="Next in queue"
-            onPress={() => {
-              const next = LIBRARY.find(
-                (m) =>
-                  m.kind === item.kind &&
-                  m.id !== item.id &&
-                  !(seat === "driver" && moving && m.video),
-              );
-              if (next) dispatch({ type: "play", seat, id: next.id });
-            }}
-            variant="quiet"
-          />
-          <SendTo
-            seat={seat}
-            kind="media"
-            refId={item.id}
-            title={item.title}
-            compact={size === "small"}
-          />
+        <div className={s.adasTags}>
+          <span className={s.badge} data-tone={moving ? "accent" : undefined}>
+            <Icon name="speed" size="1.1em" /> ACC {VEHICLE.setSpeed}
+          </span>
+          <span className={s.badge} data-tone={moving ? "ok" : undefined}>
+            Lane keep
+          </span>
         </div>
+        <div className={s.range2}>
+          <div>
+            <span style={{ width: `${VEHICLE.battery * 100}%` }} />
+          </div>
+          <p>
+            <span>
+              <strong>{VEHICLE.rangeKm} km</strong> range
+            </span>
+            <span>{Math.round(VEHICLE.battery * 100)}%</span>
+          </p>
+        </div>
+      </Card>
+      <MapView
+        label={`Route from ${JOURNEY.from} to ${JOURNEY.to} via ${JOURNEY.via}`}
+        banner
+        eta
+        zoom={1.9}
+        focus="42% 36%"
+        className={s.driveMap}
+      />
+      <div className={s.driveSide}>
+        <Card title="Media" className={s.bigMedia}>
+          <NowPlaying seat="driver" size="small" />
+        </Card>
+        <Card>
+          <p className={s.glanceNote}>
+            <Icon name="eye" />
+            {moving
+              ? "Glance mode: each look is two seconds or less. Video, settings and typing wait until you park; voice and the wheel controls do the rest."
+              : "Parked: every module is open. Set the car moving to see glance mode."}
+          </p>
+        </Card>
       </div>
     </div>
   );
 }
 
-function MiniMap({ label = "Route map" }: { label?: string }) {
+/** The co-pilot: the navigator, with the privacy shield that lets video play while moving. */
+function CopilotHome() {
+  const shield = useSystem((st) => st.shield);
+  const moving = useSystem((st) => st.moving);
   return (
-    <svg className={s.map} viewBox="0 0 320 200" role="img" aria-label={label}>
-      <rect width="320" height="200" fill="var(--os-map)" />
-      {[30, 70, 110, 150].map((y) => (
-        <path
-          key={y}
-          d={`M-10 ${y} C 90 ${y - 18}, 200 ${y + 22}, 330 ${y - 6}`}
-          stroke="var(--os-road)"
-          strokeWidth="5"
-          fill="none"
-        />
-      ))}
-      {[60, 150, 240].map((x) => (
-        <path
-          key={x}
-          d={`M${x} -10 C ${x - 14} 80, ${x + 18} 120, ${x - 4} 210`}
-          stroke="var(--os-road)"
-          strokeWidth="4"
-          fill="none"
-        />
-      ))}
-      <path
-        d="M40 176 C 90 150, 120 160, 150 120 S 230 60, 284 30"
-        stroke="var(--c-accent)"
-        strokeWidth="5"
-        fill="none"
-        strokeLinecap="round"
-      />
-      <circle cx="40" cy="176" r="7" fill="var(--c-text)" />
-      <circle cx="284" cy="30" r="7" fill="none" stroke="var(--c-accent)" strokeWidth="3" />
-    </svg>
+    <div className={`${s.view} ${s.homeGrid}`}>
+      <div className={s.span7} style={{ display: "grid" }}>
+        <MapView label={`Route to ${JOURNEY.to}`} banner eta zoom={1.25} focus="44% 45%" />
+      </div>
+      <div
+        className={s.span5}
+        style={{ display: "grid", gap: "var(--gap)", alignContent: "start" }}
+      >
+        <Card>
+          <div className={s.shield}>
+            <span className={s.shieldIcon} data-off={shield ? undefined : ""}>
+              <Icon name={shield ? "shield" : "eyeOff"} />
+            </span>
+            <Switch
+              label="Privacy shield"
+              detail={
+                shield
+                  ? "Hidden from the driver's seat, so video can play while moving"
+                  : moving
+                    ? "Off: video pauses while the car moves"
+                    : "Off: turn it on before you watch on the move"
+              }
+              checked={shield}
+              onChange={(on) => dispatch({ type: "shield", on })}
+            />
+          </div>
+        </Card>
+        <Card title="Now playing">
+          <NowPlaying seat="copilot" size="small" />
+        </Card>
+        <Card title="Add a stop">
+          <ul className={s.list}>
+            {JOURNEY.places.map((p) => (
+              <li key={p.id} className={s.placeRow}>
+                <Icon name={PLACE_ICON[p.id] ?? "pin"} />
+                <span>
+                  {p.name} <span className={s.muted}>· {p.distance}</span>
+                </span>
+                <SendTo seat="copilot" kind="place" refId={p.id} title={p.name} compact />
+              </li>
+            ))}
+          </ul>
+        </Card>
+      </div>
+    </div>
   );
 }
 
-export function Home({ seat }: { seat: SeatId }) {
-  const driving = useDriving(seat);
-  const [editing, setEditing] = useState(false);
-  const [greeting, setGreeting] = useState("Hello");
-  useEffect(() => {
-    const h = new Date().getHours();
-    setGreeting(
-      h < 5 ? "Good night" : h < 12 ? "Good morning" : h < 18 ? "Good afternoon" : "Good evening",
-    );
-  }, []);
-  const [order, setOrder] = useState(["journey", "playing", "weather", "news", "forJourney"]);
-  const move = (id: string, by: number) =>
-    setOrder((o) => {
-      const i = o.indexOf(id);
-      const j = i + by;
-      if (j < 0 || j >= o.length) return o;
-      const next = o.slice();
-      [next[i], next[j]] = [next[j] as string, next[i] as string];
-      return next;
-    });
-  if (driving) {
-    return (
-      <div className={s.drivingHome}>
-        <Card className={s.bigTile}>
-          <p className={s.kicker}>Next turn</p>
-          <p className={s.bigNumber}>
-            <Icon name="turn" size="0.8em" /> 600 m
-          </p>
-          <p className={s.bigLine}>Ridge Lane</p>
-          <p className={s.muted}>Arrive {JOURNEY.etaMinutes} min</p>
-        </Card>
-        <Card className={s.bigTile}>
-          <NowPlaying seat={seat} size="small" />
-        </Card>
+function greeting() {
+  const h = new Date().getHours();
+  return h < 5
+    ? "Good night"
+    : h < 12
+      ? "Good morning"
+      : h < 18
+        ? "Good afternoon"
+        : "Good evening";
+}
+
+/** A rear seat in a private car: a lounge. */
+function RearHome({ seat }: { seat: SeatId }) {
+  const [hello, setHello] = useState("Hello");
+  useEffect(() => setHello(greeting()), []);
+  const heat = useSystem((st) => st.heat[seat]);
+  const massage = useSystem((st) => st.massage[seat]);
+  return (
+    <div className={`${s.view} ${s.homeGrid}`}>
+      <div className={s.span12}>
+        <p className={s.greeting}>
+          {hello}. <em>{JOURNEY.etaMinutes} minutes</em> to {JOURNEY.to}.
+        </p>
       </div>
-    );
-  }
-  const widgets: Record<string, ReactElement> = {
-    journey: (
-      <Card title="Journey">
-        <MiniMap />
-        <p className={s.etaLine}>
-          <strong className="mono">{JOURNEY.etaMinutes} min</strong> to {JOURNEY.to}
+      <Card className={s.span7}>
+        <Trip />
+      </Card>
+      <Card title="Weather at Colaba" className={s.span5}>
+        <p className={s.weather}>
+          <Icon name="sun" />
+          <b>{VEHICLE.outside}°</b>
+          <span className={s.muted}>Clear evening, sea breeze</span>
         </p>
       </Card>
-    ),
-    playing: (
-      <Card title="Now playing">
+      <Card title="Now playing" className={s.span6}>
         <NowPlaying seat={seat} size="small" />
       </Card>
-    ),
-    weather: (
-      <Card title="Weather">
-        <p className={s.weather}>
-          <Icon name="sun" size="1.6em" />
-          <span className="mono">12°</span>
-        </p>
-        <p className={s.muted}>Clear at {JOURNEY.to}</p>
-      </Card>
-    ),
-    news: (
-      <Card title="News">
-        <ul className={s.news}>
-          <li>Harbour bridge reopens to traffic after repairs</li>
-          <li>Night trains return on the coast line this spring</li>
-        </ul>
-        <p className={s.fine}>Sample headlines, invented for the demo.</p>
-      </Card>
-    ),
-    forJourney: (
-      <Card title={`For this journey, ${JOURNEY.etaMinutes} min`}>
-        <ul className={s.shortList}>
+      <Card title={`For this journey, ${JOURNEY.etaMinutes} min`} className={s.span6}>
+        <ul className={s.list}>
           {LIBRARY.filter((m) => m.minutes <= JOURNEY.etaMinutes)
             .slice(0, 3)
             .map((m) => (
@@ -252,101 +665,275 @@ export function Home({ seat }: { seat: SeatId }) {
                     {m.title}
                     <span className={s.muted}> · {formatTime(m.minutes)}</span>
                   </span>
+                  <Icon name="play" size="1.2em" />
                 </Press>
               </li>
             ))}
         </ul>
       </Card>
-    ),
-  };
-  return (
-    <div className={s.home}>
-      <div className={s.homeBar}>
-        <h3 className={s.moduleTitle}>{greeting}</h3>
-        <Press className={s.chip} onPress={() => setEditing((e) => !e)} pressed={editing}>
-          <Icon name="grid" size="1.1em" />
-          <span>{editing ? "Done" : "Edit layout"}</span>
+      <div className={`${s.span12} ${s.actions}`}>
+        <Press
+          className={s.action}
+          pressed={heat > 0}
+          onPress={() => dispatch({ type: "heat", seat, to: (heat + 1) % 4 })}
+        >
+          <Icon name="heat" />
+          <span>
+            Seat heat
+            <small>{heat ? `Level ${heat}` : "Off"}</small>
+          </span>
         </Press>
-      </div>
-      <div className={s.widgets}>
-        {order.map((id, i) => (
-          <div key={id} className={s.widget} data-widget={id}>
-            {widgets[id]}
-            {editing ? (
-              <div className={s.widgetMove}>
-                <IconButton
-                  icon="arrowUp"
-                  label={`Move earlier (${i + 1} of ${order.length})`}
-                  onPress={() => move(id, -1)}
-                />
-                <IconButton icon="arrowDown" label="Move later" onPress={() => move(id, 1)} />
-              </div>
-            ) : null}
-          </div>
-        ))}
+        <Press
+          className={s.action}
+          pressed={massage}
+          onPress={() => dispatch({ type: "massage", seat })}
+        >
+          <Icon name="seat" />
+          <span>
+            Massage
+            <small>{massage ? "Gentle wave" : "Off"}</small>
+          </span>
+        </Press>
+        <Press
+          className={s.action}
+          onPress={() => dispatch({ type: "open", seat, module: "climate" })}
+        >
+          <Icon name="climate" />
+          <span>
+            Climate
+            <small>Your zone</small>
+          </span>
+        </Press>
+        <Press
+          className={s.action}
+          onPress={() => dispatch({ type: "open", seat, module: "clips" })}
+        >
+          <Icon name="clips" />
+          <span>
+            Memory clip
+            <small>Save this moment</small>
+          </span>
+        </Press>
       </div>
     </div>
   );
 }
 
-const KINDS: ReadonlyArray<{ value: MediaKind | "journey"; label: string }> = [
+/** A rear seat in cab mode: the rider's screen, after what robotaxi services put there. */
+export function RideHome({ seat }: { seat: SeatId }) {
+  const ride = useSystem((st) => st.ride);
+  return (
+    <div className={`${s.view} ${s.homeGrid}`}>
+      <div className={s.span12}>
+        <p className={s.greeting}>
+          Welcome aboard. <em>Arriving {JOURNEY.arrive}</em>
+        </p>
+      </div>
+      <Card className={s.span7}>
+        <Trip />
+        {ride.stop === "requested" ? (
+          <p className={s.note}>
+            <Icon name="pull" />
+            Pulling over at the next safe place, in about 200 m.
+          </p>
+        ) : null}
+      </Card>
+      <div className={s.span5} style={{ display: "grid" }}>
+        <MapView label={`Your route to ${JOURNEY.to}`} zoom={1.15} focus="44% 45%" />
+      </div>
+      <div className={`${s.span12} ${s.actions}`}>
+        <Press
+          className={s.action}
+          data-tone="warn"
+          pressed={ride.stop === "requested"}
+          onPress={() => dispatch({ type: "pull-over" })}
+        >
+          <Icon name="pull" />
+          <span>
+            {ride.stop === "requested" ? "Cancel stop" : "Pull over"}
+            <small>Safely, at the next place</small>
+          </span>
+        </Press>
+        <Press
+          className={s.action}
+          pressed={ride.quiet}
+          onPress={() => dispatch({ type: "quiet", on: !ride.quiet })}
+        >
+          <Icon name="mute" />
+          <span>
+            Quiet ride
+            <small>{ride.quiet ? "Driver told" : "Tell the driver"}</small>
+          </span>
+        </Press>
+        <Press
+          className={s.action}
+          pressed={ride.help}
+          onPress={() => dispatch({ type: "help", on: !ride.help })}
+        >
+          <Icon name="help" />
+          <span>
+            {ride.help ? "End call" : "Rider support"}
+            <small>{ride.help ? "Connected (demo)" : "Talk to a person"}</small>
+          </span>
+        </Press>
+        <Press
+          className={s.action}
+          onPress={() => dispatch({ type: "open", seat, module: "media" })}
+        >
+          <Icon name="radio" />
+          <span>
+            Music
+            <small>AVENUE Radio</small>
+          </span>
+        </Press>
+      </div>
+      <Card title="Your zone" className={s.span6}>
+        <ZoneStepper seat={seat} />
+      </Card>
+      <Card title="Now playing" className={s.span6}>
+        <NowPlaying seat={seat} size="small" />
+      </Card>
+    </div>
+  );
+}
+
+export function Home({ seat }: { seat: SeatId }) {
+  const fleet = useSystem((st) => st.fleet);
+  if (seat === "driver") return <DriveHome />;
+  if (seat === "copilot") return <CopilotHome />;
+  return fleet ? <RideHome seat={seat} /> : <RearHome seat={seat} />;
+}
+
+// ---------------------------------------------------------------- media
+
+const KINDS: ReadonlyArray<{ value: MediaKind | "journey" | "radio"; label: string }> = [
   { value: "journey", label: "For this journey" },
+  { value: "radio", label: "Radio" },
   { value: "show", label: "Shows" },
   { value: "film", label: "Films" },
-  { value: "music", label: "Music" },
   { value: "podcast", label: "Podcasts" },
 ];
 
+function Radio({ seat }: { seat: SeatId }) {
+  const id = useSystem((st) => st.seats[seat].nowPlaying);
+  const playing = useSystem((st) => st.seats[seat].playing);
+  const sound = useSystem((st) => st.sound);
+  const current = id ? MEDIA_BY_ID[id] : undefined;
+  const play = (station: Station) => {
+    const first = LIBRARY.find((m) => m.station === station);
+    if (!first) return;
+    if (!sound) {
+      void import("./sound").then((m) => m.enableSound());
+      dispatch({ type: "sound", on: true });
+    }
+    dispatch({ type: "play", seat, id: current?.station === station ? current.id : first.id });
+  };
+  return (
+    <>
+      <div className={s.stations}>
+        {(["edm", "lofi"] as const).map((st) => {
+          const on = current?.station === st && playing;
+          return (
+            <Press
+              key={st}
+              className={s.station}
+              data-station={st}
+              pressed={current?.station === st}
+              onPress={() => play(st)}
+            >
+              {on ? <Eq /> : null}
+              <small>AVENUE Radio</small>
+              <b>{STATION_NAME[st]}</b>
+              <small>
+                {st === "edm" ? "124 to 128 BPM, made live" : "74 to 80 BPM, made live"}
+              </small>
+            </Press>
+          );
+        })}
+      </div>
+      <p className={s.fine}>
+        Generated in your browser as you listen; no recordings.{" "}
+        {sound ? "You hear only this seat's zone." : "Turn sound on to hear it."}
+      </p>
+      <ul className={s.list}>
+        {LIBRARY.filter((m) => m.kind === "music").map((m) => (
+          <li key={m.id}>
+            <Press
+              className={s.listButton}
+              pressed={m.id === id}
+              onPress={() => dispatch({ type: "play", seat, id: m.id })}
+            >
+              <Art hue={m.hue} seed={m.seed} className={s.thumb} />
+              <span>
+                {m.title}
+                <span className={s.muted}> · {STATION_NAME[m.station ?? "lofi"]}</span>
+              </span>
+              {m.id === id && playing ? <Eq /> : <Icon name="play" size="1.2em" />}
+            </Press>
+          </li>
+        ))}
+      </ul>
+    </>
+  );
+}
+
 export function Media({ seat }: { seat: SeatId }) {
-  const [kind, setKind] = useState<MediaKind | "journey">("journey");
+  const [kind, setKind] = useState<MediaKind | "journey" | "radio">("journey");
+  const state = useSystem((st) => st);
   const driving = useDriving(seat);
-  const moving = useSystem((st) => st.moving);
-  const nowId = useSystem((st) => st.seats[seat].nowPlaying);
+  const nowId = state.seats[seat].nowPlaying;
+  const copilotBlocked = seat === "copilot" && state.moving && !state.shield;
   const items = LIBRARY.filter((m) =>
     kind === "journey" ? m.minutes <= JOURNEY.etaMinutes : m.kind === kind,
   );
   const queue = LIBRARY.filter((m) => m.id !== nowId && !m.video).slice(0, 3);
   return (
-    <div className={s.media}>
+    <div className={`${s.view} ${s.media}`}>
       <div className={s.mediaMain}>
-        <h3 className={s.moduleTitle}>Library</h3>
-        <Segmented label="Show" hideLabel options={KINDS} value={kind} onChange={setKind} />
+        <ViewHead title="Library">
+          <Segmented label="Show" hideLabel options={KINDS} value={kind} onChange={setKind} />
+        </ViewHead>
         {driving ? (
-          <p className={s.drivingNote}>
-            Moving: video waits until parked. Send it to a rear screen, or play audio.
+          <p className={s.note}>
+            <Icon name="lock" />
+            Moving: video waits until you park. Send it to another screen, or play audio.
+          </p>
+        ) : copilotBlocked ? (
+          <p className={s.note}>
+            <Icon name="eyeOff" />
+            Turn on the privacy shield to watch while moving.
           </p>
         ) : null}
-        <ul className={s.library}>
-          {items.map((m) => {
-            const locked = seat === "driver" && moving && m.video ? WHEN_PARKED : undefined;
-            return (
-              <li key={m.id} className={s.libraryItem}>
-                <Press
-                  className={s.tileButton}
-                  onPress={() => dispatch({ type: "play", seat, id: m.id })}
-                  {...(locked ? { locked } : {})}
-                  pressed={m.id === nowId}
-                >
-                  <Art hue={m.hue} seed={m.seed} className={s.tileArt} />
-                  <span className={s.tileTitle}>
-                    {m.title}
-                    <span className="sr-only">
-                      , {m.by}
-                      {locked ? `, ${locked}` : ""}
+        {kind === "radio" ? (
+          <Radio seat={seat} />
+        ) : (
+          <ul className={s.library}>
+            {items.map((m) => {
+              const locked = !canPlay(state, seat, m) ? WHEN_PARKED : undefined;
+              return (
+                <li key={m.id}>
+                  <Press
+                    className={s.tile}
+                    onPress={() => dispatch({ type: "play", seat, id: m.id })}
+                    {...(locked ? { locked } : {})}
+                    pressed={m.id === nowId}
+                    label={`${m.title}, ${m.by}`}
+                  >
+                    <Art hue={m.hue} seed={m.seed} className={s.tileArt} />
+                    <span className={s.tileTitle}>{m.title}</span>
+                    <span className={s.tileMeta}>
+                      {locked ? <Icon name="lock" /> : null}
+                      {m.station ? STATION_NAME[m.station] : formatTime(m.minutes)}
                     </span>
-                  </span>
-                  <span className={s.tileMeta}>
-                    {locked ? <Icon name="lock" size="1em" /> : null}
-                    {formatTime(m.minutes)}
-                  </span>
-                </Press>
-              </li>
-            );
-          })}
-        </ul>
+                  </Press>
+                </li>
+              );
+            })}
+          </ul>
+        )}
       </div>
-      <aside className={s.mediaSide} aria-label="Now playing and queue">
-        <Card title="Now playing">
+      <aside className={s.mediaMain} aria-label="Now playing and queue">
+        <Card>
           <NowPlaying seat={seat} />
         </Card>
         <Card title="Up next">
@@ -367,20 +954,33 @@ export function Media({ seat }: { seat: SeatId }) {
   );
 }
 
-const PLACE_ICON = { lumen: "coffee", charge: "bolt", sorrel: "bread" } as const;
+// ---------------------------------------------------------------- journey
 
 export function Journey({ seat }: { seat: SeatId }) {
   const driving = useDriving(seat);
   const [view, setView] = useState<"map" | "ar">("map");
   const ar = view === "ar" && !driving;
   return (
-    <div className={s.journey}>
-      <div className={s.journeyHead}>
-        <h3 className={s.moduleTitle}>
-          {JOURNEY.from} to {JOURNEY.to}
-        </h3>
+    <div className={`${s.view} ${s.journey}`}>
+      <div className={s.journeyView}>
+        {ar ? (
+          <ArView seat={seat} />
+        ) : (
+          <MapView
+            label={`Route from ${JOURNEY.from} to ${JOURNEY.to} via ${JOURNEY.via}`}
+            banner
+            eta
+            zoom={driving ? 1.9 : 1.2}
+            focus={driving ? "42% 36%" : "44% 45%"}
+          />
+        )}
+      </div>
+      <div className={s.journeyFacts}>
         {driving ? (
-          <p className={s.drivingNote}>AR view is available when parked.</p>
+          <p className={s.note}>
+            <Icon name="lock" />
+            AR view is available when parked.
+          </p>
         ) : (
           <Segmented
             label="View"
@@ -393,104 +993,46 @@ export function Journey({ seat }: { seat: SeatId }) {
             ]}
           />
         )}
-      </div>
-      <div className={s.journeyBody}>
-        <div className={s.journeyView}>
-          {ar ? (
-            <svg
-              className={s.arView}
-              viewBox="0 0 640 360"
-              role="img"
-              aria-label="Augmented-reality view of the street ahead, with places marked"
-            >
-              <defs>
-                <linearGradient id="arSky" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0" stopColor="#11151b" />
-                  <stop offset="1" stopColor="#1d222a" />
-                </linearGradient>
-              </defs>
-              <rect width="640" height="360" fill="url(#arSky)" />
-              <path d="M0 360 L270 190 L370 190 L640 360Z" fill="#14171c" />
-              {[0, 1, 2, 3].map((i) => (
-                <path
-                  key={`l${i}`}
-                  d={`M${40 + i * 52} ${120 - i * 12} h46 v${200 - i * 45} h-46Z`}
-                  fill="#191d24"
-                  stroke="#262b33"
-                />
-              ))}
-              {[0, 1, 2, 3].map((i) => (
-                <path
-                  key={`r${i}`}
-                  d={`M${554 - i * 52} ${110 - i * 10} h46 v${210 - i * 46} h-46Z`}
-                  fill="#191d24"
-                  stroke="#262b33"
-                />
-              ))}
-              <path
-                d="M320 350 L326 230 L344 200"
-                stroke="var(--c-accent)"
-                strokeWidth="10"
-                fill="none"
-                strokeLinecap="round"
-                opacity="0.85"
-              />
-            </svg>
-          ) : (
-            <MiniMap label="Route map from Harbour Road to Old Town Quay" />
-          )}
-          {ar ? (
-            <ul className={s.pois}>
+        <Card>
+          <Trip compact />
+          <p className={s.bigStat}>
+            <b>{JOURNEY.etaMinutes}</b>
+            <span>
+              min · {JOURNEY.km} km · arrive {JOURNEY.arrive}
+            </span>
+          </p>
+        </Card>
+        <Card>
+          <p className={s.kicker}>Next</p>
+          <p className={s.nextTurn}>
+            <Icon name="turn" />
+            {JOURNEY.nextTurn}
+          </p>
+        </Card>
+        {driving ? null : (
+          <Card title="Along the way">
+            <ul className={s.list}>
               {JOURNEY.places.map((p) => (
-                <li key={p.id} className={s.poi} data-side={p.side}>
-                  <Icon name={PLACE_ICON[p.id as keyof typeof PLACE_ICON]} />
+                <li key={p.id} className={s.placeRow}>
+                  <Icon name={PLACE_ICON[p.id] ?? "pin"} />
                   <span>
-                    <strong>{p.name}</strong>
+                    {p.name}{" "}
                     <span className={s.muted}>
-                      {p.kind} · {p.distance}
+                      · {p.kind}, {p.distance}
                     </span>
                   </span>
                   <SendTo seat={seat} kind="place" refId={p.id} title={p.name} compact />
                 </li>
               ))}
             </ul>
-          ) : null}
-        </div>
-        <div className={s.journeyFacts}>
-          <Card>
-            <p className={s.kicker}>Arrive in</p>
-            <p className={s.bigNumber}>
-              <span className="mono">{JOURNEY.etaMinutes}</span> min
-            </p>
-            <p className={s.muted}>{JOURNEY.km} km, light traffic</p>
           </Card>
-          <Card>
-            <p className={s.kicker}>Next</p>
-            <p className={s.nextTurn}>
-              <Icon name="turn" />
-              {JOURNEY.nextTurn}
-            </p>
-          </Card>
-          {driving ? null : (
-            <Card title="Nearby">
-              <ul className={s.shortList}>
-                {JOURNEY.places.map((p) => (
-                  <li key={p.id} className={s.placeRow}>
-                    <Icon name={PLACE_ICON[p.id as keyof typeof PLACE_ICON]} />
-                    <span>
-                      {p.name} <span className={s.muted}>· {p.distance}</span>
-                    </span>
-                    <SendTo seat={seat} kind="place" refId={p.id} title={p.name} compact />
-                  </li>
-                ))}
-              </ul>
-            </Card>
-          )}
-        </div>
+        )}
       </div>
     </div>
   );
 }
+
+// ---------------------------------------------------------------- climate
 
 export function Climate({ seat }: { seat: SeatId }) {
   const [tab, setTab] = useState<"climate" | "lighting" | "seats">("climate");
@@ -502,12 +1044,13 @@ export function Climate({ seat }: { seat: SeatId }) {
   const ambient = useSystem((st) => st.ambient);
   const reading = useSystem((st) => st.reading[seat]);
   const massage = useSystem((st) => st.massage[seat]);
+  const heat = useSystem((st) => st.heat[seat]);
+  const vent = useSystem((st) => st.vent[seat]);
   const driving = useDriving(seat);
   const rear = seat === "rearLeft" || seat === "rearRight";
   return (
-    <div className={s.climate}>
-      <div className={s.homeBar}>
-        <h3 className={s.moduleTitle}>Climate and car</h3>
+    <div className={s.view}>
+      <ViewHead title="Climate and comfort">
         {driving ? null : (
           <Segmented
             label="Section"
@@ -521,28 +1064,15 @@ export function Climate({ seat }: { seat: SeatId }) {
             ]}
           />
         )}
-      </div>
+      </ViewHead>
       {tab === "climate" || driving ? (
         <div className={s.climateGrid}>
-          <Card title={`${SEAT_NAME[seat]} zone`} className={s.tempCard}>
-            <div className={s.stepper}>
-              <IconButton
-                icon="minus"
-                label="Cooler"
-                onPress={() => dispatch({ type: "temp", seat, by: -0.5 })}
-              />
-              <output className={s.temp} aria-live="polite">
-                <span className="mono">{zone.temp.toFixed(1)}</span>°
-              </output>
-              <IconButton
-                icon="plus"
-                label="Warmer"
-                onPress={() => dispatch({ type: "temp", seat, by: 0.5 })}
-              />
-            </div>
+          <Card title={`${SEAT_NAME[seat]} zone`}>
+            <ZoneStepper seat={seat} />
             {driving ? (
-              <p className={s.drivingNote}>
-                More settings on the steering-wheel controls, or say “warmer”.
+              <p className={s.glanceNote}>
+                <Icon name="mic" />
+                More on the wheel controls, or say “warmer”.
               </p>
             ) : (
               <Range
@@ -555,6 +1085,44 @@ export function Climate({ seat }: { seat: SeatId }) {
                 format={(v) => (v === 0 ? "Off" : `${v} of 4`)}
               />
             )}
+          </Card>
+          <Card title="Seat">
+            <div className={s.seatRow}>
+              <span className={s.seatRowHead}>
+                <span>Heat</span>
+                <Levels value={heat} />
+              </span>
+              <Segmented
+                label="Seat heat"
+                hideLabel
+                value={String(heat) as "0" | "1" | "2" | "3"}
+                onChange={(v) => dispatch({ type: "heat", seat, to: Number(v) })}
+                options={[
+                  { value: "0", label: "Off" },
+                  { value: "1", label: "1" },
+                  { value: "2", label: "2" },
+                  { value: "3", label: "3" },
+                ]}
+              />
+            </div>
+            <div className={s.seatRow}>
+              <span className={s.seatRowHead}>
+                <span>Ventilation</span>
+                <Levels value={vent} cool />
+              </span>
+              <Segmented
+                label="Seat ventilation"
+                hideLabel
+                value={String(vent) as "0" | "1" | "2" | "3"}
+                onChange={(v) => dispatch({ type: "vent", seat, to: Number(v) })}
+                options={[
+                  { value: "0", label: "Off" },
+                  { value: "1", label: "1" },
+                  { value: "2", label: "2" },
+                  { value: "3", label: "3" },
+                ]}
+              />
+            </div>
           </Card>
           {driving ? null : (
             <>
@@ -586,42 +1154,38 @@ export function Climate({ seat }: { seat: SeatId }) {
                   />
                 ) : null}
               </Card>
-              <Card title="Cabin">
+              <Card title="Four zones">
                 <svg
-                  className={s.zones}
-                  viewBox="0 0 160 240"
+                  className={s.cabinMap}
+                  viewBox="0 0 200 250"
                   role="img"
                   aria-label={`Zones: driver ${zones.driver.temp}°, co-pilot ${zones.copilot.temp}°, rear left ${zones.rearLeft.temp}°, rear right ${zones.rearRight.temp}°`}
                 >
-                  <rect
-                    x="20"
-                    y="10"
-                    width="120"
-                    height="220"
-                    rx="48"
-                    fill="none"
-                    stroke="var(--c-line-strong)"
+                  <path
+                    d="M40 40 Q100 -6 160 40 L168 210 Q100 250 32 210 Z"
+                    fill="rgb(255 255 255 / 0.04)"
+                    stroke="rgb(255 255 255 / 0.2)"
                   />
                   {SEAT_IDS.map((id, i) => {
-                    const x = i % 2 === 0 ? 50 : 110;
-                    const y = i < 2 ? 90 : 170;
+                    const x = i % 2 === 0 ? 70 : 130;
+                    const y = i < 2 ? 95 : 170;
+                    const me = id === seat;
                     return (
                       <g key={id}>
                         <rect
-                          x={x - 22}
-                          y={y - 26}
-                          width="44"
-                          height="52"
-                          rx="12"
-                          fill={id === seat ? "var(--c-accent)" : "var(--c-raised)"}
-                          opacity={id === seat ? 0.9 : 1}
+                          x={x - 25}
+                          y={y - 28}
+                          width="50"
+                          height="56"
+                          rx="14"
+                          fill={me ? "#2d63ee" : "rgb(255 255 255 / 0.1)"}
                         />
                         <text
                           x={x}
-                          y={y + 5}
+                          y={y + 6}
                           textAnchor="middle"
-                          fontSize="15"
-                          fill={id === seat ? "var(--c-on-accent)" : "var(--c-text)"}
+                          fontSize="16"
+                          fill="#fff"
                           fontFamily="var(--font-mono)"
                         >
                           {zones[id].temp.toFixed(1)}
@@ -678,13 +1242,14 @@ export function Climate({ seat }: { seat: SeatId }) {
   );
 }
 
+// ---------------------------------------------------------------- routines, clips, settings
+
 export function Routines({ seat }: { seat: SeatId }) {
   const routines = useSystem((st) => st.routines);
   const driving = useDriving(seat);
   return (
-    <div className={s.routines}>
-      <div className={s.homeBar}>
-        <h3 className={s.moduleTitle}>Routines</h3>
+    <div className={s.view}>
+      <ViewHead title="Routines">
         <Press
           className={s.chip}
           onPress={() => dispatch({ type: "open", seat, module: "routines" })}
@@ -694,22 +1259,24 @@ export function Routines({ seat }: { seat: SeatId }) {
           <Icon name="plus" size="1.1em" />
           <span>New</span>
         </Press>
-      </div>
+      </ViewHead>
       <p className={s.muted}>
         One switch sets the cabin: light, temperature and what plays, by time, place or climate.
       </p>
-      <ul className={s.routineList}>
-        {routines.map((r) => (
-          <li key={r.id}>
-            <Switch
-              label={r.name}
-              detail={r.detail}
-              checked={r.on}
-              onChange={() => dispatch({ type: "routine", id: r.id })}
-            />
-          </li>
-        ))}
-      </ul>
+      <Card>
+        <ul className={s.routineList}>
+          {routines.map((r) => (
+            <li key={r.id}>
+              <Switch
+                label={r.name}
+                detail={r.detail}
+                checked={r.on}
+                onChange={() => dispatch({ type: "routine", id: r.id })}
+              />
+            </li>
+          ))}
+        </ul>
+      </Card>
     </div>
   );
 }
@@ -718,8 +1285,8 @@ export function Clips({ seat }: { seat: SeatId }) {
   const state = useSystem((st) => st.seats[seat].clip);
   const clips = useSystem((st) => st.clips);
   return (
-    <div className={s.clips}>
-      <h3 className={s.moduleTitle}>Memory clips</h3>
+    <div className={s.view}>
+      <ViewHead title="Memory clips" />
       <div className={s.recorder} data-state={state}>
         <div className={s.recorderView} aria-hidden="true">
           <span className={s.recDot} />
@@ -749,6 +1316,7 @@ export function Clips({ seat }: { seat: SeatId }) {
                 kind="clip"
                 refId={clips[0]?.id ?? ""}
                 title={clips[0]?.title ?? "Clip"}
+                below
               />
               <Press className={s.chip} onPress={() => dispatch({ type: "clip-discard", seat })}>
                 <Icon name="check" size="1.1em" />
@@ -768,20 +1336,22 @@ export function Clips({ seat }: { seat: SeatId }) {
           <p className={s.fine}>A demo: nothing is recorded.</p>
         </div>
       </div>
-      <ul className={s.clipList}>
-        {clips.map((c) => (
-          <li key={c.id} className={s.placeRow}>
-            <Icon name="clips" />
-            <span>
-              {c.title}{" "}
-              <span className={s.muted}>
-                · {c.seconds} s · {SEAT_NAME[c.seat]}
+      <Card title="Saved">
+        <ul className={s.list}>
+          {clips.map((c) => (
+            <li key={c.id} className={s.placeRow}>
+              <Icon name="clips" />
+              <span>
+                {c.title}{" "}
+                <span className={s.muted}>
+                  · {c.seconds} s · {SEAT_NAME[c.seat]}
+                </span>
               </span>
-            </span>
-            <SendTo seat={seat} kind="clip" refId={c.id} title={c.title} compact />
-          </li>
-        ))}
-      </ul>
+              <SendTo seat={seat} kind="clip" refId={c.id} title={c.title} compact />
+            </li>
+          ))}
+        </ul>
+      </Card>
     </div>
   );
 }
@@ -790,13 +1360,14 @@ export function Settings({ seat }: { seat: SeatId }) {
   const settings = useSystem((st) => st.settings);
   const brightness = useSystem((st) => st.seats[seat].brightness);
   const textScale = useSystem((st) => st.seats[seat].textScale);
+  const volume = useSystem((st) => st.volume[seat]);
   const set = (key: keyof typeof settings) => (on: boolean) =>
     dispatch({ type: "setting", key, on });
   return (
-    <div className={s.settings}>
-      <h3 className={s.moduleTitle}>Settings</h3>
+    <div className={s.view}>
+      <ViewHead title="Settings" />
       <div className={s.settingsGrid}>
-        <Card title="Display">
+        <Card title="Display and sound">
           <Range
             label="Brightness"
             min={0.2}
@@ -804,6 +1375,15 @@ export function Settings({ seat }: { seat: SeatId }) {
             step={0.05}
             value={brightness}
             onChange={(to) => dispatch({ type: "brightness", seat, to })}
+            format={(v) => `${Math.round(v * 100)}%`}
+          />
+          <Range
+            label="Volume, this zone"
+            min={0}
+            max={1}
+            step={0.05}
+            value={volume}
+            onChange={(to) => dispatch({ type: "volume", seat, to })}
             format={(v) => `${Math.round(v * 100)}%`}
           />
           <Segmented
@@ -842,7 +1422,7 @@ export function Settings({ seat }: { seat: SeatId }) {
           />
           <Switch
             label="Bluetooth"
-            detail="Phones and headphones"
+            detail="Headphones for this seat"
             checked={settings.bluetooth}
             onChange={set("bluetooth")}
           />
@@ -861,10 +1441,30 @@ export function Settings({ seat }: { seat: SeatId }) {
             onChange={set("analytics")}
           />
         </Card>
+        <Card title="About">
+          <dl className={s.spec}>
+            <div>
+              <dt>System</dt>
+              <dd>AVENUE, concept build</dd>
+            </div>
+            <div>
+              <dt>Target OS</dt>
+              <dd>Android Automotive 15</dd>
+            </div>
+            <div>
+              <dt>Zone</dt>
+              <dd>{SEAT_NAME[seat]}</dd>
+            </div>
+            <div>
+              <dt>Reference SoC</dt>
+              <dd>SA8295P class</dd>
+            </div>
+          </dl>
+          <p className={s.fine}>
+            This web demo runs the interface; the platform is scoped with each partner.
+          </p>
+        </Card>
       </div>
-      <p className={s.fine}>
-        AVENUE reference implementation, web. Platform integration is scoped with each partner.
-      </p>
     </div>
   );
 }

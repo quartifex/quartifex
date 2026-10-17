@@ -1,0 +1,138 @@
+.fleet {
+  isolation: isolate;
+  overflow: hidden;
+  background:
+    radial-gradient(60% 50% at 85% 40%, rgb(45 99 238 / 0.22), transparent 70%),
+    radial-gradient(50% 40% at 10% 90%, rgb(255 106 43 / 0.1), transparent 70%), var(--c-bg);
+}
+
+.fleet > :global(.wrap) {
+  position: relative;
+  z-index: 1;
+}
+
+.grid {
+  display: grid;
+  gap: clamp(2.5rem, 5vw, 4rem);
+  align-items: center;
+}
+
+@media (min-width: 1100px) {
+  .grid {
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  }
+}
+
+.head {
+  display: grid;
+  gap: var(--s-5);
+  align-content: start;
+}
+
+.lists {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  gap: var(--s-5);
+  margin-top: var(--s-2);
+}
+
+.lists ul {
+  display: grid;
+  gap: var(--s-3);
+  margin: var(--s-3) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lists li {
+  display: grid;
+  gap: 2px;
+  padding-left: var(--s-4);
+  border-left: 2px solid var(--c-accent);
+}
+
+.lists li span {
+  font-size: 0.9375rem;
+  color: var(--c-text-muted);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-4);
+}
+
+.device {
+  display: grid;
+  gap: var(--s-3);
+  perspective: 1600px;
+}
+
+.deviceFrame {
+  aspect-ratio: 16 / 10.5;
+  transform: rotateY(-8deg) rotateX(4deg);
+  transform-origin: 0% 50%;
+  transition: transform 1.2s var(--ease-out);
+}
+
+.device:hover .deviceFrame {
+  transform: rotateY(-3deg) rotateX(2deg);
+}
+
+.preview {
+  grid-template-areas: "main";
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+  pointer-events: none;
+}
+
+.preview > * {
+  overflow: hidden !important;
+}
+
+.caption {
+  font-size: 0.8125rem;
+  color: var(--c-text-muted);
+}
+
+.market {
+  margin-top: clamp(4rem, 8vw, 6rem);
+  display: grid;
+  gap: var(--s-4);
+}
+
+.market ul {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+  gap: 1px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: 1px dashed var(--c-line-strong);
+  background: var(--c-line);
+}
+
+.market li {
+  display: grid;
+  gap: var(--s-2);
+  align-content: start;
+  padding: var(--s-5);
+  background: var(--c-surface);
+}
+
+.market li span {
+  color: var(--c-text-muted);
+}
+
+.market small {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.75rem;
+  color: var(--c-text-faint);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .deviceFrame {
+    transform: none;
+  }
+}

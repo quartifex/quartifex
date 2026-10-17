@@ -91,45 +91,77 @@ function SeatSwitcher({ seat, onSelect }: { seat: SeatId; onSelect: (s: SeatId) 
   );
 }
 
-function MovingSwitch() {
-  const moving = useSystem((st) => st.moving);
+function Toggle({
+  label,
+  options,
+  value,
+  onChange,
+}: {
+  label: string;
+  options: ReadonlyArray<readonly [boolean, string]>;
+  value: boolean;
+  onChange: (v: boolean) => void;
+}) {
+  const id = `toggle-${label.toLowerCase().replace(/\W+/g, "-")}`;
   return (
-    <div className={s.movingSwitch}>
-      <span id="moving-label" className={s.controlLabel}>
-        Car
+    <div className={s.toggle}>
+      <span id={id} className={s.controlLabel}>
+        {label}
       </span>
-      <div role="radiogroup" aria-labelledby="moving-label" className={s.segmented}>
-        {(
-          [
-            [false, "Parked"],
-            [true, "Moving"],
-          ] as const
-        ).map(([value, label]) => (
+      <div role="radiogroup" aria-labelledby={id} className={s.toggleGroup}>
+        {options.map(([v, text]) => (
           // biome-ignore lint/a11y/useSemanticElements: a segmented control: buttons in a radiogroup with roving focus and arrow keys
           <button
-            key={label}
+            key={text}
             type="button"
             role="radio"
-            aria-checked={moving === value}
-            tabIndex={moving === value ? 0 : -1}
-            className={s.segment}
-            onClick={() => dispatch({ type: "moving", on: value })}
+            aria-checked={value === v}
+            tabIndex={value === v ? 0 : -1}
+            className={s.toggleOption}
+            data-tone={v && label === "Car" ? "ember" : undefined}
+            onClick={() => onChange(v)}
             onKeyDown={(e) => {
               if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(e.key)) {
                 e.preventDefault();
-                dispatch({ type: "moving", on: !moving });
-                const sibling =
-                  (e.currentTarget.parentElement?.children[moving ? 0 : 1] as
-                    | HTMLElement
-                    | undefined) ?? null;
+                onChange(!value);
+                const sibling = e.currentTarget.parentElement?.children[value ? 0 : 1] as
+                  | HTMLElement
+                  | undefined;
                 sibling?.focus();
               }
             }}
           >
-            {label}
+            {text}
           </button>
         ))}
       </div>
+    </div>
+  );
+}
+
+function CarControls() {
+  const moving = useSystem((st) => st.moving);
+  const fleet = useSystem((st) => st.fleet);
+  return (
+    <div className={s.carControls}>
+      <Toggle
+        label="Car"
+        options={[
+          [false, "Parked"],
+          [true, "Moving"],
+        ]}
+        value={moving}
+        onChange={(on) => dispatch({ type: "moving", on })}
+      />
+      <Toggle
+        label="Use"
+        options={[
+          [false, "Private"],
+          [true, "Cab"],
+        ]}
+        value={fleet}
+        onChange={(on) => dispatch({ type: "fleet", on })}
+      />
     </div>
   );
 }
@@ -156,6 +188,7 @@ function SystemStrip({ seat, onSelect }: { seat: SeatId; onSelect: (s: SeatId) =
                   ? `${item.title}`
                   : st.module[0]?.toUpperCase() + st.module.slice(1)}
               </span>
+              {st.playing && item ? <span className={s.stripLive} aria-hidden="true" /> : null}
               {st.inbox.length ? (
                 <span className={s.stripBadge}>{st.inbox.length} sent to it</span>
               ) : null}
@@ -293,14 +326,14 @@ export function Demo() {
           </h2>
         </div>
         <p className={s.intro}>
-          Choose a seat and its screen opens up. Try the driver&rsquo;s seat, then set the car
-          moving to see what locks, and send something to the back. Everything works from the
-          keyboard.
+          The car is moving, so the driver&rsquo;s screen is in glance mode. Park it to see what
+          unlocks, take another seat, send something to the back, or switch to cab mode for the
+          rider&rsquo;s screen. Everything works from the keyboard.
         </p>
       </div>
       <div className={`wrap ${s.controls}`}>
         <SeatSwitcher seat={seat} onSelect={select} />
-        <MovingSwitch />
+        <CarControls />
       </div>
       <div className={s.stage}>
         <div ref={anchor} className={s.anchor} aria-hidden="true" />

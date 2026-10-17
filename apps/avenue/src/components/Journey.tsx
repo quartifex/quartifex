@@ -7,7 +7,6 @@
 // headlines stand still.
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { SplitText } from "gsap/SplitText";
 import { type ReactNode, useEffect, useRef } from "react";
 import { dispatch } from "@/demo/store";
 import { frame, stage } from "@/stage/state";
@@ -98,12 +97,13 @@ export function Journey({ children }: { children: ReactNode }) {
       });
 
       // A2: the car pulls away halfway through the driver chapter, and the screen locks.
-      let wasMoving = false;
+      let wasMoving = true;
       ScrollTrigger.create({
         trigger: el.querySelector("section[data-chapter=driver]"),
         start: "top bottom",
         end: "bottom bottom",
         onUpdate: (self) => {
+          if (!self.isActive) return;
           const moving = self.progress > 0.45;
           if (moving === wasMoving) return;
           wasMoving = moving;
@@ -113,13 +113,14 @@ export function Journey({ children }: { children: ReactNode }) {
           );
           dispatch({ type: "moving", on: moving });
         },
+        // Outside the chapter the car is moving again: that is the demo's default.
         onLeave: () => {
-          wasMoving = false;
-          dispatch({ type: "moving", on: false });
+          wasMoving = true;
+          dispatch({ type: "moving", on: true });
         },
         onLeaveBack: () => {
-          wasMoving = false;
-          dispatch({ type: "moving", on: false });
+          wasMoving = true;
+          dispatch({ type: "moving", on: true });
         },
       });
 
@@ -131,24 +132,6 @@ export function Journey({ children }: { children: ReactNode }) {
           end: "bottom bottom",
           onUpdate: (self) => section.style.setProperty("--p", self.progress.toFixed(4)),
         });
-      }
-
-      // Headlines rise line by line as they arrive.
-      if (!reduced) {
-        for (const h of el.querySelectorAll<HTMLElement>("[data-split]")) {
-          const split = SplitText.create(h, {
-            type: "lines",
-            mask: "lines",
-            linesClass: "split-line",
-          });
-          gsap.from(split.lines, {
-            yPercent: 110,
-            duration: 1.1,
-            ease: "expo.out",
-            stagger: 0.08,
-            scrollTrigger: { trigger: h, start: "top 85%", once: true },
-          });
-        }
       }
 
       // The demo takes the camera when its section is mostly on screen.

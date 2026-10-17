@@ -53,3 +53,4 @@ apps/avenue/src/app/generated/
 # until a media host is set up (see apps/avenue/public/media/LICENSES.md).
 !apps/avenue/public/media/*.glb
 !apps/avenue/public/media/*.hdr
+!apps/avenue/public/media/**/*.webp

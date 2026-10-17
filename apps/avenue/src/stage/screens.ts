@@ -107,7 +107,7 @@ export function drawScreen(
     ctx.fillText("600 m", x0 + pad, top + bodyH * 0.4);
     ctx.fillStyle = c.text;
     ctx.font = `500 ${Math.round(bodyH * 0.14)}px Archivo, system-ui, sans-serif`;
-    ctx.fillText("Ridge Lane", x0 + pad, top + bodyH * 0.72);
+    ctx.fillText("Coastal Road", x0 + pad, top + bodyH * 0.72);
     ctx.fillStyle = c.raised;
     ctx.beginPath();
     ctx.roundRect(x0 + w0 * 0.61, top, w0 * 0.39, bodyH, H * 0.06);
