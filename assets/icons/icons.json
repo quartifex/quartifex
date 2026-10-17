@@ -502,5 +502,13 @@
   "category": "Shaders & lighting",
   "svg": "svg/L30-volumetric.svg",
   "png": "png/L30-volumetric.png"
+ },
+ {
+  "id": "S20",
+  "name": "avenue",
+  "kind": "site",
+  "category": "Product site",
+  "svg": "svg/S20-avenue.svg",
+  "png": "png/S20-avenue.png"
  }
 ]

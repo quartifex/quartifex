@@ -1,0 +1,35 @@
+## Design system
+
+Everything below is rendered live from one tokens file (`src/design/tokens.ts`). The site, the in-car interface and these tables all read it, so they cannot drift.
+
+The high-fidelity concept used a neumorphic palette. We kept the soft-surface feel (a top highlight and a low, wide shadow instead of hard borders) and restyled it so that every text and control meets WCAG 2.2 AA: neumorphism's soft, low-contrast edges usually fail it.
+
+### Colour
+
+Two themes: **cabin** (dark, the default, because car interfaces live at night) and **paper** (light, for documentation). One accent, amber: warm enough not to wash out night vision and strong enough to read on dark glass and on paper. On paper it steps darker, so a fill still stands 3:1 off the page. Red is reserved for SOS.
+
+<ColourTable />
+
+### Contrast
+
+Every pair the interface uses, checked against WCAG 2.2 AA in both themes (also enforced by a unit test):
+
+<ContrastTable />
+
+### Type
+
+Display: **Archivo**, set wide and light, for headings and the wordmark. Interface: **Instrument Sans**. Numbers and specifications: **DM Mono**, with tabular figures so changing values never shift. All three are free (SIL Open Font License) and self-hosted.
+
+<TypeScale />
+
+### Spacing, radius and elevation
+
+A 4 px base. Radii are concentric: an outer radius equals the inner radius plus the padding between them.
+
+<Scales />
+
+### Core components
+
+The same components the demo is built from, live:
+
+<ComponentShowcase />

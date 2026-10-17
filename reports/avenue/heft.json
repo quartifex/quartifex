@@ -1,0 +1,98 @@
+{
+  "measurements": {
+    "assets": {
+      "totalBytes": 1296572,
+      "glbs": [
+        {
+          "file": "models/avenue-car-lite.glb",
+          "bytes": 115396,
+          "triangles": 15906
+        },
+        {
+          "file": "models/avenue-car.glb",
+          "bytes": 345380,
+          "triangles": 62042
+        }
+      ],
+      "textureBytes": 0,
+      "sequences": [
+        {
+          "file": "sequences/cabin/manifest.json",
+          "largestTierBytes": 292630
+        }
+      ]
+    },
+    "page": {
+      "transferBytes": 534942,
+      "scriptBytes": 240756,
+      "imageBytes": 104868
+    },
+    "scroll": {
+      "frames": 816,
+      "longFrames": 6,
+      "p95FrameMs": 16.8,
+      "cls": 0.001,
+      "inp": 64
+    }
+  },
+  "findings": [
+    {
+      "metric": "assets.totalBytes",
+      "actual": 1296572,
+      "limit": 3000000,
+      "unit": "bytes",
+      "pass": true
+    },
+    {
+      "metric": "assets.sequenceBytes",
+      "actual": 292630,
+      "limit": 600000,
+      "unit": "bytes",
+      "pass": true,
+      "file": "sequences/cabin/manifest.json"
+    },
+    {
+      "metric": "page.transferBytes",
+      "actual": 534942,
+      "limit": 800000,
+      "unit": "bytes",
+      "pass": true
+    },
+    {
+      "metric": "page.scriptBytes",
+      "actual": 240756,
+      "limit": 400000,
+      "unit": "bytes",
+      "pass": true
+    },
+    {
+      "metric": "scroll.longFrames",
+      "actual": 6,
+      "limit": 8,
+      "unit": "count",
+      "pass": true
+    },
+    {
+      "metric": "scroll.p95FrameMs",
+      "actual": 16.8,
+      "limit": 40,
+      "unit": "ms",
+      "pass": true
+    },
+    {
+      "metric": "scroll.cls",
+      "actual": 0.001,
+      "limit": 0.1,
+      "unit": "score",
+      "pass": true
+    },
+    {
+      "metric": "scroll.inp",
+      "actual": 64,
+      "limit": 200,
+      "unit": "ms",
+      "pass": true
+    }
+  ],
+  "pass": true
+}

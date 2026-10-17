@@ -1,0 +1,46 @@
+{
+  "date": "2026-10-17T13:16:58.840Z",
+  "tags": [
+    "wcag2a",
+    "wcag2aa",
+    "wcag21a",
+    "wcag21aa",
+    "wcag22aa"
+  ],
+  "states": {
+    "page as loaded": {
+      "violations": [],
+      "passes": 35,
+      "version": "4.13.0"
+    },
+    "driver, moving": {
+      "violations": [],
+      "passes": 35,
+      "version": "4.13.0"
+    },
+    "rear screen, share waiting": {
+      "violations": [],
+      "passes": 35,
+      "version": "4.13.0"
+    },
+    "SOS countdown": {
+      "violations": [],
+      "passes": 35,
+      "version": "4.13.0"
+    },
+    "requirement card open": {
+      "violations": [],
+      "passes": 35,
+      "version": "4.13.0"
+    }
+  },
+  "lighthouse": {
+    "accessibility": 1,
+    "best-practices": 1,
+    "seo": 1,
+    "performance": 0.89,
+    "lcpMs": 2944.492,
+    "cls": 0.0010560326715644216,
+    "tbtMs": 266
+  }
+}

@@ -1,0 +1,103 @@
+{
+  "file": "avenue-car.glb",
+  "before": {
+    "triangles": 69818,
+    "vertices": 56634,
+    "meshes": 16,
+    "drawCalls": 21,
+    "materials": 10,
+    "nodes": 28,
+    "animations": 0,
+    "textures": [],
+    "textureBytes": 0,
+    "maxTextureSize": 0,
+    "extensions": [
+      "KHR_materials_clearcoat",
+      "KHR_materials_emissive_strength"
+    ],
+    "bytes": 2434804
+  },
+  "after": {
+    "bytes": 345380,
+    "triangles": 69818,
+    "vertices": 36666,
+    "meshes": 16,
+    "drawCalls": 21,
+    "materials": 10,
+    "nodes": 28,
+    "animations": 0,
+    "textures": [],
+    "textureBytes": 0,
+    "maxTextureSize": 0,
+    "extensions": [
+      "KHR_materials_clearcoat",
+      "KHR_materials_emissive_strength",
+      "KHR_mesh_quantization",
+      "EXT_meshopt_compression"
+    ]
+  },
+  "steps": [
+    "names: 5 issues",
+    "dedupe: accessors, meshes, textures, materials",
+    "prune: unused nodes, materials, textures, attributes",
+    "weld: identical vertices merged, every primitive indexed",
+    "compress: Meshopt (EXT_meshopt_compression), quantized"
+  ],
+  "names": [
+    {
+      "kind": "node",
+      "name": "tyre",
+      "problem": "duplicate"
+    },
+    {
+      "kind": "node",
+      "name": "tyre",
+      "problem": "duplicate"
+    },
+    {
+      "kind": "node",
+      "name": "rim",
+      "problem": "duplicate"
+    },
+    {
+      "kind": "node",
+      "name": "tyre",
+      "problem": "duplicate"
+    },
+    {
+      "kind": "node",
+      "name": "rim-mirrored",
+      "problem": "duplicate"
+    }
+  ],
+  "warnings": [],
+  "verdict": {
+    "pass": true,
+    "checks": [
+      {
+        "metric": "bytes",
+        "value": 345380,
+        "limit": 4000000,
+        "pass": true
+      },
+      {
+        "metric": "triangles",
+        "value": 69818,
+        "limit": 260000,
+        "pass": true
+      },
+      {
+        "metric": "drawCalls",
+        "value": 21,
+        "limit": 40,
+        "pass": true
+      },
+      {
+        "metric": "materials",
+        "value": 10,
+        "limit": 12,
+        "pass": true
+      }
+    ]
+  }
+}

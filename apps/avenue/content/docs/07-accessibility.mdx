@@ -1,0 +1,11 @@
+## Accessibility
+
+- **Contrast**: every colour pair meets WCAG 2.2 AA (4.5:1 for text, 3:1 for controls and edges), in both themes; a unit test checks the tokens and axe checks the page.
+- **Keyboard**: the whole demo works from the keyboard. Seat and option groups move with the arrow keys; focus is always visible (a 2 px amber ring).
+- **Screen readers**: every control has a name and a state; what changes is announced politely; locked items say why.
+- **Text size**: three steps per seat (default, large, largest), and a high-contrast mode.
+- **Captions** on by default for anything that plays.
+- **Motion**: reduced motion removes camera flights and cuts instead; nothing is conveyed by motion alone.
+- **Touch**: targets of at least 44 × 44 px, 76 px for the driver while moving.
+
+Automated checks (axe) find only part of the problems; testing with people who use assistive technology is part of any pilot.

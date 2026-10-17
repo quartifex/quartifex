@@ -104,6 +104,43 @@
           "inp": 200
         }
       }
+    },
+    {
+      "app": "avenue",
+      "initialJsKb": 260,
+      "initialCssKb": 40,
+      "totalInitialKb": 900,
+      "heroMediaKb": 4000,
+      "fontsKb": 160,
+      "freight": {
+        "bytes": 4000000,
+        "triangles": 260000,
+        "drawCalls": 40,
+        "materials": 12
+      },
+      "freightLite": {
+        "bytes": 1500000,
+        "triangles": 90000,
+        "drawCalls": 40,
+        "materials": 12
+      },
+      "heft": {
+        "assets": {
+          "totalBytes": 3000000,
+          "sequenceBytes": 600000
+        },
+        "page": {
+          "transferBytes": 800000,
+          "scriptBytes": 400000
+        },
+        "scroll": {
+          "durationMs": 14000,
+          "longFrames": 8,
+          "p95FrameMs": 40,
+          "cls": 0.1,
+          "inp": 200
+        }
+      }
     }
   ]
 }

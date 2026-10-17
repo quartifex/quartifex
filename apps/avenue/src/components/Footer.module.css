@@ -1,0 +1,86 @@
+.footer {
+  position: relative;
+  z-index: 1;
+  padding-block: clamp(4rem, 8vw, 6rem) var(--s-7);
+  background: var(--c-bg);
+  border-top: 1px solid var(--c-line);
+  font-size: 0.9375rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--s-7);
+}
+
+@media (min-width: 900px) {
+  .grid {
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  }
+}
+
+.brand {
+  display: grid;
+  gap: var(--s-3);
+  align-content: start;
+}
+
+.logo {
+  width: 220px;
+  height: auto;
+  filter: invert(94%);
+}
+
+.honesty {
+  max-width: 28rem;
+  color: var(--c-text);
+}
+
+.label {
+  color: var(--c-text-muted);
+}
+
+.brand a {
+  color: var(--c-accent-text);
+}
+
+.heading {
+  margin-bottom: var(--s-3);
+  font-family: var(--font-mono), monospace;
+  font-size: var(--t-mono);
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--c-text-muted);
+}
+
+.credits {
+  display: grid;
+  gap: 0;
+  margin: 0;
+}
+
+.credits > div {
+  display: grid;
+  grid-template-columns: minmax(0, 11rem) minmax(0, 1fr);
+  gap: var(--s-4);
+  padding: var(--s-3) 0;
+  border-top: 1px solid var(--c-line);
+}
+
+.credits dt {
+  color: var(--c-text);
+  font-weight: 560;
+}
+
+.credits dd {
+  margin: 0;
+  color: var(--c-text-muted);
+}
+
+@media (max-width: 520px) {
+  .credits > div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--s-1);
+  }
+}

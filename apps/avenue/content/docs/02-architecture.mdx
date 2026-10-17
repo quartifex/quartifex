@@ -1,0 +1,37 @@
+## Architecture
+
+AVENUE is described here as a design system plus a reference implementation (this page's demo, written for the web). How it runs inside a vehicle is scoped with each partner; see [integration](#docs-integration).
+
+### Seat modes
+
+Each screen runs in one of three modes: **driver**, **co-pilot** or **rear**. A mode decides which modules appear, how large targets are and which rules apply while the car moves. The rear mode is the researched design; driver and co-pilot are extensions of it.
+
+### Shared state
+
+One state for the whole car, read by every screen:
+
+- **Journey**: route, ETA, next turn, places along the way.
+- **Media**: each seat's now playing, position and queue.
+- **Cabin**: climate per zone (with the rear zones optionally synced), lighting, seats.
+- **Routines**: presets that set several of the above at once.
+- **Vehicle**: parked or moving, which the driver rules read.
+- **Inbox**: per seat, what other seats have sent and not yet been answered.
+
+In the reference implementation this is one reducer (`src/demo/system.ts`); every screen, including the four drawn into the 3D cabin, reads it. The lockout rules live in the reducer, not in the screens, so no screen can forget them.
+
+### Content routing
+
+A seat can send what is playing, a place or a memory clip to any other seat (card Y). The item lands in the receiving seat's inbox as a card with two choices: accept (play it there, or add the place to the route) or not now. Video sent to the driver while moving is held until the car is parked.
+
+### Permission model
+
+| Action | Driver, parked | Driver, moving | Co-pilot | Rear |
+| --- | --- | --- | --- | --- |
+| Play video | Yes | No: send to a rear screen | Yes* | Yes |
+| Long or scrolling text, text entry | Yes | No | Yes* | Yes |
+| AR view (camera imagery) | Yes | No: 2D map instead | Yes* | Yes |
+| Climate, own zone | Yes | Large steppers; detail by voice or switches | Yes | Yes |
+| Change another seat's screen | No | No | No | No: send, never take over |
+| SOS | Yes | Yes | Yes | Yes |
+
+\* NHTSA's guidelines cover any built-in device the driver can easily see or reach, even one meant for passengers. A co-pilot screen visible from the driver's seat therefore needs either a view-angle (privacy) filter or the driver's rules while moving. Which one is a hardware decision, scoped per partner.

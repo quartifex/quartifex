@@ -1,0 +1,20 @@
+## Interaction and motion
+
+### Controls feel physical
+
+- **Press**: a control scales to 0.96 in 160 ms on an easing that starts fast and settles without overshoot (`cubic-bezier(0.2, 0, 0, 1)`), and a pressed control sinks (an inset shadow). Releasing returns it the same way, and a press can be interrupted.
+- **Feedback in words**: every change that matters is also said in text (a notice on the screen and a polite live-region message), never by motion alone.
+- **Sound**: synthesised cues (a tick on press, a rising pair to confirm, a low pulse for SOS). **Off by default**; a passenger turns them on from the quick bar.
+- **Targets**: at least 44 × 44 px everywhere; 76 px on the driver's screen while moving.
+
+<MotionTokens />
+
+### Motion on this page
+
+- The camera moves only with the visitor's scroll, slowly, along one path (exterior, round to the door, into the cabin).
+- Changing seat folds the panel into its screen, flies the camera (1.1 s), then grows the next screen out (a GSAP Flip).
+- **Reduced motion** (the system setting, or the page's own): no camera flights; the camera cuts between poses, the seat switcher cuts, and everything stays usable.
+
+### Seat-mode transitions
+
+Switching a screen between parked and moving reshapes the driver's layout at once (no animation to watch while driving): two large tiles, the next turn and what is playing, with locked items marked and a reason given.

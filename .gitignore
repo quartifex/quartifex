@@ -44,3 +44,7 @@ __pycache__/
 # assets-private/fonts or served from QX_FONT_ORIGIN. See licence-check.md, Fonts.
 assets/fonts/
 *.eot
+
+# Stamps written by app asset scripts next to their generated (ignored) output.
+apps/*/public/**/.stamp
+apps/avenue/src/app/generated/

@@ -1,0 +1,8 @@
+.journey {
+  position: relative;
+  isolation: isolate;
+}
+
+.journey :global(.split-line) {
+  padding-bottom: 0.06em;
+}

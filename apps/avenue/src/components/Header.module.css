@@ -1,0 +1,120 @@
+.header {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 50;
+  transition-property: background-color, border-color, backdrop-filter;
+  transition-duration: var(--d-base);
+  border-bottom: 1px solid transparent;
+}
+
+.header[data-scrolled] {
+  background: rgb(7 8 10 / 0.78);
+  backdrop-filter: blur(18px) saturate(1.3);
+  -webkit-backdrop-filter: blur(18px) saturate(1.3);
+  border-bottom-color: var(--c-line);
+}
+
+.inner {
+  display: flex;
+  align-items: center;
+  gap: var(--s-5);
+  width: min(100% - 2 * clamp(1rem, 4vw, 3.5rem), 82rem);
+  height: 4rem;
+  margin-inline: auto;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+.logo {
+  width: 110px;
+  height: auto;
+  filter: invert(94%);
+}
+
+.nav {
+  margin-right: auto;
+}
+
+.nav ul {
+  display: flex;
+  gap: var(--s-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.nav a,
+.docsLink {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 var(--s-3);
+  border-radius: var(--r-pill);
+  color: var(--c-text-muted);
+  font-size: 0.9375rem;
+  text-decoration: none;
+  transition: color var(--d-quick);
+}
+
+.nav a:hover,
+.docsLink:hover {
+  color: var(--c-text);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+}
+
+.menu {
+  display: none;
+  place-content: center;
+  gap: 5px;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--c-line-strong);
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+}
+
+.menu span {
+  display: block;
+  width: 16px;
+  height: 1.5px;
+  background: var(--c-text);
+}
+
+@media (max-width: 760px) {
+  .docsLink {
+    display: none;
+  }
+  .menu {
+    display: grid;
+  }
+  .nav {
+    position: absolute;
+    top: 4rem;
+    left: 0;
+    right: 0;
+    display: none;
+    padding: var(--s-3) clamp(1rem, 4vw, 3.5rem) var(--s-4);
+    background: rgb(7 8 10 / 0.96);
+    border-bottom: 1px solid var(--c-line);
+  }
+  .nav[data-open] {
+    display: block;
+  }
+  .nav ul {
+    flex-direction: column;
+  }
+  .actions :global(.btn) {
+    padding-inline: var(--s-4);
+    font-size: 0.875rem;
+  }
+}

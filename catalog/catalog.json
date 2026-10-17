@@ -912,5 +912,20 @@
   "order": 2,
   "state": "built",
   "prompt": "P1"
+ },
+ {
+  "id": "S20",
+  "kind": "site",
+  "name": "avenue",
+  "host": "avenue.quartifex.com",
+  "category": "Product site",
+  "effort": "L",
+  "order": 20,
+  "deps": [],
+  "libs": "L04, L28, L26, L07, L30, L12, L29, L06, L09, L03, L27",
+  "label": "Personal Concept",
+  "prompt": "PAV",
+  "state": "in progress",
+  "icon": "icons/svg/S20"
  }
 ]
