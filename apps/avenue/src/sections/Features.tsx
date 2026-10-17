@@ -78,11 +78,11 @@ function Extra({ id }: { id: string }) {
   if (id === "road")
     return (
       <div className={s.ar} aria-hidden="true">
-        <span className={s.poi} style={{ left: "58%", top: "44%" }}>
+        <span className={s.poi} style={{ left: "74%", top: "40%" }}>
           <b>Charging, 4 bays</b>
           <small>1.2 km · on route</small>
         </span>
-        <span className={s.poi} style={{ left: "36%", top: "50%" }}>
+        <span className={s.poi} style={{ left: "56%", top: "47%" }}>
           <b>The Long Table</b>
           <small>600 m · café</small>
         </span>
