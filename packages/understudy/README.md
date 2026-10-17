@@ -97,7 +97,8 @@ start on the sequence; Save-Data and 2G follow `saveData`; reduced motion follow
 | `createUnderstudy(env, contract?)` | function | The governor: `state`, `frame(ms)`, `demote(reason)`, `retry()`, `setReducedMotion(on)`, `subscribe(fn)` |
 | `chooseRung(env, contract?)` | function | The starting rung and why. Pure |
 | `defaultSteps(maxDpr)`, `qualityAt(steps, step)` | functions | The ladder and the quality at a step |
-| `readEnvironment(gpuTier?)`, `detectWebGL()` | functions | This browser's environment |
+| `readEnvironment(gpuTier?)`, `detectWebGL()`, `detectWebGPU()` | functions | This browser's environment (`webgpu` is set when `navigator.gpu` exists) |
+| `gpuBackend(env)` | function | `"webgpu"`, `"webgl"` or null: which backend real-time 3D should ask for |
 | `watchContext(canvas, understudy)` | function | Demote on `webglcontextlost` |
 | `useUnderstudy(contract?, overrides?)`, `<Ladder>` (`/react`) | hook, component | The governor for a component's lifetime; render the current rung |
 | `<Governor understudy frameTime?>`, `useQuality(understudy)` (`/r3f`) | component, hook | Inside the Canvas: feeds frame times, applies pixel ratio and shadows, watches the context |
@@ -117,6 +118,15 @@ region, so no information depends on seeing the scene change.
 
 Everything with WebGL, `requestAnimationFrame` and `matchMedia`. `navigator.connection`
 (Save-Data, effective type) exists in Chromium browsers only; elsewhere those rules do not apply.
+
+## WebGPU
+
+The `webgl` rung means real-time 3D, whichever API draws it. `readEnvironment` reports
+`webgpu: true` when the browser exposes WebGPU, `chooseRung` says "WebGPU is available" (it still
+needs WebGL for the 3D rung: `navigator.gpu` can exist with no adapter behind it, and renderers
+fall back to WebGL2), and `gpuBackend` picks the backend to ask for. A
+renderer that falls back by itself, such as three's WebGPURenderer (WebGPU, then WebGL2), needs
+nothing more. Rung names are unchanged, so existing contracts keep working.
 
 ## Size
 

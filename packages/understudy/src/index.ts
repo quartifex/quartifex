@@ -1,5 +1,6 @@
 // @quartifex/understudy (L12, Quality & testing). A quality governor with a contract:
-// WebGL, then the image sequence, then the poster. It picks the starting rung and quality
+// real-time 3D (WebGPU or WebGL), then the image sequence, then the poster. It picks the
+// starting rung and quality
 // from the device (WebGL support, GPU tier, Save-Data, reduced motion), then watches the
 // frame rate: it steps quality down (post-processing, pixel ratio, shadows, particles) when
 // frames run slow, back up with hysteresis when they recover, and hands off to the next
@@ -26,6 +27,11 @@ export type Step = Partial<Quality> & { name: string };
 
 export type Environment = {
   webgl: boolean;
+  /**
+   * WebGPU is exposed (`navigator.gpu`). The "webgl" rung means real-time 3D: a renderer such
+   * as three's WebGPURenderer uses WebGPU when this is true and falls back to WebGL2 itself.
+   */
+  webgpu?: boolean;
   /** WebGL only through software rendering (failIfMajorPerformanceCaveat). */
   majorPerformanceCaveat?: boolean;
   /** detect-gpu's tier, e.g. from `@quartifex/understudy/gpu`. */
@@ -150,6 +156,8 @@ export function chooseRung(
       reasons.push(reason);
     }
   };
+  // WebGPU alone is not enough: `navigator.gpu` can exist with no adapter behind it, and
+  // renderers that prefer WebGPU fall back to WebGL2. So real-time 3D still needs WebGL.
   if (!env.webgl) lower("sequence", "WebGL is not available");
   else if (env.majorPerformanceCaveat) lower("sequence", "WebGL runs in software here");
   else if (env.gpuTier === 0) lower("sequence", "GPU tier 0: too slow for real-time 3D");
@@ -164,7 +172,8 @@ export function chooseRung(
   let rung: Rung | null = want;
   while (rung && !rungs.includes(rung)) rung = below(rung, rungs);
   const fallback = rungs[rungs.length - 1] ?? "poster";
-  return { rung: rung ?? fallback, reasons: reasons.length ? reasons : ["WebGL is available"] };
+  const ok = env.webgpu ? "WebGPU is available" : "WebGL is available";
+  return { rung: rung ?? fallback, reasons: reasons.length ? reasons : [ok] };
 }
 
 const snap = (hz: number) =>
@@ -362,6 +371,18 @@ export function createUnderstudy(env: Environment, contract: Contract = {}): Und
 }
 
 /** WebGL support, and whether it would only run in software. Browser only. */
+/** Renderer strings of software rasterisers, which some browsers do not flag as a caveat. */
+export const SOFTWARE_RENDERERS =
+  /swiftshader|llvmpipe|softpipe|software|basic render driver|mesa offscreen/i;
+
+function softwareRenderer(gl: RenderingContext | null): boolean {
+  const g = gl as WebGLRenderingContext | null;
+  if (!g || typeof g.getExtension !== "function") return false;
+  const info = g.getExtension("WEBGL_debug_renderer_info");
+  const name = info ? g.getParameter(info.UNMASKED_RENDERER_WEBGL) : g.getParameter(g.RENDERER);
+  return typeof name === "string" && SOFTWARE_RENDERERS.test(name);
+}
+
 export function detectWebGL(
   doc: Document = document,
 ): Pick<Environment, "webgl" | "majorPerformanceCaveat"> {
@@ -372,8 +393,11 @@ export function detectWebGL(
   };
   const fast = canvas.getContext("webgl2", strict) ?? canvas.getContext("webgl", strict);
   if (fast) {
+    // Some browsers (headless ones, with the GPU disabled) hand out a software context
+    // without flagging it: check the renderer's name as well.
+    const software = softwareRenderer(fast);
     lose(fast);
-    return { webgl: true, majorPerformanceCaveat: false };
+    return { webgl: true, majorPerformanceCaveat: software };
   }
   const any =
     doc.createElement("canvas").getContext("webgl2") ??
@@ -384,6 +408,22 @@ export function detectWebGL(
 
 type Connection = { saveData?: boolean; effectiveType?: Environment["effectiveType"] };
 
+/**
+ * Whether this browser exposes WebGPU. Synchronous and cheap: it checks for `navigator.gpu`
+ * without requesting an adapter, so a browser can still refuse one later (then a renderer that
+ * falls back, such as three's WebGPURenderer, uses WebGL2).
+ */
+export function detectWebGPU(win: Window = window): boolean {
+  return Boolean((win.navigator as Navigator & { gpu?: unknown }).gpu);
+}
+
+/** Which backend real-time 3D should ask for on this environment. */
+export function gpuBackend(env: Environment): "webgpu" | "webgl" | null {
+  if (env.webgpu && !env.majorPerformanceCaveat) return "webgpu";
+  if (env.webgl) return "webgl";
+  return env.webgpu ? "webgpu" : null;
+}
+
 /** The environment from this browser. Pass the GPU tier if you have one (it needs a fetch). */
 export function readEnvironment(
   gpuTier?: Environment["gpuTier"],
@@ -392,6 +432,7 @@ export function readEnvironment(
   const connection = (win.navigator as Navigator & { connection?: Connection }).connection;
   return {
     ...detectWebGL(win.document),
+    ...(detectWebGPU(win) ? { webgpu: true } : {}),
     ...(gpuTier === undefined ? {} : { gpuTier }),
     reducedMotion: win.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false,
     ...(connection?.saveData ? { saveData: true } : {}),

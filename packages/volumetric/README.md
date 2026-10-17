@@ -80,6 +80,7 @@ camera)` instead of `renderer.render`), or `createOverlay(canvas, options)` from
 | `shaftLight(point, source, settings, beams)`, `beamAngles(count, source)` | functions | How lit a point is by the overlay's shafts |
 | `createVolumetric(renderer, { settings, quality, sun, reducedMotion })` (`/three`) | function | The WebGL pass: `render`, `setSize`, `update`, `setQuality`, `setSun`, `dispose` |
 | `<VolumetricLight>` (`/r3f`) | component | The WebGL pass inside an R3F Canvas; follows the R3F camera (dolly-driven or not) |
+| `createTslVolumetric({ color, depth, sun, settings, quality })` (`/tsl`) | function | The same pass as TSL nodes for three's WebGPURenderer (WebGPU, or its WebGL2 fallback): `node` (scene plus shafts, for `RenderPipeline.outputNode`), `shafts`, `update(camera, seconds)`, `setSettings`, `visibility` |
 | `createOverlay(canvas, { settings, quality, reducedMotion })` (`/overlay`) | function | The canvas variant: `update`, `setQuality`, `draw`, `destroy` |
 | `<VolumetricOverlay>` (`/react`) | component | The canvas variant as an absolutely positioned, screen-blended layer |
 | `Settings`, `VolumetricQuality`, `Mote` | types | |
@@ -103,10 +104,19 @@ WebGL 2 for the WebGL pass (half-float targets where the GPU supports them, 8-bi
 otherwise); Canvas 2D for the overlay, everywhere. The overlay animates only while it is on
 screen.
 
+## WebGPU
+
+three's WebGPURenderer cannot run GLSL ShaderMaterials, so the WebGL pass in `/three` does not work
+there. `/tsl` rebuilds the same design in nodes: the light's disc and glow, cut out where the
+scene's depth says something stands in front of the sky, blurred radially towards the light
+(three's `radialBlur`), tinted by the colour temperature and added to the scene. It takes the
+scene pass's colour and depth, so it composes with other nodes (bloom, a vignette). Dust motes
+are not drawn in this variant.
+
 ## Size
 
 Enforced in CI (brotli, unminified ESM): core under 3 kB, canvas overlay under 2.5 kB,
-WebGL pass under 3.5 kB, R3F and React components under 1 kB each.
+WebGL pass under 3.5 kB, TSL pass under 1.5 kB (1.08 kB), R3F and React components under 1 kB each.
 
 ## Limitations
 

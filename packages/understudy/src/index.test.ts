@@ -4,7 +4,9 @@ import {
   createUnderstudy,
   defaultSteps,
   type Environment,
+  gpuBackend,
   qualityAt,
+  SOFTWARE_RENDERERS,
   type Understudy,
 } from "./index.js";
 
@@ -200,5 +202,38 @@ describe("the reel hand-off", () => {
     expect(reels[0]?.destroy).toHaveBeenCalled();
     expect(changes).toEqual(["reel:sequence", "none:webgl"]);
     standIn.destroy();
+  });
+});
+
+describe("WebGPU", () => {
+  it("reports WebGPU when it is there, but still needs WebGL to fall back on", () => {
+    expect(chooseRung({ webgl: true, webgpu: true })).toEqual({
+      rung: "webgl",
+      reasons: ["WebGPU is available"],
+    });
+    // navigator.gpu can exist with no adapter: without WebGL there is no 3D to fall back to.
+    expect(chooseRung({ webgl: false, webgpu: true }).rung).toBe("sequence");
+  });
+
+  it("picks the backend: WebGPU first, WebGL2 next, none without either", () => {
+    expect(gpuBackend({ webgl: true, webgpu: true })).toBe("webgpu");
+    expect(gpuBackend({ webgl: true })).toBe("webgl");
+    expect(gpuBackend({ webgl: true, webgpu: true, majorPerformanceCaveat: true })).toBe("webgl");
+    expect(gpuBackend({ webgl: false })).toBeNull();
+  });
+});
+
+describe("software renderers", () => {
+  it("recognises the usual software rasterisers by name", () => {
+    for (const name of [
+      "Google SwiftShader",
+      "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero)))",
+      "llvmpipe (LLVM 15.0.7, 256 bits)",
+      "Microsoft Basic Render Driver",
+    ]) {
+      expect(SOFTWARE_RENDERERS.test(name), name).toBe(true);
+    }
+    expect(SOFTWARE_RENDERERS.test("ANGLE (Apple, Apple M2, OpenGL 4.1)")).toBe(false);
+    expect(SOFTWARE_RENDERERS.test("Adreno (TM) 650")).toBe(false);
   });
 });

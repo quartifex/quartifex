@@ -1,7 +1,7 @@
 {
   "name": "@quartifex/volumetric",
   "version": "0.0.0",
-  "description": "Volumetric light shafts (god-rays) through a translucent medium: a WebGL post-process for three.js and React Three Fiber, and a Canvas 2D overlay for image sequences and static heroes, sharing one settings API, tier-aware and still under reduced motion.",
+  "description": "Volumetric light shafts (god-rays) through a translucent medium: a WebGL post-process for three.js and React Three Fiber, a TSL node graph for WebGPURenderer, and a Canvas 2D overlay for image sequences and static heroes, sharing one settings API, tier-aware and still under reduced motion.",
   "license": "MIT",
   "type": "module",
   "sideEffects": false,
@@ -20,6 +20,10 @@
     "./three": {
       "types": "./dist/three.d.ts",
       "import": "./dist/three.js"
+    },
+    "./tsl": {
+      "types": "./dist/tsl.d.ts",
+      "import": "./dist/tsl.js"
     },
     "./r3f": {
       "types": "./dist/r3f.d.ts",
@@ -86,6 +90,11 @@
       "name": "webgl pass",
       "path": "dist/three.js",
       "limit": "3.5 kB"
+    },
+    {
+      "name": "tsl pass",
+      "path": "dist/tsl.js",
+      "limit": "1.5 kB"
     },
     {
       "name": "r3f component",
