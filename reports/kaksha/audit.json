@@ -1,0 +1,383 @@
+{
+  "date": "2026-10-18T05:37:35.873Z",
+  "environment": "local machine",
+  "tags": [
+    "wcag2a",
+    "wcag2aa",
+    "wcag21a",
+    "wcag21aa",
+    "wcag22aa"
+  ],
+  "axeVersion": "4.13.0",
+  "pages": [
+    {
+      "name": "site / 1280px",
+      "violations": [],
+      "passes": 40
+    },
+    {
+      "name": "site / 360px",
+      "violations": [],
+      "passes": 40
+    },
+    {
+      "name": "site / 1280px reduced motion",
+      "violations": [],
+      "passes": 40
+    },
+    {
+      "name": "site / 360px reduced motion",
+      "violations": [],
+      "passes": 40
+    },
+    {
+      "name": "site /hi 1280px",
+      "violations": [],
+      "passes": 40
+    },
+    {
+      "name": "site /hi 360px",
+      "violations": [],
+      "passes": 40
+    },
+    {
+      "name": "site /hi 1280px reduced motion",
+      "violations": [],
+      "passes": 40
+    },
+    {
+      "name": "site /hi 360px reduced motion",
+      "violations": [],
+      "passes": 40
+    },
+    {
+      "name": "app en home 360px",
+      "violations": [],
+      "passes": 22
+    },
+    {
+      "name": "app en home 1280px",
+      "violations": [],
+      "passes": 22
+    },
+    {
+      "name": "app en class tests 360px",
+      "violations": [],
+      "passes": 24
+    },
+    {
+      "name": "app en class tests 1280px",
+      "violations": [],
+      "passes": 24
+    },
+    {
+      "name": "app en class students 360px",
+      "violations": [],
+      "passes": 24
+    },
+    {
+      "name": "app en class students 1280px",
+      "violations": [],
+      "passes": 24
+    },
+    {
+      "name": "app en class progress 360px",
+      "violations": [],
+      "passes": 25
+    },
+    {
+      "name": "app en class progress 1280px",
+      "violations": [],
+      "passes": 25
+    },
+    {
+      "name": "app en roster 360px",
+      "violations": [],
+      "passes": 25
+    },
+    {
+      "name": "app en roster 1280px",
+      "violations": [],
+      "passes": 25
+    },
+    {
+      "name": "app en new test 360px",
+      "violations": [],
+      "passes": 23
+    },
+    {
+      "name": "app en new test 1280px",
+      "violations": [],
+      "passes": 23
+    },
+    {
+      "name": "app en mark (key) 360px",
+      "violations": [],
+      "passes": 21
+    },
+    {
+      "name": "app en mark (key) 1280px",
+      "violations": [],
+      "passes": 21
+    },
+    {
+      "name": "app en mark (rubric) 360px",
+      "violations": [],
+      "passes": 22
+    },
+    {
+      "name": "app en mark (rubric) 1280px",
+      "violations": [],
+      "passes": 22
+    },
+    {
+      "name": "app en grid 360px",
+      "violations": [],
+      "passes": 22
+    },
+    {
+      "name": "app en grid 1280px",
+      "violations": [],
+      "passes": 22
+    },
+    {
+      "name": "app en results 360px",
+      "violations": [],
+      "passes": 22
+    },
+    {
+      "name": "app en results 1280px",
+      "violations": [],
+      "passes": 22
+    },
+    {
+      "name": "app en class summary 360px",
+      "violations": [],
+      "passes": 22
+    },
+    {
+      "name": "app en class summary 1280px",
+      "violations": [],
+      "passes": 21
+    },
+    {
+      "name": "app en student 360px",
+      "violations": [],
+      "passes": 25
+    },
+    {
+      "name": "app en student 1280px",
+      "violations": [],
+      "passes": 25
+    },
+    {
+      "name": "app en report card 360px",
+      "violations": [],
+      "passes": 22
+    },
+    {
+      "name": "app en report card 1280px",
+      "violations": [],
+      "passes": 21
+    },
+    {
+      "name": "app en settings 360px",
+      "violations": [],
+      "passes": 26
+    },
+    {
+      "name": "app en settings 1280px",
+      "violations": [],
+      "passes": 26
+    },
+    {
+      "name": "app en new class 360px",
+      "violations": [],
+      "passes": 23
+    },
+    {
+      "name": "app en new class 1280px",
+      "violations": [],
+      "passes": 23
+    },
+    {
+      "name": "app hi home 360px",
+      "violations": [],
+      "passes": 22
+    },
+    {
+      "name": "app hi home 1280px",
+      "violations": [],
+      "passes": 22
+    },
+    {
+      "name": "app hi class tests 360px",
+      "violations": [],
+      "passes": 24
+    },
+    {
+      "name": "app hi class tests 1280px",
+      "violations": [],
+      "passes": 24
+    },
+    {
+      "name": "app hi class students 360px",
+      "violations": [],
+      "passes": 24
+    },
+    {
+      "name": "app hi class students 1280px",
+      "violations": [],
+      "passes": 24
+    },
+    {
+      "name": "app hi class progress 360px",
+      "violations": [],
+      "passes": 25
+    },
+    {
+      "name": "app hi class progress 1280px",
+      "violations": [],
+      "passes": 25
+    },
+    {
+      "name": "app hi roster 360px",
+      "violations": [],
+      "passes": 25
+    },
+    {
+      "name": "app hi roster 1280px",
+      "violations": [],
+      "passes": 25
+    },
+    {
+      "name": "app hi new test 360px",
+      "violations": [],
+      "passes": 23
+    },
+    {
+      "name": "app hi new test 1280px",
+      "violations": [],
+      "passes": 23
+    },
+    {
+      "name": "app hi mark (key) 360px",
+      "violations": [],
+      "passes": 21
+    },
+    {
+      "name": "app hi mark (key) 1280px",
+      "violations": [],
+      "passes": 21
+    },
+    {
+      "name": "app hi mark (rubric) 360px",
+      "violations": [],
+      "passes": 22
+    },
+    {
+      "name": "app hi mark (rubric) 1280px",
+      "violations": [],
+      "passes": 22
+    },
+    {
+      "name": "app hi grid 360px",
+      "violations": [],
+      "passes": 22
+    },
+    {
+      "name": "app hi grid 1280px",
+      "violations": [],
+      "passes": 22
+    },
+    {
+      "name": "app hi results 360px",
+      "violations": [],
+      "passes": 22
+    },
+    {
+      "name": "app hi results 1280px",
+      "violations": [],
+      "passes": 22
+    },
+    {
+      "name": "app hi class summary 360px",
+      "violations": [],
+      "passes": 22
+    },
+    {
+      "name": "app hi class summary 1280px",
+      "violations": [],
+      "passes": 21
+    },
+    {
+      "name": "app hi student 360px",
+      "violations": [],
+      "passes": 25
+    },
+    {
+      "name": "app hi student 1280px",
+      "violations": [],
+      "passes": 25
+    },
+    {
+      "name": "app hi report card 360px",
+      "violations": [],
+      "passes": 22
+    },
+    {
+      "name": "app hi report card 1280px",
+      "violations": [],
+      "passes": 21
+    },
+    {
+      "name": "app hi settings 360px",
+      "violations": [],
+      "passes": 26
+    },
+    {
+      "name": "app hi settings 1280px",
+      "violations": [],
+      "passes": 26
+    },
+    {
+      "name": "app hi new class 360px",
+      "violations": [],
+      "passes": 23
+    },
+    {
+      "name": "app hi new class 1280px",
+      "violations": [],
+      "passes": 23
+    }
+  ],
+  "lighthouse": {
+    "/": {
+      "accessibility": 1,
+      "best-practices": 1,
+      "seo": 1,
+      "performance": 0.79,
+      "lcpMs": 3718,
+      "tbtMs": 326,
+      "cls": 0.002
+    },
+    "/hi": {
+      "accessibility": 1,
+      "best-practices": 1,
+      "seo": 1,
+      "performance": 0.82,
+      "lcpMs": 4294,
+      "tbtMs": 49,
+      "cls": 0
+    },
+    "/app": {
+      "accessibility": 1,
+      "best-practices": 1,
+      "seo": 0.6,
+      "performance": 0.98,
+      "lcpMs": 1932,
+      "tbtMs": 0,
+      "cls": 0.008
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "date": "2026-10-18T05:27:56.196Z",
+  "app Lighthouse mobile (150 ms, 1.6 Mbit/s)": {
+    "firstVisitMs": 2121,
+    "repeatVisitMs": 646,
+    "cpu": "6x",
+    "viewport": "360x640"
+  },
+  "grid 50x30 scroll, 4x CPU": {
+    "fps": 60,
+    "p95FrameMs": 16.7,
+    "frames": 88
+  },
+  "site /": {
+    "lcp": 1436,
+    "cls": 0.002
+  },
+  "site /hi": {
+    "lcp": 1328,
+    "cls": 0
+  },
+  "app slow 3G (400 ms, 400 kbit/s)": {
+    "firstVisitMs": 4829,
+    "repeatVisitMs": 668,
+    "cpu": "6x",
+    "viewport": "360x640"
+  }
+}

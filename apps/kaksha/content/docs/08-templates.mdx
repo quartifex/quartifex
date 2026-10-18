@@ -1,0 +1,27 @@
+## Templates: the file format
+
+A template is a plain JSON file anyone can write, check and share. The schema is published at [`/schema/template.v1.json`](/schema/template.v1.json), so editors such as VS Code can check a file as you type.
+
+```json
+{
+  "$schema": "https://kaksha.quartifex.com/schema/template.v1.json",
+  "format": "kaksha-template",
+  "version": 1,
+  "id": "our-grade-4-fractions",
+  "title": "Fractions check, Grade 4",
+  "subject": "Maths",
+  "language": "en",
+  "kind": "key",
+  "items": [
+    { "label": "Q1", "domain": "Fractions", "type": "choice", "key": "B", "marks": 1 },
+    { "label": "Q2", "domain": "Fractions", "type": "rightwrong", "key": null, "marks": 2 }
+  ]
+}
+```
+
+- `kind` is `"key"` for an answer-key test or `"rubric"` for a rubric.
+- In a key test, each item has a `label`, a `domain` (skill tag), a `type` (`"choice"` or `"rightwrong"`), the `key` for choice questions (`"A"` to `"D"`) and whole-number `marks`.
+- In a rubric, each item is a criterion with a `label`, a `domain` and two to eight `levels`, each with a `score`, a `label` and a `descriptor`. Scores in a criterion must differ.
+- `id` uses lowercase letters, numbers and dashes. `example: true` marks a file as an example. `author` and `notes` are optional.
+
+The three examples that come with the app, clearly marked as examples, not official curricula: [primary maths answer key](/templates/example-primary-maths-g3.json), [reading fluency rubric](/templates/example-reading-fluency.json), [writing rubric](/templates/example-writing.json).

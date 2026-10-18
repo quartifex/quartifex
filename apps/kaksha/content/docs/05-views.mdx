@@ -1,0 +1,16 @@
+## Reading the class and student views
+
+**Class view of a test** (**Results**):
+
+- **Class average** and **attendance** for the test.
+- **What it is based on.** Figures use only children with every answer marked. Absent and unfinished children are listed, and left out, never counted as zero.
+- **By skill**: the share of marks the class earned in each skill tag.
+- **By question**: the share of the class that got each question right. Bars below half are marigold. Where many children chose the same wrong answer, it is pointed out: it may be a common misunderstanding.
+- **Quartile groups**: the class ranked by score and split into four groups. Children with equal scores are always in the same group. Shown from four children up.
+- **Who needs help, by skill**: children below half in a skill, lowest first.
+
+**Progress** on the class page shows the average and attendance of every test over time.
+
+**A student's page** shows their results over time for each subject (absences appear as gaps, not zeros), and their strengths and gaps by skill, added up across their finished tests.
+
+The rules behind every number (rounding, ties, absent children) are written down in the code, in `src/lib/scoring.ts`, and checked by tests.

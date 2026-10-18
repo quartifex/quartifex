@@ -109,7 +109,8 @@ function StudentReport({ studentId }: { studentId: string }) {
               <strong>{t("report.year")}:</strong> <span className="num">{info.cls.year}</span>
             </span>
           </div>
-          <div className="tw">
+          {/* biome-ignore lint/a11y/noNoninteractiveTabindex: a scrollable region must be focusable */}
+          <section className="tw" tabIndex={0} aria-label={t("report.table")}>
             <table>
               <thead>
                 <tr>
@@ -145,7 +146,7 @@ function StudentReport({ studentId }: { studentId: string }) {
                 ))}
               </tbody>
             </table>
-          </div>
+          </section>
           <div className="grid2">
             <div>
               <h2>{t("report.strengths")}</h2>
@@ -247,7 +248,8 @@ function ClassReport({ assessmentId }: { assessmentId: string }) {
               })}
             </span>
           </div>
-          <div className="tw">
+          {/* biome-ignore lint/a11y/noNoninteractiveTabindex: a scrollable region must be focusable */}
+          <section className="tw" tabIndex={0} aria-label={t("report.table")}>
             <table>
               <thead>
                 <tr>
@@ -264,8 +266,9 @@ function ClassReport({ assessmentId }: { assessmentId: string }) {
                 ))}
               </tbody>
             </table>
-          </div>
-          <div className="tw">
+          </section>
+          {/* biome-ignore lint/a11y/noNoninteractiveTabindex: a scrollable region must be focusable */}
+          <section className="tw" tabIndex={0} aria-label={t("report.table")}>
             <table>
               <thead>
                 <tr>
@@ -303,7 +306,7 @@ function ClassReport({ assessmentId }: { assessmentId: string }) {
                 })}
               </tbody>
             </table>
-          </div>
+          </section>
           <footer>
             <span>{t("report.footer", { product: PRODUCT_NAME })}</span>
             <span className="num">{formatDate(new Date().toISOString().slice(0, 10))}</span>

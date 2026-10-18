@@ -2,15 +2,37 @@
 // copy en.json, translate the values, and add it to LOCALES below. Keys never change
 // meaning; a test checks every file has exactly the same keys and placeholders.
 import en from "./locales/en.json";
-import hi from "./locales/hi.json";
 
 export type Strings = typeof en;
 export type Key = keyof Strings;
 
+/**
+ * English ships with the app and is the fallback for any missing string. Other
+ * languages load on demand, so nobody downloads a language they do not use.
+ */
 export const LOCALES = {
-  en: { label: "English", short: "EN", intl: "en-IN", strings: en as Strings },
-  hi: { label: "हिन्दी", short: "हिं", intl: "hi-IN", strings: hi as Strings },
+  en: { label: "English", short: "EN", intl: "en-IN", load: async () => en as Strings },
+  hi: {
+    label: "हिन्दी",
+    short: "हिं",
+    intl: "hi-IN",
+    load: async () => (await import("./locales/hi.json")).default as Strings,
+  },
 } as const;
+
+const loaded: Partial<Record<keyof typeof LOCALES, Strings>> = { en: en as Strings };
+
+export async function loadLocale(locale: keyof typeof LOCALES): Promise<Strings> {
+  const have = loaded[locale];
+  if (have) return have;
+  const strings = await LOCALES[locale].load();
+  loaded[locale] = strings;
+  return strings;
+}
+
+export function isLoaded(locale: keyof typeof LOCALES): boolean {
+  return loaded[locale] !== undefined;
+}
 
 export type Locale = keyof typeof LOCALES;
 export const LOCALE_KEY = "kaksha-locale";
@@ -30,7 +52,7 @@ export function translate(
   key: Key,
   vars?: Record<string, string | number>,
 ): string {
-  const s = LOCALES[locale].strings[key] ?? LOCALES.en.strings[key] ?? key;
+  const s = loaded[locale]?.[key] ?? (en as Strings)[key] ?? key;
   return format(s, vars);
 }
 

@@ -71,14 +71,22 @@
               "type": {
                 "default": "choice",
                 "type": "string",
-                "enum": ["choice", "rightwrong"]
+                "enum": [
+                  "choice",
+                  "rightwrong"
+                ]
               },
               "key": {
                 "default": null,
                 "anyOf": [
                   {
                     "type": "string",
-                    "enum": ["A", "B", "C", "D"]
+                    "enum": [
+                      "A",
+                      "B",
+                      "C",
+                      "D"
+                    ]
                   },
                   {
                     "type": "null"
@@ -92,11 +100,21 @@
                 "maximum": 100
               }
             },
-            "required": ["label"]
+            "required": [
+              "label"
+            ]
           }
         }
       },
-      "required": ["format", "version", "id", "title", "subject", "kind", "items"]
+      "required": [
+        "format",
+        "version",
+        "id",
+        "title",
+        "subject",
+        "kind",
+        "items"
+      ]
     },
     {
       "type": "object",
@@ -185,15 +203,29 @@
                       "maxLength": 400
                     }
                   },
-                  "required": ["score", "label"]
+                  "required": [
+                    "score",
+                    "label"
+                  ]
                 }
               }
             },
-            "required": ["label", "levels"]
+            "required": [
+              "label",
+              "levels"
+            ]
           }
         }
       },
-      "required": ["format", "version", "id", "title", "subject", "kind", "items"]
+      "required": [
+        "format",
+        "version",
+        "id",
+        "title",
+        "subject",
+        "kind",
+        "items"
+      ]
     }
   ]
 }

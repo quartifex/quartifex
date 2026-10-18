@@ -34,6 +34,8 @@ const result = await build({
   loader: { ".json": "json" },
   external: ["/fonts/*", "/brand/*"],
   legalComments: "eof",
+  // Keep Devanagari as UTF-8, not \u escapes: a third of the size before gzip.
+  charset: "utf8",
   logLevel: "warning",
 });
 
@@ -66,8 +68,6 @@ const html = `<!doctype html>
 <link rel="manifest" href="/app.webmanifest">
 <link rel="icon" href="/brand/mark.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/brand/apple-touch-icon.png">
-<link rel="preload" href="/fonts/mukta-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/fonts/mukta-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin>
 <script>${prePaint}</script>
 ${cssPath ? `<link rel="stylesheet" href="${url(cssPath)}">` : ""}
 ${preload.map((p) => `<link rel="modulepreload" href="${p}">`).join("\n")}

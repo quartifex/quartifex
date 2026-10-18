@@ -1,0 +1,16 @@
+## The data model
+
+Everything is stored in the browser's IndexedDB on the device, in a database called `kaksha` (the demo uses a separate one, `kaksha-demo`).
+
+| Table | Holds | Linked to |
+| --- | --- | --- |
+| `schools` | name | |
+| `classes` | grade, section, academic year | a school |
+| `students` | roll number, name, still in the class or not | a class |
+| `assessments` | title, subject, date, kind (answer key or rubric), and its items | a class |
+| `responses` | one answer: the value tapped and when | an assessment, a student, an item |
+| `sittings` | absent or present, and the short note | an assessment, a student |
+
+Items live inside their assessment: a question (label, skill, type, key, marks) or a rubric criterion (label, skill, levels). A response's value is a choice (`A`–`D`), `R` or `W`, a rubric level's score, or `-` for an answer left blank. *No response at all* means not marked yet, which is different from blank.
+
+Every record has a random id (a UUID), which is what lets backups from several phones be combined without clashes. The code is in `src/lib/model.ts` and `src/lib/db.ts`.

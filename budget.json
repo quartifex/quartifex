@@ -107,11 +107,29 @@
     },
     {
       "app": "kaksha",
-      "initialJsKb": 170,
+      "initialJsKb": 200,
       "initialCssKb": 30,
       "totalInitialKb": 1000,
-      "heroMediaKb": 600,
-      "fontsKb": 120
+      "heroMediaKb": 0,
+      "fontsKb": 200,
+      "appInitialJsKb": 150,
+      "heft": {
+        "assets": {
+          "totalBytes": 4500000,
+          "sequenceBytes": 0
+        },
+        "page": {
+          "transferBytes": 900000,
+          "scriptBytes": 650000
+        },
+        "scroll": {
+          "durationMs": 12000,
+          "longFrames": 4,
+          "p95FrameMs": 34,
+          "cls": 0.1,
+          "inp": 200
+        }
+      }
     }
   ]
 }

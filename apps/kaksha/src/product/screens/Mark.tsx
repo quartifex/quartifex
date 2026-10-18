@@ -270,6 +270,9 @@ function KeyEntry({
 
   const record = async (value: string) => {
     if (!item || !student) return;
+    // Start the write first, in the same task as the tap, so the window in which a
+    // closed tab could lose it is as small as possible.
+    const write = setAnswer(a.id, student.id, item.id, value);
     const key = k(student.id, item.id);
     const before = values.get(key);
     const wasAbsent = absent.has(student.id);
@@ -291,7 +294,7 @@ function KeyEntry({
       `${item.label}, ${student.name}: ${value === BLANK ? t("entry.blank") : value === "R" ? t("entry.right") : value === "W" ? t("entry.wrong") : value}`,
     );
     setPos(advance(pos, nextAbsent));
-    await setAnswer(a.id, student.id, item.id, value);
+    await write;
   };
 
   const markAbsent = async () => {

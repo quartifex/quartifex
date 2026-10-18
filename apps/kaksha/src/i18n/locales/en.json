@@ -198,6 +198,7 @@
   "student.noComplete": "No finished tests yet.",
   "student.report": "Report card",
 
+  "report.table": "Table, scrolls sideways",
   "report.print": "Print or save as PDF",
   "report.printHint": "In the print screen, choose “Save as PDF” to keep a file or share it.",
   "report.cardTitle": "Progress report",

@@ -189,6 +189,13 @@ textarea {
   font: inherit;
   color: inherit;
 }
+fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+  min-inline-size: 0;
+}
 :focus-visible {
   outline: 3px solid var(--focus);
   outline-offset: 2px;
@@ -1034,6 +1041,9 @@ dialog.sheet::backdrop {
 }
 
 @media (min-width: 900px) {
+  .entry > * {
+    min-width: 0;
+  }
   .entry {
     max-width: 1000px;
     display: grid;

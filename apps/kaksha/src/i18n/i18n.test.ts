@@ -1,13 +1,13 @@
 import { describe, expect, it } from "vitest";
-import { format, formatDate, formatNumber, formatPercent, LOCALES } from "./index";
+import { format, formatDate, formatNumber, formatPercent, LOCALES, loadLocale } from "./index";
 
 const placeholders = (s: string) => [...s.matchAll(/\{(\w+)\}/g)].map((m) => m[1]).sort();
 
 describe("locale files", () => {
-  const en = LOCALES.en.strings as Record<string, string>;
-  for (const [code, { strings }] of Object.entries(LOCALES)) {
-    it(`${code} has every key, with the same placeholders, and nothing extra`, () => {
-      const s = strings as Record<string, string>;
+  for (const code of Object.keys(LOCALES) as Array<keyof typeof LOCALES>) {
+    it(`${code} has every key, with the same placeholders, and nothing extra`, async () => {
+      const en = (await loadLocale("en")) as Record<string, string>;
+      const s = (await loadLocale(code)) as Record<string, string>;
       expect(Object.keys(s).sort()).toEqual(Object.keys(en).sort());
       for (const key of Object.keys(en)) {
         expect(placeholders(s[key] ?? ""), `${code}:${key}`).toEqual(placeholders(en[key] ?? ""));

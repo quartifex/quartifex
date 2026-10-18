@@ -11,11 +11,13 @@ import {
   useState,
 } from "react";
 import {
+  isLoaded,
   isLocale,
   type Key,
   LOCALE_KEY,
   LOCALES,
   type Locale,
+  loadLocale,
   readStoredLocale,
   translate,
 } from "../i18n";
@@ -127,7 +129,7 @@ export function AppProvider({
       t: (key, vars) => translate(prefs.locale, key, vars),
       setLocale: (locale) => {
         write(LOCALE_KEY, locale);
-        setPrefs((p) => ({ ...p, locale }));
+        void loadLocale(locale).then(() => setPrefs((p) => ({ ...p, locale })));
       },
       setTheme: (theme) => {
         write("kaksha-theme", theme);
@@ -144,5 +146,12 @@ export function AppProvider({
     [prefs, route, go, back],
   );
 
-  return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
+  // A language other than English loads once, before the first screen that needs it.
+  const [, setLoadedTick] = useState(0);
+  const ready = isLoaded(prefs.locale);
+  useEffect(() => {
+    if (!ready) void loadLocale(prefs.locale).then(() => setLoadedTick((n) => n + 1));
+  }, [ready, prefs.locale]);
+
+  return <Ctx.Provider value={value}>{ready ? children : null}</Ctx.Provider>;
 }
