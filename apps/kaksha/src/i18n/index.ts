@@ -95,3 +95,19 @@ export function todayIso(): string {
   const p = (n: number) => String(n).padStart(2, "0");
   return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
 }
+
+/** "Sep" or "सित॰" from an ISO date, for chart labels. */
+export function formatShortMonth(locale: Locale, iso: string): string {
+  const d = new Date(`${iso}T12:00:00`);
+  if (Number.isNaN(d.getTime())) return iso;
+  return new Intl.DateTimeFormat(LOCALES[locale].intl, { month: "short" }).format(d);
+}
+
+/** "22 Sep" from an ISO date, for lists. */
+export function formatDayMonth(locale: Locale, iso: string): string {
+  const d = new Date(`${iso}T12:00:00`);
+  if (Number.isNaN(d.getTime())) return iso;
+  return new Intl.DateTimeFormat(LOCALES[locale].intl, { day: "numeric", month: "short" }).format(
+    d,
+  );
+}

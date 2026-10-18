@@ -19,6 +19,8 @@ export interface ClassGroup {
   section: string;
   /** Academic year as the school writes it, for example "2026-27". */
   year: string;
+  /** Subjects the teacher takes this class for. Optional; older data has none. */
+  subjects?: string[];
 }
 
 export interface Student {
@@ -112,6 +114,25 @@ export interface Sitting {
   studentId: Id;
   absent: boolean;
   note: string;
+}
+
+/** A teacher's dated note about one child. Only on this phone. */
+export interface StudentNote {
+  id: Id;
+  studentId: Id;
+  /** ISO date, YYYY-MM-DD. */
+  date: string;
+  text: string;
+  /** Show this note on the report card. */
+  onCard: boolean;
+  at: number;
+}
+
+/** About the teacher, for greetings and report cards. Every field is optional. */
+export interface Profile {
+  name: string;
+  board: string;
+  medium: string;
 }
 
 export const BLANK = "-";

@@ -1,13 +1,13 @@
 "use client";
 import { useLiveQuery } from "dexie-react-hooks";
 import { useMemo, useState } from "react";
-import { formatDate, formatPercent } from "../../i18n";
+import { formatDate, formatDayMonth, formatPercent, formatShortMonth } from "../../i18n";
 import { db } from "../../lib/db";
 import { percent, studentDomains, studentTrend } from "../../lib/scoring";
 import { Bars, Trend } from "../charts";
 import { useApp } from "../context";
-import { useAssessments, useClassRecords } from "../data";
-import { Empty, Icon, TopBar } from "../ui";
+import { useAssessments, useClassRecords, useNotes } from "../data";
+import { Empty, Icon, Pill, SectionHead, TopBar } from "../ui";
 
 export function useStudentView(studentId: string) {
   const student = useLiveQuery(
@@ -24,6 +24,7 @@ export default function StudentScreen({ studentId }: { studentId: string }) {
   const { student, tests, records } = useStudentView(studentId);
   const subjects = useMemo(() => [...new Set((tests ?? []).map((a) => a.subject))], [tests]);
   const [subject, setSubject] = useState<string | null>(null);
+  const notes = useNotes(studentId);
 
   if (student === null) return <Empty title={t("common.notFound")} />;
   if (!student || !tests || !records)
@@ -35,6 +36,14 @@ export default function StudentScreen({ studentId }: { studentId: string }) {
     .map((d) => ({ ...d, p: percent(d.score, d.max) }))
     .sort((x, y) => (y.p ?? 0) - (x.p ?? 0));
   const byId = new Map(tests.map((a) => [a.id, a]));
+  const done = trend.filter((p) => p.status === "complete" && p.percent !== null);
+  const latest = done[done.length - 1];
+  const first = done[0];
+  const strong = domains.filter((d) => (d.p ?? 0) >= 70 && d.domain).slice(0, 3);
+  const work = domains
+    .filter((d) => (d.p ?? 100) < 50 && d.domain)
+    .reverse()
+    .slice(0, 3);
 
   return (
     <>
@@ -68,6 +77,53 @@ export default function StudentScreen({ studentId }: { studentId: string }) {
               </button>
             ))}
           </div>
+        ) : null}
+        {latest ? (
+          <section className="hero hero--light" aria-label={t("student.latest")}>
+            <div className="spread">
+              <span className="hero__big num">{formatPercent(locale, latest.percent)}</span>
+              <span className="small">
+                {first && first !== latest && first.percent !== null && latest.percent !== null
+                  ? t(latest.percent >= first.percent ? "student.upFrom" : "student.downFrom", {
+                      p: formatPercent(locale, first.percent),
+                      month: formatShortMonth(locale, first.date),
+                    })
+                  : t("student.latest")}
+              </span>
+            </div>
+          </section>
+        ) : null}
+        {strong.length || work.length ? (
+          <section className="grid2" aria-label={t("student.domains")}>
+            <div className="card card--tight">
+              <h2 className="small-h">{t("student.strong")}</h2>
+              <div className="cluster">
+                {strong.length ? (
+                  strong.map((d) => (
+                    <Pill key={d.domain} tone="right">
+                      {d.domain}
+                    </Pill>
+                  ))
+                ) : (
+                  <span className="small muted">{t("report.none")}</span>
+                )}
+              </div>
+            </div>
+            <div className="card card--tight">
+              <h2 className="small-h">{t("student.workOn")}</h2>
+              <div className="cluster">
+                {work.length ? (
+                  work.map((d) => (
+                    <Pill key={d.domain} tone="genda">
+                      {d.domain}
+                    </Pill>
+                  ))
+                ) : (
+                  <span className="small muted">{t("report.none")}</span>
+                )}
+              </div>
+            </div>
+          </section>
         ) : null}
         {trend.length === 0 ? (
           <Empty title={t("class.noTests")} />
@@ -126,6 +182,35 @@ export default function StudentScreen({ studentId }: { studentId: string }) {
             </section>
           </>
         )}
+        <section className="card" aria-labelledby="notes-h">
+          <SectionHead
+            title={t("notes.title")}
+            action={
+              <button
+                type="button"
+                className="btn btn--sm"
+                onClick={() => go(`/student/${student.id}/notes`)}
+              >
+                <Icon name="note" />
+                {notes?.length ? t("student.allNotes", { n: notes.length }) : t("notes.add")}
+              </button>
+            }
+          />
+          {notes?.length ? (
+            <ol className="timeline">
+              {notes.slice(0, 2).map((n) => (
+                <li key={n.id}>
+                  <span className="timeline__date num">{formatDayMonth(locale, n.date)}</span>
+                  <div className="timeline__body">
+                    <p>{n.text}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          ) : (
+            <p className="small muted">{t("student.noNotes")}</p>
+          )}
+        </section>
         <button
           type="button"
           className="btn btn--primary"

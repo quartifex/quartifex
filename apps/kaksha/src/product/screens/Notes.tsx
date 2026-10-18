@@ -1,0 +1,90 @@
+"use client";
+// A teacher's dated notes about one child. On this phone only; optionally on the card.
+import { useLiveQuery } from "dexie-react-hooks";
+import { type FormEvent, useState } from "react";
+import { formatDayMonth } from "../../i18n";
+import { addNote, db } from "../../lib/db";
+import { useApp } from "../context";
+import { useNotes } from "../data";
+import { Empty, Icon, Toggle, TopBar } from "../ui";
+
+export default function Notes({ studentId }: { studentId: string }) {
+  const { t, locale } = useApp();
+  const student = useLiveQuery(
+    async () => (await db().students.get(studentId)) ?? null,
+    [studentId],
+  );
+  const notes = useNotes(studentId);
+  const [text, setText] = useState("");
+  const [onCard, setOnCard] = useState(false);
+  if (student === null) return <Empty title={t("common.notFound")} />;
+  if (!student || !notes) return <div aria-busy="true" style={{ minHeight: "60svh" }} />;
+  const submit = async (e: FormEvent) => {
+    e.preventDefault();
+    if (!text.trim()) return;
+    await addNote(studentId, text.trim(), onCard);
+    setText("");
+    setOnCard(false);
+  };
+  return (
+    <>
+      <TopBar title={t("notes.title")} sub={student.name} back={`/student/${studentId}`} />
+      <main className="k-main">
+        <form className="card" onSubmit={submit}>
+          <div className="field">
+            <label htmlFor="note-new">{t("notes.new")}</label>
+            <textarea
+              id="note-new"
+              className="textarea"
+              rows={3}
+              value={text}
+              placeholder={t("notes.placeholder")}
+              onChange={(e) => setText(e.target.value)}
+            />
+          </div>
+          <Toggle on={onCard} onChange={setOnCard} label={t("notes.onCard")} />
+          <button type="submit" className="btn btn--primary" disabled={!text.trim()}>
+            <Icon name="plus" />
+            {t("notes.add")}
+          </button>
+        </form>
+        {notes.length === 0 ? (
+          <p className="muted">{t("notes.none")}</p>
+        ) : (
+          <ol className="timeline">
+            {notes.map((n) => (
+              <li key={n.id}>
+                <span className="timeline__date num">{formatDayMonth(locale, n.date)}</span>
+                <div className="timeline__body">
+                  <p>{n.text}</p>
+                  <div className="cluster">
+                    <button
+                      type="button"
+                      className={`ochip ochip--sm`}
+                      aria-pressed={n.onCard}
+                      onClick={() => void db().notes.update(n.id, { onCard: !n.onCard })}
+                    >
+                      {n.onCard ? <Icon name="check" /> : null}
+                      {t("notes.onCardShort")}
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn--ghost btn--sm"
+                      onClick={() => {
+                        if (confirm(t("notes.deleteConfirm"))) void db().notes.delete(n.id);
+                      }}
+                    >
+                      <Icon name="trash" />
+                      {t("notes.delete")}
+                    </button>
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ol>
+        )}
+        <p className="small muted">{t("notes.privacy")}</p>
+      </main>
+    </>
+  );
+}

@@ -14,6 +14,7 @@ import {
 import { itemPoints } from "../../lib/scoring";
 import { useApp } from "../context";
 import { sortStudents, useAssessment } from "../data";
+import { demoStep } from "../demoBridge";
 import { Empty, Icon, TopBar } from "../ui";
 
 type Values = Map<string, string>; // `${studentId}|${itemId}` -> value
@@ -80,6 +81,18 @@ export default function Mark({
   const { t, go } = useApp();
   const a = useAssessment(assessmentId);
   const [data, setData] = useEntryData(a);
+  // Attendance comes first on a fresh test, so absent children are never scored as zero.
+  const [taken, setTaken] = useState<boolean | null>(null);
+  const initial = useRef<number | null>(null);
+  useEffect(() => {
+    if (!data || taken !== null) return;
+    setTaken(start !== undefined || data.values.size > 0 || data.absent.size > 0);
+  }, [data, taken, start]);
+  useEffect(() => {
+    if (!data) return;
+    if (initial.current === null) initial.current = data.values.size;
+    else if (data.values.size > initial.current) demoStep("mark");
+  }, [data]);
 
   if (a === null) {
     return (
@@ -110,6 +123,10 @@ export default function Mark({
       </>
     );
   }
+  if (taken === false) {
+    return <Attendance a={a} data={data} setData={setData} onDone={() => setTaken(true)} />;
+  }
+  if (taken === null) return <div aria-busy="true" style={{ minHeight: "60svh" }} />;
   return a.kind === "key" ? (
     <KeyEntry a={a} data={data} setData={setData} start={start} />
   ) : (
@@ -119,6 +136,65 @@ export default function Mark({
 
 type EntryData = NonNullable<ReturnType<typeof useEntryData>[0]>;
 type SetEntryData = ReturnType<typeof useEntryData>[1];
+
+function Attendance({
+  a,
+  data,
+  setData,
+  onDone,
+}: {
+  a: Assessment;
+  data: EntryData;
+  setData: SetEntryData;
+  onDone: () => void;
+}) {
+  const { t } = useApp();
+  const { students, absent } = data;
+  const toggle = async (id: string) => {
+    const next = new Set(absent);
+    const now = !absent.has(id);
+    if (now) next.add(id);
+    else next.delete(id);
+    setData({ ...data, absent: next });
+    await setAbsent(a.id, id, now);
+  };
+  const present = students.length - absent.size;
+  return (
+    <>
+      <TopBar title={t("attendance.title")} sub={a.title} back={`/class/${a.classId}`} />
+      <main className="k-main">
+        <p className="muted">{t("attendance.body")}</p>
+        <ul className="attend" aria-label={t("attendance.title")}>
+          {students.map((st) => {
+            const off = absent.has(st.id);
+            return (
+              <li key={st.id}>
+                <button
+                  type="button"
+                  aria-pressed={off}
+                  onClick={() => void toggle(st.id)}
+                  aria-label={`${st.roll} ${st.name}: ${off ? t("entry.absent") : t("entry.present")}`}
+                >
+                  <span className="num attend__roll">{st.roll.padStart(2, "0")}</span>
+                  <span className="attend__name">{st.name.split(" ")[0]}</span>
+                  {off ? <span className="attend__tag">{t("entry.absent")}</span> : null}
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+        <div className="sticky-actions stack">
+          <p className="small center num" role="status">
+            {t("attendance.count", { present, absent: absent.size })}
+          </p>
+          <button type="button" className="btn btn--primary btn--block" onClick={onDone}>
+            {absent.size ? t("attendance.start") : t("attendance.everyone")}
+          </button>
+        </div>
+      </main>
+    </>
+  );
+}
 
 function useAnnounce() {
   const [msg, setMsg] = useState("");

@@ -1,7 +1,7 @@
 "use client";
 import { type FormEvent, useEffect, useState } from "react";
 import { APP_VERSION, PRODUCT_NAME, REPO_URL } from "../../config";
-import { formatNumber } from "../../i18n";
+import { formatNumber, LOCALES, type Locale } from "../../i18n";
 import {
   type BackupError,
   type BackupPayload,
@@ -10,84 +10,317 @@ import {
   encryptBackup,
   MIN_PASSPHRASE,
 } from "../../lib/backup";
-import { exportTables, importTables, isDemo, wipeAll } from "../../lib/db";
+import {
+  exportTables,
+  importTables,
+  isDemo,
+  type MergePreview,
+  previewImport,
+  putSetting,
+  wipeAll,
+} from "../../lib/db";
 import { type TextSize, type Theme, useApp } from "../context";
+import { useOverview, useProfile } from "../data";
 import { shareOrSave } from "../files";
 import { hasPin, setPin } from "../PinGate";
-import { Icon, LanguageSwitch, Sheet, TopBar } from "../ui";
+import { ChoiceRow, Icon, type IconName, PageHead, Sheet, TabBar, TopBar } from "../ui";
+import { lastBackup } from "./Home";
 
-export default function Settings() {
-  const { t, theme, setTheme, size, setSize } = useApp();
+const PAGES = ["backup", "pin", "display", "data", "profile"] as const;
+type Page = (typeof PAGES)[number];
+
+export default function Settings({ page }: { page?: string | undefined }) {
+  const { t } = useApp();
+  const p = (PAGES as readonly string[]).includes(page ?? "") ? (page as Page) : null;
+  if (!p) return <MoreHub />;
+  const title = {
+    backup: t("more.backup"),
+    pin: t("pin.settingsTitle"),
+    display: t("settings.look"),
+    data: t("more.data"),
+    profile: t("more.profile"),
+  }[p];
   return (
     <>
-      <TopBar title={t("settings.title")} back="/" />
+      <TopBar title={title} back="/more" />
       <main className="k-main">
-        <section className="card" aria-labelledby="look-h">
-          <h2 id="look-h">{t("settings.look")}</h2>
-          <div className="field">
-            <span className="label">{t("settings.language")}</span>
-            <LanguageSwitch />
-          </div>
-          <div className="field">
-            <span className="label" id="theme-l">
-              {t("settings.theme")}
-            </span>
-            <fieldset className="seg" aria-labelledby="theme-l">
-              {(["light", "dark", "system"] as Theme[]).map((x) => (
-                <button
-                  key={x}
-                  type="button"
-                  aria-pressed={theme === x}
-                  onClick={() => setTheme(x)}
-                >
-                  {t(`settings.theme.${x}`)}
-                </button>
-              ))}
-            </fieldset>
-          </div>
-          <div className="field">
-            <span className="label" id="size-l">
-              {t("settings.size")}
-            </span>
-            <fieldset className="seg" aria-labelledby="size-l">
-              {(["s", "m", "l", "xl"] as TextSize[]).map((x, i) => (
-                <button
-                  key={x}
-                  type="button"
-                  aria-pressed={size === x}
-                  onClick={() => setSize(x)}
-                  style={{ fontSize: `${0.85 + i * 0.12}rem` }}
-                >
-                  {t(`settings.size.${x}`)}
-                </button>
-              ))}
-            </fieldset>
-          </div>
-        </section>
-        <Backup />
-        <Restore />
-        <PinSettings />
-        <Danger />
-        <section className="card" aria-labelledby="about-h">
-          <h2 id="about-h">{t("settings.about")}</h2>
-          <p>{t("settings.aboutBody", { product: PRODUCT_NAME })}</p>
-          <div className="cluster">
-            <a className="btn btn--sm" href="/#privacy">
-              {t("settings.privacy")}
-            </a>
-            <a className="btn btn--sm" href="/#docs">
-              {t("settings.help")}
-            </a>
-            <a className="btn btn--sm" href={REPO_URL} rel="noopener">
-              {t("settings.source")}
-            </a>
-          </div>
-          <p className="small muted num">
-            {PRODUCT_NAME} {APP_VERSION}
-          </p>
-        </section>
+        {p === "backup" ? (
+          <>
+            <Backup />
+            <Restore />
+          </>
+        ) : null}
+        {p === "pin" ? <PinSettings /> : null}
+        {p === "display" ? <Display /> : null}
+        {p === "profile" ? <ProfileForm /> : null}
+        {p === "data" ? (
+          <>
+            <About />
+            <Danger />
+          </>
+        ) : null}
       </main>
     </>
+  );
+}
+
+function MoreHub() {
+  const { t, go, locale, size } = useApp();
+  const profile = useProfile();
+  const overview = useOverview(locale);
+  const [pinOn, setPinOn] = useState<boolean | null>(null);
+  useEffect(() => {
+    hasPin().then(setPinOn);
+  }, []);
+  const classes = overview?.length ?? 0;
+  const students = overview?.reduce((n, o) => n + o.students.length, 0) ?? 0;
+  const tests = overview?.reduce((n, o) => n + o.tests.length, 0) ?? 0;
+  const school = overview?.[0]?.school?.name;
+  const last = lastBackup();
+  const days = last ? Math.floor((Date.now() - last.getTime()) / 86_400_000) : null;
+  const name = profile?.name?.trim();
+  const initials = name
+    ? name
+        .split(/\s+/)
+        .map((w) => w[0])
+        .join("")
+        .slice(0, 2)
+        .toUpperCase()
+    : null;
+
+  const rows: Array<{
+    key: string;
+    icon: IconName;
+    title: string;
+    sub: string;
+    href?: string;
+    to?: string;
+  }> = [
+    {
+      key: "backup",
+      icon: "shield",
+      title: t("more.backup"),
+      sub: t("more.backupSub"),
+      to: "/more/backup",
+    },
+    {
+      key: "pin",
+      icon: "lock",
+      title: t("pin.settingsTitle"),
+      sub: pinOn ? t("onb.on") : t("onb.off"),
+      to: "/more/pin",
+    },
+    {
+      key: "display",
+      icon: "text",
+      title: t("more.languageText"),
+      sub: `${LOCALES[locale].label} · ${t(`settings.size.${size}`)}`,
+      to: "/more/display",
+    },
+    {
+      key: "templates",
+      icon: "file",
+      title: t("more.templates"),
+      sub: t("more.templatesSub"),
+      href: "/docs/templates",
+    },
+    { key: "help", icon: "help", title: t("settings.help"), sub: t("more.helpSub"), href: "/docs" },
+    {
+      key: "privacy",
+      icon: "lock",
+      title: t("settings.privacy"),
+      sub: t("more.privacySub"),
+      href: "/docs/privacy",
+    },
+    { key: "data", icon: "trash", title: t("more.data"), sub: t("more.dataSub"), to: "/more/data" },
+  ];
+
+  return (
+    <>
+      <main className="k-main k-main--tabbed">
+        <PageHead title={t("tab.more")} />
+        <button type="button" className="profile card" onClick={() => go("/more/profile")}>
+          <span className="profile__avatar" aria-hidden="true">
+            {initials ?? <Icon name="user" />}
+          </span>
+          <span className="row-link__body">
+            <span className="row-link__title">{name || t("more.addName")}</span>
+            <span className="row-link__meta">{school ?? t("more.profileSub")}</span>
+          </span>
+          <span className="chev">
+            <Icon name="chev" />
+          </span>
+        </button>
+        <section className="card card--ink phonecard" aria-labelledby="phone-h">
+          <h2 id="phone-h" className="k-kicker">
+            {t("more.onPhone")}
+          </h2>
+          <p>
+            {t("more.counts", { classes, students, tests })}
+            {" · "}
+            {days === null ? t("today.neverBackedUp") : t("more.lastBackup", { n: days })}
+          </p>
+        </section>
+        <ul className="list card card--flush">
+          {rows.map((r) => (
+            <li key={r.key}>
+              {r.href ? (
+                <a className="row-link row-link--flat" href={r.href}>
+                  <span className="icon-tile">
+                    <Icon name={r.icon} />
+                  </span>
+                  <span className="row-link__body">
+                    <span className="row-link__title">{r.title}</span>
+                    <span className="row-link__meta">{r.sub}</span>
+                  </span>
+                  <span className="chev">
+                    <Icon name="chev" />
+                  </span>
+                </a>
+              ) : (
+                <button
+                  type="button"
+                  className="row-link row-link--flat"
+                  onClick={() => r.to && go(r.to)}
+                >
+                  <span className="icon-tile">
+                    <Icon name={r.icon} />
+                  </span>
+                  <span className="row-link__body">
+                    <span className="row-link__title">{r.title}</span>
+                    <span className="row-link__meta">{r.sub}</span>
+                  </span>
+                  <span className="chev">
+                    <Icon name="chev" />
+                  </span>
+                </button>
+              )}
+            </li>
+          ))}
+        </ul>
+        <p className="small muted center num">
+          {PRODUCT_NAME} {APP_VERSION}
+        </p>
+      </main>
+      <TabBar />
+    </>
+  );
+}
+
+function Display() {
+  const { t, theme, setTheme, size, setSize, locale, setLocale } = useApp();
+  return (
+    <section className="card" aria-labelledby="look-h">
+      <h2 id="look-h">{t("settings.look")}</h2>
+      <div className="stack" style={{ gap: 10 }}>
+        {(Object.keys(LOCALES) as Locale[]).map((l) => (
+          <ChoiceRow
+            key={l}
+            lang={LOCALES[l].intl.split("-")[0]}
+            selected={locale === l}
+            onClick={() => setLocale(l)}
+            title={LOCALES[l].label}
+            sub={l === "hi" ? "Hindi" : "अंग्रेज़ी"}
+          />
+        ))}
+      </div>
+      <div className="field">
+        <span className="label" id="theme-l">
+          {t("settings.theme")}
+        </span>
+        <fieldset className="seg" aria-labelledby="theme-l">
+          {(["light", "dark", "system"] as Theme[]).map((x) => (
+            <button key={x} type="button" aria-pressed={theme === x} onClick={() => setTheme(x)}>
+              {t(`settings.theme.${x}`)}
+            </button>
+          ))}
+        </fieldset>
+      </div>
+      <div className="field">
+        <span className="label" id="size-l">
+          {t("settings.size")}
+        </span>
+        <fieldset className="seg" aria-labelledby="size-l">
+          {(["s", "m", "l", "xl"] as TextSize[]).map((x, i) => (
+            <button
+              key={x}
+              type="button"
+              aria-pressed={size === x}
+              onClick={() => setSize(x)}
+              style={{ fontSize: `${0.85 + i * 0.12}rem` }}
+              aria-label={t(`settings.size.${x}`)}
+            >
+              A
+            </button>
+          ))}
+        </fieldset>
+      </div>
+      <div className="sample">
+        <span className="k-kicker">{t("more.sample")}</span>
+        <p>{t("more.sampleText")}</p>
+      </div>
+    </section>
+  );
+}
+
+function ProfileForm() {
+  const { t, go } = useApp();
+  const profile = useProfile();
+  const [name, setName] = useState<string | null>(null);
+  if (profile === undefined) return null;
+  const value = name ?? profile?.name ?? "";
+  return (
+    <form
+      className="card"
+      onSubmit={async (e) => {
+        e.preventDefault();
+        await putSetting("profile", {
+          name: value.trim(),
+          board: profile?.board ?? "",
+          medium: profile?.medium ?? "",
+        });
+        go("/more");
+      }}
+    >
+      <p className="muted">{t("onb.about.body")}</p>
+      <div className="field">
+        <label htmlFor="pf-name">{t("onb.about.name")}</label>
+        <input
+          id="pf-name"
+          className="input"
+          autoComplete="name"
+          value={value}
+          onChange={(e) => setName(e.target.value)}
+        />
+      </div>
+      <button type="submit" className="btn btn--primary">
+        {t("common.save")}
+      </button>
+    </form>
+  );
+}
+
+function About() {
+  const { t } = useApp();
+  return (
+    <section className="card" aria-labelledby="about-h">
+      <h2 id="about-h">{t("settings.about")}</h2>
+      <p>{t("settings.aboutBody", { product: PRODUCT_NAME })}</p>
+      <div className="cluster">
+        <a className="btn btn--sm" href="/docs/privacy">
+          {t("settings.privacy")}
+        </a>
+        <a className="btn btn--sm" href="/docs">
+          {t("settings.help")}
+        </a>
+        <a className="btn btn--sm" href={REPO_URL} rel="noopener">
+          {t("settings.source")}
+        </a>
+      </div>
+      <p className="small muted num">
+        {PRODUCT_NAME} {APP_VERSION}
+      </p>
+    </section>
   );
 }
 
@@ -190,6 +423,7 @@ function Restore() {
   const [fileName, setFileName] = useState("");
   const [pass, setPass] = useState("");
   const [payload, setPayload] = useState<BackupPayload | null>(null);
+  const [preview, setPreview] = useState<MergePreview[] | null>(null);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<{ kind: "ok" | "bad"; text: string } | null>(null);
 
@@ -207,7 +441,9 @@ function Restore() {
     setBusy(true);
     setMsg(null);
     try {
-      setPayload(await decryptBackup(text, pass));
+      const p = await decryptBackup(text, pass);
+      setPreview(await previewImport(p.tables));
+      setPayload(p);
     } catch (err) {
       const code = (err as BackupError).code ?? "damaged";
       setMsg({
@@ -297,6 +533,28 @@ function Restore() {
                   date: new Date(payload.exportedAt).toLocaleDateString("en-GB"),
                 })}
               </p>
+              {preview?.length ? (
+                <>
+                  <p>
+                    <strong>{t("restore.willDo")}</strong>
+                  </p>
+                  <ul className="list card card--flush">
+                    {preview.map((c) => (
+                      <li key={c.classId} className="row-link row-link--flat">
+                        <span className="badge">{c.grade + c.section}</span>
+                        <span className="row-link__body">
+                          <span className="row-link__title">
+                            {t("class.label", { grade: c.grade, section: c.section })}
+                          </span>
+                          <span className="row-link__meta">
+                            {t(`restore.state.${c.state}`, { n: c.changes, students: c.students })}
+                          </span>
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              ) : null}
               <p className="small muted">{t("restore.mergeNote")}</p>
               <button type="button" className="btn btn--primary" onClick={apply} disabled={busy}>
                 {t("restore.apply")}

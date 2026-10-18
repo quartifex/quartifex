@@ -4,7 +4,16 @@
 import maths from "../../public/templates/example-primary-maths-g3.json";
 import writing from "../../public/templates/example-writing.json";
 import type { BackupTables } from "./backup";
-import type { Answer, Assessment, Choice, KeyItem, RubricItem, Sitting, Student } from "./model";
+import type {
+  Answer,
+  Assessment,
+  Choice,
+  KeyItem,
+  RubricItem,
+  Sitting,
+  Student,
+  StudentNote,
+} from "./model";
 import { CHOICES, responseId, sittingId } from "./model";
 
 const NAMES: Array<[string, string]> = [
@@ -144,7 +153,8 @@ export function demoTables(locale: "en" | "hi", now = Date.now()): BackupTables 
     date: string;
     offset: number;
     growth: number;
-    fill: boolean;
+    /** How many children are marked: all, or the first n (marking still going on). */
+    fill: number | "all";
   }> = [
     {
       id: "demo-maths-jul",
@@ -152,7 +162,7 @@ export function demoTables(locale: "en" | "hi", now = Date.now()): BackupTables 
       date: "2026-07-14",
       offset: 0,
       growth: 0,
-      fill: true,
+      fill: "all",
     },
     {
       id: "demo-maths-aug",
@@ -160,7 +170,7 @@ export function demoTables(locale: "en" | "hi", now = Date.now()): BackupTables 
       date: "2026-08-18",
       offset: 1,
       growth: 0.05,
-      fill: true,
+      fill: "all",
     },
     {
       id: "demo-maths-sep",
@@ -168,7 +178,7 @@ export function demoTables(locale: "en" | "hi", now = Date.now()): BackupTables 
       date: "2026-09-22",
       offset: 2,
       growth: 0.08,
-      fill: false,
+      fill: 12,
     },
   ];
 
@@ -190,8 +200,8 @@ export function demoTables(locale: "en" | "hi", now = Date.now()): BackupTables 
       kind: "key",
       items,
     });
-    if (!t.fill) continue;
     students.forEach((s, si) => {
+      if (t.fill !== "all" && si >= t.fill) return;
       if (rand() < 0.06) {
         sittings.push({
           id: sittingId(t.id, s.id),
@@ -261,12 +271,82 @@ export function demoTables(locale: "en" | "hi", now = Date.now()): BackupTables 
     }
   });
 
+  // A second class, 5 A, with one marked test, so Classes and Insights have more than one.
+  const class5 = "demo-class-5a";
+  const students5: Student[] = NAMES.slice(6, 30).map(([en, hi], i) => ({
+    id: `demo-5a-student-${i + 1}`,
+    classId: class5,
+    roll: String(i + 1),
+    name: locale === "hi" ? hi : en,
+    active: true,
+  }));
+  const test5 = "demo-5a-maths-aug";
+  const items5 = keyItems(3);
+  assessments.push({
+    id: test5,
+    classId: class5,
+    title: locale === "hi" ? "गणित जाँच, अगस्त" : "Maths check, August",
+    subject: locale === "hi" ? "गणित" : "Maths",
+    date: "2026-08-20",
+    templateId: maths.id,
+    createdAt: created++,
+    kind: "key",
+    items: items5,
+  });
+  students5.forEach((s) => {
+    const a = 0.45 + rand() * 0.5;
+    for (const item of items5) {
+      responses.push({
+        id: responseId(test5, s.id, item.id),
+        assessmentId: test5,
+        studentId: s.id,
+        itemId: item.id,
+        value:
+          rand() < a
+            ? (item.key ?? "A")
+            : (CHOICES.filter((c) => c !== item.key)[Math.floor(rand() * 3)] ?? "B"),
+        at: created,
+      });
+    }
+  });
+
+  const noteText =
+    locale === "hi"
+      ? [
+          ["2026-09-22", "जल्दी पूरा किया, गोलू की हासिल में मदद की।", true],
+          ["2026-08-18", "सेमी और मीटर में उलझता है। घर पर रूलर से अभ्यास करे।", false],
+        ]
+      : [
+          ["2026-09-22", "Finished early, helped Golu with carrying.", true],
+          ["2026-08-18", "Mixes up cm and m. Practise with a ruler at home.", false],
+        ];
+  const notes: StudentNote[] = noteText.map(([date, text, onCard], i) => ({
+    id: `demo-note-${i + 1}`,
+    studentId: "demo-student-5",
+    date: String(date),
+    text: String(text),
+    onCard: Boolean(onCard),
+    at: now - i * 1000,
+  }));
+
+  const subj = locale === "hi" ? ["गणित", "भाषा", "अंग्रेज़ी"] : ["Maths", "Language", "English"];
   return {
     schools: [{ id: schoolId, name: DEMO_SCHOOL[locale] }],
-    classes: [{ id: classId, schoolId, grade: "4", section: "B", year: "2026-27" }],
-    students,
+    classes: [
+      { id: classId, schoolId, grade: "4", section: "B", year: "2026-27", subjects: subj },
+      {
+        id: class5,
+        schoolId,
+        grade: "5",
+        section: "A",
+        year: "2026-27",
+        subjects: [subj[0] ?? ""],
+      },
+    ],
+    students: [...students, ...students5],
     assessments,
     responses,
     sittings,
+    notes,
   };
 }

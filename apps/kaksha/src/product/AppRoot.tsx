@@ -1,9 +1,10 @@
 "use client";
 import { lazy, Suspense, useEffect, useState } from "react";
-import { db, isDemo } from "../lib/db";
+import { db, getSetting, isDemo } from "../lib/db";
 import { AppProvider, useApp } from "./context";
 import { PinGate } from "./PinGate";
 import { Home } from "./screens/Home";
+import { Icon } from "./ui";
 
 const ClassScreen = lazy(() => import("./screens/ClassScreen"));
 const NewClass = lazy(() => import("./screens/NewClass"));
@@ -15,28 +16,58 @@ const StudentScreen = lazy(() => import("./screens/StudentScreen"));
 const Report = lazy(() => import("./screens/Report"));
 const Settings = lazy(() => import("./screens/Settings"));
 const Roster = lazy(() => import("./screens/Roster"));
+const Onboarding = lazy(() => import("./screens/Onboarding"));
+const Classes = lazy(() => import("./screens/Classes"));
+const Insights = lazy(() => import("./screens/Insights"));
+const Reports = lazy(() => import("./screens/Reports"));
+const Notes = lazy(() => import("./screens/Notes"));
 
 function Screens() {
   const { route } = useApp();
   const [head, id, sub] = route;
+  if (head === "welcome") return <Onboarding step={Math.max(0, Math.min(8, Number(id) || 0))} />;
   if (head === "new-class") return <NewClass />;
-  if (head === "settings") return <Settings />;
+  if (head === "classes") return <Classes />;
+  if (head === "insights") return <Insights />;
+  if (head === "settings" || head === "more") return <Settings page={id} />;
   if (head === "class" && id) {
     if (sub === "new") return <NewTest classId={id} />;
     if (sub === "roster") return <Roster classId={id} />;
+    if (sub === "reports") return <Reports classId={id} />;
+    if (sub === "cards") return <Report kind="cards" id={id} />;
     return <ClassScreen classId={id} tab={sub ?? "tests"} />;
   }
   if (head === "test" && id) {
     if (sub === "mark") return <Mark assessmentId={id} start={route[3]} />;
     if (sub === "grid") return <Grid assessmentId={id} />;
     if (sub === "report") return <Report kind="class" id={id} />;
-    return <Results assessmentId={id} />;
+    return <Results assessmentId={id} tab={sub} item={route[3]} />;
   }
   if (head === "student" && id) {
     if (sub === "report") return <Report kind="student" id={id} />;
+    if (sub === "notes") return <Notes studentId={id} />;
     return <StudentScreen studentId={id} />;
   }
   return <Home />;
+}
+
+/** A phone with no classes that has never finished setup starts at the welcome screens. */
+function FirstRun() {
+  const { route, go } = useApp();
+  useEffect(() => {
+    if (isDemo()) return;
+    const head = route[0] ?? "";
+    if (head !== "" && head !== "today") return;
+    let live = true;
+    void (async () => {
+      const [count, done] = await Promise.all([db().classes.count(), getSetting("onboarded")]);
+      if (live && count === 0 && !done) go("/welcome/0", true);
+    })();
+    return () => {
+      live = false;
+    };
+  }, [route, go]);
+  return null;
 }
 
 function DemoBanner() {
@@ -48,6 +79,7 @@ function DemoBanner() {
       <button
         type="button"
         className="k-demo__reset"
+        aria-label={t("demo.reset")}
         onClick={async () => {
           const { resetDemo } = await import("./demoSeed");
           await resetDemo();
@@ -55,7 +87,8 @@ function DemoBanner() {
           location.reload();
         }}
       >
-        {t("demo.reset")}
+        <Icon name="undo" />
+        <span className="k-demo__resetText">{t("demo.resetShort")}</span>
       </button>
     </div>
   );
@@ -99,6 +132,7 @@ function Shell() {
       <DemoBanner />
       {ready ? (
         <PinGate>
+          <FirstRun />
           <Suspense fallback={<Loading />}>
             <Screens />
           </Suspense>

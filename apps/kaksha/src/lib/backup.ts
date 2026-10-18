@@ -6,7 +6,15 @@
 // Data = AES-GCM (256-bit key, 12-byte random IV) over the gzip of the backup JSON.
 // A wrong passphrase fails the GCM tag check, so it can never "restore" garbage.
 
-import type { Answer, Assessment, ClassGroup, School, Sitting, Student } from "./model";
+import type {
+  Answer,
+  Assessment,
+  ClassGroup,
+  School,
+  Sitting,
+  Student,
+  StudentNote,
+} from "./model";
 
 export interface BackupTables {
   schools: School[];
@@ -15,6 +23,8 @@ export interface BackupTables {
   assessments: Assessment[];
   responses: Answer[];
   sittings: Sitting[];
+  /** Added in 0.2. Older backups have none. */
+  notes?: StudentNote[];
 }
 
 export interface BackupPayload {

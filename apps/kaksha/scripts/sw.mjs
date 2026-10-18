@@ -32,8 +32,8 @@ const publicFiles = [
   ...readdirSync(path.join(pub, "templates")).map((f) => `templates/${f}`),
 ];
 for (const f of publicFiles) {
-  // The site's display face is not used inside the app.
-  if (f.includes("tiro-devanagari")) continue;
+  // The app uses the display face for Latin headings only; Devanagari headings use Mukta.
+  if (f.includes("tiro-devanagari-hindi-devanagari")) continue;
   entries.push({ url: `/${f}`, revision: hash(readFileSync(path.join(pub, f))) });
 }
 

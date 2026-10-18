@@ -3,7 +3,16 @@
 import Dexie, { type EntityTable } from "dexie";
 import { DB_NAME, DEMO_DB_NAME } from "../config";
 import type { BackupTables } from "./backup";
-import type { Answer, Assessment, ClassGroup, Id, School, Sitting, Student } from "./model";
+import type {
+  Answer,
+  Assessment,
+  ClassGroup,
+  Id,
+  School,
+  Sitting,
+  Student,
+  StudentNote,
+} from "./model";
 import { responseId, sittingId } from "./model";
 
 export interface Setting {
@@ -19,6 +28,7 @@ export class KakshaDb extends Dexie {
   responses!: EntityTable<Answer, "id">;
   sittings!: EntityTable<Sitting, "id">;
   settings!: EntityTable<Setting, "key">;
+  notes!: EntityTable<StudentNote, "id">;
 
   constructor(name: string) {
     super(name);
@@ -31,6 +41,7 @@ export class KakshaDb extends Dexie {
       sittings: "id, assessmentId, studentId",
       settings: "key",
     });
+    this.version(2).stores({ notes: "id, studentId" });
   }
 }
 
@@ -88,17 +99,26 @@ export async function setNote(assessmentId: Id, studentId: Id, note: string): Pr
   await d.sittings.put({ id, assessmentId, studentId, absent: before?.absent ?? false, note });
 }
 
+export async function getSetting<T>(key: string): Promise<T | undefined> {
+  return (await db().settings.get(key))?.value as T | undefined;
+}
+
+export async function putSetting(key: string, value: unknown): Promise<void> {
+  await db().settings.put({ key, value });
+}
+
 export async function exportTables(): Promise<BackupTables> {
   const d = db();
-  const [schools, classes, students, assessments, responses, sittings] = await Promise.all([
+  const [schools, classes, students, assessments, responses, sittings, notes] = await Promise.all([
     d.schools.toArray(),
     d.classes.toArray(),
     d.students.toArray(),
     d.assessments.toArray(),
     d.responses.toArray(),
     d.sittings.toArray(),
+    d.notes.toArray(),
   ]);
-  return { schools, classes, students, assessments, responses, sittings };
+  return { schools, classes, students, assessments, responses, sittings, notes };
 }
 
 export interface MergeCounts {
@@ -117,7 +137,7 @@ export async function importTables(tables: BackupTables): Promise<MergeCounts> {
   let updated = 0;
   await d.transaction(
     "rw",
-    [d.schools, d.classes, d.students, d.assessments, d.responses, d.sittings],
+    [d.schools, d.classes, d.students, d.assessments, d.responses, d.sittings, d.notes],
     async () => {
       const merge = async <T extends { id: string }>(
         table: EntityTable<T, "id">,
@@ -144,6 +164,7 @@ export async function importTables(tables: BackupTables): Promise<MergeCounts> {
       await merge(d.assessments, tables.assessments);
       await merge(d.responses, tables.responses, (a, b) => a.at >= b.at);
       await merge(d.sittings, tables.sittings);
+      await merge(d.notes, tables.notes ?? [], (a, b) => a.at >= b.at);
     },
   );
   return { added, updated };
@@ -169,13 +190,61 @@ export async function deleteClass(id: Id): Promise<void> {
   const d = db();
   const tests = await d.assessments.where("classId").equals(id).primaryKeys();
   for (const t of tests) await deleteAssessment(t);
-  await d.transaction("rw", d.students, d.classes, d.schools, async () => {
+  await d.transaction("rw", d.students, d.classes, d.schools, d.notes, async () => {
     const cls = await d.classes.get(id);
+    const kids = await d.students.where("classId").equals(id).primaryKeys();
+    await d.notes.where("studentId").anyOf(kids).delete();
     await d.students.where("classId").equals(id).delete();
     await d.classes.delete(id);
     if (cls) {
       const others = await d.classes.where("schoolId").equals(cls.schoolId).count();
       if (others === 0) await d.schools.delete(cls.schoolId);
     }
+  });
+}
+
+export interface MergePreview {
+  classId: Id;
+  grade: string;
+  section: string;
+  state: "added" | "updated" | "same";
+  /** Answers that would be added or replaced by newer taps. */
+  changes: number;
+  students: number;
+}
+
+/** What importTables would do, class by class, without changing anything. */
+export async function previewImport(tables: BackupTables): Promise<MergePreview[]> {
+  const d = db();
+  const out: MergePreview[] = [];
+  for (const c of tables.classes) {
+    const have = await d.classes.get(c.id);
+    const tests = new Set(tables.assessments.filter((a) => a.classId === c.id).map((a) => a.id));
+    const rows = tables.responses.filter((r) => tests.has(r.assessmentId));
+    const existing = await d.responses.bulkGet(rows.map((r) => r.id));
+    const changes = rows.filter((r, i) => {
+      const e = existing[i];
+      return !e || (r.at > e.at && r.value !== e.value);
+    }).length;
+    out.push({
+      classId: c.id,
+      grade: c.grade,
+      section: c.section,
+      state: !have ? "added" : changes > 0 ? "updated" : "same",
+      changes,
+      students: tables.students.filter((s) => s.classId === c.id).length,
+    });
+  }
+  return out;
+}
+
+export async function addNote(studentId: Id, text: string, onCard: boolean): Promise<void> {
+  await db().notes.put({
+    id: crypto.randomUUID(),
+    studentId,
+    date: new Date().toISOString().slice(0, 10),
+    text,
+    onCard,
+    at: Date.now(),
   });
 }

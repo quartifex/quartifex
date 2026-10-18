@@ -3,7 +3,18 @@
 import { useLiveQuery } from "dexie-react-hooks";
 import { collator, type Locale } from "../i18n";
 import { db } from "../lib/db";
-import type { Answer, Assessment, ClassGroup, Id, School, Sitting, Student } from "../lib/model";
+import type {
+  Answer,
+  Assessment,
+  ClassGroup,
+  Id,
+  Profile,
+  School,
+  Sitting,
+  Student,
+  StudentNote,
+} from "../lib/model";
+import { type ClassSummary, classSummary, percent } from "../lib/scoring";
 
 export interface ClassInfo extends ClassGroup {
   school: School | undefined;
@@ -103,4 +114,102 @@ export function classLabel(
   c: ClassGroup,
 ): string {
   return t("class.label", { grade: c.grade, section: c.section });
+}
+
+/** A stored setting, live. `undefined` while loading, `null` when never set. */
+export function useSetting<T>(key: string): T | null | undefined {
+  return useLiveQuery(async () => {
+    const row = await db().settings.get(key);
+    return row ? (row.value as T) : null;
+  }, [key]);
+}
+
+export function useProfile(): Profile | null | undefined {
+  return useSetting<Profile>("profile");
+}
+
+export function useNotes(studentId: Id | undefined): StudentNote[] | undefined {
+  return useLiveQuery(async () => {
+    if (!studentId) return [];
+    const all = await db().notes.where("studentId").equals(studentId).toArray();
+    return all.sort((a, b) => b.date.localeCompare(a.date) || b.at - a.at);
+  }, [studentId]);
+}
+
+export interface TestState {
+  a: Assessment;
+  summary: ClassSummary;
+  /** Children marked (complete) or absent. */
+  done: number;
+  total: number;
+  /** Class average as a percentage, from complete children only. */
+  average: number | null;
+  /** Most recent tap, for "continue where you stopped". */
+  lastAt: number;
+}
+
+export interface ClassOverview {
+  cls: ClassGroup;
+  school: School | undefined;
+  students: Student[];
+  tests: TestState[];
+}
+
+/** Every class with every test summarised. Small data, so one pass is fine. */
+export function useOverview(locale: Locale): ClassOverview[] | undefined {
+  return useLiveQuery(async () => {
+    const d = db();
+    const [classes, schools, students, tests, answers, sittings] = await Promise.all([
+      d.classes.toArray(),
+      d.schools.toArray(),
+      d.students.toArray(),
+      d.assessments.toArray(),
+      d.responses.toArray(),
+      d.sittings.toArray(),
+    ]);
+    const ansBy = new Map<string, Answer[]>();
+    for (const r of answers) {
+      const list = ansBy.get(r.assessmentId) ?? [];
+      list.push(r);
+      ansBy.set(r.assessmentId, list);
+    }
+    return classes.map((cls) => {
+      const kids = sortStudents(
+        students.filter((s) => s.classId === cls.id),
+        locale,
+      );
+      const states = tests
+        .filter((a) => a.classId === cls.id)
+        .sort((a, b) => b.date.localeCompare(a.date) || b.createdAt - a.createdAt)
+        .map((a) => {
+          const rows = ansBy.get(a.id) ?? [];
+          const summary = classSummary(
+            a,
+            kids,
+            rows,
+            sittings.filter((x) => x.assessmentId === a.id),
+          );
+          const done = summary.results.filter(
+            (r) => r.status === "complete" || r.status === "absent",
+          ).length;
+          return {
+            a,
+            summary,
+            done,
+            total: summary.results.length,
+            average:
+              summary.meanScore === null
+                ? null
+                : percent(Math.round(summary.meanScore * 1000), summary.max * 1000),
+            lastAt: rows.reduce((m, r) => Math.max(m, r.at), 0),
+          };
+        });
+      return {
+        cls,
+        school: schools.find((s) => s.id === cls.schoolId),
+        students: kids,
+        tests: states,
+      };
+    });
+  }, [locale]);
 }
