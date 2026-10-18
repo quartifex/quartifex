@@ -1,8 +1,8 @@
 {
-  "date": "2026-10-18T05:27:56.196Z",
+  "date": "2026-10-18T05:42:28.425Z",
   "app Lighthouse mobile (150 ms, 1.6 Mbit/s)": {
-    "firstVisitMs": 2121,
-    "repeatVisitMs": 646,
+    "firstVisitMs": 2177,
+    "repeatVisitMs": 560,
     "cpu": "6x",
     "viewport": "360x640"
   },
@@ -12,16 +12,16 @@
     "frames": 88
   },
   "site /": {
-    "lcp": 1436,
-    "cls": 0.002
+    "lcp": 1324,
+    "cls": 0.016
   },
   "site /hi": {
-    "lcp": 1328,
-    "cls": 0
+    "lcp": 1448,
+    "cls": 0.015
   },
   "app slow 3G (400 ms, 400 kbit/s)": {
-    "firstVisitMs": 4829,
-    "repeatVisitMs": 668,
+    "firstVisitMs": 5053,
+    "repeatVisitMs": 624,
     "cpu": "6x",
     "viewport": "360x640"
   }
