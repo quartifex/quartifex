@@ -272,12 +272,25 @@ launch gate has open lines, below).
 | Part | What is there |
 | --- | --- |
 | Brand | Kaksha (कक्षा), working name in `PRODUCT_NAME`. Paper and ink with one marigold accent; Mukta, Tiro Devanagari Hindi, IBM Plex Mono (SIL OFL). Mascot Tikki, a slate whose smile is a tick, drawn in code (`apps/kaksha/scripts/brand`); wordmark outlined with HarfBuzz; `public/brand/logo.svg` is the one file to swap for the final logo. Catalog icon `S20-kaksha.svg` |
-| App `/app` | Static, code-split React 19 + Dexie bundle with its own CSP, offline through a Serwist service worker. Classes, rosters (CSV file, spreadsheet paste, one by one; bad rows reported by line), answer-key and rubric tests (from scratch, three labelled examples, or a template file checked against the published schema), entry by question or by student with auto-advance, undo, absent and blank, write per tap, the full marks grid, class view (average, attendance, by skill, by question with common wrong answers, quartile groups, who needs help), progress over time, student view (trend, strengths and gaps), printable report card and class summary, CSV export, encrypted backup (share sheet or download), restore and merge, PIN lock, light/dark/system, four text sizes, Hindi and English throughout, demo on its own database |
-| Site `/`, `/hi` | Register-card hero with the label, both actions and the language switch; the paper-to-grid-to-chart scroll moment (GSAP + ScrollTrigger through stillness; three stills under reduced motion); the live demo in a phone frame with three guided tasks; why it is built this way; install steps with captures from the real app; 14 MDX doc sections with a sticky index (privacy written from the DPDP Act 2023 and Rules 2025 with sources and "not legal advice"); For schools form; origin note with the agreed wording; footer |
+| Design | Figma file Q2OkPraJ4byy5bhLC1zKUG: Foundations (variables, components, Tikki), App flows (eight flows, 51 screens at 360 × 780, and a map), Website (desktop 1440, phone 390, the pinned demo and the full-screen phone demo) |
+| App `/app` | First open: language, three promises, about you, first class with subjects, students (type, paste or roll numbers), PIN and backup reminder, ready with an install prompt. Four tabs: Today (continue marking, results ready to read, backup nudge, first-day state), Classes, Insights (who sat each test, below half twice running, skills across tests), More (profile, backup and restore with a per-class preview, PIN, language and text size, about and delete). Marking starts with attendance; results in four tabs (overview with mark bands and "worth a look", questions with a page per question, skills with change since the last test, groups); class students with search and filters; student page with notes; report card options and card language; all cards for a class in one PDF; test as a file. Static, code-split React 19 + Dexie bundle with its own CSP, offline through a Serwist service worker. Classes, rosters (CSV file, spreadsheet paste, one by one; bad rows reported by line), answer-key and rubric tests (from scratch, three labelled examples, or a template file checked against the published schema), entry by question or by student with auto-advance, undo, absent and blank, write per tap, the full marks grid, class view (average, attendance, by skill, by question with common wrong answers, quartile groups, who needs help), progress over time, student view (trend, strengths and gaps), printable report card and class summary, CSV export, encrypted backup (share sheet or download), restore and merge, PIN lock, light/dark/system, four text sizes, Hindi and English throughout, demo on its own database |
+| Site `/`, `/hi` | Rebuilt to the Figma: hero on ruled paper with the app's own screens drawn in markup and a ledger of facts; the paper-to-grid-to-chart scroll moment (GSAP + ScrollTrigger through stillness; three stills under reduced motion); the live demo, whose phone stays sticky beside the steps and pins on "Tap to try" (page behind dimmed, still and inert; full screen on phones; Reset, How it works, Done; Esc, Done or a click outside lets go; steps tick off as the app reports them) with a four-step tour the first time; three checkable numbers; install with three phone screens; six help topics and FAQ; for-schools form; origin; footer |
+| Help `/docs`, `/docs/<topic>` | 14 MDX topics, each its own static page with the topic list and previous/next; privacy written from the DPDP Act 2023 and Rules 2025 with sources and "not legal advice" |
 | `/api/contact` | Resend from env vars, honeypot, 5 per hour per IP; 503 until configured |
 | Vercel | Project `kaksha` (Quartifex team), root `apps/kaksha`, linked to the repo. Preview of `kaksha`: kaksha-git-kaksha-quartifex.vercel.app (Vercel Authentication on previews). Domain `kaksha.quartifex.com` added and verified on the project; it serves production, which is the `main` branch, so it goes live when this branch is merged and DNS points at Vercel |
 
-Checks, all on 18 Oct 2026:
+Checks after the app and site rebuild, 18 Oct 2026 (earlier figures below where not re-run):
+
+| Check | Result |
+| --- | --- |
+| Typecheck and Biome (kaksha) | pass |
+| Unit tests (kaksha) | 4 files, 46 pass (new: restore preview class by class, notes in backups, backups from before notes) |
+| Build | pass. `/app` initial JS **121 kB gzip** (budget 150), 31 chunks, CSS 7.4 kB; 14 help pages prerendered |
+| heft | within budget: transfer 451 kB, script 140 kB, 4 long frames, p95 frame 17 ms, CLS 0.001, interaction 24 ms |
+| Playwright, local build | app and site 20 pass (offline session with zero network requests, onboarding to a ready class, undo, backup/wipe/restore with the per-class preview, rubric, Hindi, demo isolation, CSP, demo frame with tour and ticked steps, pinned page does not scroll and is inert, Esc lets go, tour once then on request, help pages, form, scrub, reduced motion); timing pass; no clipped text or sideways scroll on 34 app screens and the site at 320–1280 px in both languages |
+| axe, 136 page states (site, help pages, every app screen, both languages, two widths) | **0 violations** |
+
+Earlier checks, 18 Oct 2026 (before the rebuild):
 
 | Check | Result |
 | --- | --- |
@@ -301,8 +314,8 @@ Deviations from the brief:
 
 - `/app` is a static React 19 bundle built with esbuild and served by the Next.js deployment, not a Next.js page: Next.js and React alone are about 168 kB gzipped, over the 150 kB budget.
 - PDFs come from the phone's print engine ("Save as PDF"), not a PDF library, because client-side PDF libraries break Devanagari conjuncts.
-- The docs are English on both language pages; the Hindi page says so.
-- Install screenshots are generated locally (raster is never committed), so the preview built from git shows the steps without pictures.
+- The help pages are English on both language pages; the Hindi page says so.
+- Install and hero pictures are the app's screens drawn in HTML and CSS from the Figma, not captures, so nothing raster is committed and the preview shows them too.
 - `airowe/claude-a11y-skill` did not install (no SKILL.md); axe-core runs directly.
 - Not promoted: the launch gate below has open lines, and the custom domain needs DNS.
 

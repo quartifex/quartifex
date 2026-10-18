@@ -1,19 +1,19 @@
 {
   "measurements": {
     "assets": {
-      "totalBytes": 163597,
+      "totalBytes": 57337,
       "glbs": [],
-      "textureBytes": 163597,
+      "textureBytes": 57337,
       "sequences": []
     },
     "page": {
-      "transferBytes": 512791,
-      "scriptBytes": 187153,
-      "imageBytes": 6145
+      "transferBytes": 462083,
+      "scriptBytes": 143666,
+      "imageBytes": 5845
     },
     "scroll": {
-      "frames": 719,
-      "longFrames": 2,
+      "frames": 700,
+      "longFrames": 4,
       "p95FrameMs": 16.8,
       "cls": 0.001,
       "inp": 24
@@ -22,28 +22,28 @@
   "findings": [
     {
       "metric": "assets.totalBytes",
-      "actual": 163597,
+      "actual": 57337,
       "limit": 4500000,
       "unit": "bytes",
       "pass": true
     },
     {
       "metric": "page.transferBytes",
-      "actual": 512791,
+      "actual": 462083,
       "limit": 900000,
       "unit": "bytes",
       "pass": true
     },
     {
       "metric": "page.scriptBytes",
-      "actual": 187153,
+      "actual": 143666,
       "limit": 650000,
       "unit": "bytes",
       "pass": true
     },
     {
       "metric": "scroll.longFrames",
-      "actual": 2,
+      "actual": 4,
       "limit": 4,
       "unit": "count",
       "pass": true

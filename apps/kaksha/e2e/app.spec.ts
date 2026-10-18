@@ -14,7 +14,8 @@ const ROSTER = [
 ].join("\n");
 
 async function addClass(page: Page) {
-  await page.getByRole("button", { name: "Add a class" }).first().click();
+  // A first open lands on the welcome screens; the short way in is the classic form.
+  await page.goto("/app#/new-class");
   await page.getByLabel("School name").fill("Imli Chowk Primary School (invented)");
   await page.getByLabel("Class or grade").fill("4");
   await page.getByLabel("Section").fill("B");
@@ -49,6 +50,12 @@ async function newKeyTest(page: Page, keys: string) {
   const pad = page.getByRole("group", { name: /Answer key: question/ });
   for (const k of keys) await pad.getByRole("button", { name: k, exact: true }).click();
   await page.getByRole("button", { name: "Create and start marking" }).click();
+  await startMarking(page);
+}
+
+/** A fresh test opens with attendance. */
+async function startMarking(page: Page) {
+  await page.getByRole("button", { name: /Start marking/ }).click();
   await expect(page.getByTestId("who")).toBeVisible();
 }
 
@@ -84,7 +91,7 @@ test.describe("the app", () => {
 
     await context.setOffline(true);
     await page.reload();
-    await expect(page.getByRole("heading", { name: "Start with your class" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: /Hello!/ })).toBeVisible();
 
     await addClass(page);
     await importRoster(page);
@@ -103,11 +110,11 @@ test.describe("the app", () => {
     }
     await expect(page.getByText("Every student is marked.")).toBeVisible();
     await page.getByRole("button", { name: "Results" }).click();
-    await expect(page.getByText(/Based on 3 students/)).toBeVisible();
-    await expect(page.getByText("Attendance (1 absent)")).toBeVisible();
+    await expect(page.getByText(/Based on 3 children with every answer marked/)).toBeVisible();
+    await expect(page.getByText(/were absent and are left out/)).toBeVisible();
 
     // Reports and the class view also come from the phone.
-    await page.getByRole("button", { name: "Class summary" }).click();
+    await page.getByRole("button", { name: "Class summary" }).first().click();
     await expect(page.getByRole("article")).toContainText("Unit check");
 
     expect(network, network.join("\n")).toEqual([]);
@@ -153,7 +160,7 @@ test.describe("the app", () => {
     await importRoster(page);
     await newKeyTest(page, "AB");
     for (let i = 0; i < 8; i++) await tap(page, i % 2 ? "B" : "A");
-    await page.goto("/app#/settings");
+    await page.goto("/app#/more/backup");
 
     await page.getByRole("button", { name: "Make a backup" }).click();
     await page.getByLabel("Passphrase", { exact: true }).fill("chalk and slate");
@@ -168,12 +175,13 @@ test.describe("the app", () => {
     expect(text).not.toContain("Asha");
     await page.getByRole("button", { name: "Close" }).click();
 
+    await page.goto("/app#/more/data");
     await page.getByRole("button", { name: "Delete all data" }).click();
     await page.getByLabel("Type the word here").fill("delete");
     await page.getByRole("dialog").getByRole("button", { name: "Delete all data" }).click();
-    await expect(page.getByRole("heading", { name: "Start with your class" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: /Hello!/ })).toBeVisible();
 
-    await page.goto("/app#/settings");
+    await page.goto("/app#/more/backup");
     await page.getByRole("button", { name: "Open a backup" }).click();
     await page.locator('dialog input[type="file"]').setInputFiles(file);
     await page.getByLabel("Passphrase").fill("wrong passphrase");
@@ -185,12 +193,13 @@ test.describe("the app", () => {
     await expect(
       page.getByText(/This backup holds 1 classes, 4 students and 1 tests/),
     ).toBeVisible();
+    // Before anything changes, it says what will, class by class.
+    await expect(page.getByText(/New on this phone · 4 students/)).toBeVisible();
     await page.getByRole("button", { name: "Restore", exact: true }).click();
     await expect(page.getByText(/Done: \d+ added/)).toBeVisible();
 
-    await page.goto("/app#/");
-    await expect(page.getByText("Class 4 B · ")).toBeVisible();
-    await page.getByText("Class 4 B · ").click();
+    await page.goto("/app#/classes");
+    await page.getByRole("button", { name: /Class 4 B/ }).click();
     await expect(page.getByText("Marked", { exact: true })).toBeVisible();
   });
 
@@ -200,6 +209,7 @@ test.describe("the app", () => {
     await importRoster(page);
     await page.getByRole("button", { name: "New test" }).click();
     await page.getByRole("button", { name: /Writing rubric \(example\)/ }).click();
+    await startMarking(page);
     await expect(page.getByTestId("who")).toContainText("Asha Aamla");
     for (const name of [
       "Ideas",
@@ -220,23 +230,54 @@ test.describe("the app", () => {
   });
 
   test("switches to Hindi everywhere, with Indian number and date formats", async ({ page }) => {
-    await page.goto("/app?demo=1&lang=hi");
+    await page.goto("/app?demo=1&lang=hi#/classes");
     await expect(page.getByRole("heading", { name: "आपकी कक्षाएँ" })).toBeVisible();
     await expect(page.locator("html")).toHaveAttribute("lang", "hi");
-    await page.getByRole("button", { name: "English" }).click();
+    await page.goto("/app?demo=1#/more/display");
+    await page.getByRole("button", { name: /^English/ }).click();
+    await page.goto("/app?demo=1#/classes");
     await expect(page.getByRole("heading", { name: "Your classes" })).toBeVisible();
     await page.goto("/app?demo=1#/test/demo-maths-aug");
     await expect(page.getByText(/· 18\/08\/2026/)).toBeVisible();
   });
 
   test("the demo never touches the real database", async ({ page }) => {
-    await page.goto("/app?demo=1");
-    await expect(page.getByText(/Demo: an invented school/)).toBeVisible();
-    await expect(page.getByText("Imli Chowk Primary School (invented)")).toBeVisible();
+    await page.goto("/app?demo=1#/classes");
+    await expect(page.getByText(/Demo · invented school/)).toBeVisible();
+    await expect(page.getByText(/Imli Chowk Primary School \(invented\)/).first()).toBeVisible();
     await page.goto("/app");
-    await expect(page.getByRole("heading", { name: "Start with your class" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: /Hello!/ })).toBeVisible();
     const dbs = await page.evaluate(async () => (await indexedDB.databases()).map((d) => d.name));
     expect(dbs).toContain("kaksha-demo");
+  });
+
+  test("a first open walks through setup to a ready class, with no account", async ({ page }) => {
+    await page.goto("/app");
+    await expect(page.getByRole("heading", { name: /Hello!/ })).toBeVisible();
+    await page.getByRole("button", { name: "Continue" }).click();
+    await page.getByRole("button", { name: "Skip" }).click();
+    await expect(page.getByRole("heading", { name: "About you" })).toBeVisible();
+    await page.getByLabel("Your name (optional)").fill("Meena Sharma");
+    await page.getByLabel("School").fill("Imli Chowk Primary School (invented)");
+    await page.getByRole("button", { name: "Continue" }).click();
+    await page.getByRole("group", { name: "Grade" }).getByRole("button", { name: "4" }).click();
+    await page.getByRole("group", { name: "Section" }).getByRole("button", { name: "B" }).click();
+    await page.getByRole("button", { name: "Continue" }).click();
+    const input = page.getByLabel("Type a name, press Enter");
+    for (const n of ["Asha Aamla", "Bunty Barfi", "आरव"]) {
+      await input.fill(n);
+      await input.press("Enter");
+    }
+    await page.getByRole("button", { name: "Add 3 students" }).click();
+    await expect(page.getByRole("heading", { name: "Keep it safe" })).toBeVisible();
+    await page.getByRole("button", { name: "Finish setup" }).click();
+    await expect(page.getByRole("heading", { name: "Class 4 B is ready." })).toBeVisible();
+    await page.getByRole("button", { name: "Go to Today" }).click();
+    await expect(page.getByRole("heading", { name: /Meena/ })).toBeVisible();
+    await expect(page.getByText("No tests yet in Class 4 B")).toBeVisible();
+    // Setup is done once: a reload stays on Today.
+    await page.reload();
+    await expect(page.getByRole("heading", { name: /Meena/ })).toBeVisible();
   });
 
   test("serves /app with a policy that forbids other origins", async ({ request }) => {

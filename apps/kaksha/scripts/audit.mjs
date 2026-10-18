@@ -18,7 +18,22 @@ const strict = process.argv.includes("--strict");
 const withLighthouse = !process.argv.includes("--no-lighthouse");
 const TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"];
 const SCREENS = [
-  ["home", "#/"],
+  ["today", "#/"],
+  ["classes", "#/classes"],
+  ["insights", "#/insights"],
+  ["more", "#/more"],
+  ["backup", "#/more/backup"],
+  ["display", "#/more/display"],
+  ["welcome", "#/welcome/0"],
+  ["setup: about you", "#/welcome/4"],
+  ["setup: first class", "#/welcome/5"],
+  ["questions", "#/test/demo-maths-aug/questions"],
+  ["one question", "#/test/demo-maths-aug/questions/q4"],
+  ["skills", "#/test/demo-maths-aug/skills"],
+  ["groups", "#/test/demo-maths-aug/groups"],
+  ["notes", "#/student/demo-student-5/notes"],
+  ["reports", "#/class/demo-class-4b/reports"],
+  ["all cards", "#/class/demo-class-4b/cards"],
   ["class tests", "#/class/demo-class-4b"],
   ["class students", "#/class/demo-class-4b/students"],
   ["class progress", "#/class/demo-class-4b/progress"],
@@ -31,7 +46,6 @@ const SCREENS = [
   ["class summary", "#/test/demo-maths-aug/report"],
   ["student", "#/student/demo-student-5"],
   ["report card", "#/student/demo-student-5/report"],
-  ["settings", "#/settings"],
   ["new class", "#/new-class"],
 ];
 
@@ -101,7 +115,7 @@ const report = await withServer(3504, async (url) => {
     process.env.PW_CHANNEL ? { channel: process.env.PW_CHANNEL } : {},
   );
   const pages = [];
-  for (const route of ["/", "/hi"]) {
+  for (const route of ["/", "/hi", "/docs", "/docs/privacy", "/docs/templates"]) {
     for (const reduced of [false, true]) {
       for (const [width, height] of [
         [1280, 800],

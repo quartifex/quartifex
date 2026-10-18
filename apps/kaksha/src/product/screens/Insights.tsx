@@ -144,23 +144,25 @@ export default function Insights() {
                     );
                   })}
                 </div>
-                <table className="sr-only">
-                  <caption>{t("insights.sat")}</caption>
-                  <tbody>
-                    {sat.map((x) => (
-                      <tr key={x.a.id}>
-                        <th scope="row">{x.a.title}</th>
-                        <td>
-                          {t("insights.satRow", {
-                            present: x.summary.attendance.present,
-                            absent: x.summary.attendance.absent,
-                            total: x.total,
-                          })}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                <div className="sr-only">
+                  <table>
+                    <caption>{t("insights.sat")}</caption>
+                    <tbody>
+                      {sat.map((x) => (
+                        <tr key={x.a.id}>
+                          <th scope="row">{x.a.title}</th>
+                          <td>
+                            {t("insights.satRow", {
+                              present: x.summary.attendance.present,
+                              absent: x.summary.attendance.absent,
+                              total: x.total,
+                            })}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </section>
             ) : null}
 

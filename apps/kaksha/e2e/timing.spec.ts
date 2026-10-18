@@ -17,7 +17,7 @@ test("20 questions x 40 students fits in 10 minutes, with the app's own time mea
   test.setTimeout(300_000);
   await page.setViewportSize({ width: 360, height: 760 });
   await page.goto("/app");
-  await page.waitForSelector(".k-bar");
+  await page.waitForSelector(".onb, .k-main");
   const { testId } = await seedClass(page, {
     students: STUDENTS,
     items: QUESTIONS,
@@ -26,6 +26,8 @@ test("20 questions x 40 students fits in 10 minutes, with the app's own time mea
   const cdp = await page.context().newCDPSession(page);
   await cdp.send("Emulation.setCPUThrottlingRate", { rate: 4 });
   await page.goto(`/app#/test/${testId}/mark`);
+  // A fresh test asks who is here first; everyone is.
+  await page.getByRole("button", { name: /Start marking/ }).click();
   await page.waitForSelector('[data-testid="who"]');
 
   const pad = page.getByRole("group", { name: /^Answer for/ });

@@ -101,14 +101,14 @@ for (const [name, n] of Object.entries(NETWORKS)) {
     });
     const t0 = Date.now();
     await page.goto("/app", { waitUntil: "commit" });
-    await page.getByRole("button", { name: "Add a class" }).first().click({ trial: true });
+    await page.getByRole("button", { name: "Continue" }).first().click({ trial: true });
     const first = Date.now() - t0;
     await page.evaluate(async () => navigator.serviceWorker.ready);
     // Let the precache finish, then come back as a returning teacher.
     await page.waitForTimeout(n.latency > 300 ? 25_000 : 8_000);
     const t1 = Date.now();
     await page.goto("/app", { waitUntil: "commit" });
-    await page.getByRole("button", { name: "Add a class" }).first().click({ trial: true });
+    await page.getByRole("button", { name: "Continue" }).first().click({ trial: true });
     const repeat = Date.now() - t1;
     record(`app ${name}`, {
       firstVisitMs: first,
@@ -127,7 +127,7 @@ test("the marks grid stays at 60 fps with 50 students x 30 questions on a 4x slo
 }) => {
   await page.setViewportSize({ width: 412, height: 860 });
   await page.goto("/app");
-  await page.waitForSelector(".k-bar");
+  await page.waitForSelector(".onb, .k-main");
   const { testId } = await seedClass(page, {
     students: 50,
     items: 30,
