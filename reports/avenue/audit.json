@@ -1,5 +1,5 @@
 {
-  "date": "2026-10-17T19:27:45.904Z",
+  "date": "2026-10-17T23:59:54.710Z",
   "tags": [
     "wcag2a",
     "wcag2aa",
@@ -10,37 +10,37 @@
   "states": {
     "page as loaded (the gate)": {
       "violations": [],
-      "passes": 37,
+      "passes": 36,
       "version": "4.13.0"
     },
     "page entered": {
       "violations": [],
-      "passes": 37,
+      "passes": 36,
       "version": "4.13.0"
     },
     "driver, moving": {
       "violations": [],
-      "passes": 37,
+      "passes": 36,
       "version": "4.13.0"
     },
     "rear screen, share waiting": {
       "violations": [],
-      "passes": 35,
+      "passes": 34,
       "version": "4.13.0"
     },
     "rear screen, cab mode": {
       "violations": [],
-      "passes": 36,
+      "passes": 35,
       "version": "4.13.0"
     },
     "SOS countdown": {
       "violations": [],
-      "passes": 37,
+      "passes": 36,
       "version": "4.13.0"
     },
     "requirement card open": {
       "violations": [],
-      "passes": 37,
+      "passes": 36,
       "version": "4.13.0"
     }
   },
@@ -48,9 +48,9 @@
     "accessibility": 1,
     "best-practices": 1,
     "seo": 1,
-    "performance": 0.76,
-    "lcpMs": 3543.0419999999995,
-    "cls": 0.01505570377625997,
-    "tbtMs": 529.5
+    "performance": 0.73,
+    "lcpMs": 3343.7135,
+    "cls": 0.024252175919098097,
+    "tbtMs": 729.5
   }
 }
