@@ -104,6 +104,14 @@
           "inp": 200
         }
       }
+    },
+    {
+      "app": "kaksha",
+      "initialJsKb": 170,
+      "initialCssKb": 30,
+      "totalInitialKb": 1000,
+      "heroMediaKb": 600,
+      "fontsKb": 120
     }
   ]
 }

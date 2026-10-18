@@ -9,6 +9,7 @@
       "!catalog/catalog.json",
       "!reports",
       "!templates",
+      "!apps/kaksha/public/brand",
       "!**/pnpm-lock.yaml"
     ]
   },

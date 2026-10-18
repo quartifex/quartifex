@@ -1,0 +1,154 @@
+{
+  "$schema": "/schema/template.v1.json",
+  "format": "kaksha-template",
+  "version": 1,
+  "id": "example-primary-maths-g3",
+  "title": "Primary maths check (example), Grade 3",
+  "subject": "Maths",
+  "language": "en",
+  "example": true,
+  "notes": "An example answer key to show the format. It is not an official curriculum or test: replace the keys with your own paper's answers.",
+  "kind": "key",
+  "items": [
+    {
+      "label": "Q1",
+      "domain": "Number sense",
+      "type": "choice",
+      "key": "A",
+      "marks": 1
+    },
+    {
+      "label": "Q2",
+      "domain": "Number sense",
+      "type": "choice",
+      "key": "C",
+      "marks": 1
+    },
+    {
+      "label": "Q3",
+      "domain": "Number sense",
+      "type": "choice",
+      "key": "B",
+      "marks": 1
+    },
+    {
+      "label": "Q4",
+      "domain": "Number sense",
+      "type": "choice",
+      "key": "D",
+      "marks": 1
+    },
+    {
+      "label": "Q5",
+      "domain": "Addition and subtraction",
+      "type": "choice",
+      "key": "B",
+      "marks": 1
+    },
+    {
+      "label": "Q6",
+      "domain": "Addition and subtraction",
+      "type": "choice",
+      "key": "A",
+      "marks": 1
+    },
+    {
+      "label": "Q7",
+      "domain": "Addition and subtraction",
+      "type": "choice",
+      "key": "D",
+      "marks": 1
+    },
+    {
+      "label": "Q8",
+      "domain": "Addition and subtraction",
+      "type": "choice",
+      "key": "C",
+      "marks": 1
+    },
+    {
+      "label": "Q9",
+      "domain": "Addition and subtraction",
+      "type": "choice",
+      "key": "A",
+      "marks": 1
+    },
+    {
+      "label": "Q10",
+      "domain": "Multiplication",
+      "type": "choice",
+      "key": "B",
+      "marks": 1
+    },
+    {
+      "label": "Q11",
+      "domain": "Multiplication",
+      "type": "choice",
+      "key": "C",
+      "marks": 1
+    },
+    {
+      "label": "Q12",
+      "domain": "Multiplication",
+      "type": "choice",
+      "key": "D",
+      "marks": 1
+    },
+    {
+      "label": "Q13",
+      "domain": "Multiplication",
+      "type": "choice",
+      "key": "D",
+      "marks": 1
+    },
+    {
+      "label": "Q14",
+      "domain": "Shapes",
+      "type": "choice",
+      "key": "B",
+      "marks": 1
+    },
+    {
+      "label": "Q15",
+      "domain": "Shapes",
+      "type": "choice",
+      "key": "A",
+      "marks": 1
+    },
+    {
+      "label": "Q16",
+      "domain": "Shapes",
+      "type": "choice",
+      "key": "C",
+      "marks": 1
+    },
+    {
+      "label": "Q17",
+      "domain": "Measurement",
+      "type": "choice",
+      "key": "B",
+      "marks": 1
+    },
+    {
+      "label": "Q18",
+      "domain": "Measurement",
+      "type": "choice",
+      "key": "A",
+      "marks": 1
+    },
+    {
+      "label": "Q19",
+      "domain": "Measurement",
+      "type": "choice",
+      "key": "D",
+      "marks": 1
+    },
+    {
+      "label": "Q20",
+      "domain": "Measurement",
+      "type": "choice",
+      "key": "C",
+      "marks": 1
+    }
+  ]
+}

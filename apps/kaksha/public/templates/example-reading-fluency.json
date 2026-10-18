@@ -1,0 +1,144 @@
+{
+  "$schema": "/schema/template.v1.json",
+  "format": "kaksha-template",
+  "version": 1,
+  "id": "example-reading-fluency",
+  "title": "Reading fluency rubric (example)",
+  "subject": "Language",
+  "language": "en",
+  "example": true,
+  "notes": "An example rubric to show the format. It is not an official curriculum or assessment: adapt the levels to your class.",
+  "kind": "rubric",
+  "items": [
+    {
+      "label": "Accuracy",
+      "domain": "Decoding",
+      "levels": [
+        {
+          "score": 1,
+          "label": "Beginning",
+          "descriptor": "Reads many words wrongly; meaning is lost."
+        },
+        {
+          "score": 2,
+          "label": "Developing",
+          "descriptor": "Reads most common words; stumbles on new ones."
+        },
+        {
+          "score": 3,
+          "label": "Secure",
+          "descriptor": "Reads nearly all words correctly; corrects own slips."
+        },
+        {
+          "score": 4,
+          "label": "Strong",
+          "descriptor": "Reads all words correctly, including new ones."
+        }
+      ]
+    },
+    {
+      "label": "Pace",
+      "domain": "Fluency",
+      "levels": [
+        {
+          "score": 1,
+          "label": "Beginning",
+          "descriptor": "Reads word by word, with long pauses."
+        },
+        {
+          "score": 2,
+          "label": "Developing",
+          "descriptor": "Reads slowly, in short bursts."
+        },
+        {
+          "score": 3,
+          "label": "Secure",
+          "descriptor": "Reads at an even, comfortable pace."
+        },
+        {
+          "score": 4,
+          "label": "Strong",
+          "descriptor": "Reads at a natural pace, as if speaking."
+        }
+      ]
+    },
+    {
+      "label": "Phrasing",
+      "domain": "Fluency",
+      "levels": [
+        {
+          "score": 1,
+          "label": "Beginning",
+          "descriptor": "Ignores full stops and commas."
+        },
+        {
+          "score": 2,
+          "label": "Developing",
+          "descriptor": "Notices some full stops."
+        },
+        {
+          "score": 3,
+          "label": "Secure",
+          "descriptor": "Pauses at most full stops and commas."
+        },
+        {
+          "score": 4,
+          "label": "Strong",
+          "descriptor": "Groups words into meaningful phrases."
+        }
+      ]
+    },
+    {
+      "label": "Expression",
+      "domain": "Fluency",
+      "levels": [
+        {
+          "score": 1,
+          "label": "Beginning",
+          "descriptor": "Flat voice throughout."
+        },
+        {
+          "score": 2,
+          "label": "Developing",
+          "descriptor": "Some change in voice."
+        },
+        {
+          "score": 3,
+          "label": "Secure",
+          "descriptor": "Voice matches most of the text."
+        },
+        {
+          "score": 4,
+          "label": "Strong",
+          "descriptor": "Voice brings characters and mood to life."
+        }
+      ]
+    },
+    {
+      "label": "Retelling",
+      "domain": "Comprehension",
+      "levels": [
+        {
+          "score": 1,
+          "label": "Beginning",
+          "descriptor": "Cannot say what the text was about."
+        },
+        {
+          "score": 2,
+          "label": "Developing",
+          "descriptor": "Recalls a few details, out of order."
+        },
+        {
+          "score": 3,
+          "label": "Secure",
+          "descriptor": "Retells the main events in order."
+        },
+        {
+          "score": 4,
+          "label": "Strong",
+          "descriptor": "Retells events and explains why they happened."
+        }
+      ]
+    }
+  ]
+}

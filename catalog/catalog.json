@@ -788,6 +788,21 @@
   "icon": "icons/svg/S19"
  },
  {
+  "id": "S20",
+  "kind": "site",
+  "name": "kaksha",
+  "host": "kaksha.quartifex.com",
+  "category": "Free tool",
+  "effort": "L",
+  "order": 20,
+  "deps": [],
+  "libs": "L06, L28, L03, L27",
+  "label": "Free tool",
+  "prompt": "PK",
+  "state": "in progress",
+  "icon": "icons/svg/S20"
+ },
+ {
   "id": "LB01",
   "kind": "lab",
   "name": "glint",
