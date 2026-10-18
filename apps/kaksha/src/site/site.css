@@ -1512,11 +1512,11 @@ html.demo-pinned body {
   gap: 10px;
   font-size: 0.92rem;
 }
-.demo__side li {
+.demo__side ul li {
   position: relative;
   padding-left: 24px;
 }
-.demo__side li::before {
+.demo__side ul li::before {
   content: "✓";
   position: absolute;
   left: 0;
