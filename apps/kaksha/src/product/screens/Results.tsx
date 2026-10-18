@@ -215,7 +215,7 @@ function Overview({
 
   return (
     <>
-      <div className="grid2">
+      <div className="pair">
         <div className="stat stat--ink">
           <span className="stat__value num">{formatPercent(locale, avg)}</span>
           <span className="stat__label">{t("results.average")}</span>
@@ -408,7 +408,11 @@ function QuestionDetail({
   return (
     <>
       <TopBar
-        title={a.kind === "key" ? t("results.questionN", { q: it.label }) : it.label}
+        title={
+          a.kind === "key" && /^\d/.test(it.label)
+            ? t("results.questionN", { q: it.label })
+            : it.label
+        }
         sub={`${a.title}${it.domain ? ` · ${it.domain}` : ""}`}
         back={`/test/${a.id}/questions`}
       />

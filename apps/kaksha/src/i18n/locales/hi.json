@@ -4,7 +4,7 @@
   "common.close": "बंद करें",
   "common.save": "सहेजें",
   "common.notFound": "यह इस फ़ोन पर नहीं मिला।",
-  "demo.banner": "डेमो: काल्पनिक स्कूल और काल्पनिक बच्चे। आपका अपना डेटा छुआ नहीं जाता।",
+  "demo.banner": "डेमो · काल्पनिक विद्यालय और बच्चे। आपका अपना डेटा नहीं छुआ जाता।",
   "demo.reset": "डेमो फिर से शुरू करें",
   "home.sub": "सिर्फ़ इसी फ़ोन पर",
   "home.title": "आपकी कक्षाएँ",
@@ -514,5 +514,6 @@
   "restore.willDo": "इसे खोलने पर यह होगा:",
   "restore.state.added": "इस फ़ोन पर नई · {students} विद्यार्थी",
   "restore.state.updated": "{n} अंक जुड़ेंगे या बदलेंगे",
-  "restore.state.same": "यहाँ पहले से वैसा ही है"
+  "restore.state.same": "यहाँ पहले से वैसा ही है",
+  "student.sameAs": "पिछला, {month} जैसा ही"
 }

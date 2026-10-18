@@ -13,20 +13,62 @@ import Languages from "../../content/docs/12-languages.mdx";
 import Faq from "../../content/docs/13-faq.mdx";
 import Changelog from "../../content/docs/14-changelog.mdx";
 
-/** The docs, in reading order. `id` is the anchor; privacy keeps the short #privacy. */
+/** The docs, in reading order. Each one is its own page at /docs/<slug>. */
 export const DOCS = [
-  { id: "docs-getting-started", label: "Getting started", Body: GettingStarted },
-  { id: "docs-roster", label: "Importing a roster", Body: Roster },
-  { id: "docs-tests", label: "Making a test or rubric", Body: Tests },
-  { id: "docs-entry", label: "The entry screen", Body: Entry },
-  { id: "docs-views", label: "Class and student views", Body: Views },
-  { id: "docs-reports", label: "Reports and export", Body: Reports },
-  { id: "docs-backup", label: "Backup and new phones", Body: Backup },
-  { id: "docs-templates", label: "Templates (JSON schema)", Body: Templates },
-  { id: "docs-data-model", label: "The data model", Body: DataModel },
-  { id: "privacy", label: "Privacy", Body: Privacy },
-  { id: "docs-accessibility", label: "Accessibility", Body: Accessibility },
-  { id: "docs-languages", label: "Adding a language", Body: Languages },
-  { id: "docs-faq", label: "Questions", Body: Faq },
-  { id: "docs-changelog", label: "Changelog", Body: Changelog },
-];
+  {
+    slug: "getting-started",
+    label: "Getting started",
+    desc: "Open, install, add a class",
+    Body: GettingStarted,
+  },
+  { slug: "roster", label: "Importing a roster", desc: "CSV, paste, or type names", Body: Roster },
+  {
+    slug: "tests",
+    label: "Making a test or rubric",
+    desc: "Answer keys, rubrics, examples",
+    Body: Tests,
+  },
+  {
+    slug: "marking",
+    label: "The marking screen",
+    desc: "By question, by student, undo",
+    Body: Entry,
+  },
+  {
+    slug: "results",
+    label: "Reading results",
+    desc: "Averages, questions, skills, groups",
+    Body: Views,
+  },
+  {
+    slug: "reports",
+    label: "Report cards and export",
+    desc: "PDF, class summary, spreadsheet",
+    Body: Reports,
+  },
+  {
+    slug: "backup",
+    label: "Backup and new phones",
+    desc: "Locked files, restore, combine",
+    Body: Backup,
+  },
+  {
+    slug: "templates",
+    label: "Templates (JSON schema)",
+    desc: "Share tests and rubrics as files",
+    Body: Templates,
+  },
+  { slug: "data-model", label: "The data model", desc: "What is stored, and how", Body: DataModel },
+  { slug: "privacy", label: "Privacy", desc: "In plain words, with sources", Body: Privacy },
+  {
+    slug: "accessibility",
+    label: "Accessibility",
+    desc: "Sunlight, text size, screen readers",
+    Body: Accessibility,
+  },
+  { slug: "languages", label: "Adding a language", desc: "For translators", Body: Languages },
+  { slug: "faq", label: "Questions", desc: "Short answers", Body: Faq },
+  { slug: "changelog", label: "Changelog", desc: "What changed", Body: Changelog },
+] as const;
+
+export type DocSlug = (typeof DOCS)[number]["slug"];

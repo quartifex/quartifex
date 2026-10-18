@@ -57,7 +57,7 @@ const schema = {
   $id: "https://kaksha.quartifex.com/schema/template.v1.json",
   title: "Kaksha template (version 1)",
   description:
-    "An answer-key test or a rubric that teachers can share. See https://kaksha.quartifex.com/#docs-templates",
+    "An answer-key test or a rubric that teachers can share. See https://kaksha.quartifex.com/docs/templates",
   ...templateJsonSchema(),
 };
 delete schema.$schema;

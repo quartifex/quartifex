@@ -1,16 +1,16 @@
-## Reading the class and student views
+## Reading results
 
-**Class view of a test** (**Results**):
+A test's results have four tabs.
 
-- **Class average** and **attendance** for the test.
-- **What it is based on.** Figures use only children with every answer marked. Absent and unfinished children are listed, and left out, never counted as zero.
-- **By skill**: the share of marks the class earned in each skill tag.
-- **By question**: the share of the class that got each question right. Bars below half are marigold. Where many children chose the same wrong answer, it is pointed out: it may be a common misunderstanding.
-- **Quartile groups**: the class ranked by score and split into four groups. Children with equal scores are always in the same group. Shown from four children up.
-- **Who needs help, by skill**: children below half in a skill, lowest first.
+- **Overview**: the class average, how many children are marked, and how the class scored, in five bands of marks. **Worth a look** names the questions fewer than half got right, and the skill where most children are below half. The line under it says what the figures are based on: only children with every answer marked. Absent children are named and left out, never counted as zero.
+- **Questions**: the share of the class that got each question right. Orange is below half. Where many children chose the same wrong answer, it says which. Tap a question to see what every option drew and who chose the most common wrong answer: it is often one shared mix-up worth going over.
+- **Skills**: the share of marks the class earned in each skill, and the change since the last test in the same subject.
+- **Groups**: the class ranked by score and split into four groups. Children with equal scores are always in the same group. Shown from four children up. Below them, the children below half in each skill, lowest first.
 
-**Progress** on the class page shows the average and attendance of every test over time.
+**A class's Progress tab** shows the average of every test over time, subject by subject, and skills added up across tests. **Students** lists the class with each child's latest result; search it, or filter it to those below half or often absent.
 
-**A student's page** shows their results over time for each subject (absences appear as gaps, not zeros), and their strengths and gaps by skill, added up across their finished tests.
+**A student's page** shows their latest result and how it has changed, what they are strong in and what to work on, every test, and your notes about them (only on this phone).
+
+**Insights** looks across tests: who sat each test, children below half in two tests in a row, and skills across everything marked so far, for one class or all of them.
 
 The rules behind every number (rounding, ties, absent children) are written down in the code, in `src/lib/scoring.ts`, and checked by tests.

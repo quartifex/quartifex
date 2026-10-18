@@ -1,11 +1,11 @@
 ## Backup and moving to a new phone
 
-**Make a backup**: **Settings → Back up → Make a backup**. Choose a passphrase of at least 8 characters, and write it down. The app makes one locked file and opens the phone's share sheet: send it to yourself on WhatsApp, save it to Drive, or keep it on a memory card. On a computer it downloads.
+**Make a backup**: **More → Backup and restore → Make a backup**. Choose a passphrase of at least 8 characters, and write it down. The app makes one locked file and opens the phone's share sheet: send it to yourself on WhatsApp, save it to Drive, or keep it on a memory card. On a computer it downloads.
 
-**Move to a new phone**: install the app on the new phone, then **Settings → Restore or combine → Open a backup**, choose the file and type the passphrase. You see what the file holds before anything changes.
+**Move to a new phone**: install the app on the new phone, then **More → Backup and restore → Open a backup**, choose the file and type the passphrase. You see what opening it will change, class by class, before anything changes.
 
 **Combine teachers' files**: a head teacher or coordinator can open several teachers' backups on one phone. Classes that are already there are updated; other classes are added beside them. Nothing is deleted. If both have a mark for the same answer, the newer one is kept.
 
 **How the lock works.** The file is encrypted with AES-GCM using a 256-bit key made from your passphrase with PBKDF2 (SHA-256, 600,000 rounds, a random salt). Without the passphrase the file cannot be opened, by anyone, including us; a wrong passphrase is refused and changes nothing. The file name ends in `.kaksha.txt` because phones only let web apps share a few file types; the content is still locked.
 
-**PIN lock.** For a shared phone, **Settings → PIN lock** asks for a PIN when the app opens. It keeps others out of the app; it does not encrypt the data stored on the phone.
+**PIN lock.** For a shared phone, **More → PIN lock** asks for a PIN when the app opens. It keeps others out of the app; it does not encrypt the data stored on the phone.

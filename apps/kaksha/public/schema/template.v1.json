@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://kaksha.quartifex.com/schema/template.v1.json",
   "title": "Kaksha template (version 1)",
-  "description": "An answer-key test or a rubric that teachers can share. See https://kaksha.quartifex.com/#docs-templates",
+  "description": "An answer-key test or a rubric that teachers can share. See https://kaksha.quartifex.com/docs/templates",
   "oneOf": [
     {
       "type": "object",

@@ -12,7 +12,7 @@ export const STUDIO_URL = "https://quartifex.com";
 /** Where the case study will live once it exists; null hides the link. */
 export const CASE_STUDY_URL: string | null = null;
 
-export const APP_VERSION = "0.1.0";
+export const APP_VERSION = "0.2.0";
 
 /** IndexedDB database names. The demo never touches the real one. */
 export const DB_NAME = "kaksha";

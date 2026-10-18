@@ -1927,7 +1927,7 @@ a.row-link {
   align-items: center;
   gap: 8px;
 }
-.art--row svg {
+.art--row li svg {
   width: 18px;
   height: 18px;
   flex: none;
@@ -2454,4 +2454,21 @@ a.row-link {
   .k-demo {
     display: none !important;
   }
+}
+
+.pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.k-demo {
+  flex-wrap: nowrap;
+  padding-block: 2px;
+  font-size: 0.78rem;
+}
+.k-demo > span {
+  min-width: 0;
+}
+.k-demo__resetText {
+  white-space: nowrap;
 }

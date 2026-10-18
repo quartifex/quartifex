@@ -1,13 +1,18 @@
 "use client";
-import { useState } from "react";
+import { type ReactNode, useState } from "react";
 import type { Copy } from "./copy";
 
-export function Install({ copy, shots }: { copy: Copy["install"]; shots: string[] }) {
+export function Install({ copy, phones }: { copy: Copy["install"]; phones: ReactNode }) {
   const [tab, setTab] = useState(copy.tabs[0]?.id ?? "android");
   const current = copy.tabs.find((t) => t.id === tab) ?? copy.tabs[0];
   return (
     <div className="install">
-      <div className="install__slip">
+      <div className="install__text">
+        <p className="eyebrow">{copy.eyebrow}</p>
+        <h2 id="install-h" className="section-title">
+          {copy.title}
+        </h2>
+        <p className="lead">{copy.body}</p>
         <div className="install__tabs" role="tablist" aria-label={copy.title}>
           {copy.tabs.map((t) => (
             <button
@@ -31,26 +36,9 @@ export function Install({ copy, shots }: { copy: Copy["install"]; shots: string[
           </ol>
         </div>
       </div>
-      {shots.length ? (
-        <figure className="install__shots">
-          {/* biome-ignore lint/a11y/noNoninteractiveTabindex: a scrollable region must be focusable */}
-          <section tabIndex={0} aria-label={copy.shots}>
-            {shots.map((src) => (
-              // biome-ignore lint/performance/noImgElement: pre-sized WebP captures of the app
-              <img
-                key={src}
-                src={src}
-                width={360}
-                height={760}
-                alt=""
-                loading="lazy"
-                decoding="async"
-              />
-            ))}
-          </section>
-          <figcaption>{copy.shots}</figcaption>
-        </figure>
-      ) : null}
+      <figure className="install__phones" aria-label={copy.phones}>
+        {phones}
+      </figure>
     </div>
   );
 }

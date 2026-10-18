@@ -4,7 +4,7 @@
   "common.close": "Close",
   "common.save": "Save",
   "common.notFound": "We could not find that on this phone.",
-  "demo.banner": "Demo: an invented school and invented children. Your own data is not touched.",
+  "demo.banner": "Demo · invented school and children. Your own data is not touched.",
   "demo.reset": "Start the demo again",
   "home.sub": "On this phone only",
   "home.title": "Your classes",
@@ -514,5 +514,6 @@
   "restore.willDo": "Here is what opening it will do:",
   "restore.state.added": "New on this phone · {students} students",
   "restore.state.updated": "{n} marks added or updated",
-  "restore.state.same": "Already the same here"
+  "restore.state.same": "Already the same here",
+  "student.sameAs": "latest, the same as in {month}"
 }
