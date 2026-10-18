@@ -96,6 +96,9 @@ of the font licences.
 | Clash Display | Fontshare (Indian Type Foundry) | ITF Free Font License | never |
 | Satoshi | Fontshare (Indian Type Foundry) | ITF Free Font License | never |
 | DM Mono | Google Fonts | SIL Open Font License 1.1 | never (fetched at build by `next/font`) |
+| Mukta (kaksha) | Ek Type, via the `@fontsource/mukta` npm package | SIL Open Font License 1.1 | never (copied into `apps/kaksha/public/fonts` at build) |
+| Tiro Devanagari Hindi (kaksha) | Tiro Typeworks, via `@fontsource/tiro-devanagari-hindi` | SIL Open Font License 1.1 | never (copied at build) |
+| IBM Plex Mono (kaksha) | IBM, via `@fontsource/ibm-plex-mono` | SIL Open Font License 1.1 | never (copied at build) |
 
 - Clash Display and Satoshi files are **not committed** to this public repo, in any
   format (`.woff2`, `.woff`, `.ttf`, `.otf` are git-ignored repo-wide).
