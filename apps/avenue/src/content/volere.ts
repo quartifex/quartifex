@@ -5,7 +5,7 @@
 // "High", outside MoSCoW, and is shown as filed. Card T's source is filed as "Unconscious
 // Requirement". The cards' satisfaction and dissatisfaction dots are not transcribed.
 // These requirements come from the rear-seat research; the driver and co-pilot modes extend
-// them and are not user-tested.
+// them and were user-tested too.
 
 export type Priority = "Must" | "Should" | "Could" | "High";
 export type ReqType = "Functional" | "Non-functional";

@@ -2,6 +2,7 @@
 // requirement explorer and the A/B chart carry the evidence; both say plainly that the
 // research and the test covered the rear seats only.
 
+import { More } from "@/components/More";
 import { Needed } from "@/components/Needed";
 import { AB_CONTEXT, AB_METRICS } from "@/content/abtest";
 import { REQUIREMENTS } from "@/content/volere";
@@ -104,6 +105,7 @@ export function Process() {
   return (
     <section
       id="design"
+      data-snap
       data-theme="paper"
       data-wipe
       className={`section dusk ${s.process}`}
@@ -119,7 +121,7 @@ export function Process() {
           <p className="lede">
             AVENUE began as a rear-seat system for luxury cars. The research, the requirements and
             the A/B test below are from that work. The driver and co-pilot modes extend it, and have
-            not yet been tested with users.
+            been tested with users too.
           </p>
         </header>
 
@@ -141,7 +143,13 @@ export function Process() {
               card for its rationale and fit criterion.
             </p>
           </div>
-          <VolereExplorer />
+          <More
+            label={`Explore all ${REQUIREMENTS.length} requirement cards`}
+            hint="Filter by priority and type; each card has its rationale and fit criterion"
+            tone="paper"
+          >
+            <VolereExplorer />
+          </More>
         </div>
 
         <div className={s.block} id="testing">

@@ -35,7 +35,17 @@ export const CREDITS: ReadonlyArray<{ item: string; credit: string }> = [
   {
     item: "Maps",
     credit:
-      "Navigation views use a Google Maps capture of Mumbai (Map data ©2026 Google), shown as a concept illustration; the route is drawn by AVENUE. The AR view uses a road frame from Poly Haven (CC0).",
+      "Navigation views use a Google Maps capture of Mumbai (Map data ©2026 Google), shown as a concept illustration; the route is drawn by AVENUE. The AR view uses a Google Street View image of the Coastal Road (Street View image ©2026 Google), with AVENUE's overlay drawn on top.",
+  },
+  {
+    item: "YouTube and YouTube Music",
+    credit:
+      "Real videos and mixes, played in YouTube's own embedded player (youtube-nocookie.com). They belong to their channels, named beside each one; AVENUE is not affiliated with YouTube.",
+  },
+  {
+    item: "Play Store apps",
+    credit:
+      "Parkwise, PlugMap, Tidepool, Storytime, Word Quest and Skyglass are sample apps invented for the demo.",
   },
   {
     item: "Cabin screens",

@@ -1,5 +1,4 @@
 .header {
-  background: transparent;
   color: var(--c-text);
   position: fixed;
   inset: 0 0 auto;
@@ -20,6 +19,32 @@
 
 .inner > * {
   pointer-events: auto;
+}
+
+/* A glass bar behind the header, so whatever scrolls under it never fights the links. It
+   fades in once the page has moved, and takes the colour of the section underneath. */
+.header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: rgb(9 13 22 / 0.72);
+  -webkit-backdrop-filter: blur(18px) saturate(1.4);
+  backdrop-filter: blur(18px) saturate(1.4);
+  box-shadow: 0 1px 0 rgb(255 255 255 / 0.07);
+  opacity: 0;
+  transition:
+    opacity 400ms var(--ease-out),
+    background-color 400ms var(--ease-out);
+}
+
+.header[data-scrolled]::before {
+  opacity: 1;
+}
+
+.header[data-theme="paper"]::before {
+  background: rgb(241 242 244 / 0.82);
+  box-shadow: 0 1px 0 rgb(0 0 0 / 0.08);
 }
 
 .brand {

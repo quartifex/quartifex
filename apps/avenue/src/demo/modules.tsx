@@ -9,6 +9,7 @@ import s from "./cabin.module.css";
 import { Icon, type IconName } from "./Icon";
 import { dispatch, useSystem } from "./store";
 import {
+  ACCENTS,
   canPlay,
   formatTime,
   JOURNEY,
@@ -26,7 +27,7 @@ import { Art, Card, IconButton, Press, Range, Segmented, Switch } from "./ui";
 
 const WHEN_PARKED = "available when parked";
 const MAP = "/media/maps/mumbai-route.webp";
-const AR = "/media/maps/ar-road.webp";
+const AR = "/media/maps/ar-coastal.webp";
 
 function useDriving(seat: SeatId) {
   return useSystem((st) => seat === "driver" && st.moving);
@@ -114,7 +115,7 @@ export function SendTo({
   );
 }
 
-function Eq() {
+export function Eq() {
   return (
     <span className={s.eq} aria-hidden="true">
       <i />
@@ -309,9 +310,9 @@ function MapView({
 
 const PLACE_ICON: Record<string, IconName> = { lumen: "coffee", charge: "bolt", sorrel: "bread" };
 const POI_AT: Record<string, [string, string]> = {
-  lumen: ["30%", "52%"],
-  charge: ["74%", "50%"],
-  sorrel: ["45%", "57%"],
+  lumen: ["24%", "40%"],
+  charge: ["80%", "46%"],
+  sorrel: ["57%", "34%"],
 };
 
 function ArView({ seat }: { seat: SeatId }) {
@@ -321,27 +322,36 @@ function ArView({ seat }: { seat: SeatId }) {
       <img src={AR} alt="" loading="lazy" />
       <svg
         className={s.arOverlay}
-        viewBox="0 0 1280 720"
+        viewBox="0 0 1600 561"
         preserveAspectRatio="xMidYMid slice"
         role="img"
         aria-label="Augmented-reality view of the road ahead, with the route and places marked"
       >
         <defs>
           <linearGradient id="arLane" x1="0" y1="1" x2="0" y2="0">
-            <stop offset="0" stopColor="#5b8cff" stopOpacity="0.7" />
-            <stop offset="1" stopColor="#5b8cff" stopOpacity="0" />
+            <stop offset="0" stopColor="var(--k-accent-2)" stopOpacity="0.75" />
+            <stop offset="1" stopColor="var(--k-accent-2)" stopOpacity="0" />
           </linearGradient>
         </defs>
-        <path d="M420 720 L610 495 L680 495 L900 720 Z" fill="url(#arLane)" />
-        {[0, 1, 2].map((i) => (
+        <path
+          d="M380 561 C560 440 700 345 772 298 L804 298 C812 360 826 450 842 561 Z"
+          fill="url(#arLane)"
+        />
+        {(
+          [
+            [637, 512, 1],
+            [688, 440, 0.78],
+            [731, 380, 0.6],
+          ] as const
+        ).map(([x, y, k], i) => (
           <path
-            key={i}
+            key={x}
             className={s.chevron}
             style={{ animationDelay: `${i * -0.5}s` }}
-            d={`M${600 - i * 30} ${560 + i * 50} L640 ${535 + i * 50} L${680 + i * 30} ${560 + i * 50}`}
+            d={`M${x - 46 * k} ${y + 22 * k} L${x} ${y} L${x + 46 * k} ${y + 22 * k}`}
             fill="none"
             stroke="#fff"
-            strokeWidth={6 + i * 2}
+            strokeWidth={9 * k}
             strokeLinecap="round"
             strokeLinejoin="round"
           />
@@ -364,7 +374,7 @@ function ArView({ seat }: { seat: SeatId }) {
           );
         })}
       </ul>
-      <p className={s.mapAttribution}>Camera view, illustrative</p>
+      <p className={s.mapAttribution}>Street View image ©2026 Google · Coastal Road, Mumbai</p>
     </div>
   );
 }
@@ -439,7 +449,7 @@ function Levels({ value, cool }: { value: number; cool?: boolean }) {
   );
 }
 
-function ViewHead({ title, children }: { title: ReactNode; children?: ReactNode }) {
+export function ViewHead({ title, children }: { title: ReactNode; children?: ReactNode }) {
   return (
     <div className={s.viewHead}>
       <h3 className={s.title}>{title}</h3>
@@ -1361,6 +1371,8 @@ export function Settings({ seat }: { seat: SeatId }) {
   const brightness = useSystem((st) => st.seats[seat].brightness);
   const textScale = useSystem((st) => st.seats[seat].textScale);
   const volume = useSystem((st) => st.volume[seat]);
+  const theme = useSystem((st) => st.seats[seat].theme);
+  const accent = useSystem((st) => st.seats[seat].accent);
   const set = (key: keyof typeof settings) => (on: boolean) =>
     dispatch({ type: "setting", key, on });
   return (
@@ -1397,6 +1409,23 @@ export function Settings({ seat }: { seat: SeatId }) {
               { value: "1.15", label: "Large" },
               { value: "1.3", label: "Largest" },
             ]}
+          />
+        </Card>
+        <Card title="Appearance">
+          <Segmented
+            label="Theme"
+            value={theme}
+            onChange={(to) => dispatch({ type: "theme", seat, to })}
+            options={[
+              { value: "dark", label: "Dark", icon: "moon" },
+              { value: "light", label: "Light", icon: "sun" },
+            ]}
+          />
+          <Segmented
+            label="Accent"
+            value={accent}
+            onChange={(to) => dispatch({ type: "accent", seat, to })}
+            options={ACCENTS.map((a) => ({ value: a.id, label: a.name.split(" ")[0] ?? a.name }))}
           />
         </Card>
         <Card title="Accessibility">

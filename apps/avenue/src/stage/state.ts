@@ -34,6 +34,8 @@ export const frame: {
   onRect: null | ((r: Rect) => void);
   reducedMotion: boolean;
   pointer: { x: number; y: number };
+  cut: boolean;
+  drag: number;
 } = {
   /** The chapter on screen (see CHAPTERS in camera.ts) and the scroll progress through it. */
   chapter: "hero",
@@ -46,4 +48,8 @@ export const frame: {
   reducedMotion: false,
   /** The pointer, -1 to 1 across the viewport, for a little parallax in the hero. */
   pointer: { x: 0, y: 0 },
+  /** Jump the camera to its goal on the next frame (behind a blink, or under reduced motion). */
+  cut: false,
+  /** The visitor's drag on the car, in radians of yaw (springs back to 0). */
+  drag: 0,
 };

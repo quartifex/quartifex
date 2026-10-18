@@ -28,6 +28,11 @@
   display: grid;
   gap: var(--s-5);
   justify-items: start;
+  min-width: 0;
+}
+
+.head > * {
+  max-width: 100%;
 }
 
 /* The chip: a lit, square-cut SoC with its blocks named. */

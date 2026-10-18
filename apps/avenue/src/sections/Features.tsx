@@ -1,39 +1,10 @@
 "use client";
-// The feature chapters, A1 to A6: the scrollytelling. Each one pins for about two screens
-// while the camera moves through the car (stage/camera.ts); the words hold still on a
-// sticky frame, with two short notes either side, the requirement IDs it rests on, and an
-// honest research status. Some chapters carry a live part: the driver's Parked / Moving state,
-// a film travelling to the back, the four climate zones, places over the road, the SOS count.
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useEffect, useRef, useState } from "react";
+// The feature chapters, A1 to A6: one screen each, over the moving camera. The words sit on a
+// glass panel with the requirement IDs they rest on; two short notes sit along the bottom; a
+// live part acts the feature out when the chapter becomes active (the driver's screen locking,
+// a film travelling to the back, the four zones, places over the road, the SOS count).
 import { FEATURES, type Feature, STATUS_LABEL } from "@/content/features";
 import s from "./chapters.module.css";
-
-function SosCount() {
-  const el = useRef<HTMLSpanElement>(null);
-  const [n, setN] = useState(5);
-  useEffect(() => {
-    const section = el.current?.closest("section");
-    if (!section) return;
-    const st = ScrollTrigger.create({
-      trigger: section,
-      start: "top bottom",
-      end: "bottom bottom",
-      onUpdate: (self) =>
-        setN(Math.max(1, 5 - Math.floor(Math.max(0, self.progress - 0.25) / 0.13))),
-    });
-    return () => st.kill();
-  }, []);
-  return (
-    <div className={s.sos} aria-hidden="true">
-      <span className={s.sosLabel}>Emergency SOS</span>
-      <span ref={el} className={s.sosCount}>
-        {n}
-      </span>
-      <span className={s.sosCancel}>Press to cancel</span>
-    </div>
-  );
-}
 
 function Extra({ id }: { id: string }) {
   if (id === "driver")
@@ -61,7 +32,12 @@ function Extra({ id }: { id: string }) {
     );
   if (id === "climate")
     return (
-      <ul className={s.zones} aria-label="Four climate zones, one per seat">
+      <ul
+        className={s.zones}
+        aria-label="Four climate zones, one per seat"
+        data-anim="right"
+        style={{ "--d": 3 } as React.CSSProperties}
+      >
         {[
           ["Driver", "20.5°"],
           ["Co-pilot", "22°"],
@@ -78,22 +54,42 @@ function Extra({ id }: { id: string }) {
   if (id === "road")
     return (
       <div className={s.ar} aria-hidden="true">
-        <span className={s.poi} style={{ left: "74%", top: "40%" }}>
-          <b>Charging, 4 bays</b>
+        <span
+          className={s.poi}
+          style={{ left: "76%", top: "38%", "--d": 3 } as React.CSSProperties}
+          data-anim
+        >
+          <b>Charging, 6 bays</b>
           <small>1.2 km · on route</small>
         </span>
-        <span className={s.poi} style={{ left: "56%", top: "47%" }}>
-          <b>The Long Table</b>
-          <small>600 m · café</small>
+        <span
+          className={s.poi}
+          style={{ left: "58%", top: "46%", "--d": 4 } as React.CSSProperties}
+          data-anim
+        >
+          <b>Café Lumen</b>
+          <small>300 m · café</small>
         </span>
-        <span className={s.eta}>
-          <small>ETA</small>
+        <span className={s.eta} data-anim="right" style={{ "--d": 5 } as React.CSSProperties}>
+          <small>Arrive</small>
           <b>21:48</b>
-          <small>38 min · 41 km</small>
+          <small>33 min · 19.9 km</small>
         </span>
       </div>
     );
-  if (id === "sos") return <SosCount />;
+  if (id === "sos")
+    return (
+      <div
+        className={s.sos}
+        aria-hidden="true"
+        data-anim="scale"
+        style={{ "--d": 2 } as React.CSSProperties}
+      >
+        <span className={s.sosLabel}>Emergency SOS</span>
+        <span className={s.sosCount} data-sos-count />
+        <span className={s.sosCancel}>Press to cancel</span>
+      </div>
+    );
   return null;
 }
 
@@ -102,37 +98,28 @@ function Chapter({ f, index }: { f: Feature; index: number }) {
     <section
       id={`ch-${f.id}`}
       data-chapter={f.id}
-      data-progress
+      data-slide
+      data-snap
       className={`${s.chapter} ${s.feature}`}
       data-side={index % 2 ? "right" : "left"}
-      data-moving={f.id === "driver" ? "false" : undefined}
+      data-moving={f.id === "driver" ? "true" : undefined}
       aria-labelledby={`${f.id}-title`}
     >
-      <div className={s.sticky}>
-        <p className={`mega ${s.word}`} aria-hidden="true">
-          {f.word}
-        </p>
-        <div className={`wrap ${s.featureGrid}`}>
-          <header className={s.featureHead}>
-            <div className={s.featureMeta}>
-              <span className="eyebrow">{f.coord}</span>
-              <span className="tag" data-status={f.status}>
-                {STATUS_LABEL[f.status]}
-              </span>
-            </div>
-            <h2 id={`${f.id}-title`} className="h1" data-split>
-              {f.title} <span className="muted">{f.muted}</span>
-            </h2>
-            <p className="lede">{f.lede}</p>
-          </header>
-          <div className={s.notes}>
-            {f.notes.map((n, i) => (
-              <div key={n.head} className={s.note} style={{ "--n": i } as React.CSSProperties}>
-                <span className="label">{n.head}</span>
-                <p>{n.body}</p>
-              </div>
-            ))}
+      <p className={`mega ${s.word}`} aria-hidden="true">
+        {f.word}
+      </p>
+      <div className={`wrap ${s.featureGrid}`}>
+        <header className={`${s.panel} ${s.featureHead}`} data-anim={index % 2 ? "right" : "left"}>
+          <div className={s.featureMeta}>
+            <span className="eyebrow">{f.coord}</span>
+            <span className="tag" data-status={f.status}>
+              {STATUS_LABEL[f.status]}
+            </span>
           </div>
+          <h2 id={`${f.id}-title`} className="h1" data-split>
+            {f.title} <span className="muted">{f.muted}</span>
+          </h2>
+          <p className="lede">{f.lede}</p>
           <p className={`mono ${s.ids}`}>
             <span className="sr-only">Requirements: </span>
             {f.ids.map((id) => (
@@ -141,9 +128,22 @@ function Chapter({ f, index }: { f: Feature; index: number }) {
               </a>
             ))}
           </p>
+        </header>
+        <div className={s.notes}>
+          {f.notes.map((n, i) => (
+            <div
+              key={n.head}
+              className={s.note}
+              data-anim
+              style={{ "--d": 4 + i } as React.CSSProperties}
+            >
+              <span className="label">{n.head}</span>
+              <p>{n.body}</p>
+            </div>
+          ))}
         </div>
-        <Extra id={f.id} />
       </div>
+      <Extra id={f.id} />
     </section>
   );
 }

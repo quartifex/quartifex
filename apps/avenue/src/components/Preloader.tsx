@@ -138,5 +138,6 @@ function enter(sound: boolean) {
     void import("@/demo/sound").then((m) => m.enableSound());
     dispatch({ type: "sound", on: true });
   }
+  document.documentElement.dataset.entered = "";
   stage.set({ entered: true });
 }

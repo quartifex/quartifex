@@ -2,8 +2,10 @@
 // emails the submission through Resend's HTTP API. No secret is in the repository: the key
 // and addresses come from environment variables set in Vercel (see the README):
 //   RESEND_API_KEY   the email provider key
-//   PARTNER_INBOX    where submissions go
+//   PARTNER_INBOX    where submissions go (defaults to hello@quartifex.com)
 //   PARTNER_FROM     a sender on a domain verified with the provider
+// Every subject ends in "AVENUE", so the studio's inbox can route them. Without a key the
+// endpoint answers 503 with a ready-made email, and the form offers to open it instead.
 import { checkSubmission, rateLimit } from "@/lib/partner";
 
 export const runtime = "nodejs";
@@ -30,15 +32,10 @@ export async function POST(request: Request) {
   if (result.kind === "invalid") return Response.json({ message: result.message }, { status: 422 });
 
   const key = process.env.RESEND_API_KEY;
-  const to = process.env.PARTNER_INBOX;
+  const to = process.env.PARTNER_INBOX || "hello@quartifex.com";
   const from = process.env.PARTNER_FROM;
-  if (!key || !to || !from) {
-    return Response.json(
-      { message: "Sorry, the form is not accepting messages yet. Please try again soon." },
-      { status: 503 },
-    );
-  }
   const s = result.submission;
+  const subject = `Partner enquiry from ${s.company} (${s.model}) · AVENUE`;
   const text = [
     `Name: ${s.name}`,
     `Company: ${s.company}`,
@@ -47,7 +44,18 @@ export async function POST(request: Request) {
     `Engagement: ${s.model}`,
     "",
     s.message || "(no message)",
+    "",
+    "Sent from avenue.quartifex.com",
   ].join("\n");
+  if (!key || !from) {
+    return Response.json(
+      {
+        message: "The form cannot send by itself yet. Your email app can send it instead.",
+        mailto: `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(text)}`,
+      },
+      { status: 503 },
+    );
+  }
   const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: { authorization: `Bearer ${key}`, "content-type": "application/json" },
@@ -55,7 +63,7 @@ export async function POST(request: Request) {
       from,
       to: [to],
       reply_to: s.email,
-      subject: `AVENUE partner enquiry: ${s.company} (${s.model})`,
+      subject,
       text,
     }),
   });

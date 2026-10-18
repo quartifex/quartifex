@@ -4,7 +4,12 @@
 import { useId, useState } from "react";
 import s from "./Collaborate.module.css";
 
-type Status = { kind: "idle" | "sending" | "sent" | "error"; message?: string };
+type Status = {
+  kind: "idle" | "sending" | "sent" | "error";
+  message?: string;
+  /** When the server cannot send, a ready-made email to hello@quartifex.com instead. */
+  mailto?: string;
+};
 
 export function PartnerForm({ models }: { models: Array<{ id: string; name: string }> }) {
   const id = useId();
@@ -33,7 +38,12 @@ export function PartnerForm({ models }: { models: Array<{ id: string; name: stri
         headers: { "content-type": "application/json" },
         body: JSON.stringify(data),
       });
-      const body = (await res.json().catch(() => ({}))) as { message?: string };
+      const body = (await res.json().catch(() => ({}))) as { message?: string; mailto?: string };
+      if (res.status === 503 && body.mailto) {
+        setStatus({ kind: "error", message: body.message ?? "", mailto: body.mailto });
+        window.location.href = body.mailto;
+        return;
+      }
       if (!res.ok) throw new Error(body.message ?? "Something went wrong. Please try again.");
       form.reset();
       setStatus({
@@ -136,9 +146,18 @@ export function PartnerForm({ models }: { models: Array<{ id: string; name: stri
         </button>
         <p className={s.status} role="status" aria-live="polite" data-kind={status.kind}>
           {status.message ?? ""}
+          {status.mailto ? (
+            <>
+              {" "}
+              <a href={status.mailto}>Open the email</a>
+            </>
+          ) : null}
         </p>
       </div>
-      <p className={s.privacy}>We use these details only to reply to you.</p>
+      <p className={s.privacy}>
+        Goes to the Quartifex studio at hello@quartifex.com. We use these details only to reply to
+        you.
+      </p>
     </form>
   );
 }

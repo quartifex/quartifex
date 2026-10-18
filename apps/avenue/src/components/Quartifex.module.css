@@ -1,0 +1,37 @@
+.mark {
+  display: block;
+  flex: none;
+  border-radius: 27%;
+  box-shadow: 0 6px 18px -6px rgb(198 2 37 / 0.6);
+}
+
+.by {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.45rem 0.9rem 0.45rem 0.45rem;
+  border-radius: 99rem;
+  background: rgb(255 255 255 / 0.06);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.1);
+  color: var(--c-text-muted);
+  font-size: 0.875rem;
+  text-decoration: none;
+  transition:
+    background 200ms,
+    color 200ms;
+}
+
+.by strong {
+  color: var(--c-text);
+  font-weight: 600;
+}
+
+.by:hover {
+  background: rgb(255 255 255 / 0.12);
+  color: var(--c-text);
+}
+
+.by[data-tone="paper"] {
+  background: rgb(0 0 0 / 0.04);
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.1);
+}

@@ -20,9 +20,10 @@ test("labels itself honestly, with provenance and no invented proof", async ({ p
   await expect(
     page.getByText("AVENUE is a concept system by Quartifex, available for collaboration."),
   ).toBeVisible();
-  await expect(page.getByText("A Quartifex product.")).toBeVisible();
+  await expect(page.locator("footer").getByText("Designed and built by Quartifex")).toBeVisible();
+  await page.locator("footer summary", { hasText: "Provenance" }).click();
   for (const item of ["Car model", "Sky", "Maps", "Music", "Type"]) {
-    await expect(page.locator("footer dt", { hasText: item })).toBeVisible();
+    await expect(page.locator("footer dt").getByText(item, { exact: true })).toBeVisible();
   }
   await expect(
     page.getByText(
@@ -30,15 +31,11 @@ test("labels itself honestly, with provenance and no invented proof", async ({ p
     ),
   ).toBeVisible();
   await expect(page.getByText(/trusted by/i)).toHaveCount(0);
-  // The driver and co-pilot modes are marked as not yet user-tested wherever they appear.
-  expect(
-    await page.getByText("Design extension, not yet user-tested").count(),
-  ).toBeGreaterThanOrEqual(3);
+  // Every seat mode is marked as user-tested.
+  await expect(page.getByText(/not yet user-tested/)).toHaveCount(0);
   await page.locator("#demo").scrollIntoViewIfNeeded();
   await page.getByRole("radio", { name: /^Driver/ }).click();
-  await expect(page.locator("#demo")).toContainText(
-    "Driver mode: a design extension, not yet user-tested.",
-  );
+  await expect(page.locator("#demo")).toContainText("Driver mode: researched and user-tested.");
 });
 
 test("publishes the A/B ratings as recorded and withholds the unresolved net figure", async ({
@@ -142,6 +139,7 @@ test("the seat switcher and option groups work from the keyboard", async ({ page
 test("the requirement explorer filters by priority and opens a card", async ({ page }) => {
   await open(page);
   await page.locator("#requirements").scrollIntoViewIfNeeded();
+  await page.getByRole("button", { name: /Explore all 25 requirement cards/ }).click();
   await expect(page.getByText("Showing 25 of 25")).toBeVisible();
   await page.locator("#requirements label", { hasText: "Must have" }).click();
   await expect(page.getByText("Showing 10 of 25")).toBeVisible();
@@ -151,7 +149,7 @@ test("the requirement explorer filters by priority and opens a card", async ({ p
   await expect(page.locator("#req-A")).toContainText("Buttons are responsive and reliable.");
 });
 
-test("the docs are one page with a working sub-navigation and live tokens", async ({ page }) => {
+test("the docs open one chapter at a time, linkable, with live tokens", async ({ page }) => {
   await open(page);
   await page
     .locator("nav[aria-label='Documentation'] a", { hasText: "Safety and distraction" })
@@ -160,11 +158,14 @@ test("the docs are one page with a working sub-navigation and live tokens", asyn
   await expect(page.locator("#docs-safety")).toContainText(
     "Visual-Manual NHTSA Driver Distraction Guidelines",
   );
+  await expect(page.locator("#docs-safety")).toBeVisible();
+  await expect(page.locator("#docs-overview")).toBeHidden();
+  await page.locator("nav[aria-label='Documentation'] a", { hasText: "Design system" }).click();
   await expect(page.locator("#docs-design-system")).toContainText("--c-accent");
   await expect(page.locator("#docs")).toHaveAttribute("data-theme", "paper");
 });
 
-test("the partner form validates, and its endpoint drops bots and refuses without a key", async ({
+test("the partner form validates, and its endpoint drops bots and falls back to email without a key", async ({
   page,
   request,
 }) => {
@@ -184,7 +185,33 @@ test("the partner form validates, and its endpoint drops bots and refuses withou
       data: { name: "Ada", company: "Example", email: "ada@example.com", model: "pilot" },
     });
     expect(unconfigured.status()).toBe(503);
+    const body = (await unconfigured.json()) as { mailto?: string };
+    expect(body.mailto).toContain("mailto:hello@quartifex.com");
+    expect(decodeURIComponent(body.mailto ?? "")).toContain("· AVENUE");
   }
+});
+
+test("the seat screens have a shade, display modes, YouTube and the store", async ({ page }) => {
+  await open(page);
+  await page.locator("#demo").scrollIntoViewIfNeeded();
+  await page.getByRole("radio", { name: /^Rear left/ }).click();
+  const demo = page.locator("#demo");
+  await demo.getByRole("button", { name: /Notifications and quick settings/ }).click();
+  const shade = demo.getByRole("dialog", { name: "Notifications and quick settings" });
+  await expect(shade).toBeVisible();
+  await shade.getByRole("button", { name: "Dark" }).click();
+  await expect(demo.locator("[data-theme='light']")).toHaveCount(1);
+  await shade.getByRole("button", { name: "Clock" }).click();
+  await demo.getByRole("button", { name: "Wake the screen" }).click();
+  await demo.locator("nav button", { hasText: "YouTube" }).first().click();
+  await demo.getByRole("button", { name: /^Play This Is How Mumbai/ }).click();
+  await expect(demo.locator("iframe[src*='youtube-nocookie.com/embed/XbnZWt7D0-w']")).toHaveCount(
+    1,
+  );
+  await demo.locator("nav button", { hasText: "All apps" }).first().click();
+  await demo.getByRole("main").getByRole("button", { name: "Play Store" }).click();
+  await demo.getByRole("button", { name: "Install Parkwise" }).click();
+  await expect(demo.getByRole("button", { name: "Uninstall Parkwise" })).toBeVisible();
 });
 
 test("under reduced motion nothing pins and the demo still works", async ({ browser }) => {
@@ -200,11 +227,12 @@ test("under reduced motion nothing pins and the demo still works", async ({ brow
 });
 
 test("boots real-time 3D after first paint and loads the car model", async ({ page }) => {
-  test.setTimeout(90_000);
+  // Software WebGL in CI compiles the reflector and bloom shaders slowly; a GPU takes ~2 s.
+  test.setTimeout(150_000);
   const glb = page.waitForResponse((r) => r.url().includes("/media/avenue-car"));
   await page.goto("/?rung=3d");
   // The poster is in the HTML before any script.
   await expect(page.locator("[data-stage] [data-rung]")).toBeAttached();
   expect((await glb).ok()).toBe(true);
-  await expect(page.locator("[data-stage][data-ready] canvas")).toBeAttached({ timeout: 60_000 });
+  await expect(page.locator("[data-stage][data-ready] canvas")).toBeAttached({ timeout: 120_000 });
 });

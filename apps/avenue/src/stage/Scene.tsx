@@ -6,13 +6,17 @@
 // The camera follows the page: each chapter (camera.ts) has a start and an end pose, scroll
 // says where between them we are, and the camera eases there. The demo takes over the camera
 // for the seat views.
-import { Environment } from "@react-three/drei";
+import { Environment, Lightformer, MeshReflectorMaterial } from "@react-three/drei";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { gsap } from "gsap";
 import { Suspense, useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { MeshoptDecoder } from "three/addons/libs/meshopt_decoder.module.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
+import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
+import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
+import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
 import { demo } from "@/demo/store";
 import { SEAT_IDS, type SeatId } from "@/demo/system";
 import { CHAPTER_BY_ID, CHAPTERS, type Pose, poseAt, SCREENS, seatPose } from "@/stage/camera";
@@ -113,6 +117,25 @@ type ScreenSlot = {
   mesh: THREE.Mesh;
 };
 
+/** The platform's light cycles slowly through the brand's colours. */
+const PLATFORM_COLOURS = ["#2d63ee", "#9cc6ff", "#7a5cff", "#ff6a2b"].map(
+  (c) => new THREE.Color(c),
+);
+const platformColour = new THREE.Color();
+function cycleColour(t: number, out: THREE.Color) {
+  const n = PLATFORM_COLOURS.length;
+  const x = (t / 7) % n;
+  const i = Math.floor(x);
+  const f = x - i;
+  const e = f * f * (3 - 2 * f);
+  const a = PLATFORM_COLOURS[i] as THREE.Color;
+  const b = PLATFORM_COLOURS[(i + 1) % n] as THREE.Color;
+  return out.copy(a).lerp(b, e);
+}
+
+/** Bloom on desktop: the lamps, the screens and the platform ring glow. */
+let composer: EffectComposer | null = null;
+
 function clock() {
   return new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 }
@@ -166,6 +189,11 @@ function Car({ lite }: { lite: boolean }) {
   const cabinLight = useRef<THREE.PointLight>(null);
   const cabinFill = useRef<THREE.PointLight>(null);
   const hazard = useRef<THREE.Group>(null);
+  const turn = useRef<THREE.Group>(null);
+  const key = useRef<THREE.DirectionalLight>(null);
+  const rim = useRef<THREE.SpotLight>(null);
+  const ring = useRef<THREE.MeshBasicMaterial>(null);
+  const glow = useRef<THREE.MeshBasicMaterial>(null);
   const target = useMemo(() => new THREE.Vector3(), []);
   const goalPos = useMemo(() => new THREE.Vector3(), []);
   const goalTarget = useMemo(() => new THREE.Vector3(), []);
@@ -209,7 +237,7 @@ function Car({ lite }: { lite: boolean }) {
               // The lamp atlas glows a little: white for the headlamps, red for the tails.
               m.emissiveMap = m.map;
               m.emissive.set("#ffffff");
-              m.emissiveIntensity = 0.35;
+              m.emissiveIntensity = 3.2;
               lamps.current = m;
             }
             seen.set(name, m);
@@ -223,12 +251,12 @@ function Car({ lite }: { lite: boolean }) {
         screens.current = built.slots;
         group.current = car;
         drawAll();
-        scene.add(car);
+        turn.current?.add(car);
       })
       .catch(() => stage.set({ rung: "poster" }));
     return () => {
       disposed = true;
-      if (group.current) scene.remove(group.current);
+      if (group.current) turn.current?.remove(group.current);
     };
   }, [scene, lite]);
 
@@ -318,9 +346,11 @@ function Car({ lite }: { lite: boolean }) {
     goalFov.current = mix(journey.fov, b.pose.fov);
     // Ease towards the goal (critically damped feel); cut under reduced motion.
     const k = frame.reducedMotion ? 1 : 1 - Math.exp(-dt * (w > 0.01 ? 3.2 : 5.5));
-    if (!drewFirst.current) {
+    if (!drewFirst.current || frame.cut) {
+      frame.cut = false;
       camera.position.copy(goalPos);
       target.copy(goalTarget);
+      camera.fov = goalFov.current;
     } else {
       camera.position.lerp(goalPos, k);
       target.lerp(goalTarget, k);
@@ -387,7 +417,34 @@ function Car({ lite }: { lite: boolean }) {
       }
     }
 
-    state.gl.render(state.scene, camera);
+    // The turntable: the visitor can turn the car a little outside; it eases back on release.
+    // Inside the cabin it is always square, so the seat views line up.
+    if (turn.current) {
+      const exterior = !chapter.inside && w < 0.01;
+      const want = exterior ? frame.drag : 0;
+      if (!exterior && (frame.reducedMotion || Math.abs(turn.current.rotation.y) < 0.002))
+        turn.current.rotation.y = 0;
+      else turn.current.rotation.y += (want - turn.current.rotation.y) * Math.min(1, dt * 4);
+    }
+    // The light moves: the key light swings slowly round, the reflections drift across the
+    // paint, and the platform's ring and rim light cycle through the brand colours.
+    const t = frame.reducedMotion ? 0 : frame.time;
+    if (key.current) {
+      const a = -2.35 + Math.sin(t * 0.09) * 0.85;
+      key.current.position.set(Math.cos(a) * 8, 8, Math.sin(a) * 8);
+    }
+    cycleColour(t, platformColour);
+    if (ring.current) ring.current.color.copy(platformColour).multiplyScalar(6);
+    if (glow.current) glow.current.color.copy(platformColour);
+    if (rim.current) {
+      rim.current.color.copy(platformColour);
+      const r = 1.1 + t * 0.12;
+      rim.current.position.set(Math.cos(r) * 7, 2.6, Math.sin(r) * 7);
+    }
+    state.scene.environmentRotation.y = 1.2 + Math.sin(t * 0.05) * 0.6;
+
+    if (composer) composer.render(dt);
+    else state.gl.render(state.scene, camera);
     if (!drewFirst.current && group.current) {
       drewFirst.current = true;
       stage.set({ ready: true });
@@ -399,6 +456,7 @@ function Car({ lite }: { lite: boolean }) {
       {/* Key: high and soft from the front left, as a photographer lights a car at dusk;
           a cool rim behind draws the roofline; a low fill lifts the sills. */}
       <directionalLight
+        ref={key}
         position={[-6, 8, -5]}
         intensity={2.2}
         color="#fff6ea"
@@ -414,7 +472,49 @@ function Car({ lite }: { lite: boolean }) {
         shadow-normalBias={0.02}
         shadow-radius={6}
       />
-      <directionalLight position={[6, 5, 7]} intensity={1.2} color="#a9c6ff" />
+      <directionalLight position={[6, 5, 7]} intensity={1.0} color="#a9c6ff" />
+      {/* A coloured rim light that circles the car, in the platform's colour. */}
+      <spotLight
+        ref={rim}
+        position={[5, 2.6, 5]}
+        angle={0.5}
+        penumbra={1}
+        intensity={40}
+        distance={16}
+        decay={1.4}
+      />
+      <group ref={turn}>
+        <Plinth lite={lite} ring={ring} glow={glow} />
+        {/* Lamps lit from inside: two white headlamps, two red tail-lamps. */}
+        <pointLight
+          position={[-0.72, 0.95, -2.36]}
+          intensity={1.6}
+          distance={2.4}
+          decay={2}
+          color="#e9f1ff"
+        />
+        <pointLight
+          position={[0.72, 0.95, -2.36]}
+          intensity={1.6}
+          distance={2.4}
+          decay={2}
+          color="#e9f1ff"
+        />
+        <pointLight
+          position={[-0.76, 1.02, 2.34]}
+          intensity={1.4}
+          distance={2}
+          decay={2}
+          color="#ff2418"
+        />
+        <pointLight
+          position={[0.76, 1.02, 2.34]}
+          intensity={1.4}
+          distance={2}
+          decay={2}
+          color="#ff2418"
+        />
+      </group>
       <directionalLight position={[5, 1.2, -6]} intensity={0.5} color="#c8d6ff" />
       <hemisphereLight args={["#b9c9ea", "#1c2433", 0.45]} />
       <group ref={hazard}>
@@ -473,20 +573,15 @@ function Car({ lite }: { lite: boolean }) {
  *  and a floor that fades into it, so the car stands in clean space like a showroom shot. */
 function Studio() {
   const scene = useThree((s) => s.scene);
-  const floor = useMemo(() => {
-    const c = document.createElement("canvas");
-    c.width = c.height = 256;
-    const g = c.getContext("2d");
-    if (g) {
-      const r = g.createRadialGradient(128, 128, 0, 128, 128, 128);
-      r.addColorStop(0, "#fff");
-      r.addColorStop(0.38, "#fff");
-      r.addColorStop(1, "#000");
-      g.fillStyle = r;
-      g.fillRect(0, 0, 256, 256);
-    }
-    return new THREE.CanvasTexture(c);
-  }, []);
+  const floor = useMemo(
+    () =>
+      radial([
+        [0, "#fff"],
+        [0.38, "#fff"],
+        [1, "#000"],
+      ]),
+    [],
+  );
   useEffect(() => {
     const c = document.createElement("canvas");
     c.width = 4;
@@ -509,46 +604,162 @@ function Studio() {
       t.dispose();
     };
   }, [scene]);
-  // A soft contact shadow under the car, drawn once: darkest under the sills, fading out.
-  const blob = useMemo(() => {
-    const c = document.createElement("canvas");
-    c.width = 128;
-    c.height = 256;
-    const g = c.getContext("2d");
-    if (g) {
-      g.translate(64, 128);
-      g.scale(1, 2.1);
-      const r = g.createRadialGradient(0, 0, 0, 0, 0, 62);
-      r.addColorStop(0, "rgba(2,4,9,0.95)");
-      r.addColorStop(0.55, "rgba(2,4,9,0.7)");
-      r.addColorStop(1, "rgba(2,4,9,0)");
-      g.fillStyle = r;
-      g.fillRect(-64, -64, 128, 128);
-    }
-    return new THREE.CanvasTexture(c);
-  }, []);
   return (
-    <>
+    <mesh rotation-x={-Math.PI / 2} position-y={-PLINTH_H - 0.004} renderOrder={-1}>
+      <circleGeometry args={[18, 96]} />
+      <meshBasicMaterial
+        color="#2e3c58"
+        alphaMap={floor}
+        transparent
+        depthWrite={false}
+        toneMapped={false}
+      />
+    </mesh>
+  );
+}
+
+/** A radial gradient texture, from the centre out. */
+function radial(stops: Array<[number, string]>, w = 256, h = 256) {
+  const c = document.createElement("canvas");
+  c.width = w;
+  c.height = h;
+  const g = c.getContext("2d");
+  if (g) {
+    g.translate(w / 2, h / 2);
+    g.scale(1, h / w);
+    const r = g.createRadialGradient(0, 0, 0, 0, 0, w / 2);
+    for (const [at, colour] of stops) r.addColorStop(at, colour);
+    g.fillStyle = r;
+    g.fillRect(-w / 2, -w / 2, w, w);
+  }
+  return new THREE.CanvasTexture(c);
+}
+
+const PLINTH_R = 3.35;
+const PLINTH_H = 0.09;
+
+/** The turntable the car stands on: a dark, polished disc that reflects the car, a thin ring
+ *  of light round its edge in the cycling brand colour, a glow on the floor beneath, the key
+ *  light's shadow and a soft contact shadow under the car. */
+function Plinth({
+  lite,
+  ring,
+  glow,
+}: {
+  lite: boolean;
+  ring: React.RefObject<THREE.MeshBasicMaterial | null>;
+  glow: React.RefObject<THREE.MeshBasicMaterial | null>;
+}) {
+  const blob = useMemo(
+    () =>
+      radial(
+        [
+          [0, "rgba(2,4,9,0.95)"],
+          [0.55, "rgba(2,4,9,0.7)"],
+          [1, "rgba(2,4,9,0)"],
+        ],
+        128,
+        256,
+      ),
+    [],
+  );
+  const halo = useMemo(
+    () =>
+      radial([
+        [0, "rgba(255,255,255,0)"],
+        [0.62, "rgba(255,255,255,0.0)"],
+        [0.7, "rgba(255,255,255,0.55)"],
+        [1, "rgba(255,255,255,0)"],
+      ]),
+    [],
+  );
+  return (
+    <group>
+      {/* The body of the plinth. */}
+      <mesh position-y={-PLINTH_H / 2} receiveShadow>
+        <cylinderGeometry args={[PLINTH_R, PLINTH_R + 0.05, PLINTH_H, 128, 1, true]} />
+        <meshStandardMaterial color="#070a10" metalness={0.8} roughness={0.4} />
+      </mesh>
+      {/* Its polished top. */}
+      <mesh rotation-x={-Math.PI / 2} position-y={0.0005} receiveShadow>
+        <circleGeometry args={[PLINTH_R, 128]} />
+        {lite ? (
+          <meshStandardMaterial color="#121826" metalness={0.85} roughness={0.28} />
+        ) : (
+          <MeshReflectorMaterial
+            resolution={1024}
+            blur={[420, 140]}
+            mixBlur={1}
+            mixStrength={1.6}
+            mixContrast={1.05}
+            depthScale={1.2}
+            minDepthThreshold={0.4}
+            maxDepthThreshold={1.4}
+            roughness={0.78}
+            metalness={0.5}
+            color="#0b101a"
+            mirror={0.45}
+          />
+        )}
+      </mesh>
+      {/* The ring of light round the edge. */}
+      <mesh rotation-x={Math.PI / 2} position-y={-0.004}>
+        <torusGeometry args={[PLINTH_R + 0.012, 0.011, 8, 256]} />
+        <meshBasicMaterial ref={ring} color="#2d63ee" toneMapped={false} />
+      </mesh>
+      {/* Its glow on the floor. */}
+      <mesh rotation-x={-Math.PI / 2} position-y={-PLINTH_H + 0.002}>
+        <planeGeometry args={[PLINTH_R * 3.2, PLINTH_R * 3.2]} />
+        <meshBasicMaterial
+          ref={glow}
+          alphaMap={halo}
+          color="#2d63ee"
+          transparent
+          opacity={0.2}
+          depthWrite={false}
+          toneMapped={false}
+          blending={THREE.AdditiveBlending}
+        />
+      </mesh>
+      {/* The car's shadows on the plinth. */}
       <mesh rotation-x={-Math.PI / 2} position-y={0.003} renderOrder={1}>
         <planeGeometry args={[2.9, 5.9]} />
         <meshBasicMaterial map={blob} transparent depthWrite={false} toneMapped={false} />
       </mesh>
       <mesh rotation-x={-Math.PI / 2} position-y={0.002} receiveShadow renderOrder={0}>
-        <planeGeometry args={[18, 18]} />
-        <shadowMaterial transparent opacity={0.42} color="#03050b" depthWrite={false} />
+        <circleGeometry args={[PLINTH_R, 96]} />
+        <shadowMaterial transparent opacity={0.45} color="#03050b" depthWrite={false} />
       </mesh>
-      <mesh rotation-x={-Math.PI / 2} position-y={-0.01} renderOrder={-1}>
-        <circleGeometry args={[16, 96]} />
-        <meshBasicMaterial
-          color="#2e3c58"
-          alphaMap={floor}
-          transparent
-          depthWrite={false}
-          toneMapped={false}
-        />
-      </mesh>
-    </>
+    </group>
   );
+}
+
+/** Bloom, on desktop: renders the scene through an HDR target with a soft glow above a high
+ *  threshold, so only the lamps, the screens and the platform ring bloom. */
+function Post() {
+  const gl = useThree((s) => s.gl);
+  const scene = useThree((s) => s.scene);
+  const camera = useThree((s) => s.camera);
+  const size = useThree((s) => s.size);
+  const dpr = useThree((s) => s.viewport.dpr);
+  useEffect(() => {
+    const rt = new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType, samples: 4 });
+    const c = new EffectComposer(gl, rt);
+    c.addPass(new RenderPass(scene, camera));
+    c.addPass(new UnrealBloomPass(new THREE.Vector2(256, 256), 0.42, 0.5, 2.4));
+    c.addPass(new OutputPass());
+    composer = c;
+    return () => {
+      composer = null;
+      c.dispose();
+      rt.dispose();
+    };
+  }, [gl, scene, camera]);
+  useEffect(() => {
+    composer?.setPixelRatio(dpr);
+    composer?.setSize(size.width, size.height);
+  }, [size, dpr]);
+  return null;
 }
 
 /** The R3F canvas. `active` pauses rendering when the stage is off screen. */
@@ -568,14 +779,42 @@ export default function Scene({ lite, active }: { lite: boolean; active: boolean
       aria-hidden="true"
     >
       <Suspense fallback={null}>
-        <Environment
-          files="/media/sky.hdr"
-          environmentIntensity={1}
-          environmentRotation={[0, 1.2, 0]}
-        />
+        {/* The sky for real-world reflections, plus studio light strips: the long, clean
+            highlights a car photographer hangs over and beside the car. */}
+        <Environment files="/media/sky.hdr" environmentIntensity={1.05} frames={3} resolution={512}>
+          <Lightformer
+            form="rect"
+            intensity={3.2}
+            position={[0, 6, 0]}
+            rotation-x={Math.PI / 2}
+            scale={[12, 1.4, 1]}
+          />
+          <Lightformer
+            form="rect"
+            intensity={1.6}
+            position={[-6, 2.2, 0]}
+            rotation-y={Math.PI / 2}
+            scale={[14, 0.8, 1]}
+          />
+          <Lightformer
+            form="rect"
+            intensity={1.6}
+            position={[6, 2.2, 0]}
+            rotation-y={-Math.PI / 2}
+            scale={[14, 0.8, 1]}
+          />
+          <Lightformer
+            form="ring"
+            intensity={2}
+            color="#9cc6ff"
+            position={[0, 3.5, -9]}
+            scale={4}
+          />
+        </Environment>
       </Suspense>
       <Studio />
       <Car lite={lite} />
+      {lite ? null : <Post />}
     </Canvas>
   );
 }

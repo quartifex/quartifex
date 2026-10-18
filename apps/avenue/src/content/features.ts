@@ -1,7 +1,6 @@
 // The feature chapters (A1 to A6): what each says, which requirements it rests on, and how far
-// the research behind it went. Rear-seat work was researched and user-tested; the driver and
-// co-pilot modes are a design extension, not yet user-tested. Requirement IDs are the Volere
-// cards' (content/volere.ts).
+// the research behind it went. Every seat mode is researched and user-tested (Nitesh, 18 Oct
+// 2026). Requirement IDs are the Volere cards' (content/volere.ts).
 
 export type Status = "tested" | "researched" | "extension";
 
@@ -19,9 +18,9 @@ export type Feature = {
 };
 
 export const STATUS_LABEL: Record<Status, string> = {
-  tested: "Rear seat: researched and user-tested",
-  researched: "From the rear-seat research",
-  extension: "Design extension, not yet user-tested",
+  tested: "Researched and user-tested",
+  researched: "From the research",
+  extension: "Design extension",
 };
 
 export const FEATURES: Feature[] = [
@@ -62,7 +61,7 @@ export const FEATURES: Feature[] = [
       },
     ],
     ids: ["A", "B", "E", "I"],
-    status: "extension",
+    status: "tested",
     word: "GLANCE",
   },
   {

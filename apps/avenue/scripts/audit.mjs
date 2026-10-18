@@ -34,6 +34,7 @@ const STATES = {
   "rear screen, share waiting": async (page) => {
     await enter(page);
     await page.locator("#demo").scrollIntoViewIfNeeded();
+    await page.waitForTimeout(1200); // let the scroll snap settle
     await page.getByRole("radio", { name: /^Rear left/ }).click();
     await page
       .locator("#demo main")
@@ -58,6 +59,7 @@ const STATES = {
   "requirement card open": async (page) => {
     await enter(page);
     await page.locator("#requirements").scrollIntoViewIfNeeded();
+    await page.getByRole("button", { name: /Explore all 25 requirement cards/ }).click();
     await page.getByRole("button", { name: /Card A:/ }).click();
   },
 };

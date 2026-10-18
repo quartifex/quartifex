@@ -214,6 +214,74 @@ export const VEHICLE = {
   outside: 29,
 };
 
+/** The seat screen's look: light or dark, and an accent colour. */
+export type OsTheme = "dark" | "light";
+export const ACCENTS = [
+  { id: "lane", name: "Lane blue", value: "#2d63ee" },
+  { id: "jade", name: "Jade", value: "#0f9d7a" },
+  { id: "violet", name: "Violet", value: "#6b4bff" },
+  { id: "amber", name: "Amber", value: "#c77700" },
+  { id: "rose", name: "Rose", value: "#d23f74" },
+] as const;
+export type AccentId = (typeof ACCENTS)[number]["id"];
+
+/** What the screen is showing when it is not the interface: off, a clock, a slideshow. */
+export type DisplayMode = "on" | "off" | "clock" | "slideshow";
+
+/** Apps a passenger can install from the store (invented for the demo). */
+export const STORE_APPS = [
+  {
+    id: "parkwise",
+    name: "Parkwise",
+    what: "Find and pay for parking near the destination",
+    icon: "pin",
+    hue: 205,
+  },
+  {
+    id: "plugmap",
+    name: "PlugMap",
+    what: "Chargers on the route, with live availability",
+    icon: "bolt",
+    hue: 150,
+  },
+  {
+    id: "tidepool",
+    name: "Tidepool",
+    what: "Podcasts and audiobooks, downloaded for the trip",
+    icon: "radio",
+    hue: 265,
+  },
+  {
+    id: "storytime",
+    name: "Storytime",
+    what: "Read-along stories for children in the back",
+    icon: "media",
+    hue: 25,
+  },
+  {
+    id: "wordquest",
+    name: "Word Quest",
+    what: "A word game two seats can play together",
+    icon: "grid",
+    hue: 320,
+  },
+  {
+    id: "skyglass",
+    name: "Skyglass",
+    what: "Weather along the route, hour by hour",
+    icon: "sun",
+    hue: 45,
+  },
+] as const;
+export type StoreAppId = (typeof STORE_APPS)[number]["id"];
+
+export type Notification = {
+  id: string;
+  title: string;
+  body: string;
+  icon: "inbox" | "routines" | "settings" | "bolt" | "phone" | "check";
+};
+
 export type Share = {
   id: string;
   from: SeatId;
@@ -232,6 +300,15 @@ export type SeatState = {
   textScale: 1 | 1.15 | 1.3;
   brightness: number;
   inbox: Share[];
+  theme: OsTheme;
+  accent: AccentId;
+  display: DisplayMode;
+  /** Do not disturb: shares and notifications wait quietly. */
+  dnd: boolean;
+  /** A YouTube video or mix playing on this screen. */
+  video: string | null;
+  /** The store app open, when module is "app". */
+  app: StoreAppId | null;
 };
 
 export type Routine = { id: string; name: string; detail: string; on: boolean };
@@ -268,6 +345,11 @@ export type System = {
   heat: Record<SeatId, number>;
   vent: Record<SeatId, number>;
   volume: Record<SeatId, number>;
+  /** Apps installed from the store, for the whole car. */
+  installed: StoreAppId[];
+  /** Casting from a phone to one seat's screen. */
+  cast: { seat: SeatId | null; state: "idle" | "pairing" | "casting"; device: string };
+  dismissed: string[];
   /** The latest message for the live region, with a counter so repeats are announced. */
   notice: { text: string; seat: SeatId | "all"; n: number };
 };
@@ -281,7 +363,19 @@ const seat = (module: ModuleId, nowPlaying: string | null, playing = false): Sea
   textScale: 1,
   brightness: 0.8,
   inbox: [],
+  theme: "dark",
+  accent: "lane",
+  display: "on",
+  dnd: false,
+  video: null,
+  app: null,
 });
+
+/** YouTube Music's mixes count as audio: allowed for the driver while moving. */
+let MUSIC_VIDEOS = new Set<string>();
+export function registerMusicVideos(ids: readonly string[]) {
+  MUSIC_VIDEOS = new Set(ids);
+}
 
 export function initialSystem(): System {
   return {
@@ -350,6 +444,9 @@ export function initialSystem(): System {
     heat: { driver: 0, copilot: 1, rearLeft: 0, rearRight: 0 },
     vent: { driver: 1, copilot: 0, rearLeft: 0, rearRight: 0 },
     volume: { driver: 0.6, copilot: 0.55, rearLeft: 0.7, rearRight: 0.5 },
+    installed: ["plugmap"],
+    cast: { seat: null, state: "idle", device: "Pixel 9 (demo phone)" },
+    dismissed: [],
     notice: { text: "", seat: "all", n: 0 },
   };
 }
@@ -390,10 +487,73 @@ export type Action =
   | { type: "heat"; seat: SeatId; to: number }
   | { type: "vent"; seat: SeatId; to: number }
   | { type: "volume"; seat: SeatId; to: number }
+  | { type: "theme"; seat: SeatId; to: OsTheme }
+  | { type: "accent"; seat: SeatId; to: AccentId }
+  | { type: "display"; seat: SeatId; to: DisplayMode }
+  | { type: "dnd"; seat: SeatId; on: boolean }
+  | { type: "video"; seat: SeatId; id: string | null }
+  | { type: "install"; id: StoreAppId }
+  | { type: "uninstall"; id: StoreAppId }
+  | { type: "open-app"; seat: SeatId; id: StoreAppId }
+  | { type: "cast"; seat: SeatId; to: "pairing" | "casting" | "idle" }
+  | { type: "dismiss"; id: string }
   | { type: "tick"; seconds: number };
 
 /** Modules the driver cannot open while the car is moving. */
-export const DRIVER_LOCKED_MODULES: readonly ModuleId[] = ["clips", "settings"];
+export const DRIVER_LOCKED_MODULES: readonly ModuleId[] = [
+  "clips",
+  "settings",
+  "youtube",
+  "store",
+  "cast",
+  "app",
+];
+
+/** The notifications a seat sees: shares waiting, the car's own news, minus dismissed ones. */
+export function notifications(state: System, seatId: SeatId): Notification[] {
+  const list: Notification[] = state.seats[seatId].inbox.map((sh) => ({
+    id: `share-${sh.id}`,
+    title: `${sh.title}`,
+    body: `Sent from the ${SEAT_NAME[sh.from].toLowerCase()} screen`,
+    icon: "inbox",
+  }));
+  const on = state.routines.filter((r) => r.on);
+  for (const r of on)
+    list.push({
+      id: `routine-${r.id}`,
+      title: `${r.name} is on`,
+      body: r.detail,
+      icon: "routines",
+    });
+  list.push(
+    {
+      id: "charge",
+      title: "Charging hub in 1.2 km",
+      body: "6 chargers free, on your route",
+      icon: "bolt",
+    },
+    {
+      id: "phone",
+      title: "Pixel 9 connected",
+      body: "Calls and messages on this seat",
+      icon: "phone",
+    },
+    {
+      id: "update",
+      title: "AVENUE update ready",
+      body: "Installs next time the car is parked",
+      icon: "settings",
+    },
+  );
+  if (state.cast.state === "casting" && state.cast.seat === seatId)
+    list.unshift({
+      id: "casting",
+      title: "Casting to this screen",
+      body: state.cast.device,
+      icon: "phone",
+    });
+  return list.filter((n) => !state.dismissed.includes(n.id));
+}
 
 /** Whether an item may play on a seat's screen right now. */
 export function canPlay(state: System, seatId: SeatId, item: MediaItem): boolean {
@@ -429,11 +589,13 @@ export function reduce(state: System, action: Action): System {
       const driver = state.seats.driver;
       const playingVideo = driver.nowPlaying && MEDIA_BY_ID[driver.nowPlaying]?.video;
       const lockedModule = DRIVER_LOCKED_MODULES.includes(driver.module);
+      const videoOn = Boolean(driver.video && !MUSIC_VIDEOS.has(driver.video));
       let seats = state.seats;
-      if (action.on && (playingVideo || lockedModule)) {
+      if (action.on && (playingVideo || lockedModule || videoOn)) {
         seats = patchSeat(state, "driver", {
           ...(playingVideo ? { playing: false } : {}),
           ...(lockedModule ? { module: "home" } : {}),
+          ...(videoOn ? { video: null } : {}),
         });
       }
       const text = action.on
@@ -464,7 +626,12 @@ export function reduce(state: System, action: Action): System {
       }
       return {
         ...state,
-        seats: patchSeat(state, action.seat, { nowPlaying: item.id, playing: true, progress: 0 }),
+        seats: patchSeat(state, action.seat, {
+          nowPlaying: item.id,
+          playing: true,
+          progress: 0,
+          video: null,
+        }),
         notice: notice(state, `Playing ${item.title}.`, action.seat),
       };
     }
@@ -475,7 +642,13 @@ export function reduce(state: System, action: Action): System {
       if (!s.playing && !canPlay(state, action.seat, item)) {
         return { ...state, notice: notice(state, "Video is available when parked.", action.seat) };
       }
-      return { ...state, seats: patchSeat(state, action.seat, { playing: !s.playing }) };
+      return {
+        ...state,
+        seats: patchSeat(state, action.seat, {
+          playing: !s.playing,
+          ...(!s.playing ? { video: null } : {}),
+        }),
+      };
     }
     case "seek":
       return {
@@ -686,7 +859,7 @@ export function reduce(state: System, action: Action): System {
         return {
           ...state,
           ride: { ...state.ride, stop: "none" },
-          notice: notice(state, "Pull over cancelled. Continuing to " + JOURNEY.to + "."),
+          notice: notice(state, `Pull over cancelled. Continuing to ${JOURNEY.to}.`),
         };
       return {
         ...state,
@@ -731,6 +904,73 @@ export function reduce(state: System, action: Action): System {
         ...state,
         vent: { ...state.vent, [action.seat]: clamp(Math.round(action.to), 0, 3) },
       };
+    case "theme":
+      return { ...state, seats: patchSeat(state, action.seat, { theme: action.to }) };
+    case "accent":
+      return { ...state, seats: patchSeat(state, action.seat, { accent: action.to }) };
+    case "display":
+      return { ...state, seats: patchSeat(state, action.seat, { display: action.to }) };
+    case "dnd":
+      return {
+        ...state,
+        seats: patchSeat(state, action.seat, { dnd: action.on }),
+        notice: notice(
+          state,
+          action.on ? "Do not disturb on." : "Do not disturb off.",
+          action.seat,
+        ),
+      };
+    case "video": {
+      if (action.id && action.seat === "driver" && state.moving) {
+        const music = action.id && MUSIC_VIDEOS.has(action.id);
+        if (!music)
+          return {
+            ...state,
+            notice: notice(state, "Video is available when parked.", action.seat),
+          };
+      }
+      return {
+        ...state,
+        seats: patchSeat(state, action.seat, {
+          video: action.id,
+          // One thing plays at a time on a seat: YouTube pauses the seat's own media.
+          ...(action.id ? { playing: false } : {}),
+        }),
+      };
+    }
+    case "install":
+      if (state.installed.includes(action.id)) return state;
+      return {
+        ...state,
+        installed: [...state.installed, action.id],
+        notice: notice(state, `${STORE_APPS.find((a) => a.id === action.id)?.name} installed.`),
+      };
+    case "uninstall":
+      return { ...state, installed: state.installed.filter((a) => a !== action.id) };
+    case "open-app":
+      if (!canOpen(state, action.seat, "app"))
+        return { ...state, notice: notice(state, "Available when parked.", action.seat) };
+      return {
+        ...state,
+        seats: patchSeat(state, action.seat, { module: "app", app: action.id }),
+      };
+    case "cast": {
+      if (action.to !== "idle" && !canOpen(state, action.seat, "cast"))
+        return { ...state, notice: notice(state, "Available when parked.", action.seat) };
+      const text =
+        action.to === "pairing"
+          ? `Waiting for ${state.cast.device} to accept.`
+          : action.to === "casting"
+            ? `Casting from ${state.cast.device} to the ${SEAT_NAME[action.seat].toLowerCase()} screen.`
+            : "Casting stopped.";
+      return {
+        ...state,
+        cast: { ...state.cast, seat: action.to === "idle" ? null : action.seat, state: action.to },
+        notice: notice(state, text, action.seat),
+      };
+    }
+    case "dismiss":
+      return { ...state, dismissed: [...state.dismissed, action.id] };
     case "volume":
       return { ...state, volume: { ...state.volume, [action.seat]: clamp(action.to, 0, 1) } };
     case "tick": {

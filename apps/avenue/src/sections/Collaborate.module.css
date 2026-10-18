@@ -261,3 +261,21 @@
   font-size: 0.8125rem;
   color: var(--c-text-faint);
 }
+
+.studio {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.25rem;
+  margin-top: 0.5rem;
+}
+
+.mail {
+  color: var(--c-text-muted);
+  font-size: 0.9375rem;
+  text-underline-offset: 0.25em;
+}
+
+.mail:hover {
+  color: var(--c-text);
+}

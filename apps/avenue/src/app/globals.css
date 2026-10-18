@@ -289,6 +289,26 @@ textarea {
   will-change: transform, filter;
 }
 
+/* In the chapters over the 3D stage, headline words rise when the chapter becomes active and
+   drop away when it leaves (data-active, set by Journey.tsx). */
+html[data-motion-ready] [data-slide] .split-word {
+  translate: 0 110%;
+  opacity: 0;
+  filter: blur(8px);
+  transition:
+    translate 420ms var(--ease-out),
+    opacity 420ms var(--ease-out),
+    filter 420ms var(--ease-out);
+}
+
+html[data-motion-ready][data-entered] [data-slide][data-active] .split-word {
+  translate: 0 0;
+  opacity: 1;
+  filter: blur(0);
+  transition-duration: 1100ms, 900ms, 900ms;
+  transition-delay: calc(320ms + var(--w, 0) * 45ms);
+}
+
 /* A keyword inside a headline: wide, upper-case and lit, ice to lane blue. */
 .kw {
   font-stretch: 125%;
@@ -520,4 +540,19 @@ textarea {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
   }
+}
+
+/* The car can be turned by dragging the open picture outside the cabin. */
+[data-slide] {
+  touch-action: pan-y;
+}
+
+html[data-grab] [data-slide] {
+  cursor: grab;
+}
+
+html[data-dragging],
+html[data-dragging] [data-slide] {
+  cursor: grabbing;
+  user-select: none;
 }

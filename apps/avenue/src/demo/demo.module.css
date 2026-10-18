@@ -331,3 +331,11 @@
   color: var(--c-text-muted);
   max-width: 60rem;
 }
+
+.footRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+}

@@ -431,3 +431,49 @@
   align-items: center;
   gap: var(--s-2);
 }
+
+/* ---------- The reader: one chapter open at a time ---------- */
+
+.content[data-reader] .article:not([data-open]) {
+  display: none;
+}
+
+.content[data-reader] .article[data-open] {
+  animation: chapterIn 500ms var(--ease-out) both;
+}
+
+@keyframes chapterIn {
+  from {
+    opacity: 0;
+    translate: 0 14px;
+  }
+}
+
+.articleSummary {
+  margin: 0 0 var(--s-4);
+  color: var(--c-text-muted);
+  font-size: 1.0625rem;
+}
+
+.nextChapter {
+  display: grid;
+  gap: var(--s-1);
+  margin-top: var(--s-6);
+  padding: var(--s-4) var(--s-5);
+  border-radius: var(--r-md);
+  background: var(--c-surface);
+  box-shadow: inset 0 0 0 1px var(--c-line);
+  color: var(--c-text);
+  font-size: 1.125rem;
+  text-decoration: none;
+}
+
+.nextChapter:hover {
+  box-shadow: inset 0 0 0 1px var(--c-accent-text);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .content[data-reader] .article[data-open] {
+    animation: none;
+  }
+}

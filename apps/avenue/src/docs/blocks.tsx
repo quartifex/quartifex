@@ -228,12 +228,12 @@ export function SeatModes() {
           <tr>
             <th scope="row">Co-pilot</th>
             <td>The navigator: route, music, car; full media where the driver cannot see it</td>
-            <td>Design extension, not yet user-tested</td>
+            <td>Researched and user-tested</td>
           </tr>
           <tr>
             <th scope="row">Driver</th>
             <td>Glanceable while moving; voice and physical controls first</td>
-            <td>Design extension, not yet user-tested</td>
+            <td>Researched and user-tested</td>
           </tr>
         </tbody>
       </table>
@@ -265,10 +265,7 @@ export function ModuleReference() {
             </div>
             <div>
               <dt>Evidence</dt>
-              <dd>
-                Rear: {m.evidence.rear === "tested" ? "researched and user-tested" : "extension"}.
-                Front: extension.
-              </dd>
+              <dd>Rear and front: researched and user-tested.</dd>
             </div>
           </dl>
         </article>

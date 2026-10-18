@@ -51,8 +51,8 @@ export const CHAPTERS: Chapter[] = [
   // drifting round towards the side.
   {
     id: "hero",
-    from: P([-7.6, 1.25, -8.0], [1.0, 0.74, -1.1], 27),
-    to: P([-9.4, 1.35, -3.4], [0.37, 0.76, -1.3], 27),
+    from: P([-6.9, 1.15, -8.6], [1.05, 0.74, -1.25], 27),
+    to: P([-7.7, 1.28, -7.8], [1.0, 0.74, -1.1], 27),
   },
   // 01 The problem: the long side, then along it towards the rear door.
   {

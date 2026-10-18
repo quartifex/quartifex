@@ -1,6 +1,7 @@
 // Collaboration: who AVENUE is for, the three ways to work with us, what a partner gets, and
 // the form. No prices, no checkout, no invented partners.
 
+import { ByQuartifex, QX_EMAIL } from "@/components/Quartifex";
 import s from "./Collaborate.module.css";
 import { PartnerForm } from "./PartnerForm";
 
@@ -40,6 +41,7 @@ export function Collaborate() {
   return (
     <section
       id="partner"
+      data-snap
       className={`section headlight ${s.partner}`}
       aria-labelledby="partner-title"
     >
@@ -54,6 +56,12 @@ export function Collaborate() {
             AVENUE is offered on a collaboration basis. Tell us about your cabin and we will propose
             a way to work together.
           </p>
+          <div className={s.studio}>
+            <ByQuartifex content="partner" />
+            <a className={s.mail} href={`mailto:${QX_EMAIL}?subject=AVENUE`}>
+              or write to {QX_EMAIL}
+            </a>
+          </div>
           <h3 className={`h3 ${s.sub}`}>For</h3>
           <ul className={s.for}>
             {FOR.map((f) => (

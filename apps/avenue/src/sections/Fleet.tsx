@@ -33,7 +33,12 @@ export function Fleet() {
     scrollToTarget("#demo");
   };
   return (
-    <section id="fleets" className={`section headlight ${s.fleet}`} aria-labelledby="fleet-title">
+    <section
+      id="fleets"
+      data-snap
+      className={`section headlight ${s.fleet}`}
+      aria-labelledby="fleet-title"
+    >
       <div className="grid-lines" aria-hidden="true" />
       <div className={`wrap ${s.grid}`}>
         <header className={s.head}>
@@ -77,8 +82,8 @@ export function Fleet() {
                 <Arrow />
               </span>
             </button>
-            <span className="tag" data-status="extension">
-              Cab mode: design extension, not yet user-tested
+            <span className="tag" data-status="tested">
+              Cab mode: researched and user-tested
             </span>
           </div>
         </header>

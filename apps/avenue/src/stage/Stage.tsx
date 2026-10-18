@@ -1,4 +1,5 @@
 "use client";
+import { gsap } from "gsap";
 // The stage behind the journey: a sticky, full-viewport layer under the hero, the chapters and
 // the demo. First paint is a still poster (pure CSS: the night road's light and the car's
 // silhouette are left to the 3D). After first paint and an idle moment the 3D boots, if the
@@ -6,6 +7,7 @@
 import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
 import { useStore } from "@/lib/store";
+import { CHAPTER_BY_ID } from "./camera";
 import styles from "./Stage.module.css";
 import { frame, stage } from "./state";
 
@@ -67,6 +69,61 @@ export function Stage() {
     });
     io.observe(el);
     return () => io.disconnect();
+  }, []);
+
+  // Turn the car: a horizontal drag on the open picture (not on words, buttons or the demo)
+  // turns it up to about 35 degrees either way; let go and it eases back, slowly.
+  useEffect(() => {
+    const proxy = { v: 0 };
+    let start: { x: number; y: number; base: number } | null = null;
+    let dragging = false;
+    const exterior = () => !CHAPTER_BY_ID[frame.chapter]?.inside && !stage.get().demo;
+    const down = (e: PointerEvent) => {
+      const el = e.target instanceof Element ? e.target : null;
+      if (!el?.closest("[data-slide]") || !exterior()) return;
+      if (el.closest("a,button,input,textarea,select,label,[data-anim],[data-no-drag]")) return;
+      gsap.killTweensOf(proxy);
+      start = { x: e.clientX, y: e.clientY, base: frame.drag };
+      dragging = false;
+    };
+    const move = (e: PointerEvent) => {
+      if (!start) return;
+      const dx = e.clientX - start.x;
+      const dy = e.clientY - start.y;
+      if (!dragging && Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy) * 1.3) {
+        dragging = true;
+        document.documentElement.dataset.dragging = "";
+      }
+      if (dragging) frame.drag = Math.max(-0.6, Math.min(0.6, start.base + dx * 0.0042));
+    };
+    const up = () => {
+      if (!start) return;
+      start = null;
+      delete document.documentElement.dataset.dragging;
+      if (!dragging) return;
+      dragging = false;
+      proxy.v = frame.drag;
+      gsap.to(proxy, {
+        v: 0,
+        delay: 0.8,
+        duration: 2.8,
+        ease: "power2.inOut",
+        onUpdate: () => {
+          frame.drag = proxy.v;
+        },
+      });
+    };
+    window.addEventListener("pointerdown", down);
+    window.addEventListener("pointermove", move, { passive: true });
+    window.addEventListener("pointerup", up);
+    window.addEventListener("pointercancel", up);
+    return () => {
+      gsap.killTweensOf(proxy);
+      window.removeEventListener("pointerdown", down);
+      window.removeEventListener("pointermove", move);
+      window.removeEventListener("pointerup", up);
+      window.removeEventListener("pointercancel", up);
+    };
   }, []);
 
   // Pointer, for a touch of parallax in the hero.

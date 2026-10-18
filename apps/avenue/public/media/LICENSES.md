@@ -18,6 +18,10 @@
 
 - A capture of Google Maps (Mumbai, Bandra West to Colaba), shown as a concept illustration with the attribution "Map data ©2026 Google". Cropped and compressed.
 
-## maps/ar-road.webp
+## maps/ar-coastal.webp
+
+- A Google Street View screenshot of the Coastal Road, Mumbai, supplied by Nitesh, shown as a concept illustration with the attribution "Street View image ©2026 Google". Street View's own controls cropped out; Google's watermarks kept.
+
+## maps/ar-road.webp (no longer shown)
 
 - A frame cut from "Rural Asphalt Road" by Poly Haven, https://polyhaven.com/a/rural_asphalt_road, CC0 1.0.

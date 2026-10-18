@@ -1,15 +1,19 @@
 "use client";
-// The journey: the sticky 3D stage with the chapters scrolling over it. Each chapter section
-// carries data-chapter; while it is on screen, scroll writes its id and progress (0 to 1) for
-// the camera. Also here: the hero's letterbox lifting, the blink as the camera enters the car,
-// headlines rising line by line, and the scripted moments the chapters describe (the driver's
-// screen locking as the car moves). Under reduced motion the camera cuts between poses and
-// headlines stand still.
+// The journey: the sticky 3D stage with the chapters over it, one screen each. Scroll picks the
+// chapter; what happens inside it is played, not scrubbed: when a chapter becomes active the
+// camera travels its path over a couple of seconds, its words and panels animate in, and the
+// ones it leaves animate out. Where the camera passes through the car's body (into the cabin,
+// back in for the demo) a short blink hides the cut. Under reduced motion the camera cuts to
+// each chapter's final pose and nothing animates.
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { type ReactNode, useEffect, useRef } from "react";
 import { dispatch } from "@/demo/store";
+import { CHAPTER_BY_ID } from "@/stage/camera";
 import { frame, stage } from "@/stage/state";
+
+/** How long the camera takes to travel a chapter's path, in seconds. */
+const TRAVEL = 2.6;
 
 export function Journey({ children }: { children: ReactNode }) {
   const root = useRef<HTMLDivElement>(null);
@@ -19,121 +23,106 @@ export function Journey({ children }: { children: ReactNode }) {
     if (!el) return;
     const reduced = frame.reducedMotion;
     const stageEl = el.querySelector<HTMLElement>("[data-stage]") ?? el;
+    const travel = { t: 0 };
+    const blink = { v: 0 };
+    const setBlink = () => stageEl.style.setProperty("--blink", blink.v.toFixed(3));
+    let current = "";
+    let timers: number[] = [];
+    const clearTimers = () => {
+      for (const t of timers) window.clearTimeout(t);
+      timers = [];
+    };
+
+    const travelTo = (id: string) => {
+      gsap.killTweensOf(travel);
+      travel.t = 0;
+      frame.local = 0;
+      if (reduced) {
+        frame.local = 1;
+        return;
+      }
+      gsap.to(travel, {
+        t: 1,
+        duration: TRAVEL,
+        ease: "power2.inOut",
+        onUpdate: () => {
+          if (frame.chapter === id) frame.local = travel.t;
+        },
+      });
+    };
+
+    const activate = (id: string, section: HTMLElement) => {
+      if (id === current) return;
+      const before = CHAPTER_BY_ID[current];
+      const next = CHAPTER_BY_ID[id];
+      current = id;
+      document.documentElement.dataset.chapter = id;
+      for (const s of el.querySelectorAll<HTMLElement>("[data-chapter]"))
+        s.toggleAttribute("data-active", s === section);
+      stageEl.toggleAttribute("data-letterbox", id === "hero");
+      document.documentElement.toggleAttribute("data-grab", !next?.inside);
+      const crossing = Boolean(before) && Boolean(before?.inside) !== Boolean(next?.inside);
+      gsap.killTweensOf(blink);
+      if (crossing && !reduced) {
+        // Through the body: dip to black, cut the camera, then fade up while it travels.
+        gsap
+          .timeline()
+          .to(blink, { v: 1, duration: 0.32, ease: "power2.in", onUpdate: setBlink })
+          .add(() => {
+            frame.chapter = id;
+            frame.cut = true;
+            travelTo(id);
+          })
+          .to(blink, { v: 0, duration: 0.7, ease: "power2.out", onUpdate: setBlink }, "+=0.08");
+      } else {
+        blink.v = 0;
+        setBlink();
+        frame.chapter = id;
+        if (reduced) frame.cut = true;
+        travelTo(id);
+      }
+      script(id, section);
+    };
+
+    // The moments a chapter acts out, timed rather than scrolled.
+    const script = (id: string, section: HTMLElement) => {
+      clearTimers();
+      if (id === "driver") {
+        section.setAttribute("data-moving", "false");
+        dispatch({ type: "moving", on: false });
+        timers.push(
+          window.setTimeout(() => {
+            section.setAttribute("data-moving", "true");
+            dispatch({ type: "moving", on: true });
+          }, 1700),
+        );
+      } else {
+        dispatch({ type: "moving", on: true });
+      }
+      if (id === "sos") {
+        let n = 5;
+        const tick = () => {
+          n -= 1;
+          section.setAttribute("data-count", String(Math.max(1, n)));
+          if (n > 1) timers.push(window.setTimeout(tick, 900));
+        };
+        section.setAttribute("data-count", "5");
+        timers.push(window.setTimeout(tick, 1100));
+      }
+    };
+
     const ctx = gsap.context(() => {
-      // Chapters: which one is on screen and how far through it we are.
       for (const section of el.querySelectorAll<HTMLElement>("[data-chapter]")) {
         const id = section.dataset.chapter ?? "hero";
         ScrollTrigger.create({
           trigger: section,
-          start: "top bottom",
-          end: "bottom bottom",
-          onUpdate: (self) => {
-            if (self.isActive) {
-              frame.chapter = id;
-              frame.local = self.progress;
-            }
-          },
+          start: "top 55%",
+          end: "bottom 45%",
           onToggle: (self) => {
-            if (self.isActive) {
-              frame.chapter = id;
-              frame.local = self.progress;
-              document.documentElement.dataset.chapter = id;
-            }
+            if (self.isActive) activate(id, section);
           },
         });
       }
-
-      // Hero: the letterbox lifts as you start to scroll.
-      ScrollTrigger.create({
-        trigger: el.querySelector("section[data-chapter=hero]"),
-        start: "top top",
-        end: "+=60%",
-        onUpdate: (self) => stageEl.style.setProperty("--letterbox", String(1 - self.progress)),
-        onLeave: () => stageEl.style.setProperty("--letterbox", "0"),
-        onEnterBack: () => stageEl.style.setProperty("--letterbox", "1"),
-      });
-      stageEl.style.setProperty("--letterbox", window.scrollY < 10 ? "1" : "0");
-
-      // The blink into the cabin: a short dip to black around the moment the camera passes
-      // through the body (about 45% through the cabin chapter).
-      ScrollTrigger.create({
-        trigger: el.querySelector("section[data-chapter=cabin]"),
-        start: "top bottom",
-        end: "bottom bottom",
-        onUpdate: (self) => {
-          const t = self.progress;
-          const d = Math.abs(t - 0.45);
-          const blink = reduced ? (t > 0.42 && t < 0.48 ? 1 : 0) : Math.max(0, 1 - d / 0.08);
-          stageEl.style.setProperty("--blink", blink.toFixed(3));
-        },
-        onLeave: () => stageEl.style.setProperty("--blink", "0"),
-        onLeaveBack: () => stageEl.style.setProperty("--blink", "0"),
-      });
-
-      // And a blink back into the cabin for the demo: dark at the very end of the SOS chapter
-      // (the camera moves inside behind it), fading up as the demo arrives.
-      ScrollTrigger.create({
-        trigger: el.querySelector("section[data-chapter=sos]"),
-        start: "top bottom",
-        end: "bottom bottom",
-        onUpdate: (self) => {
-          const t = Math.min(1, Math.max(0, (self.progress - 0.84) / 0.16));
-          stageEl.style.setProperty("--blink", (reduced ? (t > 0.5 ? 1 : 0) : t * t).toFixed(3));
-        },
-        onLeaveBack: () => stageEl.style.setProperty("--blink", "0"),
-      });
-      ScrollTrigger.create({
-        trigger: el.querySelector("section[data-chapter=demo]"),
-        start: "top bottom",
-        end: "top 50%",
-        onUpdate: (self) => {
-          const t = self.progress;
-          stageEl.style.setProperty(
-            "--blink",
-            (reduced ? (t < 0.2 ? 1 : 0) : Math.max(0, 1 - t / 0.7)).toFixed(3),
-          );
-        },
-        onLeave: () => stageEl.style.setProperty("--blink", "0"),
-      });
-
-      // A2: the car pulls away halfway through the driver chapter, and the screen locks.
-      let wasMoving = true;
-      ScrollTrigger.create({
-        trigger: el.querySelector("section[data-chapter=driver]"),
-        start: "top bottom",
-        end: "bottom bottom",
-        onUpdate: (self) => {
-          if (!self.isActive) return;
-          const moving = self.progress > 0.45;
-          if (moving === wasMoving) return;
-          wasMoving = moving;
-          el.querySelector("section[data-chapter=driver]")?.setAttribute(
-            "data-moving",
-            moving ? "true" : "false",
-          );
-          dispatch({ type: "moving", on: moving });
-        },
-        // Outside the chapter the car is moving again: that is the demo's default.
-        onLeave: () => {
-          wasMoving = true;
-          dispatch({ type: "moving", on: true });
-        },
-        onLeaveBack: () => {
-          wasMoving = true;
-          dispatch({ type: "moving", on: true });
-        },
-      });
-
-      // Step-in notes and parts that follow a chapter's progress, via CSS (--p).
-      for (const section of el.querySelectorAll<HTMLElement>("[data-progress]")) {
-        ScrollTrigger.create({
-          trigger: section,
-          start: "top bottom",
-          end: "bottom bottom",
-          onUpdate: (self) => section.style.setProperty("--p", self.progress.toFixed(4)),
-        });
-      }
-
       // The demo takes the camera when its section is mostly on screen.
       const demoEl = el.querySelector("#demo");
       if (demoEl) {
@@ -146,10 +135,16 @@ export function Journey({ children }: { children: ReactNode }) {
       }
     }, el);
 
-    // Measure again once the stage, fonts and images have settled.
+    // Start in the hero.
+    const hero = el.querySelector<HTMLElement>("section[data-chapter=hero]");
+    if (hero && window.scrollY < innerHeight * 0.5) activate("hero", hero);
+
     const t = window.setTimeout(() => ScrollTrigger.refresh(), 600);
     return () => {
       window.clearTimeout(t);
+      clearTimers();
+      gsap.killTweensOf(travel);
+      gsap.killTweensOf(blink);
       ctx.revert();
     };
   }, []);

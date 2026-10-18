@@ -1,6 +1,8 @@
 // The platform: Android Automotive OS and a reference hardware build to industry-standard
 // specs. A target for partners, scoped with each one; not a shipping product. Every figure
 // about a real part or car is cited.
+
+import { More } from "@/components/More";
 import {
   CONNECTIVITY,
   DISPLAYS,
@@ -67,6 +69,7 @@ export function Platform() {
   return (
     <section
       id="platform"
+      data-snap
       data-theme="paper"
       data-wipe
       className={`section ${s.platform}`}
@@ -103,35 +106,41 @@ export function Platform() {
             </li>
           ))}
         </ul>
-        <div className={s.groups}>
-          <Group g={OS} />
-          <Group g={HARDWARE} />
-          <Group g={DISPLAYS} />
-          <Group g={CONNECTIVITY} />
-        </div>
-        <div className={s.qual}>
-          <p className="label">Qualification targets</p>
-          <ul>
-            {QUALIFICATION.map((q) => (
-              <li key={q.label}>
-                <span>{q.label}</span>
-                <strong>{q.value}</strong>
-              </li>
-            ))}
-          </ul>
-        </div>
-        <details className={s.sources}>
-          <summary>Sources</summary>
-          <ul>
-            {PLATFORM_SOURCES.map((src) => (
-              <li key={src.url}>
-                <a href={src.url} target="_blank" rel="noreferrer">
-                  {src.title}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </details>
+        <More
+          label="The full reference specification"
+          hint="Operating system, compute, displays, connectivity, qualification and sources"
+          tone="paper"
+        >
+          <div className={s.groups}>
+            <Group g={OS} />
+            <Group g={HARDWARE} />
+            <Group g={DISPLAYS} />
+            <Group g={CONNECTIVITY} />
+          </div>
+          <div className={s.qual}>
+            <p className="label">Qualification targets</p>
+            <ul>
+              {QUALIFICATION.map((q) => (
+                <li key={q.label}>
+                  <span>{q.label}</span>
+                  <strong>{q.value}</strong>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <details className={s.sources}>
+            <summary>Sources</summary>
+            <ul>
+              {PLATFORM_SOURCES.map((src) => (
+                <li key={src.url}>
+                  <a href={src.url} target="_blank" rel="noreferrer">
+                    {src.title}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </details>
+        </More>
       </div>
     </section>
   );

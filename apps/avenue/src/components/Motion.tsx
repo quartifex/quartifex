@@ -1,15 +1,16 @@
 "use client";
-// The page's text and section motion, in one place:
-// - headlines ([data-split]) rise word by word out of masked lines, sharpening from a blur;
-// - blocks ([data-reveal]) lift and sharpen in small batches as they arrive;
-// - Day sections open like a wipe, their rounded inset frame widening to the full page;
-// - the hero's headline waits for the visitor to pass the gate, then plays.
+// The page's text and section motion, in one place. None of it is scrubbed: things play in
+// when they arrive and play out when they leave.
+// - Headlines ([data-split]) are split into words. In the chapters over the 3D stage the words
+//   rise out of masked lines when the chapter becomes active and drop away when it leaves (CSS,
+//   driven by data-active); elsewhere they rise once as they arrive.
+// - Blocks ([data-reveal]) lift and sharpen as they enter the screen, and fade as they leave.
+// - Day sections ([data-wipe]) open from an inset, rounded frame to the full page.
 // Under reduced motion none of it runs and everything is simply there.
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
 import { useEffect } from "react";
-import { stage } from "@/stage/state";
 
 export function Motion() {
   useEffect(() => {
@@ -17,91 +18,64 @@ export function Motion() {
     const root = document.documentElement;
     root.dataset.motionReady = "";
     const ctx = gsap.context(() => {
-      const words = (h: HTMLElement) => {
+      for (const h of document.querySelectorAll<HTMLElement>("[data-split]")) {
         const split = SplitText.create(h, {
           type: "lines,words",
           mask: "lines",
           linesClass: "split-line",
           wordsClass: "split-word",
         });
-        return split.words;
-      };
-
-      // Headlines.
-      for (const h of document.querySelectorAll<HTMLElement>("[data-split]")) {
-        const w = words(h);
-        gsap.from(w, {
+        if (h.closest("[data-slide]")) {
+          split.words.forEach((w, i) => {
+            (w as HTMLElement).style.setProperty("--w", String(i));
+          });
+          continue;
+        }
+        gsap.from(split.words, {
           yPercent: 115,
           opacity: 0,
           filter: "blur(10px)",
-          duration: 1.25,
+          duration: 1.2,
           ease: "expo.out",
-          stagger: 0.045,
-          scrollTrigger: { trigger: h, start: "top 86%", once: true },
-          onComplete: () => gsap.set(w, { clearProps: "filter" }),
+          stagger: 0.04,
+          scrollTrigger: { trigger: h, start: "top 86%", toggleActions: "play none none reverse" },
+          onComplete: () => gsap.set(split.words, { clearProps: "filter" }),
         });
       }
 
-      // The hero's headline plays once the gate is passed.
-      const hero = document.querySelector<HTMLElement>("[data-hero-split]");
-      if (hero) {
-        const w = words(hero);
-        const rest = document.querySelectorAll<HTMLElement>("[data-hero-after]");
-        gsap.set(w, { yPercent: 115, opacity: 0, filter: "blur(12px)" });
-        gsap.set(rest, { opacity: 0, y: 18 });
-        const play = () => {
-          gsap
-            .timeline({ delay: 0.15 })
-            .to(w, {
-              yPercent: 0,
-              opacity: 1,
-              filter: "blur(0px)",
-              duration: 1.4,
-              ease: "expo.out",
-              stagger: 0.06,
-            })
-            .to(rest, { opacity: 1, y: 0, duration: 1, ease: "expo.out", stagger: 0.1 }, "-=0.9");
-        };
-        if (stage.get().entered) play();
-        else {
-          const off = stage.subscribe(() => {
-            if (stage.get().entered) {
-              off();
-              play();
-            }
-          });
-        }
+      for (const el of document.querySelectorAll<HTMLElement>("[data-reveal]")) {
+        gsap.fromTo(
+          el,
+          { y: 40, opacity: 0, filter: "blur(10px)" },
+          {
+            y: 0,
+            opacity: 1,
+            filter: "blur(0px)",
+            duration: 1,
+            ease: "expo.out",
+            scrollTrigger: {
+              trigger: el,
+              start: "top 90%",
+              end: "bottom 6%",
+              toggleActions: "play reverse play reverse",
+            },
+          },
+        );
       }
 
-      // Blocks.
-      ScrollTrigger.batch("[data-reveal]", {
-        start: "top 90%",
-        once: true,
-        onEnter: (batch) =>
-          gsap.fromTo(
-            batch,
-            { y: 42, opacity: 0, filter: "blur(10px)" },
-            {
-              y: 0,
-              opacity: 1,
-              filter: "blur(0px)",
-              duration: 1.1,
-              ease: "expo.out",
-              stagger: 0.09,
-              clearProps: "filter,transform",
-            },
-          ),
-      });
-
-      // Day sections: a wipe, from an inset rounded frame to the full width.
       for (const sec of document.querySelectorAll<HTMLElement>("[data-wipe]")) {
         gsap.fromTo(
           sec,
-          { clipPath: "inset(6% 5% 0% 5% round 40px)" },
+          { clipPath: "inset(5% 4% 0% 4% round 40px)" },
           {
             clipPath: "inset(0% 0% 0% 0% round 0px)",
-            ease: "none",
-            scrollTrigger: { trigger: sec, start: "top bottom", end: "top 25%", scrub: 0.6 },
+            duration: 1.1,
+            ease: "expo.inOut",
+            scrollTrigger: {
+              trigger: sec,
+              start: "top 75%",
+              toggleActions: "play none none reverse",
+            },
           },
         );
       }

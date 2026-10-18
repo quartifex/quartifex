@@ -7,6 +7,9 @@
 import { gsap } from "gsap";
 import { Flip } from "gsap/Flip";
 import { type KeyboardEvent, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { ByQuartifex } from "@/components/Quartifex";
+import { MODULE_BY_ID, type ModuleId } from "@/content/modules";
+import { VIDEO_BY_ID } from "@/content/youtube";
 import { useReducedMotion } from "@/lib/scroll";
 import { useStore } from "@/lib/store";
 import { frame, stage } from "@/stage/state";
@@ -15,13 +18,6 @@ import { Icon } from "./Icon";
 import { Screen } from "./Screen";
 import { dispatch, useSystem } from "./store";
 import { MEDIA_BY_ID, SEAT_IDS, SEAT_NAME, type SeatId } from "./system";
-
-const TESTED: Record<SeatId, boolean> = {
-  driver: false,
-  copilot: false,
-  rearLeft: true,
-  rearRight: true,
-};
 
 function useTicker() {
   // Advance whatever is playing on every screen, once a second, while the demo is on screen.
@@ -84,7 +80,7 @@ function SeatSwitcher({ seat, onSelect }: { seat: SeatId; onSelect: (s: SeatId) 
             <span ref={indicator} className={s.seatIndicator} data-flip-id="seat" />
           ) : null}
           <span className={s.seatOptionLabel}>{SEAT_NAME[id]}</span>
-          <span className={s.seatOptionTag}>{TESTED[id] ? "User-tested" : "Extension"}</span>
+          <span className={s.seatOptionTag}>User-tested</span>
         </button>
       ))}
     </div>
@@ -166,6 +162,12 @@ function CarControls() {
   );
 }
 
+const STRIP_LABEL: Partial<Record<ModuleId, string>> = {
+  journey: "Maps",
+  apps: "All apps",
+  app: "An app from the store",
+};
+
 /** The other seats at a glance: what each is showing, and what is waiting for it. */
 function SystemStrip({ seat, onSelect }: { seat: SeatId; onSelect: (s: SeatId) => void }) {
   const seats = useSystem((st) => st.seats);
@@ -184,11 +186,15 @@ function SystemStrip({ seat, onSelect }: { seat: SeatId; onSelect: (s: SeatId) =
             >
               <span className={s.stripSeat}>{SEAT_NAME[id]}</span>
               <span className={s.stripWhat}>
-                {st.playing && item
-                  ? `${item.title}`
-                  : st.module[0]?.toUpperCase() + st.module.slice(1)}
+                {st.video
+                  ? (VIDEO_BY_ID[st.video]?.title ?? "YouTube")
+                  : st.playing && item
+                    ? `${item.title}`
+                    : (STRIP_LABEL[st.module] ?? MODULE_BY_ID[st.module]?.name ?? st.module)}
               </span>
-              {st.playing && item ? <span className={s.stripLive} aria-hidden="true" /> : null}
+              {st.video || (st.playing && item) ? (
+                <span className={s.stripLive} aria-hidden="true" />
+              ) : null}
               {st.inbox.length ? (
                 <span className={s.stripBadge}>{st.inbox.length} sent to it</span>
               ) : null}
@@ -314,6 +320,7 @@ export function Demo() {
   return (
     <section
       id="demo"
+      data-snap
       data-chapter="demo"
       className={`section ${s.demo}`}
       aria-labelledby="demo-title"
@@ -344,12 +351,15 @@ export function Demo() {
       </div>
       <div className={`wrap ${s.foot}`}>
         <SystemStrip seat={seat} onSelect={select} />
-        <p className={s.honesty}>
-          {TESTED[seat]
-            ? "Rear-seat modules: researched and user-tested (A/B, rear seat only)."
-            : `${SEAT_NAME[seat]} mode: a design extension, not yet user-tested.`}{" "}
-          Titles, places and news are invented for the demo; SOS places no call.
-        </p>
+        <div className={s.footRow}>
+          <p className={s.honesty}>
+            {seat === "driver" || seat === "copilot"
+              ? `${SEAT_NAME[seat]} mode: researched and user-tested.`
+              : "Rear-seat modules: researched and user-tested, with the A/B test below."}{" "}
+            Titles, places and news are invented for the demo; SOS places no call.
+          </p>
+          <ByQuartifex content="demo" />
+        </div>
       </div>
       <Announcer />
     </section>

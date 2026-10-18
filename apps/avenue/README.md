@@ -51,10 +51,12 @@ them as "To be confirmed" until they are replaced.
 | Name | What |
 | --- | --- |
 | `RESEND_API_KEY` | Email provider key for the partner form (Resend) |
-| `PARTNER_INBOX` | Where partner enquiries go |
-| `PARTNER_FROM` | A sender address on a domain verified with Resend |
+| `PARTNER_INBOX` | Where partner enquiries go (optional; defaults to hello@quartifex.com) |
+| `PARTNER_FROM` | A sender address on a domain verified with Resend, e.g. `AVENUE <avenue@quartifex.com>` |
 
-Without them the form validates but answers that it is not accepting messages yet (503).
+Every enquiry's subject ends in "· AVENUE". Without a key and sender the form still validates,
+then opens the visitor's email app with the enquiry written out to hello@quartifex.com (503
+with a `mailto`).
 
 ## Checks
 
