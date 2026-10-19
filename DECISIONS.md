@@ -156,3 +156,8 @@ Dated, one line each. Newest at the bottom. If a decision contradicts a rule in 
 - 2026-10-18: The app tells the product page when a guided task is done with `postMessage` to the same origin only; the page ticks the step off. Nothing leaves the browser.
 - 2026-10-18: Help moves from one long section to its own pages at `/docs/<topic>`, so the product page stays short; the six most-used topics and a short FAQ stay on the page.
 - 2026-10-18: The app uses the Tiro display face for Latin headings only (the Latin file is precached); Devanagari headings stay in Mukta to keep the precache small.
+- 2026-10-19: New identity from Nitesh's K mark: electric blue (#0B44FF) and lavender (#E3D7FB) with ink (#0E1433); orange stays only for "below half". Headings in Barlow Condensed, text in Inter, Devanagari in Mukta; Tiro and IBM Plex Mono are dropped. The mascot Tikki is retired.
+- 2026-10-19: Icons come from Tabler Icons (MIT, over 5,000, with an education set). Only the icons used are copied into `src/icons.ts` by `scripts/icons.mjs`, so no icon library ships to the phone.
+- 2026-10-19: The app is dashboard-first: Today shows number tiles, continue marking, attendance by test, the latest test as a ring, ready results, children below half twice running and a test calendar. From 1024 px it gets a left rail, a top bar (student search, quick actions, who is using it) and a 12-column grid; the same app installs on a computer.
+- 2026-10-19: On the product page the demo label and Reset sit outside the device (the app hides its own banner with `?embed=1`); the phone frame has a status bar clear of the rounded corners; a Phone / Computer switch shows the app at 1280 px in a browser window, scaled to fit.
+

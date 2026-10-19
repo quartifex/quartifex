@@ -90,7 +90,7 @@
   --genda: #ff7a1a;
   --genda-soft: #ffe9d8;
   --genda-ink: #9a3800;
-  --right: #0f8a4a;
+  --right: #08703a;
   --right-soft: #dcf5e7;
   --wrong: #d62f43;
   --wrong-soft: #fde2e5;
@@ -175,6 +175,12 @@
   --absent: #a19fb6;
   --focus: #8ea7ff;
   --shadow: none;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 html {
@@ -3521,4 +3527,11 @@ h3 {
   padding: 0;
   background: none;
   cursor: pointer;
+}
+.hero {
+  overflow: visible;
+  contain: paint;
+}
+.card--flush:has(> table) {
+  overflow-x: auto;
 }

@@ -33,7 +33,9 @@ test.describe("the site", () => {
   test("runs the real app in the demo frame, on its own database", async ({ page }) => {
     await page.goto("/#demo");
     const frame = page.frameLocator('iframe[title="The demo app"]');
-    await expect(frame.getByText(/Demo · invented school/)).toBeVisible({ timeout: 20_000 });
+    // The demo label sits outside the device; inside, the app runs on its own database.
+    await expect(page.locator(".demo__label")).toContainText("Demo · invented school");
+    await expect(frame.getByRole("heading", { level: 1 })).toBeVisible({ timeout: 20_000 });
     await page
       .getByRole("button", { name: /Read the class view/ })
       .first()
@@ -50,6 +52,16 @@ test.describe("the site", () => {
       .first()
       .click();
     await expect(frame.getByRole("button", { name: "Print or save as PDF" })).toBeVisible();
+  });
+
+  test("the demo also runs as the computer version, in a browser window", async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto("/#demo");
+    await page.getByRole("button", { name: "Computer" }).click();
+    const frame = page.frameLocator('iframe[title="The demo app"]');
+    // At 1280 px the app shows its rail and top bar.
+    await expect(frame.getByRole("search")).toBeVisible({ timeout: 20_000 });
+    await expect(frame.getByRole("navigation", { name: "Main sections" })).toBeVisible();
   });
 
   test("while the demo is in use the page behind stays still, and Esc lets go", async ({

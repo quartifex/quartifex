@@ -83,6 +83,10 @@ const en = {
     tap: "Tap to try",
     tapSub: "Stays on screen while you use it",
     using: "Using the demo",
+    label: "Demo · invented school and children. Your own data is not touched.",
+    viewLabel: "Show the demo as",
+    viewPhone: "Phone",
+    viewDesktop: "Computer",
     reset: "Reset",
     resetLabel: "Start the demo again from the beginning",
     done: "Done",
@@ -281,7 +285,7 @@ const en = {
     source: "Source code (MIT)",
     schools: "For schools",
     fonts:
-      "Type: Mukta (Ek Type), Tiro Devanagari Hindi (Tiro Typeworks), IBM Plex Mono (IBM), all under the SIL Open Font License.",
+      "Type: Barlow Condensed (Jeremy Tribby), Inter (Rasmus Andersson) and Mukta (Ek Type), all under the SIL Open Font License. Icons: Tabler Icons (MIT).",
     note: "Demo data is invented. No photographs of children are used anywhere.",
   },
   mock: {
@@ -394,6 +398,10 @@ const hi: Copy = {
     tap: "टैप करके आज़माएँ",
     tapSub: "इस्तेमाल के दौरान स्क्रीन पर रहेगा",
     using: "डेमो चल रहा है",
+    label: "डेमो · काल्पनिक विद्यालय और बच्चे। आपका अपना डेटा नहीं छुआ जाता।",
+    viewLabel: "डेमो इस रूप में दिखाएँ",
+    viewPhone: "फ़ोन",
+    viewDesktop: "कंप्यूटर",
     reset: "फिर से",
     resetLabel: "डेमो शुरू से फिर चलाएँ",
     done: "हो गया",
@@ -588,7 +596,7 @@ const hi: Copy = {
     source: "सोर्स कोड (MIT)",
     schools: "स्कूलों के लिए",
     fonts:
-      "टाइप: Mukta (Ek Type), Tiro Devanagari Hindi (Tiro Typeworks), IBM Plex Mono (IBM), सभी SIL Open Font License के तहत।",
+      "टाइप: Barlow Condensed (Jeremy Tribby), Inter (Rasmus Andersson) और Mukta (Ek Type), सभी SIL Open Font License के तहत। आइकन: Tabler Icons (MIT)।",
     note: "डेमो का डेटा काल्पनिक है। कहीं भी बच्चों की तस्वीरें इस्तेमाल नहीं की गई हैं।",
   },
   mock: {

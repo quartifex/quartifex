@@ -28,7 +28,10 @@ export function Demo({ copy, locale }: { copy: Copy["demo"]; locale: "en" | "hi"
   const [pinned, setPinned] = useState(false);
   const [done, setDone] = useState<Step[]>([]);
   const [tour, setTour] = useState<number | null>(null);
-  const src = `/app?demo=1&lang=${locale}`;
+  const src = `/app?demo=1&embed=1&lang=${locale}`;
+  const [view, setView] = useState<"phone" | "desktop">("phone");
+  const screen = useRef<HTMLDivElement>(null);
+  const [scale, setScale] = useState(1);
   const total = copy.tasks.length;
   const current = copy.tasks.find((x) => !done.includes(x.id as Step))?.id ?? null;
 
@@ -49,6 +52,17 @@ export function Demo({ copy, locale }: { copy: Copy["demo"]; locale: "en" | "hi"
     io.observe(el);
     return () => io.disconnect();
   }, []);
+
+  // The computer view renders the app at 1280 x 800 and scales it to the frame.
+  useEffect(() => {
+    const el = screen.current;
+    if (!el || view !== "desktop" || !("ResizeObserver" in window)) return;
+    const ro = new ResizeObserver(([e]) => {
+      if (e) setScale(Math.min(1, e.contentRect.width / 1280));
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [view]);
 
   // The app reports finished tasks (same origin only).
   useEffect(() => {
@@ -179,7 +193,7 @@ export function Demo({ copy, locale }: { copy: Copy["demo"]; locale: "en" | "hi"
   );
 
   return (
-    <div ref={root} className={`demo${pinned ? " is-pinned" : ""}`}>
+    <div ref={root} className={`demo${pinned ? " is-pinned" : ""}`} data-view={view}>
       <div className="demo__copy">
         <p className="eyebrow">{copy.eyebrow}</p>
         <h2 id="demo-h" className="section-title">
@@ -218,10 +232,77 @@ export function Demo({ copy, locale }: { copy: Copy["demo"]; locale: "en" | "hi"
             ))}
           </ul>
         </aside>
-        <div className="demo__device" data-tour="phone">
-          <div className="demo__screen">
+        {!pinned ? (
+          <div className="demo__toolbar">
+            <p className="demo__label">
+              <i aria-hidden="true" />
+              {copy.label}
+            </p>
+            <fieldset className="demo__views" aria-label={copy.viewLabel}>
+              {(["phone", "desktop"] as const).map((v) => (
+                <button key={v} type="button" aria-pressed={view === v} onClick={() => setView(v)}>
+                  {v === "phone" ? copy.viewPhone : copy.viewDesktop}
+                </button>
+              ))}
+            </fieldset>
+            <button
+              type="button"
+              className="demo__reset"
+              onClick={reset}
+              aria-label={copy.resetLabel}
+            >
+              {copy.reset}
+            </button>
+          </div>
+        ) : null}
+        <div className="demo__device" data-view={view} data-tour="phone">
+          {view === "phone" ? (
+            <div className="demo__status" aria-hidden="true">
+              <span className="demo__time">9:41</span>
+              <span className="demo__island" />
+              <span className="demo__sys">
+                <svg viewBox="0 0 18 12" width="18" height="12">
+                  <rect x="0" y="8" width="3" height="4" rx="1" />
+                  <rect x="5" y="6" width="3" height="6" rx="1" />
+                  <rect x="10" y="3" width="3" height="9" rx="1" />
+                  <rect x="15" y="0" width="3" height="12" rx="1" />
+                </svg>
+                <svg viewBox="0 0 16 12" width="16" height="12">
+                  <path d="M8 11.5l2.4-3a3.6 3.6 0 00-4.8 0zM3.2 6.4a7 7 0 019.6 0l1.4-1.6a9.2 9.2 0 00-12.4 0zM.4 3.3a11.4 11.4 0 0115.2 0L16 2.9 14.6 1.5a13.6 13.6 0 00-13.2 0L0 2.9z" />
+                </svg>
+                <span className="demo__battery">
+                  <span />
+                </span>
+              </span>
+            </div>
+          ) : (
+            <div className="demo__chrome" aria-hidden="true">
+              <span className="demo__lights">
+                <i />
+                <i />
+                <i />
+              </span>
+              <span className="demo__url">kaksha.quartifex.com/app</span>
+            </div>
+          )}
+          <div className="demo__screen" ref={screen}>
             {near ? (
-              <iframe ref={frame} src={src} title={copy.frame} tabIndex={pinned ? 0 : -1} />
+              <iframe
+                ref={frame}
+                src={src}
+                title={copy.frame}
+                tabIndex={pinned ? 0 : -1}
+                style={
+                  view === "desktop"
+                    ? {
+                        width: 1280,
+                        height: `${100 / scale}%`,
+                        transform: `scale(${scale})`,
+                        transformOrigin: "0 0",
+                      }
+                    : undefined
+                }
+              />
             ) : (
               <div className="demo__placeholder" aria-hidden="true" />
             )}
@@ -230,11 +311,16 @@ export function Demo({ copy, locale }: { copy: Copy["demo"]; locale: "en" | "hi"
                 <span className="demo__tapcard">
                   <svg viewBox="0 0 24 24" aria-hidden="true">
                     <path
-                      d="M8 3h8a1 1 0 011 1v16a1 1 0 01-1 1H8a1 1 0 01-1-1V4a1 1 0 011-1zM11 18h2"
+                      d={
+                        view === "phone"
+                          ? "M8 3h8a1 1 0 011 1v16a1 1 0 01-1 1H8a1 1 0 01-1-1V4a1 1 0 011-1zM11 18h2"
+                          : "M3 5h18v11H3zM8 20h8M12 16v4"
+                      }
                       fill="none"
                       stroke="currentColor"
                       strokeWidth="2"
                       strokeLinecap="round"
+                      strokeLinejoin="round"
                     />
                   </svg>
                   <strong>{copy.tap}</strong>
@@ -248,7 +334,7 @@ export function Demo({ copy, locale }: { copy: Copy["demo"]; locale: "en" | "hi"
           <div className="demo__bar" data-tour="bar">
             <span className="demo__live">
               <i aria-hidden="true" />
-              {copy.using}
+              <span className="demo__live-text">{copy.label}</span>
             </span>
             <button type="button" onClick={reset} aria-label={copy.resetLabel}>
               {copy.reset}

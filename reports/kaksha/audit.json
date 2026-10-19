@@ -1,5 +1,5 @@
 {
-  "date": "2026-10-18T17:37:09.838Z",
+  "date": "2026-10-19T12:14:05.467Z",
   "environment": "local machine",
   "tags": [
     "wcag2a",
@@ -113,12 +113,12 @@
     {
       "name": "app en today 360px",
       "violations": [],
-      "passes": 23
+      "passes": 28
     },
     {
       "name": "app en today 1280px",
       "violations": [],
-      "passes": 23
+      "passes": 30
     },
     {
       "name": "app en classes 360px",
@@ -128,7 +128,7 @@
     {
       "name": "app en classes 1280px",
       "violations": [],
-      "passes": 22
+      "passes": 24
     },
     {
       "name": "app en insights 360px",
@@ -138,7 +138,7 @@
     {
       "name": "app en insights 1280px",
       "violations": [],
-      "passes": 25
+      "passes": 27
     },
     {
       "name": "app en more 360px",
@@ -148,27 +148,27 @@
     {
       "name": "app en more 1280px",
       "violations": [],
-      "passes": 23
+      "passes": 25
     },
     {
       "name": "app en backup 360px",
       "violations": [],
-      "passes": 19
+      "passes": 20
     },
     {
       "name": "app en backup 1280px",
       "violations": [],
-      "passes": 19
+      "passes": 21
     },
     {
       "name": "app en display 360px",
       "violations": [],
-      "passes": 21
+      "passes": 22
     },
     {
       "name": "app en display 1280px",
       "violations": [],
-      "passes": 21
+      "passes": 23
     },
     {
       "name": "app en welcome 360px",
@@ -203,212 +203,212 @@
     {
       "name": "app en questions 360px",
       "violations": [],
-      "passes": 24
+      "passes": 25
     },
     {
       "name": "app en questions 1280px",
       "violations": [],
-      "passes": 23
+      "passes": 25
     },
     {
       "name": "app en one question 360px",
       "violations": [],
-      "passes": 21
+      "passes": 22
     },
     {
       "name": "app en one question 1280px",
       "violations": [],
-      "passes": 21
+      "passes": 23
     },
     {
       "name": "app en skills 360px",
       "violations": [],
-      "passes": 24
+      "passes": 25
     },
     {
       "name": "app en skills 1280px",
       "violations": [],
-      "passes": 23
+      "passes": 25
     },
     {
       "name": "app en groups 360px",
       "violations": [],
-      "passes": 25
+      "passes": 26
     },
     {
       "name": "app en groups 1280px",
       "violations": [],
-      "passes": 24
+      "passes": 26
     },
     {
       "name": "app en notes 360px",
       "violations": [],
-      "passes": 23
+      "passes": 24
     },
     {
       "name": "app en notes 1280px",
       "violations": [],
-      "passes": 23
+      "passes": 25
     },
     {
       "name": "app en reports 360px",
       "violations": [],
-      "passes": 20
+      "passes": 21
     },
     {
       "name": "app en reports 1280px",
       "violations": [],
-      "passes": 20
+      "passes": 22
     },
     {
       "name": "app en all cards 360px",
       "violations": [],
-      "passes": 27
+      "passes": 28
     },
     {
       "name": "app en all cards 1280px",
       "violations": [],
-      "passes": 26
+      "passes": 28
     },
     {
       "name": "app en class tests 360px",
       "violations": [],
-      "passes": 24
+      "passes": 25
     },
     {
       "name": "app en class tests 1280px",
       "violations": [],
-      "passes": 24
+      "passes": 26
     },
     {
       "name": "app en class students 360px",
       "violations": [],
-      "passes": 25
+      "passes": 26
     },
     {
       "name": "app en class students 1280px",
       "violations": [],
-      "passes": 25
+      "passes": 27
     },
     {
       "name": "app en class progress 360px",
       "violations": [],
-      "passes": 25
+      "passes": 26
     },
     {
       "name": "app en class progress 1280px",
       "violations": [],
-      "passes": 25
+      "passes": 27
     },
     {
       "name": "app en roster 360px",
       "violations": [],
-      "passes": 25
+      "passes": 26
     },
     {
       "name": "app en roster 1280px",
       "violations": [],
-      "passes": 25
+      "passes": 27
     },
     {
       "name": "app en new test 360px",
       "violations": [],
-      "passes": 23
+      "passes": 24
     },
     {
       "name": "app en new test 1280px",
       "violations": [],
-      "passes": 23
+      "passes": 25
     },
     {
       "name": "app en mark (key) 360px",
       "violations": [],
-      "passes": 21
+      "passes": 22
     },
     {
       "name": "app en mark (key) 1280px",
       "violations": [],
-      "passes": 21
+      "passes": 23
     },
     {
       "name": "app en mark (rubric) 360px",
       "violations": [],
-      "passes": 22
+      "passes": 23
     },
     {
       "name": "app en mark (rubric) 1280px",
       "violations": [],
-      "passes": 22
+      "passes": 24
     },
     {
       "name": "app en grid 360px",
       "violations": [],
-      "passes": 22
+      "passes": 23
     },
     {
       "name": "app en grid 1280px",
       "violations": [],
-      "passes": 22
+      "passes": 24
     },
     {
       "name": "app en results 360px",
       "violations": [],
-      "passes": 24
+      "passes": 25
     },
     {
       "name": "app en results 1280px",
       "violations": [],
-      "passes": 23
+      "passes": 25
     },
     {
       "name": "app en class summary 360px",
       "violations": [],
-      "passes": 22
+      "passes": 23
     },
     {
       "name": "app en class summary 1280px",
       "violations": [],
-      "passes": 21
+      "passes": 23
     },
     {
       "name": "app en student 360px",
       "violations": [],
-      "passes": 25
+      "passes": 26
     },
     {
       "name": "app en student 1280px",
       "violations": [],
-      "passes": 25
+      "passes": 27
     },
     {
       "name": "app en report card 360px",
       "violations": [],
-      "passes": 27
+      "passes": 28
     },
     {
       "name": "app en report card 1280px",
       "violations": [],
-      "passes": 26
+      "passes": 28
     },
     {
       "name": "app en new class 360px",
       "violations": [],
-      "passes": 23
+      "passes": 24
     },
     {
       "name": "app en new class 1280px",
       "violations": [],
-      "passes": 23
+      "passes": 25
     },
     {
       "name": "app hi today 360px",
       "violations": [],
-      "passes": 23
+      "passes": 28
     },
     {
       "name": "app hi today 1280px",
       "violations": [],
-      "passes": 23
+      "passes": 30
     },
     {
       "name": "app hi classes 360px",
@@ -418,7 +418,7 @@
     {
       "name": "app hi classes 1280px",
       "violations": [],
-      "passes": 22
+      "passes": 24
     },
     {
       "name": "app hi insights 360px",
@@ -428,7 +428,7 @@
     {
       "name": "app hi insights 1280px",
       "violations": [],
-      "passes": 25
+      "passes": 27
     },
     {
       "name": "app hi more 360px",
@@ -438,27 +438,27 @@
     {
       "name": "app hi more 1280px",
       "violations": [],
-      "passes": 23
+      "passes": 25
     },
     {
       "name": "app hi backup 360px",
       "violations": [],
-      "passes": 19
+      "passes": 20
     },
     {
       "name": "app hi backup 1280px",
       "violations": [],
-      "passes": 19
+      "passes": 21
     },
     {
       "name": "app hi display 360px",
       "violations": [],
-      "passes": 21
+      "passes": 22
     },
     {
       "name": "app hi display 1280px",
       "violations": [],
-      "passes": 21
+      "passes": 23
     },
     {
       "name": "app hi welcome 360px",
@@ -493,202 +493,202 @@
     {
       "name": "app hi questions 360px",
       "violations": [],
-      "passes": 23
+      "passes": 24
     },
     {
       "name": "app hi questions 1280px",
       "violations": [],
-      "passes": 23
+      "passes": 25
     },
     {
       "name": "app hi one question 360px",
       "violations": [],
-      "passes": 21
+      "passes": 22
     },
     {
       "name": "app hi one question 1280px",
       "violations": [],
-      "passes": 21
+      "passes": 23
     },
     {
       "name": "app hi skills 360px",
       "violations": [],
-      "passes": 23
+      "passes": 24
     },
     {
       "name": "app hi skills 1280px",
       "violations": [],
-      "passes": 23
+      "passes": 25
     },
     {
       "name": "app hi groups 360px",
       "violations": [],
-      "passes": 24
+      "passes": 25
     },
     {
       "name": "app hi groups 1280px",
       "violations": [],
-      "passes": 24
+      "passes": 26
     },
     {
       "name": "app hi notes 360px",
       "violations": [],
-      "passes": 23
+      "passes": 24
     },
     {
       "name": "app hi notes 1280px",
       "violations": [],
-      "passes": 23
+      "passes": 25
     },
     {
       "name": "app hi reports 360px",
       "violations": [],
-      "passes": 20
+      "passes": 21
     },
     {
       "name": "app hi reports 1280px",
       "violations": [],
-      "passes": 20
+      "passes": 22
     },
     {
       "name": "app hi all cards 360px",
       "violations": [],
-      "passes": 27
+      "passes": 28
     },
     {
       "name": "app hi all cards 1280px",
       "violations": [],
-      "passes": 26
+      "passes": 28
     },
     {
       "name": "app hi class tests 360px",
       "violations": [],
-      "passes": 24
+      "passes": 25
     },
     {
       "name": "app hi class tests 1280px",
       "violations": [],
-      "passes": 24
+      "passes": 26
     },
     {
       "name": "app hi class students 360px",
       "violations": [],
-      "passes": 25
+      "passes": 26
     },
     {
       "name": "app hi class students 1280px",
       "violations": [],
-      "passes": 25
+      "passes": 27
     },
     {
       "name": "app hi class progress 360px",
       "violations": [],
-      "passes": 25
+      "passes": 26
     },
     {
       "name": "app hi class progress 1280px",
       "violations": [],
-      "passes": 25
+      "passes": 27
     },
     {
       "name": "app hi roster 360px",
       "violations": [],
-      "passes": 25
+      "passes": 26
     },
     {
       "name": "app hi roster 1280px",
       "violations": [],
-      "passes": 25
+      "passes": 27
     },
     {
       "name": "app hi new test 360px",
       "violations": [],
-      "passes": 23
+      "passes": 24
     },
     {
       "name": "app hi new test 1280px",
       "violations": [],
-      "passes": 23
+      "passes": 25
     },
     {
       "name": "app hi mark (key) 360px",
       "violations": [],
-      "passes": 21
+      "passes": 22
     },
     {
       "name": "app hi mark (key) 1280px",
       "violations": [],
-      "passes": 21
+      "passes": 23
     },
     {
       "name": "app hi mark (rubric) 360px",
       "violations": [],
-      "passes": 22
+      "passes": 23
     },
     {
       "name": "app hi mark (rubric) 1280px",
       "violations": [],
-      "passes": 22
+      "passes": 24
     },
     {
       "name": "app hi grid 360px",
       "violations": [],
-      "passes": 22
+      "passes": 23
     },
     {
       "name": "app hi grid 1280px",
       "violations": [],
-      "passes": 22
+      "passes": 24
     },
     {
       "name": "app hi results 360px",
       "violations": [],
-      "passes": 23
+      "passes": 24
     },
     {
       "name": "app hi results 1280px",
       "violations": [],
-      "passes": 23
+      "passes": 25
     },
     {
       "name": "app hi class summary 360px",
       "violations": [],
-      "passes": 22
+      "passes": 23
     },
     {
       "name": "app hi class summary 1280px",
       "violations": [],
-      "passes": 21
+      "passes": 23
     },
     {
       "name": "app hi student 360px",
       "violations": [],
-      "passes": 25
+      "passes": 26
     },
     {
       "name": "app hi student 1280px",
       "violations": [],
-      "passes": 25
+      "passes": 27
     },
     {
       "name": "app hi report card 360px",
       "violations": [],
-      "passes": 27
+      "passes": 28
     },
     {
       "name": "app hi report card 1280px",
       "violations": [],
-      "passes": 26
+      "passes": 28
     },
     {
       "name": "app hi new class 360px",
       "violations": [],
-      "passes": 23
+      "passes": 24
     },
     {
       "name": "app hi new class 1280px",
       "violations": [],
-      "passes": 23
+      "passes": 25
     }
   ],
   "lighthouse": {}

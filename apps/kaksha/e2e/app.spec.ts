@@ -18,7 +18,7 @@ async function addClass(page: Page) {
   await page.goto("/app#/new-class");
   await page.getByLabel("School name").fill("Imli Chowk Primary School (invented)");
   await page.getByLabel("Class or grade").fill("4");
-  await page.getByLabel("Section").fill("B");
+  await page.getByLabel("Section", { exact: true }).fill("B");
   await page.getByRole("button", { name: "Next: add students" }).click();
   await expect(page.getByRole("heading", { name: "Add a list of students" })).toBeVisible();
 }

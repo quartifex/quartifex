@@ -50,7 +50,7 @@ export function DeskBar() {
           aria-label={t("desk.search")}
           placeholder={t("desk.search")}
           value={q}
-          aria-controls={id}
+          aria-controls={open && hits?.length ? id : undefined}
           onFocus={() => setOpen(true)}
           onBlur={() => setTimeout(() => setOpen(false), 150)}
           onChange={(e) => {
