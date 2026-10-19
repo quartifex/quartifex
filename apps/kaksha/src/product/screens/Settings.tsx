@@ -23,7 +23,7 @@ import { type TextSize, type Theme, useApp } from "../context";
 import { useOverview, useProfile } from "../data";
 import { shareOrSave } from "../files";
 import { hasPin, setPin } from "../PinGate";
-import { ChoiceRow, Icon, type IconName, PageHead, Sheet, TabBar, TopBar } from "../ui";
+import { ChoiceRow, Icon, type IconName, PageHead, Sheet, TopBar } from "../ui";
 import { lastBackup } from "./Home";
 
 const PAGES = ["backup", "pin", "display", "data", "profile"] as const;
@@ -136,74 +136,71 @@ function MoreHub() {
   ];
 
   return (
-    <>
-      <main className="k-main k-main--tabbed">
-        <PageHead title={t("tab.more")} />
-        <button type="button" className="profile card" onClick={() => go("/more/profile")}>
-          <span className="profile__avatar" aria-hidden="true">
-            {initials ?? <Icon name="user" />}
-          </span>
-          <span className="row-link__body">
-            <span className="row-link__title">{name || t("more.addName")}</span>
-            <span className="row-link__meta">{school ?? t("more.profileSub")}</span>
-          </span>
-          <span className="chev">
-            <Icon name="chev" />
-          </span>
-        </button>
-        <section className="card card--ink phonecard" aria-labelledby="phone-h">
-          <h2 id="phone-h" className="k-kicker">
-            {t("more.onPhone")}
-          </h2>
-          <p>
-            {t("more.counts", { classes, students, tests })}
-            {" · "}
-            {days === null ? t("today.neverBackedUp") : t("more.lastBackup", { n: days })}
-          </p>
-        </section>
-        <ul className="list card card--flush">
-          {rows.map((r) => (
-            <li key={r.key}>
-              {r.href ? (
-                <a className="row-link row-link--flat" href={r.href}>
-                  <span className="icon-tile">
-                    <Icon name={r.icon} />
-                  </span>
-                  <span className="row-link__body">
-                    <span className="row-link__title">{r.title}</span>
-                    <span className="row-link__meta">{r.sub}</span>
-                  </span>
-                  <span className="chev">
-                    <Icon name="chev" />
-                  </span>
-                </a>
-              ) : (
-                <button
-                  type="button"
-                  className="row-link row-link--flat"
-                  onClick={() => r.to && go(r.to)}
-                >
-                  <span className="icon-tile">
-                    <Icon name={r.icon} />
-                  </span>
-                  <span className="row-link__body">
-                    <span className="row-link__title">{r.title}</span>
-                    <span className="row-link__meta">{r.sub}</span>
-                  </span>
-                  <span className="chev">
-                    <Icon name="chev" />
-                  </span>
-                </button>
-              )}
-            </li>
-          ))}
-        </ul>
-        <p className="small muted center num">
-          {PRODUCT_NAME} {APP_VERSION}
+    <main className="k-main k-main--tabbed">
+      <PageHead title={t("tab.more")} />
+      <button type="button" className="profile card" onClick={() => go("/more/profile")}>
+        <span className="profile__avatar" aria-hidden="true">
+          {initials ?? <Icon name="user" />}
+        </span>
+        <span className="row-link__body">
+          <span className="row-link__title">{name || t("more.addName")}</span>
+          <span className="row-link__meta">{school ?? t("more.profileSub")}</span>
+        </span>
+        <span className="chev">
+          <Icon name="chev" />
+        </span>
+      </button>
+      <section className="card card--ink phonecard" aria-labelledby="phone-h">
+        <h2 id="phone-h" className="k-kicker">
+          {t("more.onPhone")}
+        </h2>
+        <p>
+          {t("more.counts", { classes, students, tests })}
+          {" · "}
+          {days === null ? t("today.neverBackedUp") : t("more.lastBackup", { n: days })}
         </p>
-      </main>
-      <TabBar />
-    </>
+      </section>
+      <ul className="list card card--flush">
+        {rows.map((r) => (
+          <li key={r.key}>
+            {r.href ? (
+              <a className="row-link row-link--flat" href={r.href}>
+                <span className="icon-tile">
+                  <Icon name={r.icon} />
+                </span>
+                <span className="row-link__body">
+                  <span className="row-link__title">{r.title}</span>
+                  <span className="row-link__meta">{r.sub}</span>
+                </span>
+                <span className="chev">
+                  <Icon name="chev" />
+                </span>
+              </a>
+            ) : (
+              <button
+                type="button"
+                className="row-link row-link--flat"
+                onClick={() => r.to && go(r.to)}
+              >
+                <span className="icon-tile">
+                  <Icon name={r.icon} />
+                </span>
+                <span className="row-link__body">
+                  <span className="row-link__title">{r.title}</span>
+                  <span className="row-link__meta">{r.sub}</span>
+                </span>
+                <span className="chev">
+                  <Icon name="chev" />
+                </span>
+              </button>
+            )}
+          </li>
+        ))}
+      </ul>
+      <p className="small muted center num">
+        {PRODUCT_NAME} {APP_VERSION}
+      </p>
+    </main>
   );
 }
 

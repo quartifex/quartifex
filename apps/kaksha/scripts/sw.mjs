@@ -33,7 +33,8 @@ const publicFiles = [
 ];
 for (const f of publicFiles) {
   // The app uses the display face for Latin headings only; Devanagari headings use Mukta.
-  if (f.includes("tiro-devanagari-hindi-devanagari")) continue;
+  // The site's bold Devanagari headings are not used inside the app.
+  if (f.includes("mukta-devanagari-700")) continue;
   entries.push({ url: `/${f}`, revision: hash(readFileSync(path.join(pub, f))) });
 }
 

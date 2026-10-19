@@ -34,7 +34,10 @@ test.describe("the site", () => {
     await page.goto("/#demo");
     const frame = page.frameLocator('iframe[title="The demo app"]');
     await expect(frame.getByText(/Demo · invented school/)).toBeVisible({ timeout: 20_000 });
-    await page.getByRole("button", { name: /Read the class view/ }).first().click();
+    await page
+      .getByRole("button", { name: /Read the class view/ })
+      .first()
+      .click();
     // The first time, a short tour explains the pinned phone.
     await expect(page.getByRole("dialog", { name: "This is the real app" })).toBeVisible();
     await page.getByRole("button", { name: "Skip" }).click();
@@ -42,7 +45,10 @@ test.describe("the site", () => {
     // The finished task ticks itself off beside the phone.
     await expect(page.locator(".demo__side li[data-state='done']")).toHaveCount(1);
     await page.getByRole("button", { name: "Done Esc" }).click();
-    await page.getByRole("button", { name: /Print a report card/ }).first().click();
+    await page
+      .getByRole("button", { name: /Print a report card/ })
+      .first()
+      .click();
     await expect(frame.getByRole("button", { name: "Print or save as PDF" })).toBeVisible();
   });
 

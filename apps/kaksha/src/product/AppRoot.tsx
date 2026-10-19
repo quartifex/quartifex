@@ -2,9 +2,10 @@
 import { lazy, Suspense, useEffect, useState } from "react";
 import { db, getSetting, isDemo } from "../lib/db";
 import { AppProvider, useApp } from "./context";
+import { DeskBar } from "./DeskBar";
 import { PinGate } from "./PinGate";
 import { Home } from "./screens/Home";
-import { Icon } from "./ui";
+import { Icon, TabBar } from "./ui";
 
 const ClassScreen = lazy(() => import("./screens/ClassScreen"));
 const NewClass = lazy(() => import("./screens/NewClass"));
@@ -70,9 +71,15 @@ function FirstRun() {
   return null;
 }
 
+/** Inside the product page's device frame the page shows the demo label itself. */
+function isEmbedded(): boolean {
+  if (typeof location === "undefined") return false;
+  return new URLSearchParams(location.search).get("embed") === "1";
+}
+
 function DemoBanner() {
   const { t } = useApp();
-  if (!isDemo()) return null;
+  if (!isDemo() || isEmbedded()) return null;
   return (
     <div className="k-demo" role="note">
       <span>{t("demo.banner")}</span>
@@ -100,7 +107,10 @@ function Loading() {
 
 function Shell() {
   const [ready, setReady] = useState(!isDemo());
-  const { locale } = useApp();
+  const { locale, route } = useApp();
+  const head = route[0] ?? "";
+  const onb = head === "welcome";
+  const top = ["", "today", "classes", "insights"].includes(head) || (head === "more" && !route[1]);
 
   useEffect(() => {
     if (!isDemo()) return;
@@ -128,14 +138,20 @@ function Shell() {
   }, []);
 
   return (
-    <div className="k-app">
+    <div className="k-app" data-top={top} data-onb={onb}>
       <DemoBanner />
       {ready ? (
         <PinGate>
           <FirstRun />
-          <Suspense fallback={<Loading />}>
-            <Screens />
-          </Suspense>
+          <div className="k-frame">
+            {onb ? null : <TabBar />}
+            <div className="k-stage">
+              {top ? <DeskBar /> : null}
+              <Suspense fallback={<Loading />}>
+                <Screens />
+              </Suspense>
+            </div>
+          </div>
         </PinGate>
       ) : (
         <Loading />

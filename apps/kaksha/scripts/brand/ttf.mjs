@@ -1,19 +1,23 @@
-// Unpacks the Mukta Bold woff2 files into scripts/brand/ttf for the generator.
+// Unpacks the woff2 files the wordmark needs into scripts/brand/ttf for the generator:
+// Barlow Condensed Bold for "kaksha", Mukta Bold for कक्षा (both SIL OFL 1.1).
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { decompress } from "wawoff2";
 
 const out = path.join(import.meta.dirname, "ttf");
 mkdirSync(out, { recursive: true });
-for (const subset of ["latin", "devanagari"]) {
-  const file = `mukta-${subset}-700-normal`;
+const files = [
+  ["barlow-condensed", "barlow-condensed-latin-700-normal"],
+  ["mukta", "mukta-devanagari-700-normal"],
+];
+for (const [pkg, file] of files) {
   const src = path.join(
     import.meta.dirname,
     "..",
     "..",
     "node_modules",
     "@fontsource",
-    "mukta",
+    pkg,
     "files",
     `${file}.woff2`,
   );

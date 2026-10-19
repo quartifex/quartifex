@@ -4,7 +4,7 @@
 import { type FormEvent, type ReactNode, useEffect, useState } from "react";
 import { db } from "../lib/db";
 import { useApp } from "./context";
-import { Tikki } from "./ui";
+import { Mark } from "./ui";
 
 const UNLOCKED = "kaksha-unlocked";
 
@@ -84,7 +84,7 @@ export function PinGate({ children }: { children: ReactNode }) {
   return (
     <main className="lock">
       <form className="lock__box" onSubmit={submit}>
-        <Tikki size={88} mood="calm" />
+        <Mark size={88} />
         <h1>{t("pin.title")}</h1>
         <label className="field" style={{ width: "100%" }}>
           <span className="label">{t("pin.enter")}</span>

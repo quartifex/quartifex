@@ -10,7 +10,7 @@ import { newId } from "../../lib/model";
 import { useApp } from "../context";
 import { useInstall } from "../install";
 import { setPin } from "../PinGate";
-import { ChoiceRow, Icon, Tikki, Toggle } from "../ui";
+import { ChoiceRow, Icon, Mark, Toggle } from "../ui";
 import { currentYear } from "./NewClass";
 
 type Reminder = "week" | "fortnight" | "month" | "never";
@@ -148,7 +148,7 @@ export default function Onboarding({ step }: { step: number }) {
       {step === 0 ? (
         <>
           <div className="onb__body">
-            <Tikki size={72} />
+            <Mark size={72} />
             <h1 className="onb__hello">
               <span lang="hi">नमस्ते!</span>
               <span lang="en">Hello!</span>
@@ -582,7 +582,7 @@ export default function Onboarding({ step }: { step: number }) {
       {step === 8 ? (
         <>
           <div className="onb__body">
-            <Tikki size={72} />
+            <Mark size={72} />
             <h1>{t("onb.ready.title", { cls: classLabel })}</h1>
             <dl className="summary card">
               <div>
@@ -651,7 +651,7 @@ function Restart({ onGo }: { onGo: () => void }) {
   return (
     <main className="onb">
       <div className="onb__body">
-        <Tikki size={72} mood="calm" />
+        <Mark size={72} />
         <h1>{t("onb.restart")}</h1>
         <button type="button" className="btn btn--primary" onClick={onGo}>
           {t("onb.continue")}
@@ -801,7 +801,7 @@ function ArtPhone({
 }) {
   return (
     <div className="art card art--row">
-      <Tikki size={56} mood="calm" />
+      <Mark size={56} />
       <ul>
         {items.map((x) => (
           <li key={x.icon}>

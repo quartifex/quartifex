@@ -14,18 +14,16 @@ const req = (p) => path.join(app, "node_modules", p);
 // 1. Fonts. Only the weights the app and site use.
 const FONTS = [
   [
-    "@fontsource/mukta/files",
-    [
-      "mukta-latin-400-normal",
-      "mukta-latin-600-normal",
-      "mukta-devanagari-400-normal",
-      "mukta-devanagari-600-normal",
-    ],
+    "@fontsource/inter/files",
+    ["inter-latin-400-normal", "inter-latin-500-normal", "inter-latin-600-normal"],
   ],
-  ["@fontsource/ibm-plex-mono/files", ["ibm-plex-mono-latin-500-normal"]],
   [
-    "@fontsource/tiro-devanagari-hindi/files",
-    ["tiro-devanagari-hindi-latin-400-normal", "tiro-devanagari-hindi-devanagari-400-normal"],
+    "@fontsource/barlow-condensed/files",
+    ["barlow-condensed-latin-600-normal", "barlow-condensed-latin-700-normal"],
+  ],
+  [
+    "@fontsource/mukta/files",
+    ["mukta-devanagari-400-normal", "mukta-devanagari-600-normal", "mukta-devanagari-700-normal"],
   ],
 ];
 mkdirSync(path.join(pub, "fonts"), { recursive: true });

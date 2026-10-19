@@ -30,7 +30,7 @@ import { attendanceRate, percent, studentDomains, studentResult } from "../../li
 import { useApp } from "../context";
 import { useAssessments, useClass, useClassRecords, useNotes, useStudents } from "../data";
 import { demoStep } from "../demoBridge";
-import { Empty, Icon, Tikki, Toggle, TopBar } from "../ui";
+import { Empty, Icon, Mark, Toggle, TopBar } from "../ui";
 import { useSummary } from "./Results";
 import { useStudentView } from "./StudentScreen";
 
@@ -163,7 +163,7 @@ function ReportCard({
           </p>
           <h1>{t("report.cardTitle")}</h1>
         </div>
-        <Tikki size={44} />
+        <Mark size={44} />
       </div>
       <div className="meta">
         <span>
@@ -421,7 +421,7 @@ function ClassReport({ assessmentId }: { assessmentId: string }) {
                 {a.subject} · <span className="num">{formatDate(a.date)}</span>
               </p>
             </div>
-            <Tikki size={44} />
+            <Mark size={44} />
           </div>
           <div className="meta">
             <span>
