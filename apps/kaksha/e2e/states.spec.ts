@@ -149,6 +149,16 @@ test.describe("states and failure drills", () => {
     expect(await demoCount(page, "responses")).toBe(marks);
   });
 
+  test("an old link to something deleted explains itself and leads back to Today", async ({
+    page,
+  }) => {
+    await page.goto("/app?demo=1#/test/no-such-test");
+    await expect(page.getByText("We could not find that on this phone.")).toBeVisible();
+    await expect(page.getByText("It may have been deleted")).toBeVisible();
+    await page.getByRole("button", { name: "Go to Today" }).click();
+    await expect(page).toHaveURL(/#\/$/);
+  });
+
   test("Keep it leaves the class untouched; deleting a class can be undone", async ({ page }) => {
     await page.goto("/app?demo=1#/class/demo-class-5a");
     await expect(page.getByRole("button", { name: "Delete this class" })).toBeVisible();
