@@ -6,7 +6,7 @@
 // takes the whole screen on a phone), and a bar offers Reset and Done. Esc, Done or
 // a click outside lets go. The first time, a short tour explains all this.
 import { type CSSProperties, useCallback, useEffect, useRef, useState } from "react";
-import type { Copy } from "./copy";
+import type { Copy, SiteLocale } from "./copy";
 
 type Step = "mark" | "results" | "report";
 const TOUR_KEY = "kaksha-demo-tour";
@@ -20,7 +20,7 @@ function readDone(): Step[] {
   }
 }
 
-export function Demo({ copy, locale }: { copy: Copy["demo"]; locale: "en" | "hi" }) {
+export function Demo({ copy, locale }: { copy: Copy["demo"]; locale: SiteLocale }) {
   const root = useRef<HTMLDivElement>(null);
   const frame = useRef<HTMLIFrameElement>(null);
   const tapRef = useRef<HTMLButtonElement>(null);
@@ -261,13 +261,13 @@ export function Demo({ copy, locale }: { copy: Copy["demo"]; locale: "en" | "hi"
               <span className="demo__time">9:41</span>
               <span className="demo__island" />
               <span className="demo__sys">
-                <svg viewBox="0 0 18 12" width="18" height="12">
+                <svg viewBox="0 0 18 12" width="18" height="12" aria-hidden="true">
                   <rect x="0" y="8" width="3" height="4" rx="1" />
                   <rect x="5" y="6" width="3" height="6" rx="1" />
                   <rect x="10" y="3" width="3" height="9" rx="1" />
                   <rect x="15" y="0" width="3" height="12" rx="1" />
                 </svg>
-                <svg viewBox="0 0 16 12" width="16" height="12">
+                <svg viewBox="0 0 16 12" width="16" height="12" aria-hidden="true">
                   <path d="M8 11.5l2.4-3a3.6 3.6 0 00-4.8 0zM3.2 6.4a7 7 0 019.6 0l1.4-1.6a9.2 9.2 0 00-12.4 0zM.4 3.3a11.4 11.4 0 0115.2 0L16 2.9 14.6 1.5a13.6 13.6 0 00-13.2 0L0 2.9z" />
                 </svg>
                 <span className="demo__battery">

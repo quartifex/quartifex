@@ -2,7 +2,7 @@
 // Accessibility and quality audit for kaksha. Starts the production build (build first),
 // runs axe-core (WCAG 2.0, 2.1 and 2.2, A and AA) on the site in English and Hindi, with
 // and without reduced motion, and on every app screen of the demo in both languages at
-// phone and desktop sizes; then Lighthouse (default mobile profile) on /, /hi and /app.
+// phone and desktop sizes; then Lighthouse (default mobile profile) on / and /app.
 // Writes reports/kaksha/audit.json and audit.md.
 //   --strict          exit 1 on any axe violation or a Lighthouse accessibility score under 100
 //   --no-lighthouse   axe only
@@ -115,7 +115,7 @@ const report = await withServer(3504, async (url) => {
     process.env.PW_CHANNEL ? { channel: process.env.PW_CHANNEL } : {},
   );
   const pages = [];
-  for (const route of ["/", "/hi", "/docs", "/docs/privacy", "/docs/templates"]) {
+  for (const route of ["/", "/docs", "/docs/privacy", "/docs/templates"]) {
     for (const reduced of [false, true]) {
       for (const [width, height] of [
         [1280, 800],
@@ -148,8 +148,7 @@ const report = await withServer(3504, async (url) => {
   await browser.close();
   const lighthouse = {};
   if (withLighthouse) {
-    for (const route of ["/", "/hi", "/app"])
-      lighthouse[route] = await lighthouseRun(`${url}${route}`);
+    for (const route of ["/", "/app"]) lighthouse[route] = await lighthouseRun(`${url}${route}`);
   }
   return {
     date: new Date().toISOString(),

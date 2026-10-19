@@ -53,7 +53,7 @@ function Glyph({ name }: { name: string }) {
 
 export function SitePage({ locale }: { locale: SiteLocale }) {
   const c = COPY[locale];
-  const appHref = locale === "hi" ? "/app?lang=hi" : "/app?lang=en";
+  const appHref = "/app";
   const kb = appKb();
   const topics = c.help.topics
     .map((slug) => DOCS.find((d) => d.slug === slug))

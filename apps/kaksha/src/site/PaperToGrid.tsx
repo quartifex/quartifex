@@ -5,11 +5,10 @@ import { createStillness } from "@quartifex/stillness";
 // Everything is DOM and CSS custom properties; GSAP only moves numbers. Under
 // reduced motion (and before the script loads) the three stages sit side by side.
 import { type CSSProperties, useEffect, useRef, useState } from "react";
-import type { Copy } from "./copy";
+import type { Copy, SiteLocale } from "./copy";
 
-const NAMES = {
+const NAMES: Record<SiteLocale, string[]> = {
   en: ["Asha", "Bunty", "Chinki", "Dabbu", "Golu", "Heera", "Jugnu", "Kiki"],
-  hi: ["आशा", "बंटी", "चिंकी", "डब्बू", "गोलू", "हीरा", "जुगनू", "किकी"],
 };
 const KEY = ["B", "A", "D", "C", "A", "B"];
 // 1 = right. Column totals 7, 5, 6, 2, 4, 3: question 4 is the one the class found hard.
@@ -159,7 +158,7 @@ function startSequence(el: HTMLElement, setStep: (n: number) => void): () => voi
   };
 }
 
-export function PaperToGrid({ copy, locale }: { copy: Copy["sheet"]; locale: "en" | "hi" }) {
+export function PaperToGrid({ copy, locale }: { copy: Copy["sheet"]; locale: SiteLocale }) {
   const root = useRef<HTMLDivElement>(null);
   const [step, setStep] = useState(0);
   const names = NAMES[locale];

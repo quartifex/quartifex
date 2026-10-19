@@ -57,11 +57,12 @@ for (const lang of ["en", "hi"] as const) {
   });
 
   test(`site in ${lang}: screenshots, and no clipped text`, async ({ page }) => {
+    test.skip(lang === "hi", "The product page is English only; the app keeps Hindi.");
     const problems: string[] = [];
     for (const width of [320, 360, 768, 1280]) {
       await page.setViewportSize({ width, height: 800 });
       await page.emulateMedia({ reducedMotion: "reduce" });
-      await page.goto(lang === "hi" ? "/hi" : "/");
+      await page.goto("/");
       for (const p of await clippedText(page)) problems.push(`${lang} site @${width}: ${p}`);
       if (width === 360 || width === 1280)
         await page.screenshot({

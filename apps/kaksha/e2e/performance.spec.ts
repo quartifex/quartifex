@@ -37,7 +37,7 @@ const vitals = () => {
 
 test.describe("site launch gate", () => {
   test.use(pixel);
-  for (const route of ["/", "/hi"]) {
+  for (const route of ["/"]) {
     test(`${route}: LCP under 2.5 s and CLS under 0.1 on a throttled mid-range phone`, async ({
       page,
     }) => {

@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 test.describe("the site", () => {
-  test("carries its honest label, the two actions and the language switch on the first screen", async ({
+  test("carries its honest label and the two actions on the first screen; /hi lands on it", async ({
     page,
   }) => {
     await page.goto("/");
@@ -9,19 +9,50 @@ test.describe("the site", () => {
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(
       "Mark a whole class in minutes.",
     );
-    for (const name of ["Open the app", "Try the demo below", "हिन्दी"]) {
+    for (const name of ["Open the app", "Try the demo below"]) {
       await expect(page.getByRole("link", { name, exact: true }).first()).toBeInViewport();
     }
-    await page.getByRole("link", { name: "हिन्दी" }).click();
-    await expect(page).toHaveURL(/\/hi$/);
-    await expect(page.locator("html")).toHaveAttribute("lang", "hi");
-    await expect(page.getByTestId("honest-label")).toContainText("मुफ़्त टूल");
+    // The product page is English only; old /hi links land here.
+    await expect(page.getByRole("link", { name: "हिन्दी" })).toHaveCount(0);
+    await page.goto("/hi");
+    await expect(page).toHaveURL(/\/$/);
+    await expect(page.locator("html")).toHaveAttribute("lang", "en");
+  });
+
+  test("hero phones are drawn in full at every width", async ({ page }) => {
+    for (const width of [320, 390, 768, 1024, 1280, 1440]) {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto("/");
+      const cut = await page.evaluate(() => {
+        const box = document.querySelector(".hero__phones")?.getBoundingClientRect();
+        const hero = document.querySelector(".hero")?.getBoundingClientRect();
+        if (!box || !hero) return ["no hero"];
+        return [...document.querySelectorAll<HTMLElement>(".hero__phones .pm")]
+          .filter((el) => getComputedStyle(el).display !== "none")
+          .map((el) => el.getBoundingClientRect())
+          .filter(
+            (r) =>
+              r.left < Math.min(box.left, 0) - 1 ||
+              r.right > Math.max(hero.right, box.right) + 1 ||
+              r.bottom > hero.bottom + 1 ||
+              r.top < hero.top - 1,
+          )
+          .map(
+            (r) =>
+              `${Math.round(r.left)},${Math.round(r.top)} ${Math.round(r.width)}x${Math.round(r.height)}`,
+          );
+      });
+      expect(cut, `@${width}`).toEqual([]);
+      expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
+        width,
+      );
+    }
   });
 
   test("makes no claims it cannot back: no TFI name, no testimonials, no compliance claim", async ({
     page,
   }) => {
-    for (const path of ["/", "/hi", "/docs", "/docs/privacy", "/docs/faq"]) {
+    for (const path of ["/", "/docs", "/docs/privacy", "/docs/faq"]) {
       await page.goto(path);
       const text = (await page.locator("body").innerText()).toLowerCase();
       expect(text).not.toContain("teach for india");

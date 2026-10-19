@@ -1,8 +1,8 @@
 "use client";
 import { type FormEvent, useState } from "react";
-import type { Copy } from "./copy";
+import type { Copy, SiteLocale } from "./copy";
 
-export function ContactForm({ copy, locale }: { copy: Copy["schools"]; locale: "en" | "hi" }) {
+export function ContactForm({ copy, locale }: { copy: Copy["schools"]; locale: SiteLocale }) {
   const [state, setState] = useState<"idle" | "sending" | "ok" | "fail" | "off">("idle");
   const f = copy.fields;
 

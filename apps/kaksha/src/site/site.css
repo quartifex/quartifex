@@ -299,8 +299,7 @@ img {
   display: flex;
   gap: 4px;
 }
-.top__nav a,
-.top__lang {
+.top__nav a {
   display: inline-flex;
   align-items: center;
   min-height: 44px;
@@ -311,13 +310,9 @@ img {
   font-size: 0.95rem;
   color: var(--ink-2);
 }
-.top__nav a:hover,
-.top__lang:hover {
+.top__nav a:hover {
   color: var(--ink);
   background: var(--paper-2);
-}
-.top__lang {
-  color: var(--ink);
 }
 .top__menu {
   display: none;
@@ -450,12 +445,17 @@ img {
 .ledger dd {
   margin: 0;
 }
+/* The phones set their own box: both are always drawn in full, never clipped.
+   --pw is one phone's width; the back phone sits 58% of a phone to the right. */
 .hero__phones {
+  --pw: clamp(240px, 22vw, 290px);
   position: relative;
-  height: clamp(520px, 52vw, 640px);
-  /* Clips the tilted back phone without making a scroll area. */
-  contain: paint;
-  padding: 0 0 24px;
+  width: calc(var(--pw) * 1.7);
+  height: calc(var(--pw) * 18.6 / 9 + 64px);
+  justify-self: center;
+}
+.hero__phones .pm {
+  --pw: inherit;
 }
 .hero__phones .pm--front {
   position: absolute;
@@ -465,8 +465,8 @@ img {
 }
 .hero__phones .pm--back {
   position: absolute;
-  right: 0;
-  top: 36px;
+  left: calc(var(--pw) * 0.58);
+  top: 44px;
   rotate: 4deg;
   opacity: 0.96;
 }
@@ -483,25 +483,24 @@ img {
     grid-template-columns: 1fr;
   }
   .hero__phones {
-    height: 560px;
-    max-width: 440px;
-    width: 100%;
-    margin: 0 auto;
+    --pw: min(270px, calc((100vw - 2 * var(--gutter)) / 1.7));
   }
 }
 @media (max-width: 480px) {
   .hero__phones {
-    height: 470px;
-  }
-  .hero__phones .pm {
-    --pw: min(300px, calc(100vw - 48px));
+    --pw: min(280px, calc(100vw - 2 * var(--gutter) - 16px));
+    width: var(--pw);
+    height: calc(var(--pw) * 18.6 / 9 + 8px);
   }
   .hero__phones .pm--back {
     display: none;
   }
-  .hero__phones .pm--front {
-    left: 50%;
-    translate: -50% 0;
+  .hero__stamp {
+    width: 60px;
+    height: 60px;
+    top: -18px;
+    right: -12px;
+    bottom: auto;
   }
   .ledger div {
     grid-template-columns: 110px 1fr;

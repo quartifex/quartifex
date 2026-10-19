@@ -18,7 +18,7 @@ export function Logo({ dark = false }: { dark?: boolean }) {
 /** `home` is "" on the product page itself, so section links stay in-page. */
 export function SiteHeader({ locale, home = "" }: { locale: SiteLocale; home?: string }) {
   const c = COPY[locale];
-  const appHref = locale === "hi" ? "/app?lang=hi" : "/app?lang=en";
+  const appHref = "/app";
   const links: Array<[string, string]> = [
     [`${home}#demo`, c.nav.demo],
     [`${home}#why`, c.nav.why],
@@ -33,7 +33,7 @@ export function SiteHeader({ locale, home = "" }: { locale: SiteLocale; home?: s
       </a>
       <header className="top">
         <div className="top__inner">
-          <a href={locale === "hi" ? "/hi" : "/"} className="top__brand">
+          <a href="/" className="top__brand">
             <Logo />
           </a>
           <nav aria-label={PRODUCT_NAME} className="top__nav">
@@ -43,14 +43,7 @@ export function SiteHeader({ locale, home = "" }: { locale: SiteLocale; home?: s
               </a>
             ))}
           </nav>
-          <a
-            className="top__lang"
-            href={c.langOther.href}
-            hrefLang={c.langOther.lang}
-            lang={c.langOther.lang}
-          >
-            {c.langOther.label}
-          </a>
+
           <a className="cta cta--sm" href={appHref}>
             {c.nav.open}
           </a>
@@ -83,7 +76,7 @@ export function SiteHeader({ locale, home = "" }: { locale: SiteLocale; home?: s
 export function SiteFooter({ locale, home = "" }: { locale: SiteLocale; home?: string }) {
   const c = COPY[locale];
   const f = c.footer;
-  const appHref = locale === "hi" ? "/app?lang=hi" : "/app?lang=en";
+  const appHref = "/app";
   return (
     <footer className="foot">
       <div className="foot__inner">

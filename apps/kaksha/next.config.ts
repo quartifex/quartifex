@@ -28,6 +28,10 @@ const config: NextConfig = {
   pageExtensions: ["ts", "tsx", "md", "mdx"],
   poweredByHeader: false,
   // /app is a static, code-split React bundle in public/app (scripts/build-app.mjs).
+  // The product page is English only; the app keeps Hindi. Old /hi links land on /.
+  async redirects() {
+    return [{ source: "/hi", destination: "/", permanent: true }];
+  },
   async rewrites() {
     return [
       { source: "/app", destination: "/app/index.html" },
