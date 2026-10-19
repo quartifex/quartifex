@@ -92,8 +92,8 @@ Try again, Go to Today, Report a problem. Details for support are folded away. N
 playful art on this card.
 
 **Report a problem** (`/more/problem`). The escalation route from every failure. Says
-reports are public and must not include students' names or marks; gives the app and
-browser version to copy; opens a pre-filled GitHub issue.
+reports must not include students' names or marks; gives the app and browser version to
+copy; opens an email to support@quartifex.com with the version filled in.
 
 **Update ready** (`UpdateBanner`). "A new version is ready. It opens next time, or now."
 [Update now]. Never reloads by itself, so marking in progress is not interrupted.

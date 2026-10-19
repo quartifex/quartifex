@@ -1,6 +1,6 @@
 "use client";
 import { type FormEvent, useEffect, useState } from "react";
-import { APP_VERSION, ISSUES_URL, PRODUCT_NAME, REPO_URL } from "../../config";
+import { APP_VERSION, PRODUCT_NAME, REPO_URL, SUPPORT_EMAIL } from "../../config";
 import { formatNumber, LOCALES, type Locale } from "../../i18n";
 import {
   type BackupError,
@@ -312,7 +312,7 @@ function Problem() {
   const [copied, setCopied] = useState(false);
   const info = `${PRODUCT_NAME} ${APP_VERSION} · ${typeof navigator === "undefined" ? "" : navigator.userAgent}`;
   const body = `${t("problem.template")}\n\n---\n${info}`;
-  const href = `${ISSUES_URL}?title=${encodeURIComponent(`${PRODUCT_NAME}: `)}&body=${encodeURIComponent(body)}`;
+  const href = `mailto:${SUPPORT_EMAIL}?subject=${encodeURIComponent(`${PRODUCT_NAME}: problem`)}&body=${encodeURIComponent(body)}`;
   return (
     <section className="card stack" aria-labelledby="problem-h">
       <h2 id="problem-h">{t("problem.heading")}</h2>
@@ -338,7 +338,7 @@ function Problem() {
         </button>
       </div>
       <div className="cluster">
-        <a className="btn btn--primary" href={href} target="_blank" rel="noopener">
+        <a className="btn btn--primary" href={href}>
           <Icon name="lifebuoy" />
           {t("problem.open")}
         </a>

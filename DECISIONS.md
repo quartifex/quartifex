@@ -167,3 +167,8 @@ Dated, one line each. Newest at the bottom. If a decision contradicts a rule in 
 - 2026-10-19: One word per concept in the app: student / विद्यार्थी, test / टेस्ट, report card / प्रगति पत्र. Percentages are whole numbers everywhere; full dates are DD/MM/YYYY.
 - 2026-10-19: Report a problem opens a pre-filled public GitHub issue with the app version and no student data, until a support email or number is chosen (see Inputs needed).
 - 2026-10-19: Today's screen loads on demand like the others: a first visit opens the welcome screens, and this brought the Lighthouse-network first visit back under 3 s (2.7–2.8 s).
+
+- 2026-10-19: Report a problem now opens an email to support@quartifex.com (version pre-filled, no student data) instead of a public GitHub issue.
+- 2026-10-19: The slow-3G first visit (about 5 to 6 s) is accepted for now. The test stays marked as a known failure; the Preact compat or `idb` options remain open.
+- 2026-10-19: The product page and the case-study deck use motion only for people who have not asked for reduced motion; the scroll reveals are CSS-only and skipped where unsupported.
+- 2026-10-19: Contact form email still needs KAKSHA_RESEND_KEY, KAKSHA_CONTACT_TO and KAKSHA_CONTACT_FROM set in Vercel (steps in apps/kaksha/README.md).

@@ -248,9 +248,9 @@ test.describe("states and failure drills", () => {
     await page.getByRole("button", { name: /Report a problem/ }).click();
     await expect(page.getByText("Do not include students' names or marks.")).toBeVisible();
     const href = await page
-      .getByRole("link", { name: "Open a report on GitHub" })
+      .getByRole("link", { name: "Email support@quartifex.com" })
       .getAttribute("href");
-    expect(href).toContain("github.com/quartifex/quartifex/issues/new");
+    expect(href).toContain("mailto:support@quartifex.com");
     expect(decodeURIComponent(href ?? "")).not.toMatch(/demo-student|Chinki|Chhotu/);
   });
 });
