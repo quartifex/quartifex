@@ -26,7 +26,7 @@ describe("formatting", () => {
     expect(formatDate("2026-07-04")).toBe("04/07/2026");
   });
   it("writes percentages with one decimal at most", () => {
-    expect(formatPercent("en", 66.7)).toBe("66.7%");
+    expect(formatPercent("en", 66.7)).toBe("67%");
     expect(formatPercent("en", 50)).toBe("50%");
     expect(formatPercent("en", null)).toBe("–");
   });

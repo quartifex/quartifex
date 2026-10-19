@@ -6,7 +6,7 @@ import { newId, type Student } from "../../lib/model";
 import { useApp } from "../context";
 import { useClass, useStudents } from "../data";
 import { saveText } from "../files";
-import { Empty, Icon, Sheet, TopBar } from "../ui";
+import { Empty, Icon, NotFound, Sheet, TopBar } from "../ui";
 import { useAction } from "../useAction";
 
 export default function Roster({ classId }: { classId: string }) {
@@ -20,15 +20,7 @@ export default function Roster({ classId }: { classId: string }) {
   const [committing, runCommit] = useAction();
   const [commitFailed, setCommitFailed] = useState(false);
 
-  if (info === null)
-    return (
-      <>
-        <TopBar back="/classes" />
-        <main className="k-main">
-          <Empty title={t("common.notFound")} />
-        </main>
-      </>
-    );
+  if (info === null) return <NotFound />;
   const label = info ? t("class.label", { grade: info.cls.grade, section: info.cls.section }) : "";
   const existingRolls = new Set((students ?? []).map((s) => s.roll));
 

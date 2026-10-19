@@ -18,13 +18,13 @@ const en = {
     menu: "Menu",
   },
   hero: {
-    eyebrow: "Free tool · for teachers in India",
+    eyebrow: "Free tool · for teachers and educators",
     title: "Mark a whole class in minutes.",
     sub: `Tap each child's answer. ${PRODUCT_NAME} adds it up, shows where the class stands and prints report cards. It works offline, and nothing leaves your phone.`,
     open: "Open the app",
     demo: "Try the demo below",
     facts: [
-      ["Cost", "Free, for every teacher"],
+      ["Cost", "Free, for every teacher and educator"],
       ["Account", "None"],
       ["Internet", "Only for the first visit"],
       ["App languages", "हिन्दी, English"],
@@ -82,7 +82,7 @@ const en = {
     tap: "Tap to try",
     tapSub: "Stays on screen while you use it",
     using: "Using the demo",
-    label: "Demo · invented school and children. Your own data is not touched.",
+    label: "Demo · invented school and students. Your own data is not touched.",
     viewLabel: "Show the demo as",
     viewPhone: "Phone",
     viewDesktop: "Computer",
@@ -162,7 +162,7 @@ const en = {
         id: "open",
         num: "MIT",
         title: "Free and open code",
-        body: "Free for every teacher. A school or NGO can read the code and check every claim on this page.",
+        body: "Free for every teacher and educator. A school or NGO can read the code and check every claim on this page.",
         link: "",
         linkText: "Read the code",
       },
@@ -206,13 +206,13 @@ const en = {
   help: {
     eyebrow: "Help",
     title: "Everything in one place.",
-    desc: "Written for teachers first. Each topic opens its own page, so this one stays short.",
+    desc: "Written for teachers and educators first. Each topic opens its own page, so this one stays short.",
     topics: ["getting-started", "tests", "marking", "results", "reports", "backup"] as string[],
     all: "All help topics",
     faq: [
       [
         "Is it really free?",
-        "Yes, for every teacher. If we ever offer paid help to large networks, the app itself stays free.",
+        "Yes, for every teacher and educator. If we ever offer paid help to large networks, the app itself stays free.",
       ],
       [
         "Do you see my students' marks?",
@@ -231,7 +231,7 @@ const en = {
   schools: {
     eyebrow: "For schools and NGOs",
     title: "Rolling it out across schools?",
-    body: `${PRODUCT_NAME} is free for every teacher and will stay free. For networks that want more, write to us.`,
+    body: `${PRODUCT_NAME} is free for every teacher and educator, and will stay free. For networks that want more, write to us.`,
     offers: [
       ["Your own tests and rubrics", "Built in, so every teacher starts with the same templates."],
       ["A language pack", "Marathi, Bengali, Tamil or another, with your reviewers."],
@@ -271,7 +271,7 @@ const en = {
   },
   docs: {
     title: "Help",
-    lead: "How to use it, written for teachers first, with the technical parts at the end.",
+    lead: "How to use it, written for teachers and educators first, with the technical parts at the end.",
     back: "Back to the product page",
     prev: "Previous",
     next: "Next",

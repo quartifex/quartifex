@@ -81,8 +81,8 @@
   --genda: #0b44ff;
   --brand: #0b44ff;
   --brand-deep: #0631c7;
-  --lav: #e3d7fb;
-  --lav-soft: #f1ebfe;
+  --lav: #7debc0;
+  --lav-soft: #e3f9ef;
   --orange: #ff7a1a;
   --kraft: #c9a274;
   --inland: #d7e6f4;
@@ -2316,7 +2316,7 @@ html.demo-pinned body {
   }
 }
 
-/* Brand pass: blue buttons, lavender accents on dark, the app's own colours in the mocks. */
+/* Brand pass: blue buttons, mint accents on dark, the app's own colours in the mocks. */
 .cta {
   background: var(--brand);
   border-color: var(--brand);
@@ -2347,7 +2347,8 @@ html.demo-pinned body {
 }
 .tag {
   background: var(--lav);
-  color: var(--brand);
+  /* Ink on mint: blue on mint is 4.4:1, under AA for small text. */
+  color: var(--ink);
 }
 .why__icon {
   background: var(--lav-soft);
@@ -2367,7 +2368,7 @@ html.demo-pinned body {
   background-color: var(--paper);
   background-image:
     radial-gradient(60% 60% at 85% 20%, rgb(11 68 255 / 0.1), transparent 70%),
-    radial-gradient(40% 50% at 70% 90%, rgb(227 215 251 / 0.7), transparent 70%);
+    radial-gradient(40% 50% at 70% 90%, rgb(125 235 192 / 0.35), transparent 70%);
 }
 .hero::before {
   display: none;

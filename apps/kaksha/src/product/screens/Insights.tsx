@@ -82,7 +82,12 @@ export default function Insights() {
     <main className="k-main k-main--tabbed">
       <PageHead title={t("tab.insights")} />
       {overview.length === 0 ? (
-        <Empty title={t("home.emptyTitle")} body={t("insights.empty")} />
+        <Empty title={t("home.emptyTitle")} body={t("insights.empty")}>
+          <button type="button" className="btn btn--primary" onClick={() => go("/new-class")}>
+            <Icon name="plus" />
+            {t("home.addClass")}
+          </button>
+        </Empty>
       ) : (
         <>
           <fieldset className="cluster">
@@ -113,7 +118,13 @@ export default function Insights() {
             ) : null}
           </fieldset>
 
-          {!hasTests ? <Empty title={t("class.noTests")} body={t("insights.empty")} /> : null}
+          {!hasTests ? (
+            <Empty title={t("class.noTests")} body={t("insights.empty")}>
+              <button type="button" className="btn btn--primary" onClick={() => go("/classes")}>
+                {t("classes.makeTest")}
+              </button>
+            </Empty>
+          ) : null}
 
           {hasTests ? (
             <section className="card" aria-labelledby="sat-h">

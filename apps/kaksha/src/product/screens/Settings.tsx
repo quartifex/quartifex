@@ -691,10 +691,20 @@ function PinSettings() {
 }
 
 function Danger() {
-  const { t, go } = useApp();
+  const { t, go, locale } = useApp();
   const [open, setOpen] = useState(false);
   const [word, setWord] = useState("");
+  const overview = useOverview(locale);
   const confirmWord = t("danger.word");
+  const counts = {
+    classes: overview?.length ?? 0,
+    students: overview?.reduce((n, o) => n + o.students.length, 0) ?? 0,
+    tests: overview?.reduce((n, o) => n + o.tests.length, 0) ?? 0,
+  };
+  const days = (() => {
+    const last = lastBackup();
+    return last ? Math.floor((Date.now() - last.getTime()) / 86_400_000) : null;
+  })();
   return (
     <section className="card" aria-labelledby="danger-h">
       <h2 id="danger-h">{isDemo() ? t("danger.demoTitle") : t("danger.title")}</h2>
@@ -713,6 +723,10 @@ function Danger() {
             go("/", true);
           }}
         >
+          <p>{t("danger.exact", counts)}</p>
+          <p className="small muted">
+            {days === null ? t("danger.noBackup") : t("danger.backupAge", { n: days })}
+          </p>
           <p>{t("danger.confirm", { word: confirmWord })}</p>
           <input
             className="input"

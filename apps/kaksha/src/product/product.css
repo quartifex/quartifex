@@ -69,14 +69,14 @@
     U+11B00-11B09;
 }
 
-/* Brand: electric blue and lavender from the K mark; ink for text; one warm colour
+/* Brand: electric blue and mint green from the K mark; ink for text; one warm colour
    (orange) kept for "below half", green and red for right and wrong. */
 :root {
   color-scheme: light;
   --brand: #0b44ff;
   --brand-deep: #0631c7;
-  --brand-soft: #e3d7fb;
-  --brand-softer: #f1ebfe;
+  --brand-soft: #d4f6e7;
+  --brand-softer: #ecfbf4;
   --on-brand: #ffffff;
   --paper: #f3f2f8;
   --paper-2: #ebe8f4;
@@ -125,8 +125,8 @@
     color-scheme: dark;
     --brand: #6b8cff;
     --brand-deep: #8ea7ff;
-    --brand-soft: #2a2552;
-    --brand-softer: #1d1b3a;
+    --brand-soft: #143a33;
+    --brand-softer: #0f2a26;
     --on-brand: #0a0f2a;
     --paper: #0d1022;
     --paper-2: #171a33;
@@ -153,8 +153,8 @@
   color-scheme: dark;
   --brand: #6b8cff;
   --brand-deep: #8ea7ff;
-  --brand-soft: #2a2552;
-  --brand-softer: #1d1b3a;
+  --brand-soft: #143a33;
+  --brand-softer: #0f2a26;
   --on-brand: #0a0f2a;
   --paper: #0d1022;
   --paper-2: #171a33;
@@ -2504,7 +2504,7 @@ a.row-link {
 }
 
 /* ===========================================================================
-   Kaksha 3: blue and lavender brand, condensed headings, dashboard-first.
+   Kaksha 3: blue and mint brand, condensed headings, dashboard-first.
    Phones: one column with a bottom tab bar. Tablets: two columns.
    Computers (1024 px and up): a rail on the left, a top bar, a card grid.
    =========================================================================== */
@@ -2799,11 +2799,11 @@ h3 {
   width: 180px;
   height: 180px;
   border-radius: 50%;
-  background: rgb(227 215 251 / 0.25);
+  background: rgb(125 235 192 / 0.22);
   pointer-events: none;
 }
 .hero .k-kicker {
-  color: #e3d7fb;
+  color: #7debc0;
 }
 .hero h2 {
   font-family: var(--display);

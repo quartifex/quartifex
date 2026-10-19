@@ -7,7 +7,7 @@ import { BLANK } from "../../lib/model";
 import { indexResponses, itemPoints, percent, studentResult } from "../../lib/scoring";
 import { useApp } from "../context";
 import { useAnswers, useAssessment, useSittings, useStudents } from "../data";
-import { Empty, Icon, TopBar } from "../ui";
+import { Empty, Icon, NotFound, TopBar } from "../ui";
 
 export default function Grid({ assessmentId }: { assessmentId: string }) {
   const { t, go, locale } = useApp();
@@ -17,7 +17,7 @@ export default function Grid({ assessmentId }: { assessmentId: string }) {
   const sittings = useSittings(a?.id);
   const rows = useMemo(() => indexResponses(answers ?? []), [answers]);
 
-  if (a === null) return <Empty title={t("common.notFound")} />;
+  if (a === null) return <NotFound />;
   if (!a || !students || !answers || !sittings)
     return <div aria-busy="true" style={{ minHeight: "60svh" }} />;
   const absent = new Set(sittings.filter((s) => s.absent).map((s) => s.studentId));

@@ -8,7 +8,7 @@ import { Bars, Trend } from "../charts";
 import { useApp } from "../context";
 import { DeleteButton } from "../DeleteButton";
 import { useAssessments, useClass, useClassRecords, useStudents } from "../data";
-import { Empty, Icon, Pill, TopBar } from "../ui";
+import { Empty, Icon, NotFound, Pill, TopBar } from "../ui";
 
 const TABS = ["tests", "students", "progress"] as const;
 type Tab = (typeof TABS)[number];
@@ -38,14 +38,7 @@ export default function ClassScreen({ classId, tab }: { classId: string; tab: st
   }, [tests, students, records]);
 
   if (info === null) {
-    return (
-      <>
-        <TopBar back="/classes" />
-        <main className="k-main">
-          <Empty title={t("common.notFound")} />
-        </main>
-      </>
-    );
+    return <NotFound />;
   }
   if (!info) return null;
   const label = t("class.label", { grade: info.cls.grade, section: info.cls.section });
@@ -163,7 +156,16 @@ function TestsTab({
   return (
     <>
       {tests && tests.length === 0 ? (
-        <Empty title={t("class.noTests")} body={t("class.noTestsBody")} />
+        <Empty title={t("class.noTests")} body={t("class.noTestsBody")}>
+          <button
+            type="button"
+            className="btn btn--primary"
+            onClick={() => go(`/class/${classId}/new`)}
+          >
+            <Icon name="plus" />
+            {t("class.newTest")}
+          </button>
+        </Empty>
       ) : null}
       <ul className="list list--gap">
         {(tests ?? []).map((a) => {
@@ -224,10 +226,13 @@ function TestsTab({
           );
         })}
       </ul>
-      <button type="button" className="fab" onClick={() => go(`/class/${classId}/new`)}>
-        <Icon name="plus" />
-        {t("class.newTest")}
-      </button>
+      {/* With no tests yet, the empty state carries the button instead. */}
+      {tests && tests.length > 0 ? (
+        <button type="button" className="fab" onClick={() => go(`/class/${classId}/new`)}>
+          <Icon name="plus" />
+          {t("class.newTest")}
+        </button>
+      ) : null}
     </>
   );
 }

@@ -6,10 +6,12 @@ import { AppProvider, useApp } from "./context";
 import { DeskBar } from "./DeskBar";
 import { ScreenBoundary, ScreenProblem } from "./ErrorBoundary";
 import { PinGate } from "./PinGate";
-import { Home } from "./screens/Home";
 import { UndoBar } from "./UndoBar";
 import { Icon, TabBar } from "./ui";
 
+// Every screen loads on demand, Today included: a first visit opens the welcome screens,
+// so the dashboard's code is not on the critical path.
+const Home = lazy(() => import("./screens/Home").then((m) => ({ default: m.Home })));
 const ClassScreen = lazy(() => import("./screens/ClassScreen"));
 const NewClass = lazy(() => import("./screens/NewClass"));
 const NewTest = lazy(() => import("./screens/NewTest"));

@@ -61,7 +61,7 @@ const html = `<!doctype html>
 <title>${PRODUCT_NAME}: mark a class</title>
 <meta name="description" content="Mark tests and rubrics for a whole class on your phone. Works offline. Student data stays on the device.">
 <meta name="robots" content="noindex">
-<meta name="theme-color" media="(prefers-color-scheme: light)" content="#f7f2e7">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#f3f2f8">
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#11141d">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="${PRODUCT_NAME}">

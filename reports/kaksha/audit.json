@@ -1,5 +1,5 @@
 {
-  "date": "2026-10-19T12:14:05.467Z",
+  "date": "2026-10-19T13:40:30.809Z",
   "environment": "local machine",
   "tags": [
     "wcag2a",
@@ -31,84 +31,64 @@
       "passes": 36
     },
     {
-      "name": "site /hi 1280px",
-      "violations": [],
-      "passes": 36
-    },
-    {
-      "name": "site /hi 360px",
-      "violations": [],
-      "passes": 36
-    },
-    {
-      "name": "site /hi 1280px reduced motion",
-      "violations": [],
-      "passes": 36
-    },
-    {
-      "name": "site /hi 360px reduced motion",
-      "violations": [],
-      "passes": 36
-    },
-    {
       "name": "site /docs 1280px",
       "violations": [],
-      "passes": 24
+      "passes": 23
     },
     {
       "name": "site /docs 360px",
       "violations": [],
-      "passes": 25
+      "passes": 24
     },
     {
       "name": "site /docs 1280px reduced motion",
       "violations": [],
-      "passes": 24
+      "passes": 23
     },
     {
       "name": "site /docs 360px reduced motion",
       "violations": [],
-      "passes": 25
+      "passes": 24
     },
     {
       "name": "site /docs/privacy 1280px",
       "violations": [],
-      "passes": 24
+      "passes": 23
     },
     {
       "name": "site /docs/privacy 360px",
       "violations": [],
-      "passes": 25
+      "passes": 24
     },
     {
       "name": "site /docs/privacy 1280px reduced motion",
       "violations": [],
-      "passes": 24
+      "passes": 23
     },
     {
       "name": "site /docs/privacy 360px reduced motion",
       "violations": [],
-      "passes": 25
+      "passes": 24
     },
     {
       "name": "site /docs/templates 1280px",
       "violations": [],
-      "passes": 25
+      "passes": 24
     },
     {
       "name": "site /docs/templates 360px",
       "violations": [],
-      "passes": 27
+      "passes": 26
     },
     {
       "name": "site /docs/templates 1280px reduced motion",
       "violations": [],
-      "passes": 25
+      "passes": 24
     },
     {
       "name": "site /docs/templates 360px reduced motion",
       "violations": [],
-      "passes": 27
+      "passes": 26
     },
     {
       "name": "app en today 360px",

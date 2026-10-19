@@ -17,7 +17,7 @@ import {
 } from "../data";
 import { demoStep } from "../demoBridge";
 import { saveText } from "../files";
-import { Empty, Icon, Meter, Pill, TopBar } from "../ui";
+import { Empty, Icon, Meter, NotFound, Pill, TopBar } from "../ui";
 
 export function useSummary(assessmentId: string) {
   const { locale } = useApp();
@@ -96,7 +96,7 @@ export default function Results({
   useEffect(() => {
     if (ready) demoStep("results");
   }, [ready]);
-  if (a === null) return <Empty title={t("common.notFound")} />;
+  if (a === null) return <NotFound />;
   if (!a || !s || !students || !answers)
     return <div aria-busy="true" style={{ minHeight: "60svh" }} />;
   const byId = new Map(students.map((x) => [x.id, x]));
@@ -397,7 +397,7 @@ function QuestionDetail({
   const i = a.items.findIndex((x) => x.id === itemId);
   const it = a.items[i];
   const st = s.items[i];
-  if (!it || !st) return <Empty title={t("common.notFound")} />;
+  if (!it || !st) return <NotFound />;
   const p = percent(st.score, st.max);
   const total = Object.values(st.counts).reduce((x, y) => x + y, 0);
   const complete = new Set(s.complete.map((r) => r.studentId));

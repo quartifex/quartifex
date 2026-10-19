@@ -1,13 +1,13 @@
 "use client";
 import { useLiveQuery } from "dexie-react-hooks";
 import { useMemo, useState } from "react";
-import { formatDate, formatDayMonth, formatPercent, formatShortMonth } from "../../i18n";
+import { formatDate, formatPercent, formatShortMonth } from "../../i18n";
 import { db } from "../../lib/db";
 import { percent, studentDomains, studentTrend } from "../../lib/scoring";
 import { Bars, Trend } from "../charts";
 import { useApp } from "../context";
 import { useAssessments, useClassRecords, useNotes } from "../data";
-import { Empty, Icon, Pill, SectionHead, TopBar } from "../ui";
+import { Empty, Icon, NotFound, Pill, SectionHead, TopBar } from "../ui";
 
 export function useStudentView(studentId: string) {
   const student = useLiveQuery(
@@ -26,7 +26,7 @@ export default function StudentScreen({ studentId }: { studentId: string }) {
   const [subject, setSubject] = useState<string | null>(null);
   const notes = useNotes(studentId);
 
-  if (student === null) return <Empty title={t("common.notFound")} />;
+  if (student === null) return <NotFound />;
   if (!student || !tests || !records)
     return <div aria-busy="true" style={{ minHeight: "60svh" }} />;
   const chosen = subject ?? subjects[0] ?? null;
@@ -200,7 +200,7 @@ export default function StudentScreen({ studentId }: { studentId: string }) {
             <ol className="timeline">
               {notes.slice(0, 2).map((n) => (
                 <li key={n.id}>
-                  <span className="timeline__date num">{formatDayMonth(locale, n.date)}</span>
+                  <span className="timeline__date num">{formatDate(n.date)}</span>
                   <div className="timeline__body">
                     <p>{n.text}</p>
                   </div>

@@ -4,7 +4,7 @@ import { PRODUCT_NAME, SITE_URL } from "../config";
 export function siteMetadata(): Metadata {
   const title = `${PRODUCT_NAME}: mark a whole class, offline`;
   const description =
-    "A free app for teachers to mark tests and rubrics and see class progress. Works offline. Student data stays on the phone. Hindi and English.";
+    "A free app for teachers and educators to mark tests and rubrics and see class progress. Works offline. Student data stays on the phone. Hindi and English.";
   return {
     metadataBase: new URL(SITE_URL),
     title,
@@ -25,5 +25,5 @@ export function siteMetadata(): Metadata {
 export const siteViewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#1b2340",
+  themeColor: "#f3f2f8",
 };

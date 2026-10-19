@@ -110,7 +110,7 @@ test.describe("the app", () => {
     }
     await expect(page.getByText("Every student is marked.")).toBeVisible();
     await page.getByRole("button", { name: "Results" }).click();
-    await expect(page.getByText(/Based on 3 children with every answer marked/)).toBeVisible();
+    await expect(page.getByText(/Based on 3 students with every answer marked/)).toBeVisible();
     await expect(page.getByText(/were absent and are left out/)).toBeVisible();
 
     // Reports and the class view also come from the phone.

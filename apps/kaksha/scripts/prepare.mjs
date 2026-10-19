@@ -75,8 +75,8 @@ const manifest = {
   scope: "/app",
   display: "standalone",
   orientation: "any",
-  background_color: "#f7f2e7",
-  theme_color: "#f7f2e7",
+  background_color: "#f3f2f8",
+  theme_color: "#f3f2f8",
   lang: "en-IN",
   categories: ["education", "productivity"],
   icons: [

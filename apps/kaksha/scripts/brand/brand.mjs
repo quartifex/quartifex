@@ -1,5 +1,5 @@
 // Generates the Kaksha brand SVGs from the K mark: an upright stroke with two leaves,
-// the upper one lavender, the lower one blue. App icon, maskable icon, one-colour mark,
+// the upper one mint green, the lower one blue. App icon, maskable icon, one-colour mark,
 // and the wordmark lockup with "kaksha" and कक्षा converted to outlines (no font needed).
 import fs from "node:fs";
 import path from "node:path";
@@ -11,8 +11,8 @@ fs.mkdirSync(out, { recursive: true });
 export const C = {
   blue: "#0B44FF",
   blueDeep: "#0631C7",
-  lavender: "#E3D7FB",
-  lavenderSoft: "#F1EBFE",
+  mint: "#7DEBC0",
+  mintSoft: "#DDF8EC",
   ink: "#0E1433",
   white: "#FFFFFF",
 };
@@ -31,8 +31,8 @@ function placed(h, colours) {
   return `<g transform="translate(${((512 - w) / 2 + 6).toFixed(2)} ${((512 - h) / 2).toFixed(2)}) scale(${s.toFixed(4)})">${k(colours)}</g>`;
 }
 
-const onBlue = { stroke: C.lavenderSoft, upper: C.white, lower: C.lavender };
-const onLight = { stroke: C.blue, upper: C.lavender, lower: C.blue };
+const onBlue = { stroke: C.mintSoft, upper: C.white, lower: C.mint };
+const onLight = { stroke: C.blue, upper: C.mint, lower: C.blue };
 
 // App icon: the K in light tones on a blue squircle.
 const mark = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Kaksha"><rect width="512" height="512" rx="116" fill="${C.blue}"/>${placed(300, onBlue)}</svg>`;
@@ -74,6 +74,6 @@ fs.writeFileSync(path.join(out, "mark.svg"), mark);
 fs.writeFileSync(path.join(out, "maskable.svg"), maskable);
 fs.writeFileSync(path.join(out, "glyph.svg"), glyph);
 fs.writeFileSync(path.join(out, "mark-mono.svg"), mono);
-fs.writeFileSync(path.join(out, "logo.svg"), lockup(onLight, C.ink, C.lavender));
+fs.writeFileSync(path.join(out, "logo.svg"), lockup(onLight, C.ink, C.mint));
 fs.writeFileSync(path.join(out, "logo-dark.svg"), lockup(onBlue, C.white, "#5D7BFF"));
 console.log("wrote", out, W, H);

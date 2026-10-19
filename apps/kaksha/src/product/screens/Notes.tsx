@@ -2,12 +2,12 @@
 // A teacher's dated notes about one child. On this phone only; optionally on the card.
 import { useLiveQuery } from "dexie-react-hooks";
 import { type FormEvent, useState } from "react";
-import { formatDayMonth } from "../../i18n";
+import { formatDate } from "../../i18n";
 import { addNote, db } from "../../lib/db";
 import { useApp } from "../context";
 import { useNotes } from "../data";
 import { offerUndo } from "../UndoBar";
-import { Empty, Icon, Toggle, TopBar } from "../ui";
+import { Empty, Icon, NotFound, Toggle, TopBar } from "../ui";
 
 const NOTE_MAX = 500;
 
@@ -22,7 +22,7 @@ export default function Notes({ studentId }: { studentId: string }) {
   const [onCard, setOnCard] = useState(false);
   const [busy, setBusy] = useState(false);
   const [failed, setFailed] = useState(false);
-  if (student === null) return <Empty title={t("common.notFound")} />;
+  if (student === null) return <NotFound />;
   if (!student || !notes) return <div aria-busy="true" style={{ minHeight: "60svh" }} />;
   const submit = async (e: FormEvent) => {
     e.preventDefault();
@@ -78,7 +78,7 @@ export default function Notes({ studentId }: { studentId: string }) {
           <ol className="timeline">
             {notes.map((n) => (
               <li key={n.id}>
-                <span className="timeline__date num">{formatDayMonth(locale, n.date)}</span>
+                <span className="timeline__date num">{formatDate(n.date)}</span>
                 <div className="timeline__body">
                   <p>{n.text}</p>
                   <div className="cluster">

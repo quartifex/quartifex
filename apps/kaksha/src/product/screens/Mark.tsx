@@ -16,7 +16,7 @@ import { useApp } from "../context";
 import { sortStudents, useAssessment } from "../data";
 import { demoStep } from "../demoBridge";
 import { SaveStatus } from "../SaveStatus";
-import { Empty, Icon, TopBar } from "../ui";
+import { Empty, Icon, NotFound, TopBar } from "../ui";
 
 type Values = Map<string, string>; // `${studentId}|${itemId}` -> value
 const k = (s: string, i: string) => `${s}|${i}`;
@@ -96,14 +96,7 @@ export default function Mark({
   }, [data]);
 
   if (a === null) {
-    return (
-      <>
-        <TopBar back="/" />
-        <main className="k-main">
-          <Empty title={t("common.notFound")} />
-        </main>
-      </>
-    );
+    return <NotFound />;
   }
   if (!a || !data) return <div aria-busy="true" style={{ minHeight: "60svh" }} />;
   if (data.students.length === 0) {

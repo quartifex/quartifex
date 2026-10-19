@@ -30,9 +30,9 @@ export function Icon({ name, label }: { name: IconName; label?: string }) {
 
 /** The K mark: an upright stroke with two leaves. Same drawing as /brand/mark.svg. */
 export function Mark({ size = 40, tile = true }: { size?: number; tile?: boolean }) {
-  const stroke = tile ? "#F1EBFE" : "var(--brand)";
+  const stroke = tile ? "#DDF8EC" : "var(--brand)";
   const upper = tile ? "#FFFFFF" : "var(--brand-soft)";
-  const lower = tile ? "#E3D7FB" : "var(--brand)";
+  const lower = tile ? "#7DEBC0" : "var(--brand)";
   return (
     <svg viewBox="0 0 512 512" width={size} height={size} aria-hidden="true" focusable="false">
       {tile ? <rect width="512" height="512" rx="116" fill="#0B44FF" /> : null}
@@ -159,6 +159,24 @@ export function Empty({
       {body ? <p>{body}</p> : null}
       {children}
     </div>
+  );
+}
+
+/** Not on this phone (deleted, or an old link). Always a way back to Today. */
+export function NotFound() {
+  const { t, go } = useApp();
+  return (
+    <>
+      <TopBar back="/" />
+      <main className="k-main">
+        <Empty title={t("common.notFound")} body={t("common.notFoundBody")}>
+          <button type="button" className="btn btn--primary" onClick={() => go("/")}>
+            <Icon name="home" />
+            {t("crash.today")}
+          </button>
+        </Empty>
+      </main>
+    </>
   );
 }
 

@@ -30,7 +30,7 @@ import { attendanceRate, percent, studentDomains, studentResult } from "../../li
 import { useApp } from "../context";
 import { useAssessments, useClass, useClassRecords, useNotes, useStudents } from "../data";
 import { demoStep } from "../demoBridge";
-import { Empty, Icon, Mark, Toggle, TopBar } from "../ui";
+import { Empty, Icon, Mark, NotFound, Toggle, TopBar } from "../ui";
 import { useSummary } from "./Results";
 import { useStudentView } from "./StudentScreen";
 
@@ -330,7 +330,7 @@ function StudentReport({ studentId }: { studentId: string }) {
   useEffect(() => {
     if (student) demoStep("report");
   }, [student]);
-  if (student === null) return <Empty title={t("common.notFound")} />;
+  if (student === null) return <NotFound />;
   if (!student || !tests || !records || !info || !notes)
     return <div aria-busy="true" style={{ minHeight: "60svh" }} />;
   return (
@@ -363,7 +363,7 @@ function ClassCards({ classId }: { classId: string }) {
     return ids.length ? db().notes.where("studentId").anyOf(ids).toArray() : [];
   }, [students]);
   const [opts, setOpts] = useState<CardOptions>(() => DEFAULT_OPTIONS(locale));
-  if (info === null) return <Empty title={t("common.notFound")} />;
+  if (info === null) return <NotFound />;
   if (!info || !students || !tests || !records || !notes)
     return <div aria-busy="true" style={{ minHeight: "60svh" }} />;
   const active = students.filter((s) => s.active);
@@ -399,7 +399,7 @@ function ClassReport({ assessmentId }: { assessmentId: string }) {
     async () => (info?.cls ? db().schools.get(info.cls.schoolId) : undefined),
     [info?.cls.schoolId],
   );
-  if (a === null) return <Empty title={t("common.notFound")} />;
+  if (a === null) return <NotFound />;
   if (!a || !s || !students || !info)
     return <div aria-busy="true" style={{ minHeight: "60svh" }} />;
   const byId = new Map(students.map((x) => [x.id, x]));

@@ -1,15 +1,15 @@
 {
-  "date": "2026-10-18T17:16:53.624Z",
+  "date": "2026-10-19T13:28:42.777Z",
   "taps": 800,
   "cpuThrottle": 4,
   "appMsPerTap": {
-    "mean": 91,
-    "p50": 89,
-    "p95": 119,
-    "max": 196
+    "mean": 126,
+    "p50": 122,
+    "p95": 169,
+    "max": 231
   },
-  "machineRunSeconds": 78,
+  "machineRunSeconds": 110,
   "assumedTeacherMsPerTap": 600,
-  "projectedMinutes": 9.2,
+  "projectedMinutes": 9.7,
   "targetMinutes": 10
 }
