@@ -15,6 +15,7 @@ import { itemPoints } from "../../lib/scoring";
 import { useApp } from "../context";
 import { sortStudents, useAssessment } from "../data";
 import { demoStep } from "../demoBridge";
+import { SaveStatus } from "../SaveStatus";
 import { Empty, Icon, TopBar } from "../ui";
 
 type Values = Map<string, string>; // `${studentId}|${itemId}` -> value
@@ -190,6 +191,7 @@ function Attendance({
           <button type="button" className="btn btn--primary btn--block" onClick={onDone}>
             {absent.size ? t("attendance.start") : t("attendance.everyone")}
           </button>
+          <SaveStatus />
         </div>
       </main>
     </>
@@ -693,7 +695,7 @@ function KeyEntry({
               <Icon name="next" />
             </button>
           </div>
-          <p className="small muted no-print">{t("entry.saved")}</p>
+          <SaveStatus />
         </div>
         {announce}
       </main>
@@ -929,7 +931,7 @@ function RubricEntry({
           {t("entry.nextStudent")}
           <Icon name="next" />
         </button>
-        <p className="small muted">{t("entry.saved")}</p>
+        <SaveStatus />
         {announce}
       </main>
     </>

@@ -1,7 +1,7 @@
 "use client";
 // First open: language, three short promises, then four steps to a ready class.
 // Every step except the class itself can be skipped. Nothing asks for an account.
-import { type KeyboardEvent, useState } from "react";
+import { type KeyboardEvent, useRef, useState } from "react";
 import { PRODUCT_NAME } from "../../config";
 import { LOCALES, type Locale } from "../../i18n";
 import { parseRoster } from "../../lib/csv";
@@ -85,6 +85,8 @@ export default function Onboarding({ step }: { step: number }) {
     ? t("class.label", { grade: d.grade, section: d.section }).trim()
     : t("onb.yourClass");
 
+  const creating = useRef(false);
+  const [saving, setSaving] = useState(false);
   const createClass = async () => {
     const db_ = db();
     const schoolId = newId();
@@ -111,8 +113,8 @@ export default function Onboarding({ step }: { step: number }) {
         rows.map((r) => ({ id: newId(), classId, roll: r.roll, name: r.name, active: true })),
       );
     });
-    await putSetting("profile", { name: d.name.trim(), board: d.board, medium: d.medium });
     set({ classId });
+    await putSetting("profile", { name: d.name.trim(), board: d.board, medium: d.medium });
     return classId;
   };
 
@@ -496,13 +498,26 @@ export default function Onboarding({ step }: { step: number }) {
                 <button
                   type="button"
                   className="btn btn--primary btn--block"
+                  disabled={saving}
                   onClick={async () => {
                     if (count === 0) return setError(t("onb.students.none"));
-                    if (!d.classId) await createClass();
-                    to(7);
+                    // One class, however many times the button is tapped.
+                    if (creating.current) return;
+                    creating.current = true;
+                    setSaving(true);
+                    try {
+                      if (!d.classId) await createClass();
+                      to(7);
+                    } catch {
+                      // The write is one transaction, so nothing half-saved is left behind.
+                      setError(t("onb.saveFailed"));
+                    } finally {
+                      creating.current = false;
+                      setSaving(false);
+                    }
                   }}
                 >
-                  {t("roster.add", { n: count })}
+                  {saving ? t("common.saving") : t("roster.add", { n: count })}
                 </button>
               </div>
             </div>

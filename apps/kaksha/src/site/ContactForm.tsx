@@ -3,12 +3,17 @@ import { type FormEvent, useState } from "react";
 import type { Copy, SiteLocale } from "./copy";
 
 export function ContactForm({ copy, locale }: { copy: Copy["schools"]; locale: SiteLocale }) {
-  const [state, setState] = useState<"idle" | "sending" | "ok" | "fail" | "off">("idle");
+  const [state, setState] = useState<
+    "idle" | "sending" | "ok" | "fail" | "off" | "offline" | "slow" | "missing"
+  >("idle");
   const f = copy.fields;
 
   const submit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const data = Object.fromEntries(new FormData(e.currentTarget).entries());
+    const form = e.currentTarget;
+    const data = Object.fromEntries(new FormData(form).entries());
+    // Never clear what someone typed unless it was sent.
+    if (!navigator.onLine) return setState("offline");
     setState("sending");
     try {
       const res = await fetch("/api/contact", {
@@ -18,10 +23,13 @@ export function ContactForm({ copy, locale }: { copy: Copy["schools"]; locale: S
       });
       if (res.ok) {
         setState("ok");
-        e.currentTarget?.reset();
-      } else setState(res.status === 503 ? "off" : "fail");
+        form.reset();
+      } else if (res.status === 503) setState("off");
+      else if (res.status === 429) setState("slow");
+      else if (res.status === 400) setState("missing");
+      else setState("fail");
     } catch {
-      setState("fail");
+      setState(navigator.onLine ? "fail" : "offline");
     }
   };
 
@@ -69,7 +77,7 @@ export function ContactForm({ copy, locale }: { copy: Copy["schools"]; locale: S
         {state === "sending" ? f.sending : f.send}
       </button>
       <p role="status" aria-live="polite" className="contact__status">
-        {state === "ok" ? copy.ok : state === "fail" ? copy.fail : state === "off" ? copy.off : ""}
+        {state === "idle" || state === "sending" ? "" : copy.status[state]}
       </p>
     </form>
   );

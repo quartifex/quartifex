@@ -76,6 +76,9 @@ export const ICONS = {
   cloudOff: "cloud-off",
   pin: "pin",
   sidebar: "layout-sidebar",
+  clock: "clock",
+  refresh: "refresh",
+  lifebuoy: "lifebuoy",
 };
 
 const out = {};

@@ -5,6 +5,7 @@ import { newId } from "../../lib/model";
 import { useApp } from "../context";
 import { useSchools } from "../data";
 import { TopBar } from "../ui";
+import { useAction } from "../useAction";
 
 /** Indian academic years run April to March. */
 export function currentYear(d = new Date()): string {
@@ -25,25 +26,35 @@ export default function NewClass() {
   const existing = schools ?? [];
   const usingNew = schoolId === "new" || existing.length === 0;
 
+  const [busy, run] = useAction();
   const submit = async (e: FormEvent) => {
     e.preventDefault();
     if (usingNew && !schoolName.trim()) return setError(t("newClass.needSchool"));
     if (!grade.trim()) return setError(t("newClass.needGrade"));
-    const d = db();
-    let sid = schoolId;
-    if (usingNew) {
-      sid = newId();
-      await d.schools.add({ id: sid, name: schoolName.trim() });
-    }
-    const id = newId();
-    await d.classes.add({
-      id,
-      schoolId: sid,
-      grade: grade.trim(),
-      section: section.trim(),
-      year: year.trim(),
-    });
-    go(`/class/${id}/roster`, true);
+    setError("");
+    await run(
+      async () => {
+        const d = db();
+        const id = newId();
+        // One transaction: a failure leaves no half-made school or class behind.
+        await d.transaction("rw", d.schools, d.classes, async () => {
+          let sid = schoolId;
+          if (usingNew) {
+            sid = newId();
+            await d.schools.add({ id: sid, name: schoolName.trim() });
+          }
+          await d.classes.add({
+            id,
+            schoolId: sid,
+            grade: grade.trim(),
+            section: section.trim(),
+            year: year.trim(),
+          });
+        });
+        go(`/class/${id}/roster`, true);
+      },
+      () => setError(t("common.saveFailed")),
+    );
   };
 
   return (
@@ -118,8 +129,8 @@ export default function NewClass() {
               {error}
             </p>
           ) : null}
-          <button type="submit" className="btn btn--primary btn--block">
-            {t("newClass.next")}
+          <button type="submit" className="btn btn--primary btn--block" disabled={busy}>
+            {busy ? t("common.saving") : t("newClass.next")}
           </button>
         </form>
       </main>

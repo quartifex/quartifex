@@ -1,10 +1,12 @@
 "use client";
 import { useMemo, useState } from "react";
 import { collator, formatDate, formatPercent, formatShortMonth } from "../../i18n";
+import { deleteClass, snapshotClass } from "../../lib/db";
 import type { Assessment, Student } from "../../lib/model";
 import { attendanceRate, classSummary, percent } from "../../lib/scoring";
 import { Bars, Trend } from "../charts";
 import { useApp } from "../context";
+import { DeleteButton } from "../DeleteButton";
 import { useAssessments, useClass, useClassRecords, useStudents } from "../data";
 import { Empty, Icon, Pill, TopBar } from "../ui";
 
@@ -56,14 +58,30 @@ export default function ClassScreen({ classId, tab }: { classId: string; tab: st
         sub={`${info.school?.name ?? ""} · ${info.cls.year}`}
         back="/classes"
         actions={
-          <button
-            type="button"
-            className="icon-btn"
-            onClick={() => go(`/class/${classId}/reports`)}
-            aria-label={t("reports.title")}
-          >
-            <Icon name="print" />
-          </button>
+          <>
+            <button
+              type="button"
+              className="icon-btn"
+              onClick={() => go(`/class/${classId}/reports`)}
+              aria-label={t("reports.title")}
+            >
+              <Icon name="print" />
+            </button>
+            <DeleteButton
+              label={t("del.class")}
+              name={label}
+              load={() => snapshotClass(classId)}
+              describe={(snap) =>
+                t("del.classBody", {
+                  students: snap.students?.length ?? 0,
+                  tests: snap.assessments?.length ?? 0,
+                  marks: snap.responses?.length ?? 0,
+                })
+              }
+              remove={() => deleteClass(classId)}
+              after={() => go("/classes", true)}
+            />
+          </>
         }
       />
       <div className="tabs tabs--sticky" role="tablist" aria-label={label}>
@@ -351,7 +369,28 @@ function StudentsTab({
             );
           })}
       </ul>
-      {shown.length === 0 ? <p className="muted">{t("class.noMatch")}</p> : null}
+      {shown.length === 0 ? (
+        <div className="none" role="status">
+          <p className="muted">
+            {needle
+              ? t("search.noneIn", { q: q.trim() })
+              : filter === "help"
+                ? t("class.noneHelp")
+                : t("class.noneAbsent")}
+          </p>
+          <button
+            type="button"
+            className="btn btn--sm"
+            onClick={() => {
+              setQ("");
+              setFilter("all");
+            }}
+          >
+            <Icon name="close" />
+            {t("search.clear")}
+          </button>
+        </div>
+      ) : null}
       <div className="grid2 sticky-actions">
         <button type="button" className="btn" onClick={() => go(`/class/${classId}/roster`)}>
           <Icon name="pencil" />

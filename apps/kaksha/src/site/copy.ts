@@ -251,9 +251,15 @@ const en = {
       sending: "Sending…",
     },
     needs: ["Custom rubrics or tests", "A language pack", "Help rolling it out", "Something else"],
-    ok: "Thank you. We will reply by email.",
-    fail: "That did not go through. Please try again in a while.",
-    off: "The form is not switched on yet. Please try again soon.",
+    status: {
+      ok: "Sent. Thank you; we will reply to the email you gave.",
+      fail: "Not sent: our side had a problem. Your message is still here; try again in a few minutes.",
+      off: "Not sent: this form is not switched on yet. Your message is still here; please try again later.",
+      offline:
+        "Not sent: you are offline. Your message is still here; send it when you are back online.",
+      slow: "Not sent: 5 messages an hour is the limit from one connection. Your message is still here; try again later.",
+      missing: "Not sent: please fill in your name, email, organisation and message.",
+    },
     email: "Email",
   },
   origin: {

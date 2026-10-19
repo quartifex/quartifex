@@ -6,7 +6,8 @@ import { newId, type Student } from "../../lib/model";
 import { useApp } from "../context";
 import { useClass, useStudents } from "../data";
 import { saveText } from "../files";
-import { Icon, Sheet, TopBar } from "../ui";
+import { Empty, Icon, Sheet, TopBar } from "../ui";
+import { useAction } from "../useAction";
 
 export default function Roster({ classId }: { classId: string }) {
   const { t, locale, go } = useApp();
@@ -16,8 +17,18 @@ export default function Roster({ classId }: { classId: string }) {
   const [preview, setPreview] = useState<RosterParse | null>(null);
   const [saved, setSaved] = useState<number | null>(null);
   const [editing, setEditing] = useState<Student | null>(null);
+  const [committing, runCommit] = useAction();
+  const [commitFailed, setCommitFailed] = useState(false);
 
-  if (info === null) return null;
+  if (info === null)
+    return (
+      <>
+        <TopBar back="/classes" />
+        <main className="k-main">
+          <Empty title={t("common.notFound")} />
+        </main>
+      </>
+    );
   const label = info ? t("class.label", { grade: info.cls.grade, section: info.cls.section }) : "";
   const existingRolls = new Set((students ?? []).map((s) => s.roll));
 
@@ -30,12 +41,18 @@ export default function Roster({ classId }: { classId: string }) {
   const commit = async () => {
     if (!preview) return;
     const fresh = preview.rows.filter((r) => !existingRolls.has(r.roll));
-    await db().students.bulkAdd(
-      fresh.map((r) => ({ id: newId(), classId, roll: r.roll, name: r.name, active: true })),
+    setCommitFailed(false);
+    await runCommit(
+      async () => {
+        await db().students.bulkAdd(
+          fresh.map((r) => ({ id: newId(), classId, roll: r.roll, name: r.name, active: true })),
+        );
+        setSaved(fresh.length);
+        setPreview(null);
+        setText("");
+      },
+      () => setCommitFailed(true),
     );
-    setSaved(fresh.length);
-    setPreview(null);
-    setText("");
   };
 
   const reasons: Record<string, string> = {
@@ -128,10 +145,17 @@ export default function Roster({ classId }: { classId: string }) {
                 type="button"
                 className="btn btn--primary"
                 onClick={commit}
-                disabled={preview.rows.length - clashes.length === 0}
+                disabled={committing || preview.rows.length - clashes.length === 0}
               >
-                {t("roster.add", { n: preview.rows.length - clashes.length })}
+                {committing
+                  ? t("common.saving")
+                  : t("roster.add", { n: preview.rows.length - clashes.length })}
               </button>
+              {commitFailed ? (
+                <p className="error" role="alert">
+                  {t("common.saveFailed")}
+                </p>
+              ) : null}
             </div>
           ) : null}
           {saved !== null ? (
@@ -212,15 +236,25 @@ function AddOne({
   const [roll, setRoll] = useState("");
   const [name, setName] = useState("");
   const [error, setError] = useState("");
+  const [added, setAdded] = useState("");
+  const [busy, run] = useAction();
   const submit = async (e: FormEvent) => {
     e.preventDefault();
     const r = (roll.trim() || nextRoll).slice(0, 12);
-    if (!name.trim()) return setError(t("roster.problem.noName"));
-    if (taken.has(r)) return setError(t("roster.problem.dupRoll"));
-    await db().students.add({ id: newId(), classId, roll: r, name: name.trim(), active: true });
-    setRoll("");
-    setName("");
+    if (!name.trim()) return setError(t("roster.needName"));
+    if (taken.has(r)) return setError(t("roster.rollTaken", { roll: r, next: nextRoll }));
     setError("");
+    setAdded("");
+    await run(
+      async () => {
+        const n = name.trim();
+        await db().students.add({ id: newId(), classId, roll: r, name: n, active: true });
+        setRoll("");
+        setName("");
+        setAdded(t("roster.addedOne", { name: n, roll: r }));
+      },
+      () => setError(t("common.saveFailed")),
+    );
   };
   return (
     <form className="card" onSubmit={submit} aria-labelledby="add-h">
@@ -243,6 +277,7 @@ function AddOne({
             id="name"
             className="input"
             value={name}
+            maxLength={80}
             onChange={(e) => setName(e.target.value)}
             autoComplete="off"
           />
@@ -253,9 +288,14 @@ function AddOne({
           {error}
         </p>
       ) : null}
-      <button type="submit" className="btn">
+      {added ? (
+        <p className="notice notice--ok" role="status">
+          {added}
+        </p>
+      ) : null}
+      <button type="submit" className="btn" disabled={busy}>
         <Icon name="plus" />
-        {t("roster.addButton")}
+        {busy ? t("common.saving") : t("roster.addButton")}
       </button>
     </form>
   );

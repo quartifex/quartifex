@@ -1,6 +1,6 @@
 "use client";
 import { type FormEvent, useEffect, useState } from "react";
-import { APP_VERSION, PRODUCT_NAME, REPO_URL } from "../../config";
+import { APP_VERSION, ISSUES_URL, PRODUCT_NAME, REPO_URL } from "../../config";
 import { formatNumber, LOCALES, type Locale } from "../../i18n";
 import {
   type BackupError,
@@ -26,7 +26,7 @@ import { hasPin, setPin } from "../PinGate";
 import { ChoiceRow, Icon, type IconName, PageHead, Sheet, TopBar } from "../ui";
 import { lastBackup } from "./Home";
 
-const PAGES = ["backup", "pin", "display", "data", "profile"] as const;
+const PAGES = ["backup", "pin", "display", "data", "profile", "problem"] as const;
 type Page = (typeof PAGES)[number];
 
 export default function Settings({ page }: { page?: string | undefined }) {
@@ -39,6 +39,7 @@ export default function Settings({ page }: { page?: string | undefined }) {
     display: t("settings.look"),
     data: t("more.data"),
     profile: t("more.profile"),
+    problem: t("problem.title"),
   }[p];
   return (
     <>
@@ -53,6 +54,7 @@ export default function Settings({ page }: { page?: string | undefined }) {
         {p === "pin" ? <PinSettings /> : null}
         {p === "display" ? <Display /> : null}
         {p === "profile" ? <ProfileForm /> : null}
+        {p === "problem" ? <Problem /> : null}
         {p === "data" ? (
           <>
             <About />
@@ -125,6 +127,13 @@ function MoreHub() {
       href: "/docs/templates",
     },
     { key: "help", icon: "help", title: t("settings.help"), sub: t("more.helpSub"), href: "/docs" },
+    {
+      key: "problem",
+      icon: "lifebuoy",
+      title: t("problem.title"),
+      sub: t("problem.sub"),
+      to: "/more/problem",
+    },
     {
       key: "privacy",
       icon: "lock",
@@ -294,6 +303,52 @@ function ProfileForm() {
         {t("common.save")}
       </button>
     </form>
+  );
+}
+
+/** Escalation: what to send, where to send it, and never any children's data. */
+function Problem() {
+  const { t } = useApp();
+  const [copied, setCopied] = useState(false);
+  const info = `${PRODUCT_NAME} ${APP_VERSION} · ${typeof navigator === "undefined" ? "" : navigator.userAgent}`;
+  const body = `${t("problem.template")}\n\n---\n${info}`;
+  const href = `${ISSUES_URL}?title=${encodeURIComponent(`${PRODUCT_NAME}: `)}&body=${encodeURIComponent(body)}`;
+  return (
+    <section className="card stack" aria-labelledby="problem-h">
+      <h2 id="problem-h">{t("problem.heading")}</h2>
+      <p>{t("problem.body")}</p>
+      <p className="notice notice--warn">{t("problem.noNames")}</p>
+      <div className="field">
+        <span className="small muted">{t("problem.info")}</span>
+        <code className="problem__info num">{info}</code>
+        <button
+          type="button"
+          className="btn btn--sm"
+          onClick={async () => {
+            try {
+              await navigator.clipboard.writeText(info);
+              setCopied(true);
+            } catch {
+              setCopied(false);
+            }
+          }}
+        >
+          <Icon name="copy" />
+          {copied ? t("problem.copied") : t("problem.copy")}
+        </button>
+      </div>
+      <div className="cluster">
+        <a className="btn btn--primary" href={href} target="_blank" rel="noopener">
+          <Icon name="lifebuoy" />
+          {t("problem.open")}
+        </a>
+        <a className="btn" href="/docs/faq">
+          <Icon name="help" />
+          {t("problem.faq")}
+        </a>
+      </div>
+      <p className="small muted">{t("problem.offline")}</p>
+    </section>
   );
 }
 

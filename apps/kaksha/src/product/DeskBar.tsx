@@ -75,6 +75,11 @@ export function DeskBar() {
             ))}
           </ul>
         ) : null}
+        {open && needle && hits && hits.length === 0 ? (
+          <p className="deskbar__results deskbar__none" role="status">
+            {t("search.none", { q: q.trim() })}
+          </p>
+        ) : null}
       </search>
       <nav className="deskbar__pills" aria-label={t("desk.quick")}>
         <button

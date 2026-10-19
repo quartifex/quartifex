@@ -14,6 +14,7 @@ import type {
   StudentNote,
 } from "./model";
 import { responseId, sittingId } from "./model";
+import { tracked } from "./saveState";
 
 export interface Setting {
   key: string;
@@ -57,8 +58,28 @@ export function db(): KakshaDb {
   return instance;
 }
 
-/** Record one tap. Returns the previous value so the caller can undo it. */
-export async function setAnswer(
+/**
+ * Record one tap. Returns the previous value so the caller can undo it. A failed write
+ * does not throw: it is queued and reported through saveState, so the screen can say so.
+ */
+export function setAnswer(
+  assessmentId: Id,
+  studentId: Id,
+  itemId: Id,
+  value: string | undefined,
+): Promise<string | undefined> {
+  return tracked(() => writeAnswer(assessmentId, studentId, itemId, value));
+}
+
+export function setAbsent(assessmentId: Id, studentId: Id, absent: boolean): Promise<unknown> {
+  return tracked(() => writeAbsent(assessmentId, studentId, absent));
+}
+
+export function setNote(assessmentId: Id, studentId: Id, note: string): Promise<unknown> {
+  return tracked(() => writeNote(assessmentId, studentId, note));
+}
+
+async function writeAnswer(
   assessmentId: Id,
   studentId: Id,
   itemId: Id,
@@ -80,11 +101,7 @@ export async function setAnswer(
   });
 }
 
-export async function setAbsent(
-  assessmentId: Id,
-  studentId: Id,
-  absent: boolean,
-): Promise<boolean> {
+async function writeAbsent(assessmentId: Id, studentId: Id, absent: boolean): Promise<boolean> {
   const d = db();
   const id = sittingId(assessmentId, studentId);
   const before = await d.sittings.get(id);
@@ -92,7 +109,7 @@ export async function setAbsent(
   return before?.absent ?? false;
 }
 
-export async function setNote(assessmentId: Id, studentId: Id, note: string): Promise<void> {
+async function writeNote(assessmentId: Id, studentId: Id, note: string): Promise<void> {
   const d = db();
   const id = sittingId(assessmentId, studentId);
   const before = await d.sittings.get(id);
@@ -199,6 +216,55 @@ export async function deleteClass(id: Id): Promise<void> {
     if (cls) {
       const others = await d.classes.where("schoolId").equals(cls.schoolId).count();
       if (others === 0) await d.schools.delete(cls.schoolId);
+    }
+  });
+}
+
+/** Everything a delete removes, so Undo can put it back exactly. */
+export interface Snapshot {
+  [table: string]: unknown[];
+}
+
+/** Copy a test and everything under it, before deleting it. */
+export async function snapshotAssessment(id: Id): Promise<Snapshot> {
+  const d = db();
+  return {
+    assessments: (await d.assessments.where("id").equals(id).toArray()) as unknown[],
+    responses: await d.responses.where("assessmentId").equals(id).toArray(),
+    sittings: await d.sittings.where("assessmentId").equals(id).toArray(),
+  };
+}
+
+/** Copy a class and everything under it, before deleting it. */
+export async function snapshotClass(id: Id): Promise<Snapshot> {
+  const d = db();
+  const cls = await d.classes.get(id);
+  const tests = await d.assessments.where("classId").equals(id).toArray();
+  const ids = tests.map((t) => t.id);
+  const students = await d.students.where("classId").equals(id).toArray();
+  return {
+    schools: cls ? ((await d.schools.where("id").equals(cls.schoolId).toArray()) as unknown[]) : [],
+    classes: cls ? [cls] : [],
+    students,
+    assessments: tests,
+    responses: await d.responses.where("assessmentId").anyOf(ids).toArray(),
+    sittings: await d.sittings.where("assessmentId").anyOf(ids).toArray(),
+    notes: await d.notes
+      .where("studentId")
+      .anyOf(students.map((s) => s.id))
+      .toArray(),
+  };
+}
+
+/** Put a snapshot back. Rows that still exist are left as they are. */
+export async function restoreSnapshot(snap: Snapshot): Promise<void> {
+  const d = db();
+  const tables = Object.keys(snap)
+    .map((name) => d.table(name))
+    .filter(Boolean);
+  await d.transaction("rw", tables, async () => {
+    for (const [name, rows] of Object.entries(snap)) {
+      if (rows.length) await d.table(name).bulkPut(rows);
     }
   });
 }

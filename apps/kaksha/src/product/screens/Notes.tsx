@@ -6,7 +6,10 @@ import { formatDayMonth } from "../../i18n";
 import { addNote, db } from "../../lib/db";
 import { useApp } from "../context";
 import { useNotes } from "../data";
+import { offerUndo } from "../UndoBar";
 import { Empty, Icon, Toggle, TopBar } from "../ui";
+
+const NOTE_MAX = 500;
 
 export default function Notes({ studentId }: { studentId: string }) {
   const { t, locale } = useApp();
@@ -17,14 +20,25 @@ export default function Notes({ studentId }: { studentId: string }) {
   const notes = useNotes(studentId);
   const [text, setText] = useState("");
   const [onCard, setOnCard] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [failed, setFailed] = useState(false);
   if (student === null) return <Empty title={t("common.notFound")} />;
   if (!student || !notes) return <div aria-busy="true" style={{ minHeight: "60svh" }} />;
   const submit = async (e: FormEvent) => {
     e.preventDefault();
-    if (!text.trim()) return;
-    await addNote(studentId, text.trim(), onCard);
-    setText("");
-    setOnCard(false);
+    if (!text.trim() || busy) return;
+    setBusy(true);
+    setFailed(false);
+    try {
+      await addNote(studentId, text.trim(), onCard);
+      setText("");
+      setOnCard(false);
+    } catch {
+      // Keep what the teacher typed; say so next to the button.
+      setFailed(true);
+    } finally {
+      setBusy(false);
+    }
   };
   return (
     <>
@@ -39,11 +53,21 @@ export default function Notes({ studentId }: { studentId: string }) {
               rows={3}
               value={text}
               placeholder={t("notes.placeholder")}
+              maxLength={NOTE_MAX}
+              aria-describedby="note-count"
               onChange={(e) => setText(e.target.value)}
             />
+            <p id="note-count" className="small muted num">
+              {t("notes.count", { n: text.length, max: NOTE_MAX })}
+            </p>
           </div>
           <Toggle on={onCard} onChange={setOnCard} label={t("notes.onCard")} />
-          <button type="submit" className="btn btn--primary" disabled={!text.trim()}>
+          {failed ? (
+            <p className="error" role="alert">
+              {t("notes.failed")}
+            </p>
+          ) : null}
+          <button type="submit" className="btn btn--primary" disabled={!text.trim() || busy}>
             <Icon name="plus" />
             {t("notes.add")}
           </button>
@@ -70,8 +94,11 @@ export default function Notes({ studentId }: { studentId: string }) {
                     <button
                       type="button"
                       className="btn btn--ghost btn--sm"
-                      onClick={() => {
-                        if (confirm(t("notes.deleteConfirm"))) void db().notes.delete(n.id);
+                      onClick={async () => {
+                        await db().notes.delete(n.id);
+                        offerUndo(t("undo.noteDeleted"), t("undo.noteBack"), async () => {
+                          await db().notes.put(n);
+                        });
                       }}
                     >
                       <Icon name="trash" />

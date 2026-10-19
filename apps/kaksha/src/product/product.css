@@ -3535,3 +3535,161 @@ h3 {
 .card--flush:has(> table) {
   overflow-x: auto;
 }
+
+/* ===========================================================================
+   States: saving, failures, undo, updates. One look for each situation
+   (see PATTERNS.md).
+   =========================================================================== */
+.save-line {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+}
+.save-line svg {
+  width: 16px;
+  height: 16px;
+  flex: none;
+  color: var(--right);
+}
+.undobar svg,
+.problem__safe svg {
+  width: 18px;
+  height: 18px;
+  flex: none;
+}
+.problem__icon svg {
+  width: 26px;
+  height: 26px;
+}
+.save-alert {
+  display: grid;
+  gap: 8px;
+}
+.save-alert p {
+  margin: 0;
+}
+.k-loading {
+  min-height: 60svh;
+  display: grid;
+  place-items: center;
+}
+.k-update {
+  background: var(--brand-softer);
+  color: var(--ink);
+  padding: 4px var(--pad);
+  font-size: 0.85rem;
+  display: flex;
+  gap: 4px 12px;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.k-update .k-demo__reset {
+  color: var(--brand);
+}
+.undobar {
+  position: fixed;
+  z-index: 40;
+  left: 50%;
+  translate: -50% 0;
+  bottom: calc(84px + env(safe-area-inset-bottom));
+  width: min(560px, calc(100vw - 2 * var(--pad)));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 8px 8px 16px;
+  border-radius: 16px;
+  background: var(--ink);
+  color: #fff;
+  box-shadow: 0 16px 32px -12px rgb(14 20 51 / 0.45);
+  font-size: 0.95rem;
+}
+.undobar > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.undobar__btn {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--brand-soft);
+  color: var(--ink);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+.k-app[data-top="false"] .undobar {
+  bottom: calc(16px + env(safe-area-inset-bottom));
+}
+@media (min-width: 1024px) {
+  /* Bottom left of the stage, clear of the round New test button on the right. */
+  .undobar {
+    bottom: 24px;
+    left: 140px;
+    translate: none;
+  }
+}
+.problem {
+  display: grid;
+  gap: 12px;
+  max-width: 560px;
+  margin: 8vh auto 0;
+}
+.problem__icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  background: var(--wrong-soft);
+  color: var(--wrong);
+}
+.problem__title {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 1.6rem;
+}
+.problem p {
+  margin: 0;
+}
+.problem__safe {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  color: var(--right);
+  font-weight: 600;
+}
+.problem details code,
+.problem__info {
+  display: block;
+  margin-top: 6px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: var(--paper-2);
+  font-size: 0.8rem;
+  overflow-wrap: anywhere;
+}
+.deskbar__none {
+  margin: 0;
+  padding: 12px 14px;
+  color: var(--ink-2);
+  font-size: 0.9rem;
+}
+.none {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+}
+.none p {
+  margin: 0;
+}

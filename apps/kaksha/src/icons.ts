@@ -455,5 +455,21 @@ export const ICON_DATA = {
     ],
     ["path", { d: "M9 4l0 16" }],
   ],
+  clock: [
+    ["path", { d: "M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" }],
+    ["path", { d: "M12 7v5l3 3" }],
+  ],
+  refresh: [
+    ["path", { d: "M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4" }],
+    ["path", { d: "M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4" }],
+  ],
+  lifebuoy: [
+    ["path", { d: "M8 12a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" }],
+    ["path", { d: "M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" }],
+    ["path", { d: "M15 15l3.35 3.35" }],
+    ["path", { d: "M9 15l-3.35 3.35" }],
+    ["path", { d: "M5.65 5.65l3.35 3.35" }],
+    ["path", { d: "M18.35 5.65l-3.35 3.35" }],
+  ],
 } as const satisfies Record<string, readonly IconEl[]>;
 export type IconName = keyof typeof ICON_DATA;

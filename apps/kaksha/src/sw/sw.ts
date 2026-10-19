@@ -22,4 +22,9 @@ const serwist = new Serwist({
   navigationPreload: false,
 });
 
+// The app's "Update now" button asks the waiting version to take over.
+self.addEventListener("message", (event) => {
+  if ((event.data as { type?: string } | null)?.type === "SKIP_WAITING") void self.skipWaiting();
+});
+
 serwist.addEventListeners();

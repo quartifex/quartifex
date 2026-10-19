@@ -17,6 +17,7 @@ import { parseTemplate, type Template } from "../../lib/template";
 import { useApp } from "../context";
 import { useClass } from "../data";
 import { Icon, TopBar } from "../ui";
+import { useAction } from "../useAction";
 
 const EXAMPLES = [mathsExample, readingExample, writingExample];
 
@@ -275,6 +276,7 @@ function KeyBuilder({ classId }: { classId: string }) {
     if (i === cursor && cursor < count - 1) setCursor(cursor + 1);
   };
 
+  const [busy, run] = useAction();
   const create = async () => {
     if (!title.trim()) return setError(t("newTest.needName"));
     if (type === "choice" && keys.some((k) => k === null)) return setError(t("newTest.needKeys"));
@@ -296,8 +298,13 @@ function KeyBuilder({ classId }: { classId: string }) {
       kind: "key",
       items,
     };
-    await db().assessments.add(a);
-    go(`/test/${a.id}/mark`, true);
+    await run(
+      async () => {
+        await db().assessments.add(a);
+        go(`/test/${a.id}/mark`, true);
+      },
+      () => setError(t("common.saveFailed")),
+    );
   };
 
   const knownDomains = [...new Set(domains.filter(Boolean))];
@@ -424,8 +431,13 @@ function KeyBuilder({ classId }: { classId: string }) {
           {error}
         </p>
       ) : null}
-      <button type="button" className="btn btn--primary btn--block" onClick={create}>
-        {t("newTest.create")}
+      <button
+        type="button"
+        className="btn btn--primary btn--block"
+        onClick={create}
+        disabled={busy}
+      >
+        {busy ? t("common.saving") : t("newTest.create")}
       </button>
     </div>
   );
@@ -442,6 +454,7 @@ function RubricBuilder({ classId }: { classId: string }) {
   ]);
   const [error, setError] = useState("");
 
+  const [busy, run] = useAction();
   const create = async () => {
     if (!title.trim()) return setError(t("newTest.needName"));
     const named = criteria.filter((c) => c.label.trim());
@@ -466,8 +479,13 @@ function RubricBuilder({ classId }: { classId: string }) {
       kind: "rubric",
       items,
     };
-    await db().assessments.add(a);
-    go(`/test/${a.id}/mark`, true);
+    await run(
+      async () => {
+        await db().assessments.add(a);
+        go(`/test/${a.id}/mark`, true);
+      },
+      () => setError(t("common.saveFailed")),
+    );
   };
 
   return (
@@ -530,8 +548,13 @@ function RubricBuilder({ classId }: { classId: string }) {
           {error}
         </p>
       ) : null}
-      <button type="button" className="btn btn--primary btn--block" onClick={create}>
-        {t("newTest.create")}
+      <button
+        type="button"
+        className="btn btn--primary btn--block"
+        onClick={create}
+        disabled={busy}
+      >
+        {busy ? t("common.saving") : t("newTest.create")}
       </button>
     </div>
   );

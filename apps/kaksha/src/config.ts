@@ -6,6 +6,8 @@ export const PRODUCT_NAME_HI = "कक्षा";
 
 export const SITE_URL = "https://kaksha.quartifex.com";
 export const REPO_URL = "https://github.com/quartifex/quartifex/tree/main/apps/kaksha";
+/** Where a teacher can report a problem. Public, so reports must never hold student data. */
+export const ISSUES_URL = "https://github.com/quartifex/quartifex/issues/new";
 export const STUDIO = "Quartifex";
 export const STUDIO_URL = "https://quartifex.com";
 

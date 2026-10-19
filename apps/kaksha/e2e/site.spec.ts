@@ -166,6 +166,38 @@ test.describe("the site", () => {
     expect([200, 503]).toContain(real.status());
   });
 
+  test("a message that does not send says why and keeps every word", async ({ page, context }) => {
+    await page.goto("/#schools");
+    const form = page.locator("form.contact");
+    await form.getByLabel("Your name").fill("A Teacher");
+    await form.getByLabel("Email").fill("a@example.org");
+    await form.getByLabel("Organisation").fill("An NGO");
+    await form.getByLabel("Message").fill("We have 40 schools.");
+    const status = form.getByRole("status");
+    const send = form.getByRole("button", { name: "Send" });
+    for (const [code, text] of [
+      [429, "5 messages an hour is the limit"],
+      [502, "our side had a problem"],
+      [503, "not switched on yet"],
+    ] as const) {
+      await page.route("**/api/contact", (r) => r.fulfill({ status: code, body: "{}" }));
+      await send.click();
+      await expect(status).toContainText(text);
+      await expect(status).toContainText("Your message is still here");
+      await expect(form.getByLabel("Message")).toHaveValue("We have 40 schools.");
+      await page.unroute("**/api/contact");
+    }
+    await context.setOffline(true);
+    await send.click();
+    await expect(status).toContainText("you are offline");
+    await expect(form.getByLabel("Message")).toHaveValue("We have 40 schools.");
+    await context.setOffline(false);
+    await page.route("**/api/contact", (r) => r.fulfill({ status: 200, body: '{"ok":true}' }));
+    await send.click();
+    await expect(status).toContainText("Sent.");
+    await expect(form.getByLabel("Message")).toHaveValue("");
+  });
+
   test("help: every topic has its own page, reachable from the product page", async ({ page }) => {
     await page.goto("/");
     await page.getByRole("link", { name: /Backup and new phones/ }).click();

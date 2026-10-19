@@ -2,9 +2,11 @@
 import { useEffect, useMemo } from "react";
 import { formatDate, formatNumber, formatPercent, type Key } from "../../i18n";
 import { toCsv } from "../../lib/csv";
+import { deleteAssessment, snapshotAssessment } from "../../lib/db";
 import type { Assessment, Student } from "../../lib/model";
 import { type ClassSummary, classSummary, indexResponses, percent } from "../../lib/scoring";
 import { useApp } from "../context";
+import { DeleteButton } from "../DeleteButton";
 import {
   useAnswers,
   useAssessment,
@@ -115,14 +117,33 @@ export default function Results({
         sub={sub}
         back={`/class/${a.classId}`}
         actions={
-          <button
-            type="button"
-            className="icon-btn"
-            onClick={() => go(`/test/${a.id}/report`)}
-            aria-label={t("results.print")}
-          >
-            <Icon name="print" />
-          </button>
+          <>
+            <button
+              type="button"
+              className="icon-btn"
+              onClick={() => go(`/test/${a.id}/report`)}
+              aria-label={t("results.print")}
+            >
+              <Icon name="print" />
+            </button>
+            <DeleteButton
+              label={t("del.test")}
+              name={a.title}
+              load={() => snapshotAssessment(a.id)}
+              describe={(snap) =>
+                t("del.testBody", {
+                  marks: snap.responses?.length ?? 0,
+                  students: new Set(
+                    (snap.responses as Array<{ studentId: string }> | undefined)?.map(
+                      (r) => r.studentId,
+                    ),
+                  ).size,
+                })
+              }
+              remove={() => deleteAssessment(a.id)}
+              after={() => go(`/class/${a.classId}`, true)}
+            />
+          </>
         }
       />
       <div className="tabs tabs--sticky" role="tablist" aria-label={a.title}>

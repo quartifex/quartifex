@@ -1,10 +1,13 @@
 "use client";
 import { lazy, Suspense, useEffect, useState } from "react";
 import { db, getSetting, isDemo } from "../lib/db";
+import { type SaveProblem, storageProblem } from "../lib/saveState";
 import { AppProvider, useApp } from "./context";
 import { DeskBar } from "./DeskBar";
+import { ScreenBoundary, ScreenProblem } from "./ErrorBoundary";
 import { PinGate } from "./PinGate";
 import { Home } from "./screens/Home";
+import { UndoBar } from "./UndoBar";
 import { Icon, TabBar } from "./ui";
 
 const ClassScreen = lazy(() => import("./screens/ClassScreen"));
@@ -101,12 +104,65 @@ function DemoBanner() {
   );
 }
 
+/** Blank only for the first 600 ms; after that it says what is happening. */
 function Loading() {
-  return <div aria-busy="true" style={{ minHeight: "60svh" }} />;
+  const { t } = useApp();
+  const [slow, setSlow] = useState(false);
+  useEffect(() => {
+    const id = window.setTimeout(() => setSlow(true), 600);
+    return () => window.clearTimeout(id);
+  }, []);
+  return (
+    <div aria-busy="true" className="k-loading">
+      {slow ? <p className="muted">{t("common.opening")}</p> : null}
+    </div>
+  );
+}
+
+/** A new version has downloaded. It waits for the next start, or the teacher says now. */
+function UpdateBanner() {
+  const { t } = useApp();
+  const [waiting, setWaiting] = useState<ServiceWorker | null>(null);
+  useEffect(() => {
+    if (isDemo() || !("serviceWorker" in navigator)) return;
+    let live = true;
+    void navigator.serviceWorker.getRegistration("/app").then((reg) => {
+      if (!reg || !live) return;
+      if (reg.waiting && navigator.serviceWorker.controller) setWaiting(reg.waiting);
+      reg.addEventListener("updatefound", () => {
+        const next = reg.installing;
+        next?.addEventListener("statechange", () => {
+          if (next.state === "installed" && navigator.serviceWorker.controller && live)
+            setWaiting(next);
+        });
+      });
+    });
+    return () => {
+      live = false;
+    };
+  }, []);
+  if (!waiting) return null;
+  return (
+    <div className="k-update" role="status">
+      <span>{t("update.ready")}</span>
+      <button
+        type="button"
+        className="k-demo__reset"
+        onClick={() => {
+          navigator.serviceWorker.addEventListener("controllerchange", () => location.reload());
+          waiting.postMessage({ type: "SKIP_WAITING" });
+        }}
+      >
+        <Icon name="refresh" />
+        <span>{t("update.now")}</span>
+      </button>
+    </div>
+  );
 }
 
 function Shell() {
   const [ready, setReady] = useState(!isDemo());
+  const [blocked, setBlocked] = useState<{ p: SaveProblem; detail: string } | null>(null);
   const { locale, route } = useApp();
   const head = route[0] ?? "";
   const onb = head === "welcome";
@@ -132,24 +188,42 @@ function Shell() {
     if (!isDemo() && "serviceWorker" in navigator && process.env.NODE_ENV === "production") {
       navigator.serviceWorker.register("/sw.js", { scope: "/app" }).catch(() => {});
     }
+    // If the browser will not open storage (some private windows, a full disk), say so
+    // up front instead of showing screens that cannot save.
     void db()
       .open()
-      .catch(() => {});
+      .catch((error: unknown) => {
+        const p = storageProblem(error);
+        setBlocked({
+          p: p === "other" ? "blocked" : p,
+          detail: error instanceof Error ? `${error.name}: ${error.message}`.slice(0, 160) : "",
+        });
+      });
   }, []);
 
   return (
     <div className="k-app" data-top={top} data-onb={onb}>
       <DemoBanner />
-      {ready ? (
+      <UpdateBanner />
+      {blocked ? (
+        <ScreenProblem
+          problem={blocked.p === "quota" ? "quota" : "blocked"}
+          detail={blocked.detail}
+          onRetry={() => location.reload()}
+        />
+      ) : ready ? (
         <PinGate>
           <FirstRun />
           <div className="k-frame">
             {onb ? null : <TabBar />}
             <div className="k-stage">
               {top ? <DeskBar /> : null}
-              <Suspense fallback={<Loading />}>
-                <Screens />
-              </Suspense>
+              <ScreenBoundary resetKey={route.join("/")}>
+                <Suspense fallback={<Loading />}>
+                  <Screens />
+                </Suspense>
+              </ScreenBoundary>
+              <UndoBar />
             </div>
           </div>
         </PinGate>
