@@ -384,6 +384,14 @@
   "png": "png/S19-lattice.png"
  },
  {
+  "id": "S20",
+  "name": "kaksha",
+  "kind": "site",
+  "category": "Free tool",
+  "svg": "svg/S20-kaksha.svg",
+  "png": "png/S20-kaksha.png"
+ },
+ {
   "id": "LB01",
   "name": "glint",
   "kind": "lab",

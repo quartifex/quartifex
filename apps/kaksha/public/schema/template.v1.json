@@ -1,0 +1,231 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kaksha.quartifex.com/schema/template.v1.json",
+  "title": "Kaksha template (version 1)",
+  "description": "An answer-key test or a rubric that teachers can share. See https://kaksha.quartifex.com/docs/templates",
+  "oneOf": [
+    {
+      "type": "object",
+      "properties": {
+        "format": {
+          "type": "string",
+          "const": "kaksha-template"
+        },
+        "version": {
+          "type": "number",
+          "const": 1
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9-]{1,62}$"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "subject": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 60
+        },
+        "language": {
+          "default": "en",
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 20
+        },
+        "example": {
+          "default": false,
+          "type": "boolean"
+        },
+        "author": {
+          "type": "string",
+          "maxLength": 120
+        },
+        "notes": {
+          "type": "string",
+          "maxLength": 2000
+        },
+        "kind": {
+          "type": "string",
+          "const": "key"
+        },
+        "items": {
+          "minItems": 1,
+          "maxItems": 200,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 40
+              },
+              "domain": {
+                "default": "",
+                "type": "string",
+                "maxLength": 60
+              },
+              "type": {
+                "default": "choice",
+                "type": "string",
+                "enum": [
+                  "choice",
+                  "rightwrong"
+                ]
+              },
+              "key": {
+                "default": null,
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "enum": [
+                      "A",
+                      "B",
+                      "C",
+                      "D"
+                    ]
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "marks": {
+                "default": 1,
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 100
+              }
+            },
+            "required": [
+              "label"
+            ]
+          }
+        }
+      },
+      "required": [
+        "format",
+        "version",
+        "id",
+        "title",
+        "subject",
+        "kind",
+        "items"
+      ]
+    },
+    {
+      "type": "object",
+      "properties": {
+        "format": {
+          "type": "string",
+          "const": "kaksha-template"
+        },
+        "version": {
+          "type": "number",
+          "const": 1
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9-]{1,62}$"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "subject": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 60
+        },
+        "language": {
+          "default": "en",
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 20
+        },
+        "example": {
+          "default": false,
+          "type": "boolean"
+        },
+        "author": {
+          "type": "string",
+          "maxLength": 120
+        },
+        "notes": {
+          "type": "string",
+          "maxLength": 2000
+        },
+        "kind": {
+          "type": "string",
+          "const": "rubric"
+        },
+        "items": {
+          "minItems": 1,
+          "maxItems": 40,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 80
+              },
+              "domain": {
+                "default": "",
+                "type": "string",
+                "maxLength": 60
+              },
+              "levels": {
+                "minItems": 2,
+                "maxItems": 8,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "score": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 100
+                    },
+                    "label": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 40
+                    },
+                    "descriptor": {
+                      "default": "",
+                      "type": "string",
+                      "maxLength": 400
+                    }
+                  },
+                  "required": [
+                    "score",
+                    "label"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "label",
+              "levels"
+            ]
+          }
+        }
+      },
+      "required": [
+        "format",
+        "version",
+        "id",
+        "title",
+        "subject",
+        "kind",
+        "items"
+      ]
+    }
+  ]
+}

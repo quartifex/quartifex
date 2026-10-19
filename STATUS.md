@@ -264,6 +264,71 @@ Deviations from the P6 brief:
   (most today), and the page says so; the WebP numbers are real bytes.
 - halcyon's on-page results are from a local run until CI's first publish on `main`.
 
+## PK: kaksha (S20), the offline marking app and its site
+
+Branch `kaksha`, not merged. State: **in progress** (built and deployed as a preview; the
+launch gate has open lines, below).
+
+| Part | What is there |
+| --- | --- |
+| Brand | Kaksha (कक्षा), working name in `PRODUCT_NAME`. The K mark (stroke and two leaves) in electric blue and mint green, ink text; Barlow Condensed headings, Inter text, Mukta Devanagari (SIL OFL); Tabler icons (MIT) inlined. Drawn in code (`apps/kaksha/scripts/brand`); wordmark outlined with HarfBuzz; `public/brand/logo.svg` is the one file to swap for the final logo. Catalog icon `S20-kaksha.svg` |
+| Design | Figma file Q2OkPraJ4byy5bhLC1zKUG: Foundations (variables, components, Tikki), App flows (eight flows, 51 screens at 360 × 780, and a map), Website (desktop 1440, phone 390, the pinned demo and the full-screen phone demo) |
+| App `/app` | First open: language, three promises, about you, first class with subjects, students (type, paste or roll numbers), PIN and backup reminder, ready with an install prompt. Four tabs: Today (continue marking, results ready to read, backup nudge, first-day state), Classes, Insights (who sat each test, below half twice running, skills across tests), More (profile, backup and restore with a per-class preview, PIN, language and text size, about and delete). Marking starts with attendance; results in four tabs (overview with mark bands and "worth a look", questions with a page per question, skills with change since the last test, groups); class students with search and filters; student page with notes; report card options and card language; all cards for a class in one PDF; test as a file. Static, code-split React 19 + Dexie bundle with its own CSP, offline through a Serwist service worker. Classes, rosters (CSV file, spreadsheet paste, one by one; bad rows reported by line), answer-key and rubric tests (from scratch, three labelled examples, or a template file checked against the published schema), entry by question or by student with auto-advance, undo, absent and blank, write per tap, the full marks grid, class view (average, attendance, by skill, by question with common wrong answers, quartile groups, who needs help), progress over time, student view (trend, strengths and gaps), printable report card and class summary, CSV export, encrypted backup (share sheet or download), restore and merge, PIN lock, light/dark/system, four text sizes, Hindi and English throughout, demo on its own database |
+| Site `/` (`/hi` redirects to `/`; the app keeps Hindi) | Rebuilt to the Figma: hero on ruled paper with the app's own screens drawn in markup and a ledger of facts; the paper-to-grid-to-chart scroll moment (GSAP + ScrollTrigger through stillness; three stills under reduced motion); the live demo, whose phone stays sticky beside the steps and pins on "Tap to try" (page behind dimmed, still and inert; full screen on phones; Reset, How it works, Done; Esc, Done or a click outside lets go; steps tick off as the app reports them) with a four-step tour the first time; three checkable numbers; install with three phone screens; six help topics and FAQ; for-schools form; origin; footer |
+| Help `/docs`, `/docs/<topic>` | 14 MDX topics, each its own static page with the topic list and previous/next; privacy written from the DPDP Act 2023 and Rules 2025 with sources and "not legal advice" |
+| `/api/contact` | Resend from env vars, honeypot, 5 per hour per IP; 503 until configured |
+| Vercel | Project `kaksha` (Quartifex team), root `apps/kaksha`, linked to the repo. Preview of `kaksha`: kaksha-git-kaksha-quartifex.vercel.app (Vercel Authentication on previews). Domain `kaksha.quartifex.com` added and verified on the project; it serves production, which is the `main` branch, so it goes live when this branch is merged and DNS points at Vercel |
+
+Quality audit, 19 Oct 2026 (`reports/kaksha/quality-audit.md`, patterns in `apps/kaksha/PATTERNS.md`): save failures shown and retried, crash and blocked-storage screens, delete test or class with counts and Undo, double-tap guards, no-results and not-found states with a way on, Report a problem, one word per concept, whole percentages and DD/MM/YYYY. Brand pairs blue with mint green; the site says "teachers and educators". Checks: typecheck and lint pass; unit 48 pass; Playwright 38 (all pass; 1 skipped; slow 3G still a marked known failure); axe 132 page states, 0 violations; `/app` initial JS 125.7 kB gzip of 150; first visit on the Lighthouse network 2.7–2.8 s.
+
+Checks after the brand and dashboard overhaul, 19 Oct 2026: typecheck and lint pass; unit 46 pass; Playwright app, site and screens 21 pass (including the computer demo); axe 136 page states, 0 violations; `/app` initial JS 127.6 kB gzip of 150.
+
+Checks after the app and site rebuild, 18 Oct 2026 (earlier figures below where not re-run):
+
+| Check | Result |
+| --- | --- |
+| Typecheck and Biome (kaksha) | pass |
+| Unit tests (kaksha) | 4 files, 46 pass (new: restore preview class by class, notes in backups, backups from before notes) |
+| Build | pass. `/app` initial JS **121 kB gzip** (budget 150), 31 chunks, CSS 7.4 kB; 14 help pages prerendered |
+| heft | within budget: transfer 451 kB, script 140 kB, 4 long frames, p95 frame 17 ms, CLS 0.001, interaction 24 ms |
+| Playwright, local build | app and site 20 pass (offline session with zero network requests, onboarding to a ready class, undo, backup/wipe/restore with the per-class preview, rubric, Hindi, demo isolation, CSP, demo frame with tour and ticked steps, pinned page does not scroll and is inert, Esc lets go, tour once then on request, help pages, form, scrub, reduced motion); timing pass; no clipped text or sideways scroll on 34 app screens and the site at 320–1280 px in both languages |
+| axe, 136 page states (site, help pages, every app screen, both languages, two widths) | **0 violations** |
+
+Earlier checks, 18 Oct 2026 (before the rebuild):
+
+| Check | Result |
+| --- | --- |
+| Typecheck (turbo, 40 tasks) and root `tsc` | pass |
+| Lint (Biome, 437 files) | pass |
+| Unit tests (Vitest, whole repo) | 27 files, 283 tests pass; kaksha: scoring 21, templates/backup/CSV 16, locales 6 |
+| Build | pass. `/app` initial JS **112.4 kB gzip** (budget 150), 25 chunks, CSS 4.2 kB |
+| Size (turbo) | 40 tasks pass |
+| heft (`reports/kaksha/heft.md`) | within budget: transfer 501 kB, script 183 kB, 2 long frames, p95 frame 17 ms, CLS 0.001, interaction 24 ms; `/app` 112.4 / 150 kB |
+| Playwright, local build | 24 pass, including: full offline marking session with **zero network requests** after the service worker is ready; undo and write-per-tap; backup → wipe → restore, wrong passphrase refused; CSV and paste roster with bad rows; rubric; Hindi; CSP; demo frame; reduced motion; scrub; form; docs; no clipped text at 320–1280 px in both languages (Hindi and English screenshots at 360 and 1280 px saved locally) |
+| Playwright, against the preview | the same 24 pass |
+| Timing, job 1 (`reports/kaksha/timing.json`) | 800 taps on a 4x slower CPU: app time per tap mean 81–92 ms, p95 107–138 ms; with an assumed 600 ms of teacher reading per answer, **9.1–9.2 minutes** for 20 questions x 40 students (target 10) |
+| Grid, 50 x 30, 4x CPU | **60 fps**, p95 frame 16.7 ms |
+| Site LCP / CLS, Pixel 7, 4x CPU, 1.6 Mbit/s | `/` 1.3–1.4 s, `/hi` 1.3–1.4 s; CLS 0 to 0.016 |
+| `/app` first visit, 6x CPU, 360 x 640 | Lighthouse mobile network: **2.1–2.2 s**; slow 3G (400 ms, 400 kbit/s): **4.8–5.1 s** (target 3 s, missed); from cache 0.6 s |
+| contactsheet, 36 profiles + 4 low-end Android (`reports/kaksha/sheet-*`) | site: no flags; app: no flags |
+| axe (WCAG 2.0/2.1/2.2 A and AA), 68 page states (`reports/kaksha/audit.md`) | **0 violations** |
+| Lighthouse, mobile (`reports/kaksha/audit.md`) | `/` and `/hi`: accessibility, best practices, SEO 100; performance 79–90 (simulated LCP 3.2–4.3 s, against the measured 1.3–1.4 s above); `/app`: 100 / 100 / SEO 60 (noindex on purpose) / performance 95–98 |
+
+Deviations from the brief:
+
+- `/app` is a static React 19 bundle built with esbuild and served by the Next.js deployment, not a Next.js page: Next.js and React alone are about 168 kB gzipped, over the 150 kB budget.
+- PDFs come from the phone's print engine ("Save as PDF"), not a PDF library, because client-side PDF libraries break Devanagari conjuncts.
+- The help pages are English on both language pages; the Hindi page says so.
+- Install and hero pictures are the app's screens drawn in HTML and CSS from the Figma, not captures, so nothing raster is committed and the preview shows them too.
+- `airowe/claude-a11y-skill` did not install (no SKILL.md); axe-core runs directly.
+- Not promoted: the launch gate below has open lines, and the custom domain needs DNS.
+
+Launch gate (`apps/kaksha/README.md`): all ticked except `/app` under 3 s on slow 3G (4.8 s),
+the native Hindi review, the final name, and TFI's answer on naming.
+
+Next step to note, not built: a Play Store wrapper as a Trusted Web Activity (Bubblewrap), once
+the name and the domain are final.
+
 ## Known issues
 
 - The safeframe page's own contactsheet flags come from its scaled preview of other devices and
@@ -274,6 +339,9 @@ Deviations from the P6 brief:
 - stillness: two small layout shifts on iPads (0.12 and 0.13), and frameguide's and
   aspect-morph's pages flag their own scaled previews of other screens, the same expected case
   as safeframe.
+- kaksha: `/app`'s first visit on slow 3G is 4.8–5.1 s (target 3 s). React 19 and Dexie are about 100 kB gzipped. The test is marked as a known failure. Options that change the brief's stack: Preact's React compat layer (about 45 kB less), or `idb` instead of Dexie (about 30 kB less).
+- kaksha: Lighthouse's simulated LCP for `/hi` (4.3 s) is well above the measured one (1.4 s); the Devanagari faces are about 100 kB each per weight. Subsetting them with HarfBuzz to the page's characters would cut that, if Lighthouse scores matter.
+- kaksha: the Serwist runtime bundled into `sw.js` contains its offline Google Analytics helper as dead code; it is never enabled and the CSP would block it anyway.
 - turbo's build outputs for the apps do not include the generated `public/sequences`, so a
   cache hit can leave a checkout without frames (seen here for anyframe).
 - Next's `beforeInteractive` scripts run after the HTML is parsed in the App Router, not before
@@ -284,7 +352,7 @@ Deviations from the P6 brief:
 ## Items
 
 <!-- items:start -->
-_63 items: 22 built, 41 not started. Generated by `pnpm status`; edit the catalog, not this table._
+_64 items: 22 built, 41 not started, 1 in progress. Generated by `pnpm status`; edit the catalog, not this table._
 
 ### Libraries (30)
 
@@ -321,7 +389,7 @@ _63 items: 22 built, 41 not started. Generated by `pnpm status`; edit the catalo
 | L19 | steadicam | P12 | not started | 3D / R3F |
 | L30 | volumetric | P5V | built | Shaders & lighting |
 
-### Sites (19)
+### Sites (20)
 
 | Id | Name | Gate | State | Note |
 | --- | --- | --- | --- | --- |
@@ -344,6 +412,7 @@ _63 items: 22 built, 41 not started. Generated by `pnpm status`; edit the catalo
 | S10 | deepfield | P15 | not started | Personal Case Study |
 | S11 | apogee | P16 | not started | Concept (invented brand, labelled) |
 | S12 | gaussia | P16 | not started | Personal Case Study |
+| S20 | kaksha | PK | in progress | Free tool |
 
 ### Lab seeds (14)
 
@@ -382,6 +451,17 @@ Things only Nitesh can supply or decide. None of them blocks the library work.
 | 9 | **Optional: KTX-Software.** Install `toktx` (KTX-Software 4) on this machine and in CI if you want freight's KTX2 path exercised; without it freight writes WebP and says so. | freight KTX2 |
 | 10 | **NutriMuscle (optional).** The plan describes sleeve as extracted from the NutriMuscle jar work. No jar model or label art is in `assets-private`, and it is client work, so sleeve was built generically with a fictional demo brand. If NutriMuscle should appear (a case study, a demo), supply the model and label and confirm the client's permission in writing. | Any NutriMuscle showcase |
 | 11 | **reelhouse and halcyon on Vercel.** Create a Vercel project for each (root directory `apps/reelhouse` and `apps/halcyon`; `vercel.json` does the rest) and point `reelhouse.quartifex.com` and `halcyon.quartifex.com` at them; set `QX_FONT_ORIGIN` there too (input 4). halcyon's CI job commits its audit back to `main`: if the repository's Actions settings limit the workflow token to read-only, allow read and write (Settings, Actions, General, Workflow permissions), or the page keeps showing the local run. | reelhouse and halcyon going live; CI figures on halcyon |
+| 12 | **TFI and the origin line.** Has Teach For India agreed to be named as Kaksha's origin, and where (case study only, or the product page too)? Until then the site says "Grew out of an assessment portal we designed for a classroom NGO in 2019" and nothing carries TFI's name or brand. | Naming TFI anywhere |
+| 13 | **The 2019 TFI screens.** PNG or SVG exports of `Archived/UI-UX/TFI UI` (Illustrator), for reference and the case study only, never shipped in the product. The screenshots shared in chat were used as context. | The case study |
+| 14 | **Real rubrics and test formats** to support (they shape the template schema). Three example templates ship now, labelled as examples. | Template schema v2 |
+| 15 | **The final name and logo.** "Kaksha" clashes with Samagra Shiksha Assam's e-Kaksha, the "eKaksha" iOS app, Kaksha Live and Kaksha Learning. Change `PRODUCT_NAME` (and `PRODUCT_NAME_HI`) in `apps/kaksha/src/config.ts`; swap `public/brand/logo.svg` (and `logo-dark.svg`). | Launch |
+| 16 | **A native Hindi speaker** to review `apps/kaksha/src/i18n/locales/hi.json`, the Hindi strings in `src/site/copy.ts` and `src/lib/demo.ts`. | Launch |
+| 17 | **Contact form:** an inbox, and a Resend API key with a verified sender. Set `KAKSHA_RESEND_KEY`, `KAKSHA_CONTACT_TO`, `KAKSHA_CONTACT_FROM` in the Vercel project `kaksha` (Production and Preview). | The "Work with us" form |
+| 18 | **DNS:** in Cloudflare, `CNAME kaksha → cname.vercel-dns.com`, DNS only (grey cloud), as for `lab`. The domain is already added and verified on the Vercel project. Then merge the `kaksha` branch to `main` to make it the production deployment. | kaksha.quartifex.com going live |
+| 19 | **Install screenshots online:** the captures from `apps/kaksha/scripts/shots.mjs` are raster and are not committed. Either upload them to Cloudinary (and we point the install section at it), or approve committing these six WebP files as an exception. | Pictures in the install section |
+| 20 | **One or two real teachers** to try the demo before launch. Feedback goes in the log; nothing is quoted on the site without their written OK. | Launch |
+| 21 | **The slow-3G target:** accept 4.8 s on 400 kbit/s for the first visit (2.1 s on Lighthouse's mobile network, 0.6 s after), or allow a stack change (Preact compat, `idb`) to chase 3 s. | Closing the launch gate |
+| 22 | **Where teachers report problems (kaksha):** a support email or WhatsApp number. Until then Report a problem opens a public GitHub issue. | Escalation route in the app |
 
 ## Open questions
 
@@ -593,3 +673,8 @@ Next prompt: **P6** (gate M6), the proof sites `reelhouse` and `halcyon`, now at
 visual bar with `volumetric` available, or **PF** (the flagship quartifex.com), per the order in
 `docs/code-prompts.md`. From P8 on, see the positioning
 note in `DECISIONS.md` (general-purpose libraries built to stand on their own).
+
+### 2026-10-18, PK (kaksha)
+
+See "PK" above: the brand, the app, the site, the checks, the deviations and the launch gate.
+Inputs 12 to 21 are new. The branch is pushed and previewed; merging it is Nitesh's step.

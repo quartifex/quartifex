@@ -1,0 +1,10 @@
+## Adding a language
+
+All the app's words live in one file per language: `src/i18n/locales/en.json` and `hi.json`. To add, say, Marathi:
+
+1. Copy `en.json` to `mr.json` and translate the values. Keep the keys, and keep `{placeholders}` exactly as they are.
+2. Add it in `src/i18n/index.ts`: `mr: { label: "मराठी", short: "म", intl: "mr-IN", strings: mr }`.
+3. Run the tests. One of them checks that every language has exactly the same keys and placeholders as English.
+4. If the script needs a font that is not already included, add it the way Mukta is added (self-hosted, with its licence recorded).
+
+The Hindi in this first version needs review by a native speaker before launch. Corrections are welcome, as an issue or a pull request on GitHub.

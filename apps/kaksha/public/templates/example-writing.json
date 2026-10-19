@@ -1,0 +1,144 @@
+{
+  "$schema": "/schema/template.v1.json",
+  "format": "kaksha-template",
+  "version": 1,
+  "id": "example-writing",
+  "title": "Writing rubric (example)",
+  "subject": "Language",
+  "language": "en",
+  "example": true,
+  "notes": "An example rubric to show the format. It is not an official curriculum or assessment: adapt the criteria and levels to your task.",
+  "kind": "rubric",
+  "items": [
+    {
+      "label": "Ideas",
+      "domain": "Content",
+      "levels": [
+        {
+          "score": 1,
+          "label": "Beginning",
+          "descriptor": "Few ideas; hard to follow."
+        },
+        {
+          "score": 2,
+          "label": "Developing",
+          "descriptor": "Some ideas, not developed."
+        },
+        {
+          "score": 3,
+          "label": "Secure",
+          "descriptor": "Clear ideas with some detail."
+        },
+        {
+          "score": 4,
+          "label": "Strong",
+          "descriptor": "Clear, interesting ideas with good detail."
+        }
+      ]
+    },
+    {
+      "label": "Organisation",
+      "domain": "Structure",
+      "levels": [
+        {
+          "score": 1,
+          "label": "Beginning",
+          "descriptor": "No clear beginning or end."
+        },
+        {
+          "score": 2,
+          "label": "Developing",
+          "descriptor": "Some order, with gaps."
+        },
+        {
+          "score": 3,
+          "label": "Secure",
+          "descriptor": "Clear beginning, middle and end."
+        },
+        {
+          "score": 4,
+          "label": "Strong",
+          "descriptor": "Well ordered; ideas link smoothly."
+        }
+      ]
+    },
+    {
+      "label": "Word choice",
+      "domain": "Language",
+      "levels": [
+        {
+          "score": 1,
+          "label": "Beginning",
+          "descriptor": "Very few words, often repeated."
+        },
+        {
+          "score": 2,
+          "label": "Developing",
+          "descriptor": "Simple words, some repeated."
+        },
+        {
+          "score": 3,
+          "label": "Secure",
+          "descriptor": "Varied words that fit the topic."
+        },
+        {
+          "score": 4,
+          "label": "Strong",
+          "descriptor": "Precise, vivid words chosen with care."
+        }
+      ]
+    },
+    {
+      "label": "Sentences",
+      "domain": "Language",
+      "levels": [
+        {
+          "score": 1,
+          "label": "Beginning",
+          "descriptor": "Mostly incomplete sentences."
+        },
+        {
+          "score": 2,
+          "label": "Developing",
+          "descriptor": "Simple sentences, some complete."
+        },
+        {
+          "score": 3,
+          "label": "Secure",
+          "descriptor": "Complete sentences with some variety."
+        },
+        {
+          "score": 4,
+          "label": "Strong",
+          "descriptor": "Varied sentences that read well aloud."
+        }
+      ]
+    },
+    {
+      "label": "Spelling and punctuation",
+      "domain": "Conventions",
+      "levels": [
+        {
+          "score": 1,
+          "label": "Beginning",
+          "descriptor": "Many errors make it hard to read."
+        },
+        {
+          "score": 2,
+          "label": "Developing",
+          "descriptor": "Errors in common words."
+        },
+        {
+          "score": 3,
+          "label": "Secure",
+          "descriptor": "Few errors; common words correct."
+        },
+        {
+          "score": 4,
+          "label": "Strong",
+          "descriptor": "Almost no errors; punctuation helps meaning."
+        }
+      ]
+    }
+  ]
+}
