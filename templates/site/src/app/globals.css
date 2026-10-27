@@ -1,5 +1,12 @@
 @import "@quartifex/tokens/tokens.css";
 
+:root {
+  /* DM Mono comes through next/font (self-hosted at build), under its own family name. */
+  --qx-font-mono:
+    var(--font-dm-mono), "DM Mono", ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas,
+    monospace;
+}
+
 *,
 *::before,
 *::after {

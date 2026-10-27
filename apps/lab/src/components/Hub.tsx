@@ -22,10 +22,18 @@ const STATUSES: { value: Status; label: string }[] = [
 ];
 
 /** Catalog browser: filter by kind, status and text. Cards arrive server-rendered. */
-export function Hub({ groups }: { groups: HubGroup[] }) {
-  const [kind, setKind] = useState("all");
+export function Hub({
+  groups,
+  initialKind = "all",
+  initialQuery = "",
+}: {
+  groups: HubGroup[];
+  initialKind?: string;
+  initialQuery?: string;
+}) {
+  const [kind, setKind] = useState(initialKind);
   const [status, setStatus] = useState<Status>("all");
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState(initialQuery);
   const searchId = useId();
 
   const visible = useMemo(() => {

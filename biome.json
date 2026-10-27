@@ -9,6 +9,8 @@
       "!catalog/catalog.json",
       "!reports",
       "!templates",
+      "!apps/lab/src/styles/kit.css",
+      "!apps/lab/src/lib/**/*.js",
       "!**/pnpm-lock.yaml"
     ]
   },

@@ -1,0 +1,111 @@
+/* Lab footer: sits at the foot of the content tray, hairline above, kit tokens only. */
+
+.footer {
+  margin-top: auto;
+  padding-top: clamp(2rem, 5vw, 3.5rem);
+  display: grid;
+  gap: 24px;
+}
+
+.top {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) repeat(3, minmax(0, 1fr));
+  gap: 28px;
+  padding-top: 28px;
+  border-top: 1px solid var(--hair);
+}
+
+.brand {
+  display: grid;
+  gap: 12px;
+  align-content: start;
+  max-width: 34ch;
+}
+
+.brand p {
+  margin: 0;
+  color: var(--muted);
+  font: 500 14px / 1.5 var(--font);
+}
+
+.mail {
+  font: 500 13px var(--mono);
+  letter-spacing: 0.04em;
+  color: var(--acc-lab);
+  text-decoration: none;
+}
+
+.mail:hover {
+  text-decoration: underline;
+}
+
+.col {
+  display: grid;
+  gap: 10px;
+  align-content: start;
+}
+
+.col a {
+  font: 600 14px var(--font);
+  color: var(--fg);
+  text-decoration: none;
+  transition: color 160ms var(--ease);
+}
+
+.col a:hover {
+  color: var(--acc-lab);
+}
+
+.label {
+  font: 500 11px var(--mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.base {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding-top: 16px;
+  border-top: 1px solid var(--hair);
+  font: 500 12px var(--mono);
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.status i {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--acc-lab);
+}
+
+@media (max-width: 900px) {
+  .top {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .brand {
+    grid-column: 1 / -1;
+  }
+}
+
+.credits {
+  margin: 0;
+  max-width: 72ch;
+  font: 500 13px / 1.6 var(--font);
+  color: var(--muted);
+}
+
+.credits a {
+  color: var(--fg);
+  text-underline-offset: 3px;
+}

@@ -1,11 +1,16 @@
 import type { Metadata, Viewport } from "next";
 import { DM_Mono } from "next/font/google";
-import Script from "next/script";
 import type { ReactNode } from "react";
 import { preload } from "react-dom";
+import { BOOT_SCRIPT } from "@/lib/boot";
 import "./globals.css";
 
-const dmMono = DM_Mono({ subsets: ["latin"], weight: ["400", "500"], variable: "--font-dm-mono" });
+const dmMono = DM_Mono({
+  subsets: ["latin"],
+  weight: ["300", "400", "500"],
+  variable: "--font-dm-mono",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: { default: "Quartifex Lab", template: "%s · Quartifex Lab" },
@@ -13,15 +18,11 @@ export const metadata: Metadata = {
     "Open-source libraries, proof sites and small experiments for cinematic, scroll-driven web launches.",
 };
 
-// Light by default, dark when the OS asks; a saved choice (below) overrides both on the page.
+// Dark on a first visit; the boot script (below) applies a saved choice before first paint.
 export const viewport: Viewport = {
-  themeColor: [{ media: "(prefers-color-scheme: dark)", color: "#050505" }, { color: "#f4f2ee" }],
-  colorScheme: "light dark",
+  themeColor: "#050505",
+  colorScheme: "dark light",
 };
-
-// Apply a saved theme before first paint. With no saved choice the tokens follow
-// the OS preference on their own, so nothing is set.
-const themeScript = `try{var t=localStorage.getItem("qx-theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}`;
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   // The brand faces start downloading with the page, so they are usually in before first
@@ -30,13 +31,19 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     preload(`/fonts/${face}.woff2`, { as: "font", type: "font/woff2", crossOrigin: "anonymous" });
   }
   return (
-    <html lang="en" className={dmMono.variable} suppressHydrationWarning>
-      <body>
-        <Script id="qx-theme" strategy="beforeInteractive">
-          {themeScript}
-        </Script>
-        {children}
-      </body>
+    <html
+      lang="en"
+      data-theme="dark"
+      data-surface="depth"
+      data-brand="lab"
+      className={dmMono.variable}
+      suppressHydrationWarning
+    >
+      <head>
+        {/* biome-ignore lint/security/noDangerouslySetInnerHtml: static boot script, no user input */}
+        <script dangerouslySetInnerHTML={{ __html: BOOT_SCRIPT }} />
+      </head>
+      <body>{children}</body>
     </html>
   );
 }

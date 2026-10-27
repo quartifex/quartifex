@@ -1,0 +1,345 @@
+/* The Lab shell on the kit's 3D depth surface: raised sidebar, sunken content tray. */
+
+.shell {
+  display: grid;
+  grid-template-columns: 272px minmax(0, 1fr);
+  gap: 14px;
+  padding: 14px;
+  box-sizing: border-box;
+  min-height: 100svh;
+  background: var(--bg);
+}
+
+.sidebar {
+  position: sticky;
+  top: 14px;
+  height: calc(100svh - 28px);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 18px 14px 14px;
+  border-radius: var(--r-xl);
+  background: var(--surface);
+  box-shadow: var(--raise);
+  z-index: 5;
+}
+
+.sideTop {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 6px;
+}
+
+.search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 0 14px;
+  border-radius: var(--r-md);
+  background: var(--bg-2);
+  box-shadow: var(--tray);
+  color: var(--muted);
+  transition: color 160ms var(--ease);
+}
+
+.search input {
+  flex: 1;
+  min-width: 0;
+  background: none;
+  border: 0;
+  outline: 0;
+  color: var(--fg);
+  font: 500 14px var(--font);
+}
+
+.search:focus-within {
+  color: var(--accent);
+}
+
+.nav {
+  display: grid;
+  gap: 18px;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  align-content: start;
+  scrollbar-width: none;
+}
+
+.group ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.groupLabel {
+  margin: 0 0 8px;
+  padding: 0 12px;
+  font: 500 11px var(--mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 42px;
+  padding: 0 12px;
+  border-radius: var(--r-sm);
+  color: var(--fg);
+  text-decoration: none;
+  font: 600 14px var(--font);
+  transition:
+    background 160ms var(--ease),
+    box-shadow 360ms var(--spring),
+    transform 360ms var(--spring),
+    color 160ms var(--ease);
+}
+
+.item {
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.item span:not(:global(.ico)) {
+  flex: 1;
+  text-align: left;
+}
+
+.item em {
+  font: 500 11px var(--mono);
+  font-style: normal;
+  color: var(--muted);
+}
+
+.item :global(.ico) {
+  color: var(--muted);
+  transition: color 160ms var(--ease);
+}
+
+.item:hover {
+  background: color-mix(in srgb, var(--fg) 6%, transparent);
+}
+
+.item:hover :global(.ico) {
+  color: var(--fg);
+}
+
+.item:active {
+  transform: scale(0.975);
+}
+
+/* The page you are on is pressed into the surface. */
+.item[aria-current="page"] {
+  background: var(--bg-2);
+  box-shadow: var(--tray);
+}
+
+.item[aria-current="page"] :global(.ico) {
+  color: var(--accent);
+}
+
+.sideBottom {
+  display: grid;
+  gap: 12px;
+}
+
+.utility {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding-left: 6px;
+}
+
+.helpLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font: 600 13px var(--font);
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 160ms var(--ease);
+}
+
+.helpLink:hover {
+  color: var(--fg);
+}
+
+/* Settings opens upward from the sidebar foot, over the content. */
+.cogwrap :global(.settings) {
+  left: 0;
+  right: auto;
+  top: auto;
+  bottom: calc(100% + 12px);
+  transform-origin: bottom left;
+}
+
+.signIn {
+  display: grid;
+  gap: 8px;
+}
+
+.signIn > :global(.btn) {
+  width: 100%;
+}
+
+.userCard {
+  display: grid;
+  gap: 8px;
+  padding: 8px;
+  border-radius: var(--r-md);
+  background: var(--bg-2);
+  box-shadow: var(--tray);
+}
+
+.userLink {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  min-width: 0;
+}
+
+.avatar {
+  flex: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  object-fit: cover;
+  display: inline-grid;
+  place-items: center;
+  background: var(--accent);
+  color: var(--accent-ink);
+  box-shadow: var(--raise-in);
+  font: 700 12px var(--mono);
+}
+
+.userText {
+  display: grid;
+  min-width: 0;
+}
+
+.userText strong,
+.userText small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.userText strong {
+  font-size: 14px;
+}
+
+.userText small {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  min-height: calc(100svh - 28px);
+  min-width: 0;
+  border-radius: var(--r-xl);
+  background: var(--bg-2);
+  box-shadow: var(--tray);
+  overflow: clip;
+  padding: clamp(1rem, 2.5vw, 2rem);
+}
+
+/* Favourite: the kit's round icon button, filled when saved. */
+.heart {
+  display: inline-grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 999px;
+  border: 0;
+  background: var(--surface);
+  box-shadow: var(--raise-in);
+  color: var(--fg);
+  cursor: pointer;
+  transition:
+    transform 360ms var(--spring),
+    color 160ms var(--ease),
+    box-shadow 360ms var(--spring);
+}
+
+.heart:hover {
+  color: var(--accent);
+}
+
+.heart:active {
+  transform: scale(0.9);
+  box-shadow: var(--tray);
+}
+
+.heart[aria-pressed="true"] {
+  color: var(--acc-q);
+  box-shadow: var(--tray);
+}
+
+@media (max-width: 900px) {
+  .shell {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 10px;
+    gap: 10px;
+  }
+
+  .sidebar {
+    position: static;
+    height: auto;
+    border-radius: var(--r-lg);
+  }
+
+  .nav {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+
+  .group {
+    flex: none;
+  }
+
+  .group ul {
+    display: flex;
+  }
+
+  .item {
+    white-space: nowrap;
+  }
+
+  .main {
+    border-radius: var(--r-lg);
+    min-height: 0;
+  }
+
+  .cogwrap :global(.settings) {
+    bottom: auto;
+    top: calc(100% + 12px);
+    transform-origin: top left;
+  }
+}
+
+/* phones: the tab bar carries the sections, so the sidebar keeps only the logo, search and
+   account, and the page clears the bar at the bottom */
+@media (max-width: 640px) {
+  .shell {
+    padding-bottom: calc(96px + env(safe-area-inset-bottom));
+  }
+
+  .nav {
+    display: none;
+  }
+}

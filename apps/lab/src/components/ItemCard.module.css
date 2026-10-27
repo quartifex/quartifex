@@ -1,21 +1,31 @@
+/* A catalog card on the kit's depth surface. The icon sits on its own raised tile and plays its
+   motion when the card is hovered or focused. */
+
 .card {
   position: relative;
   display: grid;
   align-content: start;
-  gap: var(--qx-space-2);
-  padding: var(--qx-space-3);
-  border: var(--qx-line) solid var(--qx-hairline);
-  border-radius: var(--qx-radius-md);
+  gap: 10px;
+  padding: 12px 12px 14px;
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  box-shadow: var(--raise);
   text-decoration: none;
-  transition: border-color var(--qx-duration) var(--qx-ease-out);
+  transition:
+    transform 640ms var(--spring),
+    box-shadow 360ms var(--ease);
   /* Off-screen cards skip layout and paint until they are scrolled near. */
   content-visibility: auto;
-  contain-intrinsic-size: auto 320px;
+  contain-intrinsic-size: auto 330px;
 }
 
 .card:hover,
 .card:has(.link:focus-visible) {
-  border-color: var(--qx-hairline-strong);
+  transform: translateY(-3px);
+}
+
+.card:active {
+  transform: translateY(0) scale(0.985);
 }
 
 /* The name's link covers the whole card. */
@@ -36,8 +46,8 @@
 }
 
 .card:has(.link:focus-visible) {
-  outline: var(--qx-line) solid var(--qx-teal);
-  outline-offset: 2px;
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
 }
 
 /* Above the covering link, so it stays its own target. */
@@ -48,63 +58,85 @@
   display: inline-flex;
   align-items: center;
   min-height: 24px;
-  font-family: var(--font-dm-mono), var(--qx-font-mono);
-  font-size: var(--qx-text-xs);
-  letter-spacing: var(--qx-tracking-label);
+  padding: 0 4px;
+  font: 500 11px var(--mono);
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--qx-muted);
+  color: var(--muted);
   text-underline-offset: 3px;
+  transition: color 160ms var(--ease);
 }
 
 .source:hover,
 .source:focus-visible {
-  color: var(--qx-fg);
+  color: var(--accent);
 }
 
+/* The tile: a sunken well holding a raised disc under the glyph. */
 .icon {
+  position: relative;
   aspect-ratio: 1;
-  border-radius: var(--qx-radius-sm);
-  overflow: hidden;
+  display: grid;
+  place-items: center;
+  border-radius: var(--r-md);
+  background: var(--bg-2);
+  box-shadow: var(--tray);
+  padding: 14%;
+}
+
+.icon::before {
+  content: "";
+  position: absolute;
+  inset: 12%;
+  border-radius: 50%;
+  background: var(--surface);
+  box-shadow: var(--raise);
+  transition: transform 640ms var(--spring);
+}
+
+.card:hover .icon::before {
+  transform: scale(1.06);
 }
 
 .icon :global(svg) {
+  position: relative;
   display: block;
   width: 100%;
   height: 100%;
+  color: var(--fg);
 }
 
 .meta {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-family: var(--font-dm-mono), var(--qx-font-mono);
-  font-size: var(--qx-text-xs);
-  letter-spacing: var(--qx-tracking-label);
+  padding: 0 4px;
+  font: 500 11px var(--mono);
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--qx-muted);
-}
-
-.chip {
-  padding: 2px var(--qx-space-2);
-  border: var(--qx-line) solid var(--qx-hairline-strong);
-  border-radius: var(--qx-radius-pill);
-}
-
-.chip[data-built] {
-  border-color: var(--qx-teal);
-  color: var(--qx-teal);
+  color: var(--muted);
 }
 
 .name {
   margin: 0;
-  font-family: var(--qx-font-display);
-  font-size: var(--qx-text-lg);
-  font-weight: 500;
+  padding: 0 4px;
+  font-family: var(--display);
+  font-size: 1.25rem;
+  font-weight: 600;
   line-height: 1.1;
 }
 
 .note {
   margin: 0;
-  font-size: var(--qx-text-sm);
-  color: var(--qx-muted);
+  padding: 0 4px;
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+.fav {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 2;
 }

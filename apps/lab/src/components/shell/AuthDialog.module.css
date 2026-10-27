@@ -1,0 +1,42 @@
+.dialog {
+  position: fixed;
+  inset: 0;
+  margin: auto;
+  width: min(480px, calc(100vw - 2rem));
+  max-height: calc(100svh - 2rem);
+  overflow: auto;
+  padding: 56px 32px 32px;
+  border: 0;
+  border-radius: var(--r-xl);
+  background: var(--surface);
+  box-shadow: var(--raise);
+  color: var(--fg);
+}
+
+.dialog::backdrop {
+  background: color-mix(in srgb, var(--bg) 55%, transparent);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 38px;
+  height: 38px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--surface);
+  box-shadow: var(--raise-in);
+  color: var(--fg);
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: transform 360ms var(--spring);
+}
+
+.close:active {
+  transform: scale(0.9);
+  box-shadow: var(--tray);
+}

@@ -1,6 +1,8 @@
 import Link from "next/link";
+import { Badge } from "@/components/ui/Badge";
 import { type CatalogItem, getIconSvg, githubLinks, hrefFor, isBuilt } from "@/lib/catalog";
 import styles from "./ItemCard.module.css";
+import { FavoriteButton } from "./shell/FavoriteButton";
 
 /**
  * One catalog item. The icon is inlined so its own animation and hover palette work. The
@@ -10,7 +12,7 @@ export function ItemCard({ item }: { item: CatalogItem }) {
   const built = isBuilt(item);
   const github = githubLinks(item);
   return (
-    <article className={styles.card} data-testid="item-card">
+    <article className={`${styles.card} qxi-host`} data-testid="item-card">
       <div
         className={styles.icon}
         aria-hidden="true"
@@ -19,9 +21,10 @@ export function ItemCard({ item }: { item: CatalogItem }) {
       />
       <div className={styles.meta}>
         <span>{item.id}</span>
-        <span className={styles.chip} data-built={built || undefined}>
-          {built ? "Built" : "Soon"}
-        </span>
+        <Badge tone={built ? "accent" : "outline"}>{built ? "Built" : "Soon"}</Badge>
+      </div>
+      <div className={styles.fav}>
+        <FavoriteButton itemId={item.id} name={item.name} />
       </div>
       <h3 className={styles.name}>
         <Link href={hrefFor(item)} className={styles.link}>

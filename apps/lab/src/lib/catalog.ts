@@ -1,5 +1,6 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
+import { toKitIcon } from "./kit-icons";
 
 // The catalog is the single source of truth for what exists. It is read from the
 // repo root at build time and validated here, at the boundary, so the rest of the
@@ -125,7 +126,7 @@ export function isBuilt(item: CatalogItem): boolean {
 
 /** The icon's SVG markup. Icons carry their own animation, hover palette and reduced-motion rule. */
 export function getIconSvg(item: CatalogItem): string {
-  return readFileSync(path.join(ICON_DIR, `${item.id}-${item.name}.svg`), "utf8");
+  return toKitIcon(readFileSync(path.join(ICON_DIR, `${item.id}-${item.name}.svg`), "utf8"));
 }
 
 export const REPO = "https://github.com/quartifex/quartifex";

@@ -1,8 +1,11 @@
 import type { Metadata, Viewport } from "next";
+import { DM_Mono } from "next/font/google";
 import type { ReactNode } from "react";
 import { preload } from "react-dom";
 import { MOTION_SCRIPT } from "@/lib/motion";
 import "./globals.css";
+
+const dmMono = DM_Mono({ subsets: ["latin"], weight: ["400", "500"], variable: "--font-dm-mono" });
 
 const TITLE = "halcyon: one launch story in full, reduced and static motion";
 const DESCRIPTION =
@@ -33,7 +36,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   }
   return (
     // data-motion is set before first paint by the script below, so React leaves it alone.
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className={dmMono.variable} suppressHydrationWarning>
       <head>
         {/* A plain inline script runs while the head is parsed, before anything is painted. */}
         {/* biome-ignore lint/security/noDangerouslySetInnerHtml: a fixed string from this repo, no input in it */}

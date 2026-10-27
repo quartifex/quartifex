@@ -1,48 +1,53 @@
+/* Filters follow the kit's segmented control: a sunken tray with a raised, selected pill. */
+
 .filters {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--qx-space-3) var(--qx-space-6);
-  padding-bottom: var(--qx-space-4);
-  border-bottom: var(--qx-line) solid var(--qx-hairline);
-  font-family: var(--font-dm-mono), var(--qx-font-mono);
-  font-size: var(--qx-text-xs);
-  letter-spacing: var(--qx-tracking-label);
-  text-transform: uppercase;
+  gap: 12px 20px;
+  padding-bottom: 18px;
 }
 
 .set {
-  display: flex;
+  display: inline-flex;
   flex-wrap: wrap;
-  gap: var(--qx-space-2);
+  gap: 2px;
   margin: 0;
-  padding: 0;
+  padding: 4px;
   border: 0;
+  border-radius: 999px;
+  background: var(--bg);
+  box-shadow: var(--tray);
 }
 
 .option {
-  min-height: 2.25rem;
-  padding: 0 var(--qx-space-3);
-  border: var(--qx-line) solid var(--qx-hairline);
-  border-radius: var(--qx-radius-pill);
+  min-height: 34px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 999px;
   background: transparent;
-  color: var(--qx-muted);
-  font: inherit;
-  letter-spacing: inherit;
-  text-transform: inherit;
+  color: var(--muted);
+  font: 600 13px var(--font);
   cursor: pointer;
   transition:
-    border-color var(--qx-duration) var(--qx-ease-out),
-    color var(--qx-duration) var(--qx-ease-out);
+    color 160ms var(--ease),
+    background 160ms var(--ease),
+    box-shadow 360ms var(--spring),
+    transform 360ms var(--spring);
 }
 
 .option:hover {
-  color: var(--qx-fg);
+  color: var(--fg);
+}
+
+.option:active {
+  transform: scale(0.975);
 }
 
 .option[aria-pressed="true"] {
-  border-color: var(--qx-fg);
-  color: var(--qx-fg);
+  background: var(--surface);
+  color: var(--fg);
+  box-shadow: var(--raise-in);
 }
 
 .search {
@@ -50,62 +55,65 @@
 }
 
 .search input {
-  min-height: 2.25rem;
-  width: min(16rem, 60vw);
-  padding: 0 var(--qx-space-3);
-  border: var(--qx-line) solid var(--qx-hairline-strong);
-  border-radius: var(--qx-radius-pill);
-  background: transparent;
-  color: var(--qx-fg);
-  font: inherit;
-  letter-spacing: inherit;
+  min-height: 42px;
+  width: min(17rem, 60vw);
+  padding: 0 18px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--bg);
+  box-shadow: var(--tray);
+  color: var(--fg);
+  font: 500 14px var(--font);
+  outline: 0;
+}
+
+.search input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .search input::placeholder {
-  color: var(--qx-muted);
-  text-transform: uppercase;
+  color: var(--muted);
 }
 
 .count {
-  margin: var(--qx-space-4) 0 0;
-  font-family: var(--font-dm-mono), var(--qx-font-mono);
-  font-size: var(--qx-text-xs);
-  letter-spacing: var(--qx-tracking-label);
+  margin: 4px 0 0;
+  font: 500 11px var(--mono);
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--qx-muted);
+  color: var(--muted);
 }
 
 .group {
-  margin-top: var(--qx-space-12);
+  margin-top: 48px;
 }
 
 .heading {
   display: flex;
   align-items: baseline;
-  gap: var(--qx-space-3);
-  margin: 0 0 var(--qx-space-6);
-  font-family: var(--qx-font-display);
-  font-size: var(--qx-text-xl);
-  font-weight: 500;
+  gap: 12px;
+  margin: 0 0 22px;
+  font-family: var(--display);
+  font-size: 1.75rem;
+  font-weight: 600;
   line-height: 1.1;
 }
 
 .heading span {
-  font-family: var(--font-dm-mono), var(--qx-font-mono);
-  font-size: var(--qx-text-xs);
-  color: var(--qx-teal);
+  font: 500 12px var(--mono);
+  color: var(--accent);
 }
 
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 13.5rem), 1fr));
-  gap: var(--qx-space-4);
+  gap: 18px;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
 .empty {
-  margin-top: var(--qx-space-12);
-  color: var(--qx-muted);
+  margin-top: 48px;
+  color: var(--muted);
 }

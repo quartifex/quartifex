@@ -1,21 +1,92 @@
-.intro {
+/* Hero on the kit's depth surface: a raised panel, raised icon tiles that move on hover. */
+
+.hero {
   display: grid;
-  gap: var(--qx-space-4);
-  margin-bottom: var(--qx-space-12);
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: 40px;
+  align-items: center;
+  padding: clamp(1.5rem, 4vw, 3.5rem);
+  margin-bottom: 2.5rem;
+  border-radius: var(--r-xl);
+  background: var(--surface);
+  box-shadow: var(--raise);
+  overflow: hidden;
+}
+
+.heroCopy {
+  display: grid;
+  gap: 18px;
+  justify-items: start;
 }
 
 .title {
   margin: 0;
-  font-family: var(--qx-font-display);
-  font-size: var(--qx-text-3xl);
-  font-weight: 500;
-  line-height: var(--qx-leading-tight);
+  font-family: var(--display);
+  font-size: clamp(2rem, 3.6vw, 3.4rem);
+  font-weight: 600;
+  line-height: 1.05;
   letter-spacing: -0.02em;
+  text-wrap: balance;
 }
 
 .lede {
-  max-width: 56ch;
+  max-width: 52ch;
   margin: 0;
-  font-size: var(--qx-text-lg);
-  color: var(--qx-muted);
+  font-size: 1.0625rem;
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+.cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.mosaic {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  min-width: 0;
+}
+
+.mosaic li {
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  padding: 12%;
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  box-shadow: var(--raise);
+  transition: transform 640ms var(--spring);
+}
+
+.mosaic li:nth-child(even) {
+  transform: translateY(14px);
+}
+
+.mosaic li:hover {
+  transform: translateY(-3px);
+}
+
+.mosaic li:nth-child(even):hover {
+  transform: translateY(11px);
+}
+
+.mosaic :global(svg) {
+  width: 100%;
+  height: 100%;
+}
+
+@media (max-width: 900px) {
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .mosaic {
+    display: none;
+  }
 }

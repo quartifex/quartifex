@@ -44,3 +44,6 @@ __pycache__/
 # assets-private/fonts or served from QX_FONT_ORIGIN. See licence-check.md, Fonts.
 assets/fonts/
 *.eot
+
+.vercel
+.env*

@@ -1,0 +1,130 @@
+/* The Lab's glue to the UI kit. kit.css (layer "site") is the source of truth for tokens,
+   surfaces, buttons, badges and the logo; this file only adds what the kit draws elsewhere
+   (fonts, the first-load cover, the skip link) and maps the Lab's older --qx-* tokens onto the
+   kit's so pages not yet rebuilt follow the same theme. */
+
+/* No rubber-band gap above the first or below the last row of the page. */
+html,
+body {
+  overscroll-behavior-y: none;
+}
+
+/* The kit's page body carries 32px 40px 96px of gallery padding; the Lab shell frames itself,
+   so that padding was the extra gap above the first and below the last row, sidebar included. */
+body {
+  margin: 0;
+  padding: 0;
+}
+
+html:root[data-surface] {
+  --font: "Satoshi", ui-sans-serif, system-ui, sans-serif;
+  --display: "Clash Display", "Satoshi", ui-sans-serif, system-ui, sans-serif;
+  --mono: var(--font-dm-mono), "DM Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --qx-bg: var(--bg);
+  --qx-bg-raised: var(--surface);
+  --qx-fg: var(--fg);
+  --qx-muted: var(--muted);
+  --qx-hairline: var(--hair);
+  --qx-hairline-strong: var(--hair-2);
+  --qx-teal: var(--accent);
+  --qx-teal-ink: var(--accent-ink);
+  --qx-sindoor: var(--acc-q);
+  --qx-font-display: var(--display);
+  --qx-font-body: var(--font);
+}
+
+body {
+  font-family: var(--font);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--display);
+}
+
+/* first-load cover: server-rendered so there is no flash before the preloader starts */
+#pl-cover {
+  position: fixed;
+  inset: 0;
+  z-index: 299;
+  background: var(--bg);
+  animation: qx-cover-off 0s 6s forwards;
+}
+
+html[data-pl="off"] #pl-cover {
+  display: none;
+}
+
+@keyframes qx-cover-off {
+  to {
+    visibility: hidden;
+  }
+}
+
+.skip,
+.skip-link {
+  position: fixed;
+  left: 12px;
+  top: -80px;
+  z-index: 400;
+  padding: 10px 16px;
+  border-radius: 999px;
+  background: var(--fg);
+  color: var(--bg);
+  font: 600 14px var(--font);
+  text-decoration: none;
+  transition: top 160ms;
+}
+
+.skip:focus,
+.skip-link:focus {
+  top: 12px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Tool icons: glyph only, ink and accent from the kit; motion plays on hover (see kit-icons.ts). */
+svg.qxi {
+  display: block;
+  overflow: visible;
+}
+
+/* The studio site's mobile tab bar, carrying the Lab's links. The kit draws it inside a phone
+   mock; here it is fixed to the viewport, and only on phones, where the sidebar's link rows
+   give way to it. */
+.tabbar,
+.moremenu {
+  position: fixed;
+}
+.tabbar {
+  bottom: calc(12px + env(safe-area-inset-bottom));
+  z-index: 60;
+}
+.moremenu {
+  z-index: 61;
+}
+@media (min-width: 641px) {
+  .tabbar,
+  .moremenu {
+    display: none;
+  }
+}
+.tabbar a,
+.tabbar a:hover,
+.tabbar a:focus,
+.moremenu button {
+  text-decoration: none;
+}

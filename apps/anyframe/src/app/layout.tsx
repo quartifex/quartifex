@@ -1,7 +1,10 @@
 import type { Metadata, Viewport } from "next";
+import { DM_Mono } from "next/font/google";
 import type { ReactNode } from "react";
 import { preload } from "react-dom";
 import "./globals.css";
+
+const dmMono = DM_Mono({ subsets: ["latin"], weight: ["400", "500"], variable: "--font-dm-mono" });
 
 const TITLE = "anyframe: one scene, every screen";
 const DESCRIPTION =
@@ -34,7 +37,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     preload(`/fonts/${face}.woff2`, { as: "font", type: "font/woff2", crossOrigin: "anonymous" });
   }
   return (
-    <html lang="en">
+    <html lang="en" className={dmMono.variable}>
       <body>{children}</body>
     </html>
   );
