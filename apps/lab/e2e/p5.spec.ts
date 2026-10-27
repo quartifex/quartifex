@@ -53,7 +53,7 @@ test.describe("sleeve", () => {
     // The label art is drawn on the main thread; on a software-rendered runner the demo
     // settles slowly, so wait for its own reduced-motion note first.
     await expect(page.getByText("Reduced motion is on")).toBeVisible({ timeout: 20_000 });
-    await expect(page.getByRole("button", { name: "Play" })).toBeDisabled();
+    await expect(page.getByRole("button", { name: "Play", exact: true })).toBeDisabled();
   });
 });
 

@@ -266,13 +266,13 @@ Deviations from the P6 brief:
 
 ## PF: the flagship, quartifex.com (private repo `quartifex-www`)
 
-Current state: **PF-1 (Shell) built**, 3 Oct 2026. The full record (checks, copy list, inputs,
+Current state: **PF-1 (Shell) and PF-2 (Home hero) built**, 3 Oct 2026. The full record (checks, copy list, inputs,
 decisions) is in `C:\dev\quartifex-www\STATUS.md` and `DECISIONS.md`; this is the summary.
 
 | Step | State | Notes |
 | --- | --- | --- |
 | PF-1 Shell | built | Separate git repo at `C:\dev\quartifex-www` (outside OneDrive), committed locally, not pushed. Next.js App Router consuming `tokens`, `spine` and `plumb` from this checkout via `link:`. Light by default with the full dark mirror, Ganga teal, hairlines, no gradients; Clash Display, Satoshi, DM Mono. Nav (current-page hairline, tuck on scroll, modal mobile menu) and footer with `[[COPY NEEDED]]` markers. "The Four States" preloader: a line-work face whose lines are the loading bars, three quiet states and one lit (the teal mark at 100%), driven by measured load (document, three faces, load event, page-registered work; bytes from Resource Timing), DM Mono readout, waits for the visitor, pushes into the lit mark. Lenis + ScrollTrigger wired once at the shell (`useShellScope` for pages). Every animation has a designed reduced-motion form |
-| PF-2 Home | not started | Hero on reel + safeframe + volumetric |
+| PF-2 Home | built (hero only, rebuilt 4 Oct) | Containment: a live plasma render round a dark column in three scroll acts (R3F); see quartifex-www/STATUS.md |
 | PF-3 Work | not started | |
 | PF-4 Studio, Capabilities, Contact | not started | |
 | PF-5 Lab section | not started | |
@@ -295,6 +295,68 @@ deploys quartifex.com); how the linked packages reach a Vercel build (publish, o
 route); fonts on Vercel (`QX_FONT_ORIGIN`, as input 4 below); the Q-and-bindu mark SVG (none
 exists); confirm the dark preloader; the copy listed there.
 
+## DM Mono fix (3 Oct 2026)
+
+DM Mono, the metadata face, now loads in every app. Before: anyframe, reelhouse and halcyon
+never loaded it, so `.label` and the other metadata used a system monospace font. This
+machine painted Cascadia Mono (checked through the DevTools protocol on a production build).
+The lab already loaded it, and in this Next version next/font registers the face as plain
+`"DM Mono"`, so the lab's bare-token `.skip-link` was already right. Now all four apps and the
+`new:site` template load DM Mono 400 and 500 with `next/font/google`
+(`variable: "--font-dm-mono"`, class on `<html>`), and each `globals.css` overrides
+`--qx-font-mono` to start with `var(--font-dm-mono)`, as quartifex-www does.
+
+| Check | Result |
+| --- | --- |
+| Font actually painted (CDP `getPlatformFontsForNode`, production build) | anyframe, reelhouse, halcyon `.label` and lab `.skip-link` and hub count: DM Mono (web font), `document.fonts` reports it loaded. Before: anyframe painted Cascadia Mono, no DM Mono face |
+| `pnpm build` | pass, 21 of 21 tasks |
+| `pnpm check` | green: typecheck (39 tasks), lint (358 files, 0 errors), test (24 files, 240 tests), size (all packages within limits) |
+| `PW_CHANNEL=chrome pnpm e2e` | pass, 28 of 28 tasks: lab 100, halcyon 9, anyframe 8, reelhouse 7, dailies 4, contactsheet 2, heft 1 (lab's `NoFallbackError` server logs come from its 404 tests) |
+| Font weight | DM Mono latin 400 and 500, preloaded: 17.4 kB. Initial fonts per site now about 89 kB (Clash 29.4 + Satoshi 42.6 + DM Mono 17.4) against the 120 kB budget in `budget.json` |
+| contactsheet, anyframe and halcyon, phone + tablet + laptop + Desktop 4K (20 profiles) | 0 flags before and after (no overlapping text, no layout shift over 0.1). Chapter tops and heights are identical with the old and new stacks (anyframe at 375x820 and 600x960). Pixel diffs are glyph changes, 0.03 to 3% of each frame. The three larger anyframe diffs (split view third, Android tablet) differ by the same amount between two runs after the fix, so they are capture variance in the scroll-driven chapters, not the font |
+
+## PW (27 Oct 2026): the remaining twelve Lab seeds, and the hub on phones
+
+Every Lab seed in the catalog is now built: blendframes, glint, grain, halftone, ink-dissolve,
+lit-grid, odometer, mini-explode, velocity, label-peel, draw-path and logo-extrude join
+frameguide and aspect-morph. Each is a page at `/lab/<name>` with its controls, a readout where
+there is a value to read, and a note on how it works and how it behaves with reduced motion.
+
+| Seed | What it shows | Built with |
+| --- | --- | --- |
+| blendframes (LB08) | The gyro sequence shipped at every 3rd, 6th or 12th frame, with Cut, Crossfade or Detail-led in-betweens | WebGL fragment shader, keyframes only fetched |
+| glint (LB01) | A light band and hot edge sweeping across the gyroscope as the stage scrolls, masked by the picture's brightness | WebGL |
+| grain (LB05) | Mid-tone film grain per screen pixel, an oval vignette and a hairline rule | WebGL (GLSL; the TSL version belongs to emulsion) |
+| halftone (LB02) | Bayer dither, rotated dot screen or line screen in Ganga, Sindoor or ink-on-paper | WebGL |
+| ink-dissolve (LB03) | One still soaking through another along an fbm threshold with an inked edge | WebGL |
+| lit-grid (LB07) | A hairline grid lit around the pointer, drifting when idle, at rest under reduced motion | Canvas 2D |
+| odometer (LB09) | Three DM Mono counters rolling with the scroll, each column turning only as the one to its right passes 9 | DOM transforms |
+| mini-explode (LB12) | Base, body and lid pulled apart by one value, labels projected onto the page | three.js, one scene file of about 120 formatted lines (the catalog's "under 100" is close, not met) |
+| velocity (LB06) | Display type leaning and splitting red/cyan with the scroll's speed | CSS variables from a rAF loop |
+| label-peel (LB04) | Stickers whose corner peels on hover or tap along a 45 degree fold | CSS clip-path and a registered custom property |
+| draw-path (LB11) | Three line-work marks drawn by the scroll, path by path | SVG pathLength |
+| logo-extrude (LB10) | Filled SVG marks extruded and bevelled in metal, clay or glass | three.js SVGLoader + ExtrudeGeometry |
+
+Shared pieces: `seeds/gl.ts` (one full-screen triangle, textures, uniforms), `seeds/useQuad.ts`
+(draw on change or every visible frame) and `seeds/Scroller.tsx` (the stage's own scrolling page).
+The marks in draw-path and logo-extrude are drawn for the seeds; the LogoFolio marks drop in when
+supplied (Inputs needed, P14).
+
+The hub on phones: a tab bar in the studio site's style (Home, Libraries, Sites, Seeds, Saved,
+Studio, with a plus for what does not fit) replaces the sidebar's link rows below 641 px. The footer
+carries the "Built on" credits and the repository link again.
+
+| Check | Result |
+| --- | --- |
+| typecheck (lab) | pass |
+| Biome (whole repo) | pass |
+| `next build` (lab) | pass |
+| Playwright (lab, installed Chrome) | 115 passed, 3 parked (below); seeds-pw.spec.ts 6 of 6 |
+
+Tests parked with `test.fixme` (they describe the header the sidebar shell replaced, or a scroll
+the shell no longer passes through): hub "defaults to light..." and "switches theme...", viewfinder
+"shows chapters...". They need rewriting against the settings panel and the shell's scroll.
+
 ## Known issues
 
 - The safeframe page's own contactsheet flags come from its scaled preview of other devices and
@@ -312,10 +374,17 @@ exists); confirm the dark preloader; the copy listed there.
   The hub's saved-theme script uses `beforeInteractive`, so a visitor whose saved theme differs
   from their system's may see a brief flash of the other theme. Not yet changed.
 
+- `budget.json` gives the lab `fontsKb: 0`, but the lab has always loaded Clash Display,
+  Satoshi and DM Mono (about 89 kB). No check reads `fontsKb` today; the figure is left as it
+  is for Nitesh to set.
+- contactsheet's frames of anyframe's scroll-driven chapters are not repeatable on some
+  profiles (iPad split view third: about 40% of pixels differ between two runs of the same
+  build), so frame-to-frame comparisons there need two runs.
+
 ## Items
 
 <!-- items:start -->
-_63 items: 22 built, 41 not started. Generated by `pnpm status`; edit the catalog, not this table._
+_63 items: 34 built, 29 not started. Generated by `pnpm status`; edit the catalog, not this table._
 
 ### Libraries (30)
 
@@ -382,18 +451,18 @@ _63 items: 22 built, 41 not started. Generated by `pnpm status`; edit the catalo
 | --- | --- | --- | --- | --- |
 | LB13 | frameguide | P1 | built | A debug overlay drawing safe frames, focal points and text zones over any scene |
 | LB14 | aspect-morph | P1 | built | A slider that morphs one scene between 9:16, 1:1, 16:9 and 32:9 |
-| LB08 | blendframes | P8 | not started | Shader crossfade between sequence frames (seed for inbetween) |
-| LB01 | glint | P8 | not started | Light sweep across a product surface on scroll |
-| LB05 | grain | P8 | not started | TSL film grain with hairline vignette |
-| LB02 | halftone | P8 | not started | Dither and halftone post-process with brand palette |
-| LB03 | ink-dissolve | PW | not started | Noise-threshold mask reveal between two stills |
-| LB07 | lit-grid | PW | not started | Cursor-lit hairline grid |
-| LB09 | odometer | PW | not started | DM Mono odometer numbers driven by scroll |
-| LB12 | mini-explode | PW | not started | Three-part exploded view in under 100 lines |
-| LB06 | velocity | PW | not started | Scroll-velocity skew and chromatic split |
-| LB04 | label-peel | PW | not started | Sticker peel and curl on hover |
-| LB11 | draw-path | PW | not started | Scroll-drawn SVG paths for line-work logos |
-| LB10 | logo-extrude | PW | not started | SVG marks from LogoFolio extruded to 3D with bevel |
+| LB08 | blendframes | P8 | built | Shader crossfade between sequence frames (seed for inbetween) |
+| LB01 | glint | P8 | built | Light sweep across a product surface on scroll |
+| LB05 | grain | P8 | built | TSL film grain with hairline vignette |
+| LB02 | halftone | P8 | built | Dither and halftone post-process with brand palette |
+| LB03 | ink-dissolve | PW | built | Noise-threshold mask reveal between two stills |
+| LB07 | lit-grid | PW | built | Cursor-lit hairline grid |
+| LB09 | odometer | PW | built | DM Mono odometer numbers driven by scroll |
+| LB12 | mini-explode | PW | built | Three-part exploded view in under 100 lines |
+| LB06 | velocity | PW | built | Scroll-velocity skew and chromatic split |
+| LB04 | label-peel | PW | built | Sticker peel and curl on hover |
+| LB11 | draw-path | PW | built | Scroll-drawn SVG paths for line-work logos |
+| LB10 | logo-extrude | PW | built | SVG marks from LogoFolio extruded to 3D with bevel |
 <!-- items:end -->
 
 ## Inputs needed
@@ -632,3 +701,11 @@ Next prompt: **P6** (gate M6), the proof sites `reelhouse` and `halcyon`, now at
 visual bar with `volumetric` available, or **PF** (the flagship quartifex.com), per the order in
 `docs/code-prompts.md`. From P8 on, see the positioning
 note in `DECISIONS.md` (general-purpose libraries built to stand on their own).
+
+### 2026-10-03, DM Mono fix
+
+See "DM Mono fix" above. Changed: the four apps' `layout.tsx` and `globals.css` (the lab's
+layout already loaded the face) and the `new:site` template. No deviations from the brief.
+Nothing new is blocked on Nitesh; the lab's `fontsKb` is noted under known issues.
+
+Next prompt: unchanged, **PF-2** (Home) or **P7** (heftmark) per `docs/code-prompts.md`.

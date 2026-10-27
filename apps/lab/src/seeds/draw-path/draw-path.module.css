@@ -1,0 +1,22 @@
+.mark {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(70%, 70vh, 420px);
+  height: auto;
+  translate: -50% -50%;
+  overflow: visible;
+}
+
+.path {
+  fill: none;
+  stroke: #edeae4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1 1;
+  transition: stroke 400ms ease;
+}
+
+.path[data-done] {
+  stroke: #34d1bf;
+}

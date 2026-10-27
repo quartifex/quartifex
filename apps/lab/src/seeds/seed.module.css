@@ -51,3 +51,66 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* The shader and scroll seeds draw in one stage: 16:9 on wide screens, taller on phones. */
+.stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: var(--qx-radius-sm);
+  background: #070707;
+  border: var(--qx-line) solid var(--qx-hairline);
+  touch-action: pan-y;
+}
+
+.canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.status {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  font-family: var(--font-dm-mono), var(--qx-font-mono);
+  font-size: var(--qx-text-xs);
+  letter-spacing: var(--qx-tracking-label);
+  text-transform: uppercase;
+  color: #8b8881;
+}
+
+/* A page inside the stage that scrolls on its own, for the scroll-driven seeds. */
+.scroller {
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  container-type: size;
+  /* the kit lays every section out as a flex column, which would shrink the page to fit */
+  display: block;
+  scrollbar-width: thin;
+}
+
+.hint {
+  position: absolute;
+  right: 12px;
+  bottom: 10px;
+  z-index: 2;
+  pointer-events: none;
+  font-family: var(--font-dm-mono), var(--qx-font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #8b8881;
+}
+
+@media (max-width: 40rem) {
+  .stage {
+    aspect-ratio: 4 / 5;
+  }
+}

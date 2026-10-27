@@ -793,7 +793,7 @@
   "name": "glint",
   "description": "Light sweep across a product surface on scroll",
   "order": 4,
-  "state": "not started",
+  "state": "built",
   "prompt": "P8"
  },
  {
@@ -802,7 +802,7 @@
   "name": "halftone",
   "description": "Dither and halftone post-process with brand palette",
   "order": 6,
-  "state": "not started",
+  "state": "built",
   "prompt": "P8"
  },
  {
@@ -811,7 +811,7 @@
   "name": "ink-dissolve",
   "description": "Noise-threshold mask reveal between two stills",
   "order": 7,
-  "state": "not started",
+  "state": "built",
   "prompt": "PW"
  },
  {
@@ -820,7 +820,7 @@
   "name": "label-peel",
   "description": "Sticker peel and curl on hover",
   "order": 12,
-  "state": "not started",
+  "state": "built",
   "prompt": "PW"
  },
  {
@@ -829,7 +829,7 @@
   "name": "grain",
   "description": "TSL film grain with hairline vignette",
   "order": 5,
-  "state": "not started",
+  "state": "built",
   "prompt": "P8"
  },
  {
@@ -838,7 +838,7 @@
   "name": "velocity",
   "description": "Scroll-velocity skew and chromatic split",
   "order": 11,
-  "state": "not started",
+  "state": "built",
   "prompt": "PW"
  },
  {
@@ -847,7 +847,7 @@
   "name": "lit-grid",
   "description": "Cursor-lit hairline grid",
   "order": 8,
-  "state": "not started",
+  "state": "built",
   "prompt": "PW"
  },
  {
@@ -856,7 +856,7 @@
   "name": "blendframes",
   "description": "Shader crossfade between sequence frames (seed for inbetween)",
   "order": 3,
-  "state": "not started",
+  "state": "built",
   "prompt": "P8"
  },
  {
@@ -865,7 +865,7 @@
   "name": "odometer",
   "description": "DM Mono odometer numbers driven by scroll",
   "order": 9,
-  "state": "not started",
+  "state": "built",
   "prompt": "PW"
  },
  {
@@ -874,7 +874,7 @@
   "name": "logo-extrude",
   "description": "SVG marks from LogoFolio extruded to 3D with bevel",
   "order": 14,
-  "state": "not started",
+  "state": "built",
   "prompt": "PW"
  },
  {
@@ -883,7 +883,7 @@
   "name": "draw-path",
   "description": "Scroll-drawn SVG paths for line-work logos",
   "order": 13,
-  "state": "not started",
+  "state": "built",
   "prompt": "PW"
  },
  {
@@ -892,7 +892,7 @@
   "name": "mini-explode",
   "description": "Three-part exploded view in under 100 lines",
   "order": 10,
-  "state": "not started",
+  "state": "built",
   "prompt": "PW"
  },
  {

@@ -109,7 +109,7 @@ test.describe("safeframe", () => {
   test("turns Play off under reduced motion", async ({ page }) => {
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto("/safeframe");
-    await expect(page.getByRole("button", { name: "Play" })).toBeDisabled();
+    await expect(page.getByRole("button", { name: "Play", exact: true })).toBeDisabled();
   });
 });
 

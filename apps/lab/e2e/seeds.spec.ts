@@ -37,7 +37,7 @@ test.describe("Lab seeds", () => {
   test("aspect-morph turns Play off under reduced motion", async ({ page }) => {
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto("/lab/aspect-morph");
-    await expect(page.getByRole("button", { name: "Play" })).toBeDisabled();
+    await expect(page.getByRole("button", { name: "Play", exact: true })).toBeDisabled();
   });
 
   test("the bare scene page is staged and reports its subject", async ({ page }) => {

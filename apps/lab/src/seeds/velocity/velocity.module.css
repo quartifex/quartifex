@@ -1,0 +1,25 @@
+.page {
+  --skew: 0deg;
+  --split: 0px;
+  padding: 18% 8% 30%;
+  transform: skewY(var(--skew));
+  transform-origin: 50% 50%;
+  will-change: transform;
+}
+
+.line {
+  margin: 0;
+  font-family: var(--qx-font-display);
+  font-weight: 600;
+  font-size: clamp(2.6rem, 9vw, 6.5rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: #edeae4;
+  text-shadow:
+    calc(var(--split) * -1) 0 0 rgba(255, 60, 60, 0.75),
+    var(--split) 0 0 rgba(52, 209, 220, 0.75);
+}
+
+.line[data-accent] {
+  color: #34d1bf;
+}
