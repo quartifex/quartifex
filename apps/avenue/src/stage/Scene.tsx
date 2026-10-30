@@ -6,10 +6,10 @@
 // The camera follows the page: each chapter (camera.ts) has a start and an end pose, scroll
 // says where between them we are, and the camera eases there. The demo takes over the camera
 // for the seat views.
-import { Environment, Lightformer, MeshReflectorMaterial } from "@react-three/drei";
+import { ContactShadows, Environment, Lightformer, MeshReflectorMaterial } from "@react-three/drei";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { gsap } from "gsap";
-import { Suspense, useEffect, useMemo, useRef } from "react";
+import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import { MeshoptDecoder } from "three/addons/libs/meshopt_decoder.module.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
@@ -56,13 +56,16 @@ type Finish = Partial<THREE.MeshPhysicalMaterialParameters> & { keepMap?: boolea
 
 /** The finishes, by the model's material names; anything not listed keeps its own textures. */
 const FINISH: Record<string, Finish> = {
-  // Pearl white with a clear coat: holds the sky's highlights, so the car reads on dark pages.
+  // Pearl white, built like real paint: a soft, non-metallic base coat under a glass-hard
+  // lacquer. The base takes the light; the lacquer carries the long, sharp studio reflections.
   body: {
-    color: "#e4e8ee",
-    metalness: 0.3,
-    roughness: 0.26,
+    color: "#dfe3e9",
+    metalness: 0,
+    roughness: 0.42,
     clearcoat: 1,
-    clearcoatRoughness: 0.03,
+    clearcoatRoughness: 0.015,
+    specularIntensity: 0.6,
+    envMapIntensity: 1.15,
     keepMap: false,
   },
   black_ext: {
@@ -89,9 +92,9 @@ const FINISH: Record<string, Finish> = {
     envMapIntensity: 1.4,
   },
   caliper: { metalness: 0.4, roughness: 0.35 },
-  tires: { metalness: 0, roughness: 0.88 },
-  rim1: { metalness: 1, roughness: 0.28 },
-  rim2: { metalness: 1, roughness: 0.35 },
+  tires: { color: "#1a1b1d", metalness: 0, roughness: 0.92 },
+  rim1: { metalness: 1, roughness: 0.22, envMapIntensity: 1.3 },
+  rim2: { metalness: 1, roughness: 0.3, envMapIntensity: 1.3 },
   bmwlogo: { metalness: 0.7, roughness: 0.35 },
   disc: { metalness: 0.9, roughness: 0.45 },
   metallic_int: { metalness: 1, roughness: 0.3 },
@@ -190,6 +193,7 @@ function Car({ lite }: { lite: boolean }) {
   const cabinFill = useRef<THREE.PointLight>(null);
   const hazard = useRef<THREE.Group>(null);
   const turn = useRef<THREE.Group>(null);
+  const [onPlinth, setOnPlinth] = useState(false);
   const key = useRef<THREE.DirectionalLight>(null);
   const rim = useRef<THREE.SpotLight>(null);
   const ring = useRef<THREE.MeshBasicMaterial>(null);
@@ -252,6 +256,7 @@ function Car({ lite }: { lite: boolean }) {
         group.current = car;
         drawAll();
         turn.current?.add(car);
+        setOnPlinth(true);
       })
       .catch(() => stage.set({ rung: "poster" }));
     return () => {
@@ -485,6 +490,20 @@ function Car({ lite }: { lite: boolean }) {
       />
       <group ref={turn}>
         <Plinth lite={lite} ring={ring} glow={glow} />
+        {/* Soft contact shadow where the tyres and sills meet the plinth: drawn once, from below,
+            once the car is in place, and turned with it. It is what makes the car sit, not float. */}
+        {onPlinth ? (
+          <ContactShadows
+            position={[0, 0.004, 0]}
+            scale={[3.4, 6.4]}
+            far={1.6}
+            blur={2.6}
+            opacity={0.8}
+            resolution={lite ? 256 : 512}
+            frames={1}
+            color="#02040a"
+          />
+        ) : null}
         {/* Lamps lit from inside: two white headlamps, two red tail-lamps. */}
         <pointLight
           position={[-0.72, 0.95, -2.36]}
@@ -772,8 +791,9 @@ export default function Scene({ lite, active }: { lite: boolean; active: boolean
       camera={{ fov: 28, near: 0.03, far: 200, position: [-5.6, 1.15, -5.4] }}
       gl={{ antialias: true, powerPreference: "high-performance", alpha: false }}
       onCreated={({ gl }) => {
-        gl.toneMapping = THREE.ACESFilmicToneMapping;
-        gl.toneMappingExposure = 1;
+        // AgX rolls highlights off like film: white paint keeps its shape instead of clipping flat
+        gl.toneMapping = THREE.AgXToneMapping;
+        gl.toneMappingExposure = 1.15;
         stage.set({ rung: "3d" });
       }}
       aria-hidden="true"
@@ -781,27 +801,50 @@ export default function Scene({ lite, active }: { lite: boolean; active: boolean
       <Suspense fallback={null}>
         {/* The sky for real-world reflections, plus studio light strips: the long, clean
             highlights a car photographer hangs over and beside the car. */}
-        <Environment files="/media/sky.hdr" environmentIntensity={1.05} frames={3} resolution={512}>
+        <Environment
+          files="/media/sky.hdr"
+          environmentIntensity={0.75}
+          frames={3}
+          resolution={1024}
+        >
+          {/* overhead softbox, long and narrow, with a second one behind for the roof line */}
           <Lightformer
             form="rect"
-            intensity={3.2}
+            intensity={5}
             position={[0, 6, 0]}
             rotation-x={Math.PI / 2}
             scale={[12, 1.4, 1]}
           />
           <Lightformer
             form="rect"
-            intensity={1.6}
+            intensity={2.4}
+            position={[0, 5, 4]}
+            rotation-x={Math.PI / 2.4}
+            scale={[10, 0.6, 1]}
+          />
+          {/* side strips at shoulder height: the highlight that runs the length of the doors */}
+          <Lightformer
+            form="rect"
+            intensity={2.8}
             position={[-6, 2.2, 0]}
             rotation-y={Math.PI / 2}
             scale={[14, 0.8, 1]}
           />
           <Lightformer
             form="rect"
-            intensity={1.6}
+            intensity={2.8}
             position={[6, 2.2, 0]}
             rotation-y={-Math.PI / 2}
             scale={[14, 0.8, 1]}
+          />
+          {/* a low, dim bounce from the floor, so the sills do not drop to black */}
+          <Lightformer
+            form="rect"
+            intensity={0.6}
+            color="#8fa3c8"
+            position={[0, 0.3, 0]}
+            rotation-x={-Math.PI / 2}
+            scale={[10, 10, 1]}
           />
           <Lightformer
             form="ring"
