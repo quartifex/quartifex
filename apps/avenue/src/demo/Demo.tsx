@@ -1,9 +1,8 @@
 "use client";
-// The live demo. When its section arrives the camera settles on a seat and that seat's screen
-// grows out of the 3D cabin into a full-size, keyboard-usable interface (a GSAP Flip from the
-// screen's rectangle on the page). The seat switcher folds the panel back into its screen,
-// flies the camera to the next seat, and grows that seat's screen out. Under reduced motion,
-// or without real-time 3D, it cuts instead. The Parked / Moving switch shows the driver lockout.
+// The live demo, on a stage of its own (the car steps aside): one seat's screen in a device, with
+// the seat switcher and the car controls under it like a console, and every seat at a glance
+// below. Changing seat dims the screen, swaps it and brings it back up; under reduced motion it
+// simply changes. The Parked / Moving switch shows the driver lockout.
 import { gsap } from "gsap";
 import { Flip } from "gsap/Flip";
 import { type KeyboardEvent, useEffect, useLayoutEffect, useRef, useState } from "react";
@@ -12,7 +11,7 @@ import { MODULE_BY_ID, type ModuleId } from "@/content/modules";
 import { VIDEO_BY_ID } from "@/content/youtube";
 import { useReducedMotion } from "@/lib/scroll";
 import { useStore } from "@/lib/store";
-import { frame, stage } from "@/stage/state";
+import { stage } from "@/stage/state";
 import s from "./demo.module.css";
 import { Icon } from "./Icon";
 import { Screen } from "./Screen";
@@ -236,85 +235,40 @@ function VisibleNotice() {
 export function Demo() {
   const seat = useStore(stage, (st) => st.seat);
   const active = useStore(stage, (st) => st.demo);
-  const rung = useStore(stage, (st) => st.rung);
-  const ready = useStore(stage, (st) => st.ready);
   const panel = useRef<HTMLDivElement>(null);
-  const anchor = useRef<HTMLDivElement>(null);
   const [shownSeat, setShownSeat] = useState<SeatId>(seat);
   const level = useReducedMotion() ? "reduced" : "full";
-  const flying = rung === "3d" && ready && level === "full";
   useTicker();
 
-  // The anchor follows the selected screen on the page, every frame, without re-rendering.
-  useEffect(() => {
-    frame.onRect = (r) => {
-      const el = anchor.current;
-      const host = el?.offsetParent as HTMLElement | null;
-      if (!el || !host) return;
-      const box = host.getBoundingClientRect();
-      el.style.transform = `translate(${r.x - box.left}px, ${r.y - box.top}px)`;
-      el.style.width = `${Math.max(1, r.width)}px`;
-      el.style.height = `${Math.max(1, r.height)}px`;
-    };
-    return () => {
-      frame.onRect = null;
-    };
-  }, []);
-
-  // Grow out of the screen when the demo arrives.
+  // The device rises into place when the section arrives.
   useEffect(() => {
     const el = panel.current;
-    const from = anchor.current;
-    if (!el || !from || !active) return;
-    if (!flying) {
-      gsap.fromTo(el, { autoAlpha: 0 }, { autoAlpha: 1, duration: level === "full" ? 0.4 : 0.01 });
+    if (!el || !active) return;
+    if (level !== "full") {
+      gsap.set(el, { autoAlpha: 1, y: 0, scale: 1 });
       return;
     }
-    // Wait for the camera to land, then grow from where the screen is.
-    const t = window.setTimeout(() => {
-      const vars = Flip.fit(el, from, { scale: true, getVars: true }) as gsap.TweenVars;
-      gsap.fromTo(
-        el,
-        { ...vars, autoAlpha: 0.6 },
-        { x: 0, y: 0, scaleX: 1, scaleY: 1, autoAlpha: 1, duration: 0.85, ease: "expo.inOut" },
-      );
-    }, 950);
-    return () => window.clearTimeout(t);
-  }, [active, flying, level]);
+    gsap.fromTo(
+      el,
+      { autoAlpha: 0, y: 36, scale: 0.97 },
+      { autoAlpha: 1, y: 0, scale: 1, duration: 0.9, ease: "expo.out" },
+    );
+  }, [active, level]);
 
+  // Another seat: the screen dims, changes, and comes back up.
   const select = (next: SeatId) => {
     if (next === seat) return;
-    const el = panel.current;
-    const to = anchor.current;
-    if (!el || !to || !flying || !active) {
-      stage.set({ seat: next });
+    stage.set({ seat: next });
+    const el = panel.current?.querySelector<HTMLElement>("[data-screen]");
+    if (!el || level !== "full") {
       setShownSeat(next);
-      if (el)
-        gsap.fromTo(
-          el,
-          { autoAlpha: 0.4 },
-          { autoAlpha: 1, duration: level === "full" ? 0.25 : 0.01 },
-        );
       return;
     }
-    // Fold into this screen, fly, then grow out of the next one.
-    const fold = Flip.fit(el, to, { scale: true, getVars: true }) as gsap.TweenVars;
     gsap
       .timeline()
-      .to(el, { ...fold, autoAlpha: 0.5, duration: 0.5, ease: "expo.in" })
-      .add(() => {
-        stage.set({ seat: next });
-        setShownSeat(next);
-      })
-      .to(el, { autoAlpha: 0, duration: 0.12 })
-      .add(() => {
-        const grow = Flip.fit(el, to, { scale: true, getVars: true }) as gsap.TweenVars;
-        gsap.fromTo(
-          el,
-          { ...grow, autoAlpha: 0.6 },
-          { x: 0, y: 0, scaleX: 1, scaleY: 1, autoAlpha: 1, duration: 0.8, ease: "expo.out" },
-        );
-      }, "+=1.0");
+      .to(el, { autoAlpha: 0, scale: 0.985, duration: 0.18, ease: "power2.in" })
+      .add(() => setShownSeat(next))
+      .to(el, { autoAlpha: 1, scale: 1, duration: 0.45, ease: "expo.out" });
   };
 
   return (
@@ -328,7 +282,7 @@ export function Demo() {
       <div className={`wrap ${s.head}`}>
         <div>
           <p className="eyebrow">D · The live demo</p>
-          <h2 id="demo-title" className="h1">
+          <h2 id="demo-title" className={`h1 ${s.title}`}>
             Take any seat. <span className="muted">Every screen is real.</span>
           </h2>
         </div>
@@ -338,16 +292,17 @@ export function Demo() {
           rider&rsquo;s screen. Everything works from the keyboard.
         </p>
       </div>
+      <div className={s.stage}>
+        <div ref={panel} className={s.device}>
+          <div className={s.panel} data-screen>
+            <Screen seat={shownSeat} />
+            <VisibleNotice />
+          </div>
+        </div>
+      </div>
       <div className={`wrap ${s.controls}`}>
         <SeatSwitcher seat={seat} onSelect={select} />
         <CarControls />
-      </div>
-      <div className={s.stage}>
-        <div ref={anchor} className={s.anchor} aria-hidden="true" />
-        <div ref={panel} className={s.panel}>
-          <Screen seat={shownSeat} />
-          <VisibleNotice />
-        </div>
       </div>
       <div className={`wrap ${s.foot}`}>
         <SystemStrip seat={seat} onSelect={select} />

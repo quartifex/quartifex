@@ -1,12 +1,18 @@
-/* The demo section: heading, the seat switcher and car controls, the panel the cabin screen
-   grows into, the strip of all four screens. The interface itself is in cabin.module.css. */
+/* The demo section: its own dark stage over the 3D one, the heading, the screen in a device,
+   the seat switcher and car controls under it like a console, the strip of all four screens.
+   The interface itself is in cabin.module.css. */
 
 .demo {
+  position: relative;
+  z-index: 2;
   min-height: 100svh;
   display: grid;
-  gap: var(--s-4);
+  gap: clamp(1.25rem, 0.8rem + 1.6vw, 2.25rem);
   align-content: start;
-  padding-top: 5rem;
+  padding-block: 5.5rem 3rem;
+  background:
+    radial-gradient(55% 45% at 50% 46%, rgb(45 99 238 / 0.12), transparent 72%),
+    radial-gradient(80% 60% at 50% 110%, rgb(156 198 255 / 0.06), transparent 70%), #07080b;
 }
 
 .head {
@@ -15,9 +21,19 @@
   grid-template-columns: minmax(0, 1fr);
 }
 
+.title {
+  max-width: 22ch;
+  font-size: clamp(1.75rem, 1.2rem + 1.6vw, 2.75rem);
+  line-height: 1.06;
+  letter-spacing: -0.02em;
+}
+
 .intro {
-  max-width: 36rem;
-  color: var(--c-text-muted);
+  max-width: 34rem;
+  margin: 0;
+  font-size: clamp(0.95rem, 0.9rem + 0.2vw, 1.05rem);
+  line-height: 1.6;
+  color: #b9c2d1;
 }
 
 @media (min-width: 900px) {
@@ -31,7 +47,7 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   gap: var(--s-3);
 }
 
@@ -194,22 +210,28 @@
   padding-inline: clamp(0.5rem, 3vw, 2rem);
 }
 
-.anchor {
-  position: absolute;
-  top: 0;
-  left: 0;
-  pointer-events: none;
-  visibility: hidden;
+/* The device: a slim, dark bezel with a lit edge, standing in soft light. */
+.device {
+  position: relative;
+  /* As wide as fits, keeping the screen 16:10 and the console in view. */
+  width: min(1240px, 100%, calc((100svh - 22rem) * 1.6 + 22px));
+  padding: clamp(6px, 0.7vw, 11px);
+  border-radius: clamp(20px, 2.4vw, 34px);
+  background: linear-gradient(180deg, #1a1d23, #0b0d11);
+  box-shadow:
+    0 0 0 1px rgb(255 255 255 / 0.07),
+    inset 0 1px 0 rgb(255 255 255 / 0.09),
+    0 50px 110px -40px rgb(0 0 0 / 0.95),
+    0 0 120px -30px rgb(45 99 238 / 0.25);
 }
 
 .panel {
   position: relative;
-  width: min(1240px, 100%);
-  height: min(780px, calc(100svh - 13rem));
-  min-height: 32rem;
+  width: 100%;
+  aspect-ratio: 16 / 10;
   container-type: size;
-  transform-origin: 0 0;
-  will-change: transform;
+  border-radius: clamp(14px, 1.8vw, 24px);
+  overflow: hidden;
 }
 
 .notice {

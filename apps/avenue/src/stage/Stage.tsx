@@ -37,6 +37,8 @@ export function Stage() {
   const [visible, setVisible] = useState(true);
   const rung = useStore(stage, (s) => s.rung);
   const ready = useStore(stage, (s) => s.ready);
+  // The demo has a stage of its own over this one, so the car rests while it is on screen.
+  const demoOn = useStore(stage, (s) => s.demo);
 
   // Start after first paint and an idle moment, so the hero's words paint first.
   useEffect(() => {
@@ -147,7 +149,7 @@ export function Stage() {
       <div className={styles.poster} data-rung={rung ?? "boot"} />
       {boot ? (
         <div className={styles.canvas}>
-          <Scene lite={lite} active={visible} />
+          <Scene lite={lite} active={visible && !demoOn} />
         </div>
       ) : null}
       <div className={styles.letterbox} />
