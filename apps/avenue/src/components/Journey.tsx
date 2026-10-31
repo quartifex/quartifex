@@ -1,10 +1,11 @@
 "use client";
-// The journey: the sticky 3D stage with the chapters over it, one screen each. Scroll picks the
-// chapter; what happens inside it is played, not scrubbed: when a chapter becomes active the
-// camera travels its path over a couple of seconds, its words and panels animate in, and the
-// ones it leaves animate out. Where the camera passes through the car's body (into the cabin,
-// back in for the demo) a short blink hides the cut. Under reduced motion the camera cuts to
-// each chapter's final pose and nothing animates.
+// The journey: the sticky 3D stage with the chapters over it, one screen each. Scroll drives the
+// camera: how far the visitor is through a chapter is how far the camera is along its path, and
+// the render loop eases it there, so it moves with their hand and stops when they stop. Words
+// and panels animate in when a chapter becomes active and out when it leaves. Where two
+// chapters' paths do not meet (leaving the cabin for the roof view, going back in) a short blink
+// hides the cut; the opening chapters join up, so the way in has none. Under reduced motion the
+// camera cuts to each chapter's final pose and nothing animates.
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { type ReactNode, useEffect, useRef } from "react";
@@ -12,8 +13,8 @@ import { dispatch } from "@/demo/store";
 import { CHAPTER_BY_ID } from "@/stage/camera";
 import { frame, stage } from "@/stage/state";
 
-/** How long the camera takes to travel a chapter's path, in seconds. */
-const TRAVEL = 2.6;
+/** Two poses closer than this (metres) are one continuous path, with no blink between them. */
+const JOINED = 0.35;
 
 export function Journey({ children }: { children: ReactNode }) {
   const root = useRef<HTMLDivElement>(null);
@@ -23,7 +24,6 @@ export function Journey({ children }: { children: ReactNode }) {
     if (!el) return;
     const reduced = frame.reducedMotion;
     const stageEl = el.querySelector<HTMLElement>("[data-stage]") ?? el;
-    const travel = { t: 0 };
     const blink = { v: 0 };
     const setBlink = () => stageEl.style.setProperty("--blink", blink.v.toFixed(3));
     let current = "";
@@ -31,24 +31,6 @@ export function Journey({ children }: { children: ReactNode }) {
     const clearTimers = () => {
       for (const t of timers) window.clearTimeout(t);
       timers = [];
-    };
-
-    const travelTo = (id: string) => {
-      gsap.killTweensOf(travel);
-      travel.t = 0;
-      frame.local = 0;
-      if (reduced) {
-        frame.local = 1;
-        return;
-      }
-      gsap.to(travel, {
-        t: 1,
-        duration: TRAVEL,
-        ease: "power2.inOut",
-        onUpdate: () => {
-          if (frame.chapter === id) frame.local = travel.t;
-        },
-      });
     };
 
     const activate = (id: string, section: HTMLElement) => {
@@ -61,7 +43,16 @@ export function Journey({ children }: { children: ReactNode }) {
         s.toggleAttribute("data-active", s === section);
       stageEl.toggleAttribute("data-letterbox", id === "hero");
       document.documentElement.toggleAttribute("data-grab", !next?.inside);
-      const crossing = Boolean(before) && Boolean(before?.inside) !== Boolean(next?.inside);
+      const gap =
+        before && next
+          ? Math.hypot(
+              before.to.pos[0] - next.from.pos[0],
+              before.to.pos[1] - next.from.pos[1],
+              before.to.pos[2] - next.from.pos[2],
+            )
+          : 0;
+      const crossing =
+        Boolean(before) && Boolean(before?.inside) !== Boolean(next?.inside) && gap > JOINED;
       gsap.killTweensOf(blink);
       if (crossing && !reduced) {
         // Through the body: dip to black, cut the camera, then fade up while it travels.
@@ -71,7 +62,6 @@ export function Journey({ children }: { children: ReactNode }) {
           .add(() => {
             frame.chapter = id;
             frame.cut = true;
-            travelTo(id);
           })
           .to(blink, { v: 0, duration: 0.7, ease: "power2.out", onUpdate: setBlink }, "+=0.08");
       } else {
@@ -79,7 +69,6 @@ export function Journey({ children }: { children: ReactNode }) {
         setBlink();
         frame.chapter = id;
         if (reduced) frame.cut = true;
-        travelTo(id);
       }
       script(id, section);
     };
@@ -116,10 +105,14 @@ export function Journey({ children }: { children: ReactNode }) {
         const id = section.dataset.chapter ?? "hero";
         ScrollTrigger.create({
           trigger: section,
-          start: "top 55%",
-          end: "bottom 45%",
+          start: "top 50%",
+          end: "bottom 50%",
           onToggle: (self) => {
             if (self.isActive) activate(id, section);
+          },
+          // How far along the chapter's path; under reduced motion, always its end.
+          onUpdate: (self) => {
+            if (self.isActive && frame.chapter === id) frame.local = reduced ? 1 : self.progress;
           },
         });
       }
@@ -143,7 +136,6 @@ export function Journey({ children }: { children: ReactNode }) {
     return () => {
       window.clearTimeout(t);
       clearTimers();
-      gsap.killTweensOf(travel);
       gsap.killTweensOf(blink);
       ctx.revert();
     };

@@ -14,12 +14,9 @@ export function Hero() {
       className={`${s.chapter} ${s.hero}`}
       aria-labelledby="hero-title"
     >
-      <p className={`mega ${s.heroMega}`} aria-hidden="true">
-        Avenue
-      </p>
       <div className={`wrap ${s.heroBody}`}>
         <div
-          className={`${s.panel} ${s.heroPanel}`}
+          className={`${s.panel} ${s.bare} ${s.heroPanel}`}
           data-anim
           style={{ "--d": 0 } as React.CSSProperties}
         >
@@ -63,7 +60,7 @@ export function Problem() {
       className={`${s.chapter} ${s.problem}`}
       aria-labelledby="problem-title"
     >
-      <div className={`${s.panel} ${s.left}`} data-anim="left">
+      <div className={`${s.panel} ${s.bare} ${s.left}`} data-anim="left">
         <p className="eyebrow">01 · The problem</p>
         <h2 id="problem-title" className="h1" data-split>
           Cars gained screens.{" "}
@@ -96,7 +93,7 @@ export function Cabin() {
       className={`${s.chapter} ${s.cabin}`}
       aria-labelledby="cabin-title"
     >
-      <div className={`${s.panel} ${s.cabinHead}`} data-anim>
+      <div className={`${s.panel} ${s.bare} ${s.cabinHead}`} data-anim>
         <p className="eyebrow">02 · Into the cabin</p>
         <h2 id="cabin-title" className="h1" data-split>
           One system. <span className="muted">Four seats, each with a mode of its own.</span>

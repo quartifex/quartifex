@@ -1,0 +1,14 @@
+/* The screen fills the page edge to edge, as it fills the tablet's glass. */
+.tablet {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  background: #0e131d;
+  overflow: hidden;
+  container-type: size;
+}
+
+.tablet > * {
+  width: 100%;
+  height: 100%;
+}

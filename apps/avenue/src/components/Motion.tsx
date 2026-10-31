@@ -4,7 +4,7 @@
 // - Headlines ([data-split]) are split into words. In the chapters over the 3D stage the words
 //   rise out of masked lines when the chapter becomes active and drop away when it leaves (CSS,
 //   driven by data-active); elsewhere they rise once as they arrive.
-// - Blocks ([data-reveal]) lift and sharpen as they enter the screen, and fade as they leave.
+// - Blocks ([data-reveal]) lift in as they enter the screen, and fade as they leave.
 // - Day sections ([data-wipe]) open from an inset, rounded frame to the full page.
 // Under reduced motion none of it runs and everything is simply there.
 import { gsap } from "gsap";
@@ -34,23 +34,20 @@ export function Motion() {
         gsap.from(split.words, {
           yPercent: 115,
           opacity: 0,
-          filter: "blur(10px)",
           duration: 1.2,
           ease: "expo.out",
           stagger: 0.04,
           scrollTrigger: { trigger: h, start: "top 86%", toggleActions: "play none none reverse" },
-          onComplete: () => gsap.set(split.words, { clearProps: "filter" }),
         });
       }
 
       for (const el of document.querySelectorAll<HTMLElement>("[data-reveal]")) {
         gsap.fromTo(
           el,
-          { y: 40, opacity: 0, filter: "blur(10px)" },
+          { y: 40, opacity: 0 },
           {
             y: 0,
             opacity: 1,
-            filter: "blur(0px)",
             duration: 1,
             ease: "expo.out",
             scrollTrigger: {

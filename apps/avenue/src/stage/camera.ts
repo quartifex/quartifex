@@ -10,6 +10,8 @@ export type Chapter = {
   id: string;
   from: Pose;
   to: Pose;
+  /** A point the camera bends through on the way (a curve, not a straight line). */
+  via?: [number, number, number];
   /** Inside the cabin (the glass turns see-through, the cabin light comes up). */
   inside?: boolean;
 };
@@ -46,24 +48,31 @@ export function seatPose(seat: SeatId): Pose {
   return P([ex * 0.92, ey + 0.04, ez + (front ? 0.12 : 0.08)], [sx, sy, sz], front ? 46 : 50);
 }
 
+// The opening chapters are one unbroken move: each starts where the last one ends.
+const HERO_END = P([-7.4, 1.22, -7.2], [0.9, 0.74, -1.0], 27);
+const PROBLEM_END = P([-5.6, 1.7, 6.4], [0.9, 0.95, -2.2], 30);
+
 export const CHAPTERS: Chapter[] = [
   // 00 Hero: the front three-quarter in the studio, the car to the right of the words,
   // drifting round towards the side.
   {
     id: "hero",
-    from: P([-6.9, 1.15, -8.6], [1.05, 0.74, -1.25], 27),
-    to: P([-7.7, 1.28, -7.8], [1.0, 0.74, -1.1], 27),
+    from: P([-6.6, 1.1, -8.4], [1.05, 0.74, -1.25], 27),
+    to: HERO_END,
   },
-  // 01 The problem: the long side, then along it towards the rear door.
+  // 01 The problem: round the long side, low, to the rear three-quarter.
   {
     id: "problem",
-    from: P([-9.6, 1.4, 0.6], [0.6, 0.8, -1.6], 28),
-    to: P([-6.8, 1.6, 5.4], [0.4, 0.95, -0.4], 30),
+    from: HERO_END,
+    via: [-9.4, 1.35, -0.4],
+    to: PROBLEM_END,
   },
-  // 02 Into the cabin: up to the rear window, a blink, then inside behind the front seats.
+  // 02 Into the cabin: up behind the car, then forward through the rear glass to sit behind the
+  // front seats. The glass is already clear, so the lit cabin shows on the way in.
   {
     id: "cabin",
-    from: P([-3.2, 1.5, 2.8], [-0.6, 1.1, 0.7], 34),
+    from: PROBLEM_END,
+    via: [0, 1.5, 4.4],
     to: P([0, 1.42, 1.02], [0, 1.05, -0.7], 66),
     inside: true,
   },
@@ -131,8 +140,16 @@ export function poseAt(chapter: Chapter, t: number): Pose {
     a: [number, number, number],
     b: [number, number, number],
   ): [number, number, number] => [lerp(a[0], b[0]), lerp(a[1], b[1]), lerp(a[2], b[2])];
+  const { via } = chapter;
+  // Through `via`: a quadratic curve from the start to the end.
+  const bend = (i: 0 | 1 | 2) => {
+    const a = chapter.from.pos[i];
+    const c = chapter.to.pos[i];
+    const v = via?.[i] ?? (a + c) / 2;
+    return (1 - k) * (1 - k) * a + 2 * (1 - k) * k * v + k * k * c;
+  };
   return {
-    pos: l3(chapter.from.pos, chapter.to.pos),
+    pos: via ? [bend(0), bend(1), bend(2)] : l3(chapter.from.pos, chapter.to.pos),
     target: l3(chapter.from.target, chapter.to.target),
     fov: lerp(chapter.from.fov, chapter.to.fov),
   };

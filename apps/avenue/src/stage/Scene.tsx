@@ -6,17 +6,21 @@
 // The camera follows the page: each chapter (camera.ts) has a start and an end pose, scroll
 // says where between them we are, and the camera eases there. The demo takes over the camera
 // for the seat views.
-import { ContactShadows, Environment, Lightformer, MeshReflectorMaterial } from "@react-three/drei";
+import {
+  AccumulativeShadows,
+  Environment,
+  Lightformer,
+  MeshReflectorMaterial,
+  RandomizedLight,
+} from "@react-three/drei";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { Bloom, EffectComposer, N8AO, ToneMapping, Vignette } from "@react-three/postprocessing";
 import { gsap } from "gsap";
+import { ToneMappingMode } from "postprocessing";
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import { MeshoptDecoder } from "three/addons/libs/meshopt_decoder.module.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
-import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
-import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
-import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
-import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
 import { demo } from "@/demo/store";
 import { SEAT_IDS, type SeatId } from "@/demo/system";
 import { CHAPTER_BY_ID, CHAPTERS, type Pose, poseAt, SCREENS, seatPose } from "@/stage/camera";
@@ -59,9 +63,9 @@ const FINISH: Record<string, Finish> = {
   // Pearl white, built like real paint: a soft, non-metallic base coat under a glass-hard
   // lacquer. The base takes the light; the lacquer carries the long, sharp studio reflections.
   body: {
-    color: "#dfe3e9",
+    color: "#e7e9ec",
     metalness: 0,
-    roughness: 0.42,
+    roughness: 0.32,
     clearcoat: 1,
     clearcoatRoughness: 0.015,
     specularIntensity: 0.6,
@@ -120,8 +124,8 @@ type ScreenSlot = {
   mesh: THREE.Mesh;
 };
 
-/** The platform's light cycles slowly through the brand's colours. */
-const PLATFORM_COLOURS = ["#2d63ee", "#9cc6ff", "#7a5cff", "#ff6a2b"].map(
+/** The platform's light drifts slowly between cool whites and the brand's ice blue. */
+const PLATFORM_COLOURS = ["#dfe7f5", "#9cc6ff", "#e9eef6", "#7fa6ff"].map(
   (c) => new THREE.Color(c),
 );
 const platformColour = new THREE.Color();
@@ -135,9 +139,6 @@ function cycleColour(t: number, out: THREE.Color) {
   const b = PLATFORM_COLOURS[(i + 1) % n] as THREE.Color;
   return out.copy(a).lerp(b, e);
 }
-
-/** Bloom on desktop: the lamps, the screens and the platform ring glow. */
-let composer: EffectComposer | null = null;
 
 function clock() {
   return new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
@@ -241,7 +242,7 @@ function Car({ lite }: { lite: boolean }) {
               // The lamp atlas glows a little: white for the headlamps, red for the tails.
               m.emissiveMap = m.map;
               m.emissive.set("#ffffff");
-              m.emissiveIntensity = 3.2;
+              m.emissiveIntensity = 1.6;
               lamps.current = m;
             }
             seen.set(name, m);
@@ -439,7 +440,7 @@ function Car({ lite }: { lite: boolean }) {
       key.current.position.set(Math.cos(a) * 8, 8, Math.sin(a) * 8);
     }
     cycleColour(t, platformColour);
-    if (ring.current) ring.current.color.copy(platformColour).multiplyScalar(6);
+    if (ring.current) ring.current.color.copy(platformColour).multiplyScalar(2.5);
     if (glow.current) glow.current.color.copy(platformColour);
     if (rim.current) {
       rim.current.color.copy(platformColour);
@@ -448,61 +449,53 @@ function Car({ lite }: { lite: boolean }) {
     }
     state.scene.environmentRotation.y = 1.2 + Math.sin(t * 0.05) * 0.6;
 
-    if (composer) composer.render(dt);
-    else state.gl.render(state.scene, camera);
     if (!drewFirst.current && group.current) {
       drewFirst.current = true;
       stage.set({ ready: true });
     }
-  }, 1);
+  });
 
   return (
     <>
       {/* Key: high and soft from the front left, as a photographer lights a car at dusk;
           a cool rim behind draws the roofline; a low fill lifts the sills. */}
-      <directionalLight
-        ref={key}
-        position={[-6, 8, -5]}
-        intensity={2.2}
-        color="#fff6ea"
-        castShadow
-        shadow-mapSize={[2048, 2048]}
-        shadow-camera-left={-4.5}
-        shadow-camera-right={4.5}
-        shadow-camera-top={4.5}
-        shadow-camera-bottom={-4.5}
-        shadow-camera-near={1}
-        shadow-camera-far={24}
-        shadow-bias={-0.0004}
-        shadow-normalBias={0.02}
-        shadow-radius={6}
-      />
-      <directionalLight position={[6, 5, 7]} intensity={1.0} color="#a9c6ff" />
+      <directionalLight ref={key} position={[-6, 8, -5]} intensity={2.2} color="#fff6ea" />
+      <directionalLight position={[6, 5, 7]} intensity={0.6} color="#e4e9f1" />
       {/* A coloured rim light that circles the car, in the platform's colour. */}
       <spotLight
         ref={rim}
         position={[5, 2.6, 5]}
         angle={0.5}
         penumbra={1}
-        intensity={40}
+        intensity={12}
         distance={16}
         decay={1.4}
       />
       <group ref={turn}>
         <Plinth lite={lite} ring={ring} glow={glow} />
-        {/* Soft contact shadow where the tyres and sills meet the plinth: drawn once, from below,
-            once the car is in place, and turned with it. It is what makes the car sit, not float. */}
+        {/* The car's shadow on the plinth, as a studio shoots it: soft light from a large area
+            overhead, accumulated over many frames once the car is in place, so it is dense
+            under the sills and tyres and fades out softly. It turns with the car. */}
         {onPlinth ? (
-          <ContactShadows
-            position={[0, 0.004, 0]}
-            scale={[3.4, 6.4]}
-            far={1.6}
-            blur={2.6}
-            opacity={0.8}
-            resolution={lite ? 256 : 512}
-            frames={1}
+          <AccumulativeShadows
+            temporal
+            frames={lite ? 40 : 90}
+            alphaTest={0.82}
+            opacity={0.92}
+            scale={9}
             color="#02040a"
-          />
+            position={[0, 0.004, 0]}
+            resolution={lite ? 512 : 1024}
+          >
+            <RandomizedLight
+              amount={8}
+              radius={3.2}
+              ambient={0.55}
+              intensity={1.4}
+              position={[-2, 7, -1.5]}
+              bias={0.0005}
+            />
+          </AccumulativeShadows>
         ) : null}
         {/* Lamps lit from inside: two white headlamps, two red tail-lamps. */}
         <pointLight
@@ -521,21 +514,21 @@ function Car({ lite }: { lite: boolean }) {
         />
         <pointLight
           position={[-0.76, 1.02, 2.34]}
-          intensity={1.4}
-          distance={2}
+          intensity={0.35}
+          distance={1.2}
           decay={2}
           color="#ff2418"
         />
         <pointLight
           position={[0.76, 1.02, 2.34]}
-          intensity={1.4}
-          distance={2}
+          intensity={0.35}
+          distance={1.2}
           decay={2}
           color="#ff2418"
         />
       </group>
       <directionalLight position={[5, 1.2, -6]} intensity={0.5} color="#c8d6ff" />
-      <hemisphereLight args={["#b9c9ea", "#1c2433", 0.45]} />
+      <hemisphereLight args={["#eef1f5", "#15171b", 0.35]} />
       <group ref={hazard}>
         <pointLight
           position={[-0.76, 0.95, -2.42]}
@@ -608,10 +601,10 @@ function Studio() {
     const g = c.getContext("2d");
     if (g) {
       const l = g.createLinearGradient(0, 0, 0, 512);
-      l.addColorStop(0, "#0a0e17");
-      l.addColorStop(0.45, "#18233a");
-      l.addColorStop(0.62, "#2e3c58");
-      l.addColorStop(1, "#2e3c58");
+      l.addColorStop(0, "#060708");
+      l.addColorStop(0.45, "#111316");
+      l.addColorStop(0.62, "#1d2025");
+      l.addColorStop(1, "#1d2025");
       g.fillStyle = l;
       g.fillRect(0, 0, 4, 512);
     }
@@ -627,7 +620,7 @@ function Studio() {
     <mesh rotation-x={-Math.PI / 2} position-y={-PLINTH_H - 0.004} renderOrder={-1}>
       <circleGeometry args={[18, 96]} />
       <meshBasicMaterial
-        color="#2e3c58"
+        color="#1d2025"
         alphaMap={floor}
         transparent
         depthWrite={false}
@@ -669,19 +662,6 @@ function Plinth({
   ring: React.RefObject<THREE.MeshBasicMaterial | null>;
   glow: React.RefObject<THREE.MeshBasicMaterial | null>;
 }) {
-  const blob = useMemo(
-    () =>
-      radial(
-        [
-          [0, "rgba(2,4,9,0.95)"],
-          [0.55, "rgba(2,4,9,0.7)"],
-          [1, "rgba(2,4,9,0)"],
-        ],
-        128,
-        256,
-      ),
-    [],
-  );
   const halo = useMemo(
     () =>
       radial([
@@ -716,7 +696,7 @@ function Plinth({
             maxDepthThreshold={1.4}
             roughness={0.78}
             metalness={0.5}
-            color="#0b101a"
+            color="#0c0d10"
             mirror={0.45}
           />
         )}
@@ -734,51 +714,36 @@ function Plinth({
           alphaMap={halo}
           color="#2d63ee"
           transparent
-          opacity={0.2}
+          opacity={0.07}
           depthWrite={false}
           toneMapped={false}
           blending={THREE.AdditiveBlending}
         />
       </mesh>
-      {/* The car's shadows on the plinth. */}
-      <mesh rotation-x={-Math.PI / 2} position-y={0.003} renderOrder={1}>
-        <planeGeometry args={[2.9, 5.9]} />
-        <meshBasicMaterial map={blob} transparent depthWrite={false} toneMapped={false} />
-      </mesh>
-      <mesh rotation-x={-Math.PI / 2} position-y={0.002} receiveShadow renderOrder={0}>
-        <circleGeometry args={[PLINTH_R, 96]} />
-        <shadowMaterial transparent opacity={0.45} color="#03050b" depthWrite={false} />
-      </mesh>
     </group>
   );
 }
 
-/** Bloom, on desktop: renders the scene through an HDR target with a soft glow above a high
- *  threshold, so only the lamps, the screens and the platform ring bloom. */
-function Post() {
-  const gl = useThree((s) => s.gl);
-  const scene = useThree((s) => s.scene);
-  const camera = useThree((s) => s.camera);
-  const size = useThree((s) => s.size);
-  const dpr = useThree((s) => s.viewport.dpr);
-  useEffect(() => {
-    const rt = new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType, samples: 4 });
-    const c = new EffectComposer(gl, rt);
-    c.addPass(new RenderPass(scene, camera));
-    c.addPass(new UnrealBloomPass(new THREE.Vector2(256, 256), 0.42, 0.5, 2.4));
-    c.addPass(new OutputPass());
-    composer = c;
-    return () => {
-      composer = null;
-      c.dispose();
-      rt.dispose();
-    };
-  }, [gl, scene, camera]);
-  useEffect(() => {
-    composer?.setPixelRatio(dpr);
-    composer?.setSize(size.width, size.height);
-  }, [size, dpr]);
-  return null;
+/** The finish, as a studio viewer renders a model: ambient occlusion (N8AO, stable from frame to
+ *  frame) settles the car into its shadows and darkens the seams, panel gaps and the cabin's
+ *  corners; bloom only above full white, so only lamps, screens and the ring glow; AgX tone
+ *  mapping on the HDR result; a light vignette; multisampled edges. */
+function Post({ lite }: { lite: boolean }) {
+  return (
+    <EffectComposer multisampling={lite ? 0 : 4} enableNormalPass={false}>
+      <N8AO
+        aoRadius={0.55}
+        distanceFalloff={0.6}
+        intensity={2.4}
+        quality={lite ? "low" : "high"}
+        halfRes={lite}
+        color="#02040a"
+      />
+      <Bloom mipmapBlur luminanceThreshold={1} luminanceSmoothing={0.2} intensity={0.55} />
+      <ToneMapping mode={ToneMappingMode.AGX} />
+      <Vignette offset={0.28} darkness={0.5} />
+    </EffectComposer>
+  );
 }
 
 /** The R3F canvas. `active` pauses rendering when the stage is off screen. */
@@ -791,8 +756,9 @@ export default function Scene({ lite, active }: { lite: boolean; active: boolean
       camera={{ fov: 28, near: 0.03, far: 200, position: [-5.6, 1.15, -5.4] }}
       gl={{ antialias: true, powerPreference: "high-performance", alpha: false }}
       onCreated={({ gl }) => {
-        // AgX rolls highlights off like film: white paint keeps its shape instead of clipping flat
-        gl.toneMapping = THREE.AgXToneMapping;
+        // The scene renders in HDR and the composer tone-maps it (AgX: highlights roll off like
+        // film, so white paint keeps its shape instead of clipping flat).
+        gl.toneMapping = THREE.NoToneMapping;
         gl.toneMappingExposure = 1.15;
         stage.set({ rung: "3d" });
       }}
@@ -803,7 +769,7 @@ export default function Scene({ lite, active }: { lite: boolean; active: boolean
             highlights a car photographer hangs over and beside the car. */}
         <Environment
           files="/media/sky.hdr"
-          environmentIntensity={0.75}
+          environmentIntensity={0.35}
           frames={3}
           resolution={1024}
         >
@@ -857,7 +823,7 @@ export default function Scene({ lite, active }: { lite: boolean; active: boolean
       </Suspense>
       <Studio />
       <Car lite={lite} />
-      {lite ? null : <Post />}
+      <Post lite={lite} />
     </Canvas>
   );
 }

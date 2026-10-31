@@ -286,7 +286,7 @@ textarea {
 }
 
 .split-word {
-  will-change: transform, filter;
+  will-change: transform;
 }
 
 /* In the chapters over the 3D stage, headline words rise when the chapter becomes active and
@@ -294,18 +294,15 @@ textarea {
 html[data-motion-ready] [data-slide] .split-word {
   translate: 0 110%;
   opacity: 0;
-  filter: blur(8px);
   transition:
     translate 420ms var(--ease-out),
-    opacity 420ms var(--ease-out),
-    filter 420ms var(--ease-out);
+    opacity 420ms var(--ease-out);
 }
 
 html[data-motion-ready][data-entered] [data-slide][data-active] .split-word {
   translate: 0 0;
   opacity: 1;
-  filter: blur(0);
-  transition-duration: 1100ms, 900ms, 900ms;
+  transition-duration: 1000ms, 800ms;
   transition-delay: calc(320ms + var(--w, 0) * 45ms);
 }
 
