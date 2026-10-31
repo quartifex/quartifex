@@ -36,10 +36,10 @@ export default function Home() {
         <Journey>
           <Stage />
           <Hero />
+          <Demo />
           <Problem />
           <Cabin />
           <Features />
-          <Demo />
         </Journey>
         <Fleet />
         <Platform />

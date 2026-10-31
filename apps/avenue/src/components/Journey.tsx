@@ -153,7 +153,10 @@ export function Journey({ children }: { children: ReactNode }) {
       if (y <= (tops[0] ?? 0) || y >= end) return;
       let i = 0;
       while (i < tops.length - 1 && (tops[i + 1] ?? end) <= y) i += 1;
-      const from = tops[i] ?? 0;
+      // A chapter taller than the screen (the demo) reads freely to its end before any glide.
+      const tall = Math.max(0, (chapters[i]?.offsetHeight ?? 0) - innerHeight);
+      if (y <= (tops[i] ?? 0) + tall) return;
+      const from = (tops[i] ?? 0) + tall;
       const span = (tops[i + 1] ?? end) - from;
       const through = (y - from) / span;
       if (through < 0.01 || through > 0.99) return;
