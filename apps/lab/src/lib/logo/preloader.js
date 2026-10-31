@@ -238,6 +238,19 @@ function runQx(pl, o) {
     vt = 0,
     last = performance.now(),
     pr = 0;
+  /* reversed: start from the set name and run the whole timeline backwards, fast */
+  var REV = 4.2;
+  if (o.reverse) {
+    ORDER.forEach((q, k) => {
+      ta[k] = 80 + k * 70;
+    });
+    tb = ta[ORDER.length - 1] + 300;
+    tc = tb + 230;
+    vt = tc + (lab ? 1150 : 950);
+    pr = 1;
+    setPr(pl, 1);
+    pl.classList.add("set");
+  }
   return new Promise((res) => {
     o.skip = () => {
       rate = 5;
@@ -245,11 +258,14 @@ function runQx(pl, o) {
     function frame(now) {
       var dt = Math.min(64, now - last);
       last = now;
-      vt += (dt * rate) / o.slow;
+      vt += ((o.reverse ? -REV : 1) * dt * rate) / o.slow;
       if (o.cancelled) return res();
-      var target = prog(vt);
-      pr += (target - pr) * Math.min(1, dt / 60);
-      if (target >= 1 && pr > 0.995) pr = 1;
+      if (o.reverse && vt <= 0) return res();
+      if (!o.reverse) {
+        var target = prog(vt);
+        pr += (target - pr) * Math.min(1, dt / 60);
+        if (target >= 1 && pr > 0.995) pr = 1;
+      }
       if (tc < 0) setPr(pl, pr);
       ORDER.forEach((q, k) => {
         if (ta[k] < 0 && pr >= ((k + 1) / ORDER.length) * 0.97) ta[k] = vt;
@@ -363,6 +379,7 @@ export function playPreloader(host, opts = {}) {
     real: !!opts.real,
     slow: opts.slow || 1,
     fixed: !!opts.fixed,
+    reverse: !!opts.reverse,
   };
   const pl = document.createElement("div");
   pl.className = "pl" + (o.fixed ? " fixed" : "");
@@ -371,6 +388,7 @@ export function playPreloader(host, opts = {}) {
   o.el = pl;
   active = o;
   host.appendChild(pl);
+  if (o.reverse) pl.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 160, easing: "ease-out" });
   if (o.fixed) root.classList.add("pl-lock");
   const skip = () => {
     if (o.skip) o.skip();
@@ -412,7 +430,7 @@ export function playPreloader(host, opts = {}) {
   return done.then(() => {
     for (const ev of evs) tgt.removeEventListener(ev, skip);
     removeEventListener("resize", onRs);
-    if (!o.cancelled) pl.remove();
+    if (!o.cancelled && !o.reverse) pl.remove();
     if (o.fixed) root.classList.remove("pl-lock");
     if (active === o) active = null;
   });

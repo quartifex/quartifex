@@ -30,7 +30,7 @@ export function Preloader() {
       return;
     }
     import("@/lib/logo/preloader").then(({ playPreloader }) => {
-      playPreloader(document.body, { fixed: true, real: true });
+      playPreloader(document.body, { fixed: true, real: true, brand: "lab" });
       hideCover();
     });
   }, []);
