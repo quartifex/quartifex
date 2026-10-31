@@ -10,6 +10,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { type ReactNode, useEffect, useRef } from "react";
 import { dispatch } from "@/demo/store";
+import { settleTo } from "@/lib/scroll";
 import { CHAPTER_BY_ID } from "@/stage/camera";
 import { frame, stage } from "@/stage/state";
 
@@ -110,9 +111,12 @@ export function Journey({ children }: { children: ReactNode }) {
           onToggle: (self) => {
             if (self.isActive) activate(id, section);
           },
-          // How far along the chapter's path; under reduced motion, always its end.
+          // How far along the chapter's path: the move plays out as the chapter arrives (from its
+          // top at mid-screen to its top at the top), so a chapter at rest shows its finished shot.
+          // Under reduced motion, always its end.
           onUpdate: (self) => {
-            if (self.isActive && frame.chapter === id) frame.local = reduced ? 1 : self.progress;
+            if (self.isActive && frame.chapter === id)
+              frame.local = reduced ? 1 : Math.min(1, self.progress * 2);
           },
         });
       }
@@ -132,8 +136,48 @@ export function Journey({ children }: { children: ReactNode }) {
     const hero = el.querySelector<HTMLElement>("section[data-chapter=hero]");
     if (hero && window.scrollY < innerHeight * 0.5) activate("hero", hero);
 
+    // Every chapter arrives whole: when the visitor stops scrolling part-way between two
+    // chapters, the page glides on to the next one in the direction they were going (or back,
+    // if they had barely left). The camera follows, since scroll drives it. Not past the start
+    // of the demo, and not without smooth scrolling (reduced motion).
+    const chapters = [...el.querySelectorAll<HTMLElement>("[data-chapter]")];
+    let lastY = window.scrollY;
+    let dir = 0;
+    let settling = false;
+    let idle = 0;
+    const settle = () => {
+      if (settling || chapters.length < 2) return;
+      const y = window.scrollY;
+      const tops = chapters.map((c) => c.getBoundingClientRect().top + y);
+      const end = tops[tops.length - 1] ?? 0;
+      if (y <= (tops[0] ?? 0) || y >= end) return;
+      let i = 0;
+      while (i < tops.length - 1 && (tops[i + 1] ?? end) <= y) i += 1;
+      const from = tops[i] ?? 0;
+      const span = (tops[i + 1] ?? end) - from;
+      const through = (y - from) / span;
+      if (through < 0.01 || through > 0.99) return;
+      const next = dir >= 0 ? (through > 0.08 ? i + 1 : i) : through < 0.92 ? i : i + 1;
+      const target = chapters[next];
+      if (!target) return;
+      settling = settleTo(target, () => {
+        settling = false;
+        lastY = window.scrollY;
+      });
+    };
+    const onScroll = () => {
+      const y = window.scrollY;
+      if (y !== lastY) dir = Math.sign(y - lastY);
+      lastY = y;
+      window.clearTimeout(idle);
+      if (!settling) idle = window.setTimeout(settle, 140);
+    };
+    if (!reduced) window.addEventListener("scroll", onScroll, { passive: true });
+
     const t = window.setTimeout(() => ScrollTrigger.refresh(), 600);
     return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.clearTimeout(idle);
       window.clearTimeout(t);
       clearTimers();
       gsap.killTweensOf(blink);
