@@ -15,7 +15,8 @@ const appCsp = [
   "connect-src 'self'",
   "worker-src 'self'",
   "manifest-src 'self'",
-  "frame-ancestors 'self'",
+  // quartifex.com shows /app in a phone frame on the Kaksha case study.
+  "frame-ancestors 'self' https://quartifex.com https://www.quartifex.com",
   "form-action 'self'",
   "base-uri 'self'",
   "object-src 'none'",
