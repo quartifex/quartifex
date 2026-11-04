@@ -17,14 +17,12 @@ const LINKS = [
 
 /** The chapters the rail shows, in page order, with the anchor each dot jumps to. */
 const RAIL = [
-  { id: "hero", label: "Blue hour", href: "#top" },
-  { id: "cabin", label: "Into the cabin", href: "#ch-cabin" },
-  { id: "seats", label: "Every seat", href: "#ch-seats" },
+  { id: "hero", label: "The studio", href: "#top" },
+  { id: "enter", label: "The car as it is", href: "#ch-enter" },
+  { id: "cabin", label: "The driver's seat", href: "#ch-cabin" },
   { id: "driver", label: "Driver", href: "#ch-driver" },
-  { id: "share", label: "Send to the back", href: "#ch-share" },
-  { id: "climate", label: "Climate", href: "#ch-climate" },
-  { id: "road", label: "The road", href: "#ch-road" },
-  { id: "sos", label: "SOS", href: "#ch-sos" },
+  { id: "centre", label: "Centre display", href: "#ch-centre" },
+  { id: "rear", label: "Back seats", href: "#ch-rear" },
   { id: "demo", label: "Live demo", href: "#demo" },
 ];
 

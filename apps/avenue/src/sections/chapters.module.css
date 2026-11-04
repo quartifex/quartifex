@@ -127,8 +127,12 @@
   max-width: min(40rem, 100%);
 }
 
+.nowrap {
+  white-space: nowrap;
+}
+
 .heroTitle {
-  max-width: 14ch;
+  max-width: 15ch;
   font-size: clamp(2rem, 1.25rem + 2vw, 3.2rem);
   line-height: 1.04;
   letter-spacing: -0.025em;
@@ -836,4 +840,80 @@
   text-shadow:
     0 1px 2px rgb(0 0 0 / 0.35),
     0 6px 28px rgb(0 0 0 / 0.5);
+}
+
+/* ---------- The studio chapters (v2): dark words on the pale studio ---------- */
+
+.studio[data-theme="paper"] {
+  background: transparent;
+  color: var(--c-text);
+}
+
+.studio::before {
+  background: linear-gradient(
+    90deg,
+    rgb(232 230 226 / 0.9) 0%,
+    rgb(232 230 226 / 0.6) 26%,
+    rgb(232 230 226 / 0.12) 42%,
+    transparent 52%
+  ) !important;
+}
+
+.studio .panel :global(.lede),
+.studio .what {
+  color: #4a4e55;
+}
+
+.studio .panel :global(.muted) {
+  color: #80858d;
+}
+
+.studio .what strong {
+  color: #111215;
+}
+
+.studio :global(.eyebrow) {
+  color: #5c616a;
+}
+
+.studio .scrollHint,
+.studio .credit {
+  background: rgb(255 255 255 / 0.55);
+  color: #3d4148 !important;
+}
+
+.studio .scrollHint i::after {
+  background: #111215;
+}
+
+.seatRow3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  max-width: 64rem;
+}
+
+@media (max-width: 760px) {
+  .seatRow3 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.studio .bare,
+.studio .bare :global(.lede),
+.studio .bare h1,
+.studio .bare h2,
+.studio .bare p {
+  text-shadow: none;
+}
+
+/* the back seats: a smaller panel low on the left, so both headrest screens stay in view */
+.feature[data-chapter="rear"] .featureHead {
+  max-width: min(30rem, 100%);
+  align-self: end;
+  grid-column: 1 / span 6;
+}
+.feature[data-chapter="rear"] .notes {
+  display: none;
+}
+.feature[data-chapter="rear"] .featureHead :global(.h1) {
+  font-size: clamp(1.6rem, 1.1rem + 1.4vw, 2.4rem);
 }

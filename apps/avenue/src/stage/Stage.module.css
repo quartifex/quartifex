@@ -6,7 +6,7 @@
   margin-bottom: -100lvh;
   z-index: 0;
   overflow: hidden;
-  background: var(--c-bg);
+  background: #e6e4e0;
 }
 
 /* The first paint, and the whole picture without WebGL: moonlight above a dark road, the
@@ -15,9 +15,8 @@
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(60% 38% at 50% 78%, rgb(156 198 255 / 0.18), transparent 70%),
-    radial-gradient(40% 30% at 62% 18%, rgb(188 208 255 / 0.14), transparent 70%),
-    linear-gradient(180deg, #0a1020 0%, #070a12 48%, #0b0d12 62%, #050608 100%);
+    radial-gradient(46% 18% at 52% 74%, rgb(40 36 32 / 0.16), transparent 70%),
+    linear-gradient(180deg, #cbc9c5 0%, #e2e0dc 50%, #ebe9e5 62%, #e6e4e0 100%);
   transition: opacity 1.2s var(--ease-out);
 }
 
@@ -52,9 +51,8 @@
 }
 
 .stage[data-letterbox] .letterbox {
-  box-shadow:
-    inset 0 6vh 0 0 #000,
-    inset 0 -6vh 0 0 #000;
+  /* (v2: the studio has no letterbox) */
+  box-shadow: none;
 }
 
 /* The blink as the camera passes through the car's body into the cabin. */

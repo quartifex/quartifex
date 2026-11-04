@@ -25,7 +25,7 @@ export const CREDITS: ReadonlyArray<{ item: string; credit: string }> = [
   {
     item: "Car model",
     credit:
-      "“BMW X6M Competition Assetto” by vecarz on Sketchfab, CC BY 4.0. Used for demonstration only: every maker's badge, roundel and lettering removed, tyre lettering and plates replaced, screens blanked, simplified and compressed by Quartifex. AVENUE is not affiliated with any carmaker.",
+      "Vehicle model licensed by Quartifex for this concept. Every maker's badge and mark removed, the car's own screens replaced with AVENUE's, compressed by Quartifex. The two rear headrest screens are AVENUE's addition.",
   },
   {
     item: "Sky",
@@ -73,7 +73,7 @@ export const CREDITS: ReadonlyArray<{ item: string; credit: string }> = [
 ];
 
 export const CAR_NOTICE =
-  "Vehicle model used for demonstration only. AVENUE is not affiliated with any carmaker.";
+  "Vehicle model shown for demonstration only. AVENUE is an independent concept system.";
 
 export const SOURCES = {
   nhtsa: {

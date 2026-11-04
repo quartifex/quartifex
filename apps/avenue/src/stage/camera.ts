@@ -1,126 +1,138 @@
-// The camera's script. Coordinates are the demo car's, in metres: nose towards -Z, the driver
-// on the left (-X, a left-hand-drive car), wheels on y = 0, the car 4.92 m long, 1.67 m tall.
+// The camera's script. Coordinates are the car's, in metres: nose towards -Z, the driver on the
+// left (-X), wheels on y = 0; the car is 4.88 m long and 1.66 m tall.
 // Each chapter has a start and an end pose; scroll moves the camera between them, and the
 // render loop eases towards wherever scroll says it should be.
 import type { SeatId } from "@/demo/system";
 
-export type Pose = { pos: [number, number, number]; target: [number, number, number]; fov: number };
+export type V3 = [number, number, number];
+export type Pose = { pos: V3; target: V3; fov: number };
 
 export type Chapter = {
   id: string;
   from: Pose;
   to: Pose;
   /** A point the camera bends through on the way (a curve, not a straight line). */
-  via?: [number, number, number];
+  via?: V3;
   /** Inside the cabin (the glass turns see-through, the cabin light comes up). */
   inside?: boolean;
 };
 
-const P = (pos: Pose["pos"], target: Pose["target"], fov: number): Pose => ({ pos, target, fov });
+const P = (pos: V3, target: V3, fov: number): Pose => ({ pos, target, fov });
 
-/** The cabin screens: centre, size (w, h) in metres, the direction they face, and tilt. */
-export const SCREENS: Record<
-  SeatId,
-  { center: [number, number, number]; size: [number, number]; yaw: number; tilt: number }
-> = {
-  // The driver's curved display: cluster and centre screen as one panel behind the wheel...
-  driver: { center: [-0.3, 1.09, -0.752], size: [0.6, 0.135], yaw: 0, tilt: -0.42 },
-  // ...and the co-pilot's own screen across the dash in front of them.
-  copilot: { center: [0.36, 1.1, -0.612], size: [0.42, 0.12], yaw: 0, tilt: -0.38 },
-  // The rear screens, in the backs of the front seats, facing the rear passengers.
-  rearLeft: { center: [-0.36, 1.0, 0.258], size: [0.26, 0.16], yaw: Math.PI, tilt: -0.08 },
-  rearRight: { center: [0.36, 1.0, 0.258], size: [0.26, 0.16], yaw: Math.PI, tilt: -0.08 },
+/** The surfaces AVENUE draws on. Three are the car's own (the driver display behind the wheel,
+ *  the portrait centre display, the head-up display); the two rear screens are AVENUE's
+ *  addition, mounted on the backs of the front headrests. */
+export type SurfaceId = "cluster" | "centre" | "hud" | "rearLeft" | "rearRight";
+export const SURFACE_IDS: SurfaceId[] = ["cluster", "centre", "hud", "rearLeft", "rearRight"];
+
+export type Surface = {
+  /** Middle of the glass, metres. */
+  center: V3;
+  /** The way the glass faces (towards its viewer). */
+  normal: V3;
+  /** Width and height of the glass, metres. */
+  size: [number, number];
+  /** Canvas pixels for the drawing. */
+  px: [number, number];
+  name: string;
+};
+
+/** Measured from the model: the planes fitted to its own screen glass and headrests. */
+export const SURFACES: Record<SurfaceId, Surface> = {
+  cluster: {
+    name: "Driver display",
+    center: [-0.358, 1.115, -0.514],
+    normal: [0, 0.257, 0.966],
+    size: [0.222, 0.0767],
+    px: [1160, 400],
+  },
+  centre: {
+    name: "Centre display",
+    center: [0.005, 1.035, -0.486],
+    normal: [-0.045, 0.342, 0.939],
+    size: [0.202, 0.316],
+    px: [860, 1344],
+  },
+  // A virtual image, as a head-up display shows it: floating over the bonnet in the driver's
+  // line of sight.
+  hud: {
+    name: "Head-up display",
+    center: [-0.37, 1.17, -1.55],
+    normal: [0.008, 0.06, 1],
+    size: [0.46, 0.15],
+    px: [1104, 360],
+  },
+  rearLeft: {
+    name: "Rear left screen",
+    center: [-0.363, 1.33, 0.448],
+    normal: [0, 0.17, 0.985],
+    size: [0.192, 0.12],
+    px: [1280, 800],
+  },
+  rearRight: {
+    name: "Rear right screen",
+    center: [0.363, 1.33, 0.448],
+    normal: [0, 0.17, 0.985],
+    size: [0.192, 0.12],
+    px: [1280, 800],
+  },
+};
+
+/** Which surface a seat works on: the front seats share the centre display. */
+export const SEAT_SURFACE: Record<SeatId, SurfaceId> = {
+  driver: "centre",
+  copilot: "centre",
+  rearLeft: "rearLeft",
+  rearRight: "rearRight",
 };
 
 /** Where each seat's occupant looks from. */
-export const EYES: Record<SeatId, [number, number, number]> = {
-  driver: [-0.38, 1.26, 0.12],
-  copilot: [0.38, 1.26, 0.12],
-  rearLeft: [-0.36, 1.24, 0.92],
-  rearRight: [0.36, 1.24, 0.92],
+export const EYES: Record<SeatId, V3> = {
+  driver: [-0.36, 1.25, 0.2],
+  copilot: [0.36, 1.25, 0.2],
+  rearLeft: [-0.36, 1.2, 1.12],
+  rearRight: [0.36, 1.2, 1.12],
 };
 
-/** The demo's view for a seat: just behind and above its occupant's eyes, on its screen. */
+/** The demo's view for a seat: just behind its occupant's eyes, on its screen. */
 export function seatPose(seat: SeatId): Pose {
   const [ex, ey, ez] = EYES[seat];
-  const [sx, sy, sz] = SCREENS[seat].center;
+  const [sx, sy, sz] = SURFACES[SEAT_SURFACE[seat]].center;
   const front = seat === "driver" || seat === "copilot";
-  return P([ex * 0.92, ey + 0.04, ez + (front ? 0.12 : 0.08)], [sx, sy, sz], front ? 46 : 50);
+  return P(
+    [ex * 0.8 + sx * 0.2, ey + 0.02, ez - (front ? 0.05 : 0.18)],
+    [sx, sy, sz],
+    front ? 40 : 38,
+  );
 }
 
-// The opening chapters are one unbroken move: each starts where the last one ends.
-const HERO_END = P([-7.4, 1.22, -7.2], [0.9, 0.74, -1.0], 27);
-const PROBLEM_END = P([-5.6, 1.7, 6.4], [0.9, 0.95, -2.2], 30);
+// The opening is one unbroken move: each chapter starts where the last one ends.
+const HERO_FROM = P([-7.9, 1.25, -7.5], [1.25, 0.66, -1.35], 24);
+const HERO_END = P([-9.2, 1.45, -3.9], [0.85, 0.7, -1.75], 25);
+const DOOR = P([-2.75, 1.3, 0.25], [-0.25, 1.05, -0.55], 38);
+const SEATED = P([-0.36, 1.25, 0.24], [-0.24, 1.07, -0.62], 50);
+const CLUSTER = P([-0.32, 1.25, 0.14], [-0.62, 1.15, -0.9], 42);
+const CENTRE = P([-0.12, 1.23, 0.06], [0.16, 1.03, -0.49], 42);
+const REAR_FROM = P([0, 1.46, 1.22], [0, 1.12, 0.3], 58);
+const REAR_TO = P([0.04, 1.4, 1.12], [0, 1.08, 0.3], 56);
 
 export const CHAPTERS: Chapter[] = [
-  // 00 Hero: the front three-quarter in the studio, the car to the right of the words,
-  // drifting round towards the side.
-  {
-    id: "hero",
-    from: P([-6.6, 1.1, -8.4], [1.05, 0.74, -1.25], 27),
-    to: HERO_END,
-  },
-  // 01 The problem: round the long side, low, to the rear three-quarter.
-  {
-    id: "problem",
-    from: HERO_END,
-    via: [-9.4, 1.35, -0.4],
-    to: PROBLEM_END,
-  },
-  // 02 Into the cabin: up behind the car, then forward through the rear glass to sit behind the
-  // front seats. The glass is already clear, so the lit cabin shows on the way in.
-  {
-    id: "cabin",
-    from: PROBLEM_END,
-    via: [0, 1.5, 4.4],
-    to: P([0, 1.42, 1.02], [0, 1.05, -0.7], 66),
-    inside: true,
-  },
-  // A1 Every seat: the four screens from the back of the cabin.
-  {
-    id: "seats",
-    from: P([0, 1.42, 1.02], [0, 1.05, -0.7], 66),
-    to: P([0, 1.4, 0.92], [0, 1.04, -0.75], 72),
-    inside: true,
-  },
-  // A2 Driver: over the driver's shoulder onto the driver's display.
-  {
-    id: "driver",
-    from: P([0.05, 1.33, 0.32], [-0.3, 1.08, -0.75], 50),
-    to: P([-0.1, 1.3, 0.1], [-0.3, 1.08, -0.75], 44),
-    inside: true,
-  },
-  // A3 Send it to the back: from the co-pilot's screen round to the rear left screen.
-  {
-    id: "share",
-    from: P([0.4, 1.36, 0.3], [0.36, 1.1, -0.61], 50),
-    to: P([-0.02, 1.38, 0.98], [-0.36, 1.0, 0.26], 54),
-    inside: true,
-  },
-  // A4 Climate per seat: rising out of the car to look down on all four seats.
-  {
-    id: "climate",
-    from: P([4.8, 3.6, 4.6], [0.3, 0.7, 0.2], 30),
-    to: P([3.6, 5.0, 2.3], [0.2, 0.6, 0], 30),
-  },
-  // A5 The road, augmented: the driver's view out through the windscreen.
-  {
-    id: "road",
-    from: P([-0.38, 1.3, 0.16], [-0.3, 1.1, -8], 58),
-    to: P([-0.38, 1.28, 0.08], [-0.15, 1.05, -8], 54),
-    inside: true,
-  },
-  // A6 SOS: outside again, the rear three-quarter, hazard lights on.
-  {
-    id: "sos",
-    from: P([4.8, 1.15, 6.0], [0, 0.8, 0.4], 30),
-    to: P([5.8, 1.55, 3.6], [0, 0.82, 0.2], 32),
-  },
-  // D The live demo: back inside, settling on the driver's screen, moving by default (the demo
-  // then takes the camera seat by seat).
+  // 00 The studio: the car's front three-quarter, turning slowly to its side.
+  { id: "hero", from: HERO_FROM, to: HERO_END },
+  // 01 The car as it is: round to the driver's door, which opens.
+  { id: "enter", from: HERO_END, via: [-6.2, 1.25, 0.6], to: DOOR },
+  // 02 Into the driver's seat: through the open door, the screens waking one by one.
+  { id: "cabin", from: DOOR, via: [-1.2, 1.3, 0.35], to: SEATED, inside: true },
+  // 03 The driver display and the head-up display.
+  { id: "driver", from: SEATED, to: CLUSTER, inside: true },
+  // 04 The centre display.
+  { id: "centre", from: CLUSTER, via: [-0.3, 1.24, 0.1], to: CENTRE, inside: true },
+  // 05 Turning round: the rear seats and their screens.
+  { id: "rear", from: REAR_FROM, to: REAR_TO, inside: true },
+  // D The live demo: settling on the driver's view of the centre display.
   {
     id: "demo",
-    from: P([0, 1.42, 1.0], [-0.2, 1.05, -0.4], 62),
+    from: P([0, 1.3, 0.9], [-0.1, 1.08, -0.4], 56),
     to: seatPose("driver"),
     inside: true,
   },
@@ -136,12 +148,8 @@ const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2
 export function poseAt(chapter: Chapter, t: number): Pose {
   const k = ease(Math.min(1, Math.max(0, t)));
   const lerp = (a: number, b: number) => a + (b - a) * k;
-  const l3 = (
-    a: [number, number, number],
-    b: [number, number, number],
-  ): [number, number, number] => [lerp(a[0], b[0]), lerp(a[1], b[1]), lerp(a[2], b[2])];
+  const l3 = (a: V3, b: V3): V3 => [lerp(a[0], b[0]), lerp(a[1], b[1]), lerp(a[2], b[2])];
   const { via } = chapter;
-  // Through `via`: a quadratic curve from the start to the end.
   const bend = (i: 0 | 1 | 2) => {
     const a = chapter.from.pos[i];
     const c = chapter.to.pos[i];
