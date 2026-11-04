@@ -229,7 +229,6 @@
   background: var(--k-accent-2);
 }
 
-
 .railItem[data-locked] {
   opacity: 0.55;
 }
@@ -387,7 +386,6 @@
     inset 0 1px 0 rgb(255 255 255 / 0.22),
     0 0.5em 1.4em -0.5em rgb(45 99 238 / 0.8);
 }
-
 
 .press[data-variant="danger"] {
   background: var(--k-danger);
@@ -1154,7 +1152,6 @@
   background: var(--k-accent-2);
   transition: width 1s linear;
 }
-
 
 .glanceNote {
   display: flex;
@@ -2247,8 +2244,6 @@
 .os[data-seat="driver"] .railItem {
   font-size: 0.98em;
 }
-
-
 
 /* ---------------------------------------------------------------- v3: the status bar */
 

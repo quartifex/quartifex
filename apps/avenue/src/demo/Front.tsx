@@ -66,7 +66,11 @@ export function DriverDisplay() {
   const pct = Math.round(VEHICLE.battery * 100);
   return (
     <div className={f.bezel}>
-      <section className={f.cluster} aria-label="Driver display" data-moving={moving ? "" : undefined}>
+      <section
+        className={f.cluster}
+        aria-label="Driver display"
+        data-moving={moving ? "" : undefined}
+      >
         <div className={f.left}>
           <p className={f.speed}>
             <b>{speed}</b>
@@ -98,11 +102,30 @@ export function DriverDisplay() {
               <stop offset="1" stopColor="#4d7dff" stopOpacity="0" />
             </linearGradient>
           </defs>
-          <path d="M60 120 L94 14 H106 L140 120 Z" fill="url(#fd-lane)" opacity={moving ? 0.22 : 0.08} />
+          <path
+            d="M60 120 L94 14 H106 L140 120 Z"
+            fill="url(#fd-lane)"
+            opacity={moving ? 0.22 : 0.08}
+          />
           <path d="M60 120 L94 14" stroke="#4d7dff" strokeWidth="2.5" opacity={moving ? 1 : 0.3} />
-          <path d="M140 120 L106 14" stroke="#4d7dff" strokeWidth="2.5" opacity={moving ? 1 : 0.3} />
-          <path d="M10 120 L78 14" stroke="rgb(255 255 255 / 0.16)" strokeWidth="2" strokeDasharray="7 8" />
-          <path d="M190 120 L122 14" stroke="rgb(255 255 255 / 0.16)" strokeWidth="2" strokeDasharray="7 8" />
+          <path
+            d="M140 120 L106 14"
+            stroke="#4d7dff"
+            strokeWidth="2.5"
+            opacity={moving ? 1 : 0.3}
+          />
+          <path
+            d="M10 120 L78 14"
+            stroke="rgb(255 255 255 / 0.16)"
+            strokeWidth="2"
+            strokeDasharray="7 8"
+          />
+          <path
+            d="M190 120 L122 14"
+            stroke="rgb(255 255 255 / 0.16)"
+            strokeWidth="2"
+            strokeDasharray="7 8"
+          />
           {moving ? <path d="M88 56 h24 l-2.5 -11 h-19 Z" fill="rgb(255 255 255 / 0.6)" /> : null}
           <path d="M82 116 h36 l-4.5 -20 h-27 Z" fill="#f2f5fa" />
         </svg>
@@ -138,7 +161,12 @@ export function DriverDisplay() {
               <span>
                 <b>{item.title}</b> {item.by}
               </span>
-              {me.playing ? <span className={f.live} aria-label="playing" /> : null}
+              {me.playing ? (
+                <>
+                  <span className={f.live} aria-hidden="true" />
+                  <span className="sr-only">playing</span>
+                </>
+              ) : null}
             </>
           ) : (
             <span>Nothing playing</span>

@@ -402,7 +402,9 @@
   gap: 2.4rem;
   align-content: end;
   padding-bottom: 1.6rem;
-  transition: opacity 400ms var(--ease-out), filter 400ms var(--ease-out);
+  transition:
+    opacity 400ms var(--ease-out),
+    filter 400ms var(--ease-out);
 }
 
 /* From the passenger side the driver's screens are there but not the point. */

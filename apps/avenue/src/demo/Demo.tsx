@@ -13,9 +13,9 @@ import { useReducedMotion } from "@/lib/scroll";
 import { useStore } from "@/lib/store";
 import { stage } from "@/stage/state";
 import s from "./demo.module.css";
+import { DriverDisplay, Hud } from "./Front";
 import { Icon } from "./Icon";
 import { Screen } from "./Screen";
-import { DriverDisplay, Hud } from "./Front";
 import { dispatch, useSystem } from "./store";
 import { MEDIA_BY_ID, SEAT_IDS, SEAT_NAME, type SeatId } from "./system";
 
