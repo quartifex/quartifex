@@ -47,7 +47,7 @@ export function useClock() {
 }
 
 /** The car's speed while moving: a gentle, believable wander around 62 km/h. */
-function useSpeed(moving: boolean) {
+export function useSpeed(moving: boolean) {
   const [v, setV] = useState(moving ? 62 : 0);
   useEffect(() => {
     if (!moving) {
@@ -463,88 +463,10 @@ export function ViewHead({ title, children }: { title: ReactNode; children?: Rea
 /** The driver: a drive view. Moving, it is glance-only: big type, no lists, no video. */
 function DriveHome() {
   const moving = useSystem((st) => st.moving);
-  const speed = useSpeed(moving);
+  // Speed, gear, assistance and range live on the driver display and the head-up display
+  // (Front.tsx); the centre display keeps the route, the media and why things are locked.
   return (
     <div className={`${s.view} ${s.drive}`}>
-      <Card className={s.cluster}>
-        <div className={s.speedRow}>
-          <p className={s.speed}>
-            <b>{speed}</b>
-            <span>km/h</span>
-          </p>
-          <span className={s.limit} role="img" aria-label={`Speed limit ${VEHICLE.speedLimit}`}>
-            {VEHICLE.speedLimit}
-          </span>
-        </div>
-        <p className={s.gears}>
-          <span className="sr-only">Gear {moving ? "D" : "P"}: </span>
-          {["P", "R", "N", "D"].map((g) => (
-            <span key={g} data-on={(moving ? g === "D" : g === "P") ? "" : undefined}>
-              {g}
-            </span>
-          ))}
-        </p>
-        <div className={s.adas}>
-          <svg
-            viewBox="0 0 200 120"
-            role="img"
-            aria-label="Driver assistance: lane keeping on, a car ahead at a safe distance"
-          >
-            <path
-              d="M70 120 L95 20"
-              stroke="#5b8cff"
-              strokeWidth="3"
-              strokeLinecap="round"
-              opacity={moving ? 1 : 0.35}
-            />
-            <path
-              d="M130 120 L105 20"
-              stroke="#5b8cff"
-              strokeWidth="3"
-              strokeLinecap="round"
-              opacity={moving ? 1 : 0.35}
-            />
-            <path
-              d="M20 120 L80 20"
-              stroke="rgb(255 255 255 / 0.18)"
-              strokeWidth="2"
-              strokeDasharray="8 8"
-            />
-            <path
-              d="M180 120 L120 20"
-              stroke="rgb(255 255 255 / 0.18)"
-              strokeWidth="2"
-              strokeDasharray="8 8"
-            />
-            {moving ? (
-              <>
-                <path d="M84 70 h32 l-3 -14 h-26 Z" fill="rgb(255 255 255 / 0.55)" />
-                <path d="M88 84 h24" stroke="#5b8cff" strokeWidth="2" opacity="0.7" />
-              </>
-            ) : null}
-            <path d="M80 118 h40 l-5 -22 h-30 Z" fill="#fff" />
-          </svg>
-        </div>
-        <div className={s.adasTags}>
-          <span className={s.badge} data-tone={moving ? "accent" : undefined}>
-            <Icon name="speed" size="1.1em" /> ACC {VEHICLE.setSpeed}
-          </span>
-          <span className={s.badge} data-tone={moving ? "ok" : undefined}>
-            Lane keep
-          </span>
-        </div>
-        <div className={s.range2}>
-          <div>
-            <span style={{ width: `${VEHICLE.battery * 100}%` }} />
-          </div>
-          <p>
-            <span>
-              <strong>{VEHICLE.rangeKm} km</strong> range
-            </span>
-            <span>{Math.round(VEHICLE.battery * 100)}%</span>
-          </p>
-        </div>
-      </Card>
       <MapView
         label={`Route from ${JOURNEY.from} to ${JOURNEY.to} via ${JOURNEY.via}`}
         banner

@@ -730,7 +730,7 @@ export function Screen({ seat }: { seat: SeatId }) {
   const driving = seat === "driver" && moving;
   const rear = seat === "rearLeft" || seat === "rearRight";
   const View = VIEWS[module];
-  const accent = ACCENTS.find((a) => a.id === me.accent)?.value ?? "#2d63ee";
+  const accent = ACCENTS.find((a) => a.id === me.accent)?.value ?? "#4d7dff";
   const close = useCallback(() => setShade(false), []);
   const rail = RAIL[kindOf(seat)];
   const railActive = rail.includes(module) ? module : module === "app" ? "apps" : module;

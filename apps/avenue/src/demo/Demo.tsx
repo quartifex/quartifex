@@ -15,8 +15,11 @@ import { stage } from "@/stage/state";
 import s from "./demo.module.css";
 import { Icon } from "./Icon";
 import { Screen } from "./Screen";
+import { DriverDisplay, Hud } from "./Front";
 import { dispatch, useSystem } from "./store";
 import { MEDIA_BY_ID, SEAT_IDS, SEAT_NAME, type SeatId } from "./system";
+
+const isFront = (seat: SeatId) => seat === "driver" || seat === "copilot";
 
 function useTicker() {
   // Advance whatever is playing on every screen, once a second, while the demo is on screen.
@@ -171,7 +174,7 @@ const STRIP_LABEL: Partial<Record<ModuleId, string>> = {
 function SystemStrip({ seat, onSelect }: { seat: SeatId; onSelect: (s: SeatId) => void }) {
   const seats = useSystem((st) => st.seats);
   return (
-    <ul className={s.strip} aria-label="All four screens">
+    <ul className={s.strip} aria-label="Every seat">
       {SEAT_IDS.map((id) => {
         const st = seats[id];
         const item = st.nowPlaying ? MEDIA_BY_ID[st.nowPlaying] : undefined;
@@ -239,6 +242,7 @@ export function Demo() {
   const [shownSeat, setShownSeat] = useState<SeatId>(seat);
   const level = useReducedMotion() ? "reduced" : "full";
   useTicker();
+  const front = isFront(shownSeat);
 
   // The device rises into place when the section arrives.
   useEffect(() => {
@@ -259,7 +263,12 @@ export function Demo() {
   const select = (next: SeatId) => {
     if (next === seat) return;
     stage.set({ seat: next });
-    const el = panel.current?.querySelector<HTMLElement>("[data-screen]");
+    // Between the front seats only the centre display changes; to or from the back, the whole
+    // view does.
+    const el =
+      isFront(next) && isFront(shownSeat)
+        ? panel.current?.querySelector<HTMLElement>("[data-screen]")
+        : panel.current;
     if (!el || level !== "full") {
       setShownSeat(next);
       return;
@@ -287,17 +296,45 @@ export function Demo() {
           </h2>
         </div>
         <p className={s.intro}>
-          The car is moving, so the driver&rsquo;s screen is in glance mode. Park it to see what
-          unlocks, take another seat, send something to the back, or switch to cab mode for the
-          rider&rsquo;s screen. Everything works from the keyboard.
+          The front seats share the centre display; the driver also gets the head-up and driver
+          displays, and each back seat has a headrest screen. The car is moving, so the
+          driver&rsquo;s view is in glance mode. Park it to see what unlocks, take another seat,
+          send something to the back, or switch to cab mode. Everything works from the keyboard.
         </p>
       </div>
       <div className={s.stage}>
-        <div ref={panel} className={s.device}>
-          <div className={s.panel} data-screen>
-            <Screen seat={shownSeat} />
-            <VisibleNotice />
-          </div>
+        <div ref={panel} className={s.swap}>
+          {front ? (
+            <div className={s.front} data-seat={shownSeat}>
+              <div className={s.frontLeft} data-dim={shownSeat === "copilot" ? "" : undefined}>
+                <Hud />
+                <DriverDisplay />
+              </div>
+              <figure className={s.centre}>
+                <div className={`${s.device} ${s.centreDevice}`}>
+                  <div className={`${s.panel} ${s.portrait}`} data-screen>
+                    <Screen seat={shownSeat} />
+                    <VisibleNotice />
+                  </div>
+                </div>
+                <figcaption className={s.surface}>
+                  Centre display · {SEAT_NAME[shownSeat]}
+                </figcaption>
+              </figure>
+            </div>
+          ) : (
+            <figure className={s.centre}>
+              <div className={`${s.device} ${s.headrest}`}>
+                <div className={s.panel} data-screen>
+                  <Screen seat={shownSeat} />
+                  <VisibleNotice />
+                </div>
+              </div>
+              <figcaption className={s.surface}>
+                Headrest screen · {SEAT_NAME[shownSeat]}
+              </figcaption>
+            </figure>
+          )}
         </div>
       </div>
       <div className={`wrap ${s.controls}`}>

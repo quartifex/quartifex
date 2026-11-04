@@ -7,7 +7,7 @@ export type SeatId = "driver" | "copilot" | "rearLeft" | "rearRight";
 export const SEAT_IDS: readonly SeatId[] = ["driver", "copilot", "rearLeft", "rearRight"];
 export const SEAT_NAME: Record<SeatId, string> = {
   driver: "Driver",
-  copilot: "Co-pilot",
+  copilot: "Front passenger",
   rearLeft: "Rear left",
   rearRight: "Rear right",
 };
@@ -217,7 +217,7 @@ export const VEHICLE = {
 /** The seat screen's look: light or dark, and an accent colour. */
 export type OsTheme = "dark" | "light";
 export const ACCENTS = [
-  { id: "lane", name: "Lane blue", value: "#2d63ee" },
+  { id: "lane", name: "Lane blue", value: "#4d7dff" },
   { id: "jade", name: "Jade", value: "#0f9d7a" },
   { id: "violet", name: "Violet", value: "#6b4bff" },
   { id: "amber", name: "Amber", value: "#c77700" },

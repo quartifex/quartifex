@@ -3,7 +3,7 @@
    rail, a persistent climate-and-media dock along the bottom as production cars have it.
    Everything is sized in em from the screen's own width (container units), so the panel
    reads the same on a laptop and on a phone. The driver's screen while moving switches to
-   glance sizes (76 px targets) and the ember accent. */
+   glance sizes (76 px targets); one blue for what is live, amber only for the glance badge. */
 
 .os {
   --u: clamp(11px, 1.12cqi, 16px);
@@ -17,10 +17,10 @@
   --k-text: #f2f5fa;
   --k-muted: #b0b9c9;
   --k-faint: #8e99ad;
-  --k-accent: #2d63ee;
-  --k-accent-2: #5b8cff;
+  --k-accent: #4d7dff;
+  --k-accent-2: #7aa0ff;
   --k-accent-text: #a9c9ff;
-  --k-ember: #ff7a3d;
+  --k-ember: #ffb066;
   --k-danger: #e5484d;
   --k-ok: #3ddc97;
   --k-map-filter: invert(0.92) hue-rotate(185deg) saturate(0.7) brightness(0.92) contrast(0.95);
@@ -75,9 +75,8 @@
 
 .os[data-driving] {
   --target: max(64px, 4.6em);
-  --k-accent-text: #ffc3a6;
   background:
-    radial-gradient(60% 50% at 100% 110%, rgb(255 122 61 / 0.16), transparent 60%),
+    radial-gradient(60% 50% at 100% 110%, rgb(77 125 255 / 0.14), transparent 60%),
     radial-gradient(60% 50% at 0% 0%, rgb(169 201 255 / 0.06), transparent 60%),
     linear-gradient(170deg, #171c27 0%, #0c1018 100%);
 }
@@ -230,9 +229,6 @@
   background: var(--k-accent-2);
 }
 
-.os[data-driving] .railItem[aria-current="page"]::before {
-  background: var(--k-ember);
-}
 
 .railItem[data-locked] {
   opacity: 0.55;
@@ -392,13 +388,6 @@
     0 0.5em 1.4em -0.5em rgb(45 99 238 / 0.8);
 }
 
-.os[data-driving] .press[data-variant="accent"] {
-  background: var(--k-ember);
-  color: #1d0800;
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 0.3),
-    0 0.5em 1.4em -0.5em rgb(255 122 61 / 0.7);
-}
 
 .press[data-variant="danger"] {
   background: var(--k-danger);
@@ -495,7 +484,7 @@
 
 .action[data-variant="danger"][aria-pressed="true"],
 .action[data-tone="warn"][aria-pressed="true"] {
-  background: linear-gradient(180deg, rgb(255 122 61 / 0.3), rgb(255 122 61 / 0.14));
+  background: linear-gradient(180deg, rgb(255 176 102 / 0.3), rgb(255 176 102 / 0.14));
   box-shadow: inset 0 0 0 1.5px var(--k-ember);
 }
 
@@ -991,7 +980,7 @@
 
 .drive {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr) minmax(0, 0.95fr);
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
   gap: var(--gap);
   min-height: 100%;
 }
@@ -1166,9 +1155,6 @@
   transition: width 1s linear;
 }
 
-.os[data-driving] .progress span {
-  background: var(--k-ember);
-}
 
 .glanceNote {
   display: flex;
@@ -1501,7 +1487,7 @@
   align-items: center;
   padding: 0.7em 0.9em;
   border-radius: var(--rad-s);
-  background: rgb(255 122 61 / 0.12);
+  background: rgb(255 176 102 / 0.12);
   color: #ffd3bd;
   font-size: 0.92em;
 }
@@ -1903,13 +1889,13 @@
 /* ---------------------------------------------------------------- narrower screens */
 
 @container (max-width: 820px) {
-  .drive {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  .main .drive {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(16em, 1.4fr) auto;
   }
   .driveSide {
-    grid-column: 1 / -1;
     grid-template-rows: auto;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr);
   }
   .media,
   .journey {
@@ -2008,8 +1994,8 @@
   --k-text: #f2f5fa;
   --k-muted: #b0b9c9;
   --k-faint: #8e99ad;
-  --k-accent: #2d63ee;
-  --k-accent-2: #5b8cff;
+  --k-accent: #4d7dff;
+  --k-accent-2: #7aa0ff;
   --k-accent-text: #a9c9ff;
   --k-danger: #e5484d;
   --target: 52px;
@@ -2066,7 +2052,7 @@
   font-weight: 600;
 }
 
-/* The drive view fills the screen: three columns, full height. */
+/* The drive view fills the screen: the route and a side column, full height. */
 .drive {
   grid-template-rows: minmax(0, 1fr);
   align-content: stretch;
@@ -2179,9 +2165,8 @@
 
 .os[data-theme="light"][data-driving] {
   background:
-    radial-gradient(60% 50% at 100% 110%, rgb(255 122 61 / 0.18), transparent 60%),
+    radial-gradient(60% 50% at 100% 110%, rgb(77 125 255 / 0.12), transparent 60%),
     linear-gradient(170deg, #f6f3ef 0%, #e6e1da 100%);
-  --k-accent-text: #a8410f;
 }
 
 /* Accent everywhere the old code hard-coded the lane blue's glow. */
@@ -2252,13 +2237,7 @@
   font-size: 0.98em;
 }
 
-.os[data-driving] .railItem[aria-current="page"] {
-  background: rgb(255 122 61 / 0.18);
-}
 
-.os[data-driving] .railItem[aria-current="page"] svg {
-  color: var(--k-ember);
-}
 
 /* ---------------------------------------------------------------- v3: the status bar */
 

@@ -197,8 +197,8 @@
 }
 
 .toggleOption[aria-checked="true"][data-tone="ember"] {
-  background: var(--c-ember);
-  color: #1d0800;
+  background: #ffb066;
+  color: #1d0d00;
 }
 
 /* ---------------------------------------------------------------- the panel */
@@ -360,4 +360,87 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--s-3);
+}
+
+/* ---------------------------------------------------------------- the screens, as fitted */
+
+.swap {
+  display: grid;
+  place-items: center;
+  width: 100%;
+}
+
+.centre {
+  display: grid;
+  justify-items: center;
+  gap: 0.85rem;
+  margin: 0;
+  width: 100%;
+}
+
+.surface {
+  font-family: var(--font-narrow), sans-serif;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--c-text-muted);
+}
+
+/* The front: windscreen and driver display on the left, the tall centre display on the right,
+   as they sit in the car. */
+.front {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: clamp(1rem, 2.4vw, 2.5rem);
+  width: min(1360px, 100%);
+}
+
+.frontLeft {
+  display: grid;
+  gap: 2.4rem;
+  align-content: end;
+  padding-bottom: 1.6rem;
+  transition: opacity 400ms var(--ease-out), filter 400ms var(--ease-out);
+}
+
+/* From the passenger side the driver's screens are there but not the point. */
+.frontLeft[data-dim] {
+  opacity: 0.45;
+  filter: saturate(0.6);
+}
+
+.centreDevice {
+  width: min(600px, calc((100svh - 9rem) * 0.64 + 22px));
+}
+
+.portrait {
+  aspect-ratio: 860 / 1344;
+}
+
+.headrest {
+  border-radius: clamp(22px, 2.6vw, 38px);
+  background: linear-gradient(180deg, #202227, #0d0e11);
+}
+
+@media (max-width: 900px) {
+  .front {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .frontLeft {
+    order: 2;
+    padding-bottom: 0;
+  }
+  .centreDevice {
+    width: min(100%, 460px);
+  }
+}
+
+/* On a phone a landscape headrest screen would be too small to touch: it stands up, and the
+   interface stacks as it does on the centre display. */
+@media (max-width: 640px) {
+  .headrest .panel {
+    aspect-ratio: 10 / 15;
+  }
 }

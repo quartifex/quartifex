@@ -321,7 +321,29 @@ function Car({ lite }: { lite: boolean }) {
     }
     camera.fov += (goalFov.current - camera.fov) * k;
     camera.lookAt(target);
-    camera.updateProjectionMatrix();
+    // Portrait screens (phones): widen the lens so the car still fits across, and slide the
+    // picture so it clears the words: up outside (the words sit low), down in the cabin (they
+    // sit high).
+    const aspect = size.width / Math.max(1, size.height);
+    if (aspect < 1 && w < 0.5) {
+      const widen = Math.min(2.4, (1.25 / aspect) ** 0.75);
+      const half = Math.atan(Math.tan(THREE.MathUtils.degToRad(camera.fov) / 2) * widen);
+      const fov = camera.fov;
+      camera.fov = THREE.MathUtils.radToDeg(half * 2);
+      camera.setViewOffset(
+        size.width,
+        size.height,
+        0,
+        size.height * (chapter.inside ? -0.12 : 0.17),
+        size.width,
+        size.height,
+      );
+      camera.updateProjectionMatrix();
+      camera.fov = fov;
+    } else {
+      camera.clearViewOffset();
+      camera.updateProjectionMatrix();
+    }
 
     // The door swings on its hinge.
     if (door.current) {
