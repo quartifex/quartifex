@@ -440,7 +440,9 @@ export function initialSystem(): System {
     sound: false,
     fleet: false,
     ride: { quiet: false, stop: "none", help: false },
-    shield: true,
+    // The front seats share the centre display, so passenger video waits while moving unless a
+    // car has a dual-view panel; this concept's car does not.
+    shield: false,
     heat: { driver: 0, copilot: 1, rearLeft: 0, rearRight: 0 },
     vent: { driver: 1, copilot: 0, rearLeft: 0, rearRight: 0 },
     volume: { driver: 0.6, copilot: 0.55, rearLeft: 0.7, rearRight: 0.5 },

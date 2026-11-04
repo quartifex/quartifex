@@ -1605,7 +1605,7 @@
 
 .climateGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15em), 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 19em), 1fr));
   gap: var(--gap);
 }
 
@@ -1916,6 +1916,17 @@
 }
 
 @container (max-width: 600px) {
+  .os .tbApps {
+    display: none;
+  }
+  /* The tall screen gives the route the top of the screen, as on the car's own display. */
+  .homeGrid > .span7 {
+    min-height: 24em;
+  }
+  .os .taskbar {
+    grid-template-columns: minmax(0, 1fr) auto;
+    margin: 0.4em 0.8em 0.8em;
+  }
   .os {
     grid-template-areas:
       "status"
@@ -2768,7 +2779,7 @@
   right: 1.6em;
   bottom: 6.2em;
   z-index: 8;
-  width: min(22em, 40%);
+  width: min(16em, 30%);
   aspect-ratio: 16 / 9;
   border-radius: 1em;
   overflow: hidden;

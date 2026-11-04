@@ -776,8 +776,8 @@ export function Screen({ seat }: { seat: SeatId }) {
             </span>
           ) : seat === "copilot" && moving ? (
             <span className={s.badge} data-tone={shield ? "ok" : undefined}>
-              <Icon name={shield ? "shield" : "eyeOff"} size="1.05em" />
-              {shield ? "Privacy shield on" : "Shield off"}
+              <Icon name="eye" size="1.05em" />
+              Shared with the driver
             </span>
           ) : rear && fleet ? (
             <span className={s.badge} data-tone="accent">

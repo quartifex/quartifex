@@ -1,7 +1,7 @@
 "use client";
 // The modules of a seat's screen, per seat. Each seat gets the home it needs, as production
 // cars and robotaxis lay them out: the driver a drive view (speed, ADAS, the next turn, the
-// map, one media tile), the co-pilot a navigator with a privacy shield, the rear a lounge, or
+// map, one media tile), the front passenger a navigator on the shared centre display, the rear a lounge, or
 // in cab mode a rider's screen (trip, pull over, help, quiet ride). Every driving rule comes
 // from system.ts (canPlay, canOpen); these views only show the result and say why.
 import { type ReactNode, useEffect, useState } from "react";
@@ -492,7 +492,7 @@ function DriveHome() {
   );
 }
 
-/** The co-pilot: the navigator, with the privacy shield that lets video play while moving. */
+/** The front passenger: the navigator on the shared centre display. */
 function CopilotHome() {
   const shield = useSystem((st) => st.shield);
   const moving = useSystem((st) => st.moving);
@@ -505,25 +505,15 @@ function CopilotHome() {
         className={s.span5}
         style={{ display: "grid", gap: "var(--gap)", alignContent: "start" }}
       >
-        <Card>
-          <div className={s.shield}>
-            <span className={s.shieldIcon} data-off={shield ? undefined : ""}>
-              <Icon name={shield ? "shield" : "eyeOff"} />
-            </span>
-            <Switch
-              label="Privacy shield"
-              detail={
-                shield
-                  ? "Hidden from the driver's seat, so video can play while moving"
-                  : moving
-                    ? "Off: video pauses while the car moves"
-                    : "Off: turn it on before you watch on the move"
-              }
-              checked={shield}
-              onChange={(on) => dispatch({ type: "shield", on })}
-            />
-          </div>
-        </Card>
+        {moving && !shield ? (
+          <Card>
+            <p className={s.glanceNote}>
+              <Icon name="eye" />
+              The driver can see this screen too, so video waits until you park. Music, the route
+              and stops are yours; send a film to the back.
+            </p>
+          </Card>
+        ) : null}
         <Card title="Now playing">
           <NowPlaying seat="copilot" size="small" />
         </Card>
@@ -832,8 +822,8 @@ export function Media({ seat }: { seat: SeatId }) {
           </p>
         ) : copilotBlocked ? (
           <p className={s.note}>
-            <Icon name="eyeOff" />
-            Turn on the privacy shield to watch while moving.
+            <Icon name="eye" />
+            The driver shares this screen: video waits until you park, or send it to the back.
           </p>
         ) : null}
         {kind === "radio" ? (

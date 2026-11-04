@@ -55,13 +55,6 @@ export const VIDEOS: readonly Video[] = [
 /** YouTube Music: mixes and live radios for the drive. */
 export const MIXES: readonly (Video & { mood: string })[] = [
   {
-    id: "jfKfPfyJRdk",
-    title: "lofi hip hop radio, beats to relax/study to",
-    channel: "Lofi Girl",
-    live: true,
-    mood: "Lo-fi",
-  },
-  {
     id: "4xDzrJKXOOY",
     title: "synthwave radio, beats to chill/game to",
     channel: "Lofi Girl",

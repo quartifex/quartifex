@@ -28,9 +28,8 @@ export const CREDITS: ReadonlyArray<{ item: string; credit: string }> = [
       "Vehicle model licensed by Quartifex for this concept. Every maker's badge and mark removed, the car's own screens replaced with AVENUE's, compressed by Quartifex. The two rear headrest screens are AVENUE's addition.",
   },
   {
-    item: "Sky",
-    credit:
-      "“Kloofendal 48d Partly Cloudy (Pure Sky)” by Poly Haven, CC0; reduced for reflections.",
+    item: "Studio",
+    credit: "Lit in code by Quartifex with soft-box light panels; no photographic environment.",
   },
   {
     item: "Maps",

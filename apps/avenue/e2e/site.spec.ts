@@ -22,12 +22,12 @@ test("labels itself honestly, with provenance and no invented proof", async ({ p
   ).toBeVisible();
   await expect(page.locator("footer").getByText("Designed and built by Quartifex")).toBeVisible();
   await page.locator("footer summary", { hasText: "Provenance" }).click();
-  for (const item of ["Car model", "Sky", "Maps", "Music", "Type"]) {
+  for (const item of ["Car model", "Studio", "Maps", "Music", "Type"]) {
     await expect(page.locator("footer dt").getByText(item, { exact: true })).toBeVisible();
   }
   await expect(
     page.getByText(
-      "Vehicle model used for demonstration only. AVENUE is not affiliated with any carmaker.",
+      "Vehicle model shown for demonstration only. AVENUE is an independent concept system.",
     ),
   ).toBeVisible();
   await expect(page.getByText(/trusted by/i)).toHaveCount(0);
@@ -128,12 +128,12 @@ test("the seat switcher and option groups work from the keyboard", async ({ page
   await toDemo(page);
   await page.getByRole("radio", { name: /^Driver/ }).focus();
   await page.keyboard.press("ArrowRight");
-  await expect(page.getByRole("radio", { name: /^Co-pilot/ })).toHaveAttribute(
+  await expect(page.getByRole("radio", { name: /^Front passenger/ })).toHaveAttribute(
     "aria-checked",
     "true",
   );
-  await expect(page.getByRole("radio", { name: /^Co-pilot/ })).toBeFocused();
-  await expect(page.locator("#demo header").first()).toContainText("Co-pilot");
+  await expect(page.getByRole("radio", { name: /^Front passenger/ })).toBeFocused();
+  await expect(page.locator("#demo header").first()).toContainText("Front passenger");
 });
 
 test("the requirement explorer filters by priority and opens a card", async ({ page }) => {
@@ -229,7 +229,7 @@ test("under reduced motion nothing pins and the demo still works", async ({ brow
 test("boots real-time 3D after first paint and loads the car model", async ({ page }) => {
   // Software WebGL in CI compiles the reflector and bloom shaders slowly; a GPU takes ~2 s.
   test.setTimeout(150_000);
-  const glb = page.waitForResponse((r) => r.url().includes("/media/avenue-car"));
+  const glb = page.waitForResponse((r) => r.url().includes("avenue-car-v2"));
   await page.goto("/?rung=3d");
   // The poster is in the HTML before any script.
   await expect(page.locator("[data-stage] [data-rung]")).toBeAttached();

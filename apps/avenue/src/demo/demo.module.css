@@ -437,6 +437,17 @@
   }
 }
 
+/* On the tall centre display the notice drops from the top, clear of the rail and dock. */
+.portrait .notice {
+  top: 3.4rem;
+  bottom: auto;
+  translate: -50% -6px;
+}
+
+.portrait .notice[data-shown] {
+  translate: -50% 0;
+}
+
 /* On a phone a landscape headrest screen would be too small to touch: it stands up, and the
    interface stacks as it does on the centre display. */
 @media (max-width: 640px) {

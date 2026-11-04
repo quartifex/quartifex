@@ -25,7 +25,9 @@ describe("driver lockout", () => {
     const s = run(initialSystem(), { type: "moving", on: true });
     const film = MEDIA_BY_ID.northbound;
     expect(film && canPlay(s, "driver", film)).toBe(false);
-    expect(film && canPlay(s, "copilot", film)).toBe(true);
+    // The front passenger shares the centre display with the driver.
+    expect(film && canPlay(s, "copilot", film)).toBe(false);
+    expect(film && canPlay(s, "rearLeft", film)).toBe(true);
     const tried = run(s, { type: "open", seat: "driver", module: "settings" });
     expect(tried.seats.driver.module).not.toBe("settings");
     expect(
@@ -47,7 +49,7 @@ describe("driver lockout", () => {
 describe("co-pilot privacy shield", () => {
   it("lets the co-pilot watch video while moving only with the shield on", () => {
     const film = MEDIA_BY_ID.northbound;
-    let s = initialSystem();
+    let s = run(initialSystem(), { type: "shield", on: true });
     expect(film && canPlay(s, "copilot", film)).toBe(true);
     s = run(s, { type: "play", seat: "copilot", id: "northbound" }, { type: "shield", on: false });
     expect(s.seats.copilot.playing).toBe(false);
