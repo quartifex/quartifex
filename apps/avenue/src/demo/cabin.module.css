@@ -1942,13 +1942,14 @@
     width: auto;
     min-width: 4.6em;
   }
-  .railItem[aria-current="page"]::before {
-    left: 30%;
-    right: 30%;
+  .os .rail .railItem[aria-current="page"]::before {
+    left: 50%;
+    right: auto;
     top: auto;
-    bottom: 0.15em;
-    width: auto;
+    bottom: 0.3em;
+    width: 1.4em;
     height: 0.22em;
+    translate: -50% 0;
   }
   .drive,
   .driveSide,

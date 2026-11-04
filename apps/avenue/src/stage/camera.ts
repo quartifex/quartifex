@@ -122,7 +122,7 @@ export const CHAPTERS: Chapter[] = [
   // 01 The car as it is: round to the driver's door, which opens.
   { id: "enter", from: HERO_END, via: [-6.2, 1.25, 0.6], to: DOOR },
   // 02 Into the driver's seat: through the open door, the screens waking one by one.
-  { id: "cabin", from: DOOR, via: [-1.2, 1.3, 0.35], to: SEATED, inside: true },
+  { id: "cabin", from: DOOR, via: [-1.25, 1.22, -0.25], to: SEATED, inside: true },
   // 03 The driver display and the head-up display.
   { id: "driver", from: SEATED, to: CLUSTER, inside: true },
   // 04 The centre display.

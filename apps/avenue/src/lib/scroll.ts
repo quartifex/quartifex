@@ -7,6 +7,9 @@ let current: Lenis | null = null;
 
 export function setLenis(l: Lenis | null) {
   current = l;
+  // Dev only: lets the film script (quartifex-motion/av-film.mjs) scroll through Lenis.
+  if (process.env.NODE_ENV !== "production")
+    (window as unknown as { __lenis?: Lenis | null }).__lenis = l;
 }
 
 export function scrollToTarget(target: string | HTMLElement, offset = 0) {

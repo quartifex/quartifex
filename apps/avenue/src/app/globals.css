@@ -289,6 +289,13 @@ textarea {
   will-change: transform;
 }
 
+/* The masks the words rise out of are wider and taller than the line, so a heading's soft
+   shadow is not cut off at the line box. Hidden words are transparent too, so nothing peeks. */
+.split-line-mask {
+  padding: 0.5em 1.2em;
+  margin: -0.5em -1.2em;
+}
+
 /* In the chapters over the 3D stage, headline words rise when the chapter becomes active and
    drop away when it leaves (data-active, set by Journey.tsx). */
 html[data-motion-ready] [data-slide] .split-word {

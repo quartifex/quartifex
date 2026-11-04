@@ -28,6 +28,16 @@ export function Journey({ children }: { children: ReactNode }) {
     const blink = { v: 0 };
     const setBlink = () => stageEl.style.setProperty("--blink", blink.v.toFixed(3));
     let current = "";
+    // How far along a chapter's path the camera is: the same sum as its trigger's onUpdate
+    // (start "top 50%", end "bottom 50%", the move done by the half-way point).
+    const localOf = (id: string) => {
+      if (reduced) return 1;
+      const sec = el.querySelector<HTMLElement>(`[data-chapter="${id}"]`);
+      if (!sec) return 0;
+      const r = sec.getBoundingClientRect();
+      const p = (innerHeight * 0.5 - r.top) / Math.max(1, r.height);
+      return Math.min(1, Math.max(0, p * 2));
+    };
     let timers: number[] = [];
     const clearTimers = () => {
       for (const t of timers) window.clearTimeout(t);
@@ -62,6 +72,7 @@ export function Journey({ children }: { children: ReactNode }) {
           .to(blink, { v: 1, duration: 0.32, ease: "power2.in", onUpdate: setBlink })
           .add(() => {
             frame.chapter = id;
+            frame.local = localOf(id);
             frame.cut = true;
           })
           .to(blink, { v: 0, duration: 0.7, ease: "power2.out", onUpdate: setBlink }, "+=0.08");
@@ -69,6 +80,8 @@ export function Journey({ children }: { children: ReactNode }) {
         blink.v = 0;
         setBlink();
         frame.chapter = id;
+        // the new chapter starts from where its own scroll is, not from the old chapter's
+        frame.local = localOf(id);
         if (reduced) frame.cut = true;
       }
       script(id, section);

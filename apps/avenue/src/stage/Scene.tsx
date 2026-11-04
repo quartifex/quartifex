@@ -280,6 +280,7 @@ function Car({ lite }: { lite: boolean }) {
     });
   }, []);
 
+  const outsideW = useRef(1);
   const corners = useMemo(
     () => [new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3()],
     [],
@@ -295,9 +296,13 @@ function Car({ lite }: { lite: boolean }) {
     const mix = (a: number, c: number) => a + (c - a) * w;
     const outside = !chapter.inside && w < 0.5;
     const still = frame.reducedMotion;
-    const drift = still || !outside ? 0 : Math.sin(frame.time * 0.15) * 0.1;
-    const px = outside && !still ? frame.pointer.x * 0.22 : 0;
-    const py = outside && !still ? frame.pointer.y * 0.06 : 0;
+    // The slow drift and the pointer's pull ease out as the camera goes inside, rather than
+    // stopping on the frame the chapter changes (which read as a jolt between chapters).
+    outsideW.current += ((outside && !still ? 1 : 0) - outsideW.current) * Math.min(1, dt * 1.6);
+    const ow = outsideW.current;
+    const drift = Math.sin(frame.time * 0.15) * 0.1 * ow;
+    const px = frame.pointer.x * 0.22 * ow;
+    const py = frame.pointer.y * 0.06 * ow;
     goalPos.set(
       mix(journey.pos[0] + drift + px, b.pose.pos[0]),
       mix(journey.pos[1] + py, b.pose.pos[1]),
