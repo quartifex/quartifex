@@ -1,9 +1,8 @@
 // The A/B test survey (ratings out of 5) from the AVENUE case study, exactly as recorded on
 // the showcase board. It covered the rear-seat system only.
 //
-// "Physical effort" is unresolved: the board gives a net difference of -1.15, but 2.25 - 3 is
-// -0.75. Until Nitesh confirms which is right, the page shows the two ratings and no net
-// difference for that row. The participant count and method are not stated until supplied.
+// "Physical effort": the board gave -1.15, but 2.25 - 3 is -0.75; Nitesh confirmed -0.75
+// (12 Nov 2026). The participant count and method are not stated until supplied.
 
 export type Metric = {
   name: string;
@@ -27,9 +26,8 @@ export const AB_METRICS: readonly Metric[] = [
     name: "Physical effort",
     v1: 3,
     v2: 2.25,
-    net: null,
+    net: -0.75,
     lowerIsBetter: true,
-    note: "Net difference withheld: the recorded figure (-1.15) does not match the ratings (2.25 - 3 = -0.75). [[NEEDED: confirm the physical-effort figure]]",
   },
 ];
 

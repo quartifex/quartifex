@@ -38,16 +38,15 @@ test("labels itself honestly, with provenance and no invented proof", async ({ p
   await expect(page.locator("#demo")).toContainText("Driver mode: researched and user-tested.");
 });
 
-test("publishes the A/B ratings as recorded and withholds the unresolved net figure", async ({
+test("publishes the A/B ratings as recorded, with the confirmed physical-effort figure", async ({
   page,
 }) => {
   await open(page);
   const row = page.locator("#testing tr", { hasText: "Physical effort" });
   await expect(row).toContainText("3");
   await expect(row).toContainText("2.25");
-  await expect(row).toContainText("To be confirmed");
+  await expect(row).toContainText("0.75");
   await expect(row).not.toContainText("1.15");
-  await expect(row).not.toContainText("0.75");
   await expect(page.locator("#testing")).toContainText("Rear-seat system only");
 });
 
