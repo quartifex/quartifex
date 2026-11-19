@@ -733,3 +733,21 @@ drag orbits, scroll travels in, and the pointer parts the gas.
 
 Open questions for Nitesh: do pieces join the catalog as their own kind, and do they replace
 the Lab seeds or sit beside them?
+
+### 2026-11-20, Lab pieces: four more, and a controls window
+
+- New pieces at `/pieces/nada` (sand on a vibrating plate), `/pieces/syahi` (ink in water),
+  `/pieces/niyam` (strange attractors) and `/pieces/parvat` (an endless mountain range of
+  points), plus an index at `/pieces`. Engines in `apps/lab/src/pieces/<name>/engine.js`, each
+  with an `engine.d.ts`. These four run on WebGL 2; only `brahmand` is on WebGPU.
+- Shared frame `pieces/PieceShell.tsx` and controls window `pieces/ControlPanel.tsx`
+  (draggable by pointer or arrow keys, foldable, reset). Each piece lists its own controls;
+  `brahmand` was moved onto the shared frame and given controls too.
+- Checks: `pnpm check` green. All five opened in Chromium on an RTX 4070 with the controls
+  window showing; `parvat` at 3,240,000 points, `niyam` at 900,000 threads.
+- Controls: the four WebGL engines had every control set from a test harness; on
+  `/pieces/brahmand` the window itself was driven by script (ranges, toggle, action, fold,
+  reset, arrow-key move) with no errors.
+- Not done: dragging the window with a pointer was not tried; no Playwright tests; no catalog
+  entries; the hub does not link to `/pieces`; not tried on a phone, in Safari or in Firefox;
+  sound not listened to.

@@ -169,6 +169,10 @@ export async function createBrahmand(canvas, options) {
   const uBloom = uniform(0);
   const uTintA = uniform(new THREE.Vector3(0.9, 0.5, 0.3));
   const uTintB = uniform(new THREE.Vector3(0.2, 0.4, 0.6));
+  const uGasK = uniform(1);
+  const uStarK = uniform(1);
+  const uPushK = uniform(1);
+  const P = { wind: 1.7, bloom: 0.07, drift: true };
 
   /* ---------- particle state ---------- */
   const mk = (n) => {
@@ -240,7 +244,7 @@ export async function createBrahmand(canvas, options) {
       const w = pos.xyz.sub(uRayO);
       const perp = w.sub(uRayD.mul(dot(w, uRayD)));
       const d2 = dot(perp, perp);
-      const fall = exp(d2.negate().div(0.035)).mul(uPush).mul(m);
+      const fall = exp(d2.negate().div(0.035)).mul(uPush).mul(uPushK).mul(m);
       const away = perp.div(d2.sqrt().add(0.0001));
       acc.addAssign(away.mul(fall.mul(30)));
       acc.addAssign(cross(uRayD, away).mul(fall.mul(16)));
@@ -280,7 +284,7 @@ export async function createBrahmand(canvas, options) {
     const vivid = mix(vec3(grey), c.xyz, 1.3).max(0);
     // clumpy, so there are filaments and gaps
     const clump = fine.mul(fine).mul(fine).mul(3.4).add(0.12);
-    const gain = mix(float(0.4), uExpose.mul(0.03).mul(clump), m);
+    const gain = mix(float(0.4), uExpose.mul(0.03).mul(uGasK).mul(clump), m);
     const d = uv().sub(0.5);
     const shape = exp(dot(d, d).mul(-14)).sub(0.03).max(0);
     material.scaleNode = size;
@@ -311,7 +315,7 @@ export async function createBrahmand(canvas, options) {
       .mul(0.22)
       .add(0.78);
     const lit = giant.select(float(7), mag.mul(3.5).add(0.1)).mul(twinkle);
-    const gain = mix(h.z.mul(0.5), lit, m);
+    const gain = mix(h.z.mul(0.5), lit.mul(uStarK), m);
     const d = uv().sub(0.5);
     const r2 = dot(d, d);
     const point = exp(r2.mul(-70))
@@ -534,10 +538,14 @@ export async function createBrahmand(canvas, options) {
   let releaseTimer = 0;
   const pointer = new THREE.Vector2(0, 0);
 
+  const readout = () =>
+    `Points ${(GAS + STARS).toLocaleString("en-US")}\n${want ? "Universe" : "Photograph"}`;
+  options.onReadout(readout());
+
   function toggle() {
     want = want ? 0 : 1;
     if (!want) zoomTo = 1;
-    options.onState(want ? "universe" : "photograph");
+    options.onReadout(readout());
     chord();
   }
 
@@ -676,7 +684,9 @@ export async function createBrahmand(canvas, options) {
     const rate = reduced ? 1 / 11 : 1 / 6.5;
     M += Math.sign(want - M) * Math.min(Math.abs(want - M), dt * rate);
     const e = M * M * (3 - 2 * M);
-    wind = want ? Math.min(1.7, wind + dt * (reduced ? 0.012 : 0.03)) : wind * Math.exp(-dt * 1.2);
+    wind = want
+      ? Math.min(P.wind, wind + dt * (reduced ? 0.012 : 0.03))
+      : wind * Math.exp(-dt * 1.2);
     push *= Math.exp(-dt * 2.2);
 
     if (!down) {
@@ -691,7 +701,7 @@ export async function createBrahmand(canvas, options) {
     }
     pitch = Math.max(-1.35, Math.min(1.35, pitch));
     zoom += (zoomTo - zoom) * (1 - Math.exp(-dt * 3));
-    const idle = now - lastTouch > 3500 && !reduced ? 1 : 0;
+    const idle = P.drift && now - lastTouch > 3500 && !reduced ? 1 : 0;
     const ay = (yaw + (0.42 * Math.sin(t * 0.045) + 0.12 * Math.sin(t * 0.11)) * idle) * e;
     const ap = (pitch + 0.16 * Math.sin(t * 0.037 + 1) * idle) * e;
     const half = uHalf.value;
@@ -718,7 +728,7 @@ export async function createBrahmand(canvas, options) {
     const fade = 1 - Math.min(1, Math.max(0, (e - 0.07) / 0.22));
     uPhotoA.value = fade * fade * (3 - 2 * fade);
     photoMesh.visible = fade > 0;
-    uBloom.value = 0.07 * Math.min(1, e * 3);
+    uBloom.value = P.bloom * Math.min(1, e * 3);
 
     renderer.compute(gasSim);
     renderer.compute(starSim);
@@ -727,7 +737,48 @@ export async function createBrahmand(canvas, options) {
   renderer.setAnimationLoop(frame);
 
   return {
-    points: GAS + STARS,
+    controls: [
+      { type: "action", key: "toggle", label: "Let it go / bring it home" },
+      {
+        type: "range",
+        key: "gas",
+        label: "Gas brightness",
+        min: 0.2,
+        max: 3,
+        step: 0.05,
+        value: 1,
+      },
+      {
+        type: "range",
+        key: "stars",
+        label: "Star brightness",
+        min: 0,
+        max: 3,
+        step: 0.05,
+        value: 1,
+      },
+      { type: "range", key: "bloom", label: "Glow", min: 0, max: 0.3, step: 0.005, value: 0.07 },
+      {
+        type: "range",
+        key: "wind",
+        label: "How far it winds",
+        min: 0,
+        max: 4,
+        step: 0.05,
+        value: 1.7,
+      },
+      { type: "range", key: "force", label: "Pointer force", min: 0, max: 4, step: 0.05, value: 1 },
+      { type: "toggle", key: "drift", label: "Drift when left alone", value: true },
+    ],
+    set(key, value) {
+      if (key === "toggle") {
+        auto = false;
+        toggle();
+      } else if (key === "gas") uGasK.value = value;
+      else if (key === "stars") uStarK.value = value;
+      else if (key === "force") uPushK.value = value;
+      else if (key in P) P[key] = value;
+    },
     toggle() {
       auto = false;
       toggle();
@@ -752,7 +803,7 @@ export async function createBrahmand(canvas, options) {
       vpitch = 0;
       zoom = 1;
       zoomTo = 1;
-      options.onState("photograph");
+      options.onReadout(readout());
       window.clearTimeout(releaseTimer);
       releaseTimer = window.setTimeout(() => {
         if (!want && !disposed) toggle();

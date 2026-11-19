@@ -1,38 +1,45 @@
 :global(html):has(.page) {
   overflow: hidden;
-  background: #000;
 }
 
 .page {
   position: fixed;
   inset: 0;
   overflow: hidden;
-  background: #000;
-  color: #ece7dc;
-  --dim: rgb(236 231 220 / 0.62);
+  background: var(--piece-bg);
+  color: var(--piece-ink);
+  --piece-bg: #000;
+  --piece-ink: #ece7dc;
+  --piece-dim: rgb(236 231 220 / 0.62);
+  --piece-line: rgb(236 231 220 / 0.24);
+  --piece-panel: rgb(8 10 12 / 0.66);
+  --piece-shade: rgb(0 0 0 / 0.62);
+}
+
+.page[data-tone="light"] {
+  --piece-bg: #ebe6da;
+  --piece-ink: #14171c;
+  --piece-dim: rgb(20 23 28 / 0.62);
+  --piece-line: rgb(20 23 28 / 0.26);
+  --piece-panel: rgb(244 240 230 / 0.72);
+  --piece-shade: rgb(235 230 218 / 0.7);
 }
 
 .canvas {
   position: absolute;
   inset: 0;
+  display: block;
   width: 100%;
   height: 100%;
-  display: block;
   touch-action: none;
-  cursor: grab;
-}
-
-.canvas:active {
-  cursor: grabbing;
+  cursor: crosshair;
 }
 
 .shade {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background:
-    linear-gradient(to top, rgb(0 0 0 / 0.62) 0%, transparent 30%),
-    linear-gradient(to bottom, rgb(0 0 0 / 0.4) 0%, transparent 14%);
+  background: linear-gradient(to top, var(--piece-shade) 0%, transparent 30%);
 }
 
 .mono {
@@ -41,19 +48,15 @@
   font-size: 11px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--dim);
-}
-
-.mono b {
-  color: #ece7dc;
-  font-weight: 400;
+  color: var(--piece-dim);
 }
 
 .top,
 .bottom {
   position: absolute;
-  left: 0;
   right: 0;
+  left: 0;
+  z-index: 1;
   display: flex;
   justify-content: space-between;
   gap: 20px;
@@ -71,26 +74,39 @@
   align-items: flex-end;
 }
 
-.right {
+.readout {
+  display: grid;
+  gap: 6px;
   text-align: right;
-  line-height: 1.9;
+  line-height: 1.6;
+}
+
+.readout b {
+  color: var(--piece-ink);
+  font-weight: 400;
+}
+
+.readout span {
+  white-space: pre-line;
+  text-transform: none;
+  letter-spacing: 0.04em;
 }
 
 .title {
   margin: 0 0 10px;
   font-family: var(--qx-font-display);
-  font-weight: 500;
   font-size: clamp(34px, 5.2vw, 68px);
+  font-weight: 500;
   line-height: 0.95;
   letter-spacing: -0.02em;
 }
 
 .premise {
-  margin: 0;
   max-width: 44ch;
+  margin: 0;
+  color: var(--piece-dim);
   font-size: clamp(14px, 1.25vw, 17px);
   line-height: 1.45;
-  color: var(--dim);
   text-wrap: pretty;
 }
 
@@ -108,14 +124,14 @@
 }
 
 .button {
-  pointer-events: auto;
   padding: 10px 14px;
-  border: 1px solid rgb(236 231 220 / 0.28);
+  border: 1px solid var(--piece-line);
   border-radius: 999px;
-  background: rgb(0 0 0 / 0.35);
-  color: #ece7dc;
+  background: var(--piece-panel);
+  color: var(--piece-ink);
   white-space: nowrap;
   cursor: pointer;
+  pointer-events: auto;
   transition:
     border-color 0.2s,
     color 0.2s;
@@ -145,6 +161,7 @@
 .drop,
 .message {
   position: absolute;
+  z-index: 3;
   display: grid;
   place-items: center;
   text-align: center;
@@ -161,7 +178,7 @@
 .message {
   inset: 0;
   padding: 32px;
-  color: var(--dim);
+  color: var(--piece-dim);
 }
 
 .message p {
