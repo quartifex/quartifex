@@ -709,3 +709,27 @@ layout already loaded the face) and the `new:site` template. No deviations from 
 Nothing new is blocked on Nitesh; the lab's `fontsKb` is noted under known issues.
 
 Next prompt: unchanged, **PF-2** (Home) or **P7** (heftmark) per `docs/code-prompts.md`.
+
+### 2026-11-19, Lab pieces: brahmand
+
+A new kind of Lab work, outside the prompt sequence: full-screen authored pieces at
+`/pieces/<name>`. First one built: **brahmand** (`/pieces/brahmand`, label "Personal Concept").
+A photograph (chosen, dropped or pasted; a code-painted sample by default) is shown as it is,
+then released into a nebula and star field made of its own pixels. Click releases and returns,
+drag orbits, scroll travels in, and the pointer parts the gas.
+
+- Files: `apps/lab/src/pieces/brahmand/engine.js` (+ `engine.d.ts`),
+  `apps/lab/src/app/(bare)/pieces/brahmand/` (page, client component, CSS module).
+- Technique: three's WebGPU renderer and TSL. Two compute passes advance 1,450,000 particles
+  (spring to a target, galactic winding, pointer force); sprites drawn additively into a
+  half-float pass; bloom and a film curve after. See `DECISIONS.md`, 19 Nov.
+- Checks: `pnpm check` green (after `turbo run build --filter=./packages/*` in a fresh
+  worktree). Hub production build includes `/pieces/brahmand`. Seen running in Chromium on an
+  RTX 4070 at 2022 x 1222: about 81 frames a second.
+- Not done: no Playwright test, no catalog entry, no hub link to the piece, no OG image, not
+  tried on a phone, in Safari or in Firefox, reduced-motion path not exercised by eye, sound
+  not listened to.
+- Built on the branch `pieces/brahmand`, not `main`.
+
+Open questions for Nitesh: do pieces join the catalog as their own kind, and do they replace
+the Lab seeds or sit beside them?
