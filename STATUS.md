@@ -829,3 +829,18 @@ the Lab seeds or sit beside them?
   the morning flights fanned out of the hubs; at 16:30 UTC India's night lights and the Gulf
   hubs showed.
 - Not done: no phone, Safari or Firefox; sound not listened to.
+
+### 2026-11-20, Prithvi: rivers, and ancient and dry rivers
+
+- `/pieces/prithvi` now draws rivers (a "Rivers" control sets how small a river is still shown)
+  and has an "Ancient and dry rivers" toggle. Rerun `prithvi-data.mjs` (about 40 s with the
+  cache) to make the new `rivers-x-y.png` tiles; they need hosting with the other textures.
+- Checks: probed the tiles at known places: the Amazon, Nile, Ganges and Indus come out large
+  today; the Tamanrasset paleoriver and Wadi Howar show only with rain everywhere; the drowned
+  Channel River under the English Channel is a large river at ice-age sea level; the empty
+  Libyan Sahara has none. On screen in Chromium on an RTX 4070: the Indus, Ganges, Amu Darya and
+  Syr Darya, Nile and Niger as today's rivers, and the Sahara's fossil drainage network with the
+  toggle on. `pnpm check` green.
+- Known limits: the Ghaggar-Hakra shows as a living river, because irrigated Punjab looks green
+  in the imagery; at a distance diagonal channels look beaded; the ice-age ice still covers
+  southern England.

@@ -14,6 +14,7 @@ import {
   float,
   hash,
   instanceIndex,
+  length,
   max,
   min,
   mix,
@@ -67,6 +68,37 @@ async function bitmap(url) {
 }
 
 /** Ground height and spill height in metres, as one two-channel half-float texture. */
+/** River flow, as traced by scripts/prithvi-data.mjs: today's (red) and with rain everywhere (green). */
+async function loadRivers(base) {
+  const data = new Uint8Array(W * H * 2);
+  const canvas = new OffscreenCanvas(TILE, TILE);
+  const cx = canvas.getContext("2d", { willReadFrequently: true });
+  const names = [];
+  for (let ty = 0; ty < H / TILE; ty++) for (let tx = 0; tx < W / TILE; tx++) names.push([tx, ty]);
+  const images = await Promise.all(
+    names.map(([tx, ty]) => bitmap(`${base}/rivers-${tx}-${ty}.png`)),
+  );
+  names.forEach(([tx, ty], n) => {
+    cx.drawImage(images[n], 0, 0);
+    images[n].close();
+    const px = cx.getImageData(0, 0, TILE, TILE).data;
+    for (let j = 0; j < TILE; j++) {
+      let o = ((ty * TILE + j) * W + tx * TILE) * 2;
+      let i = j * TILE * 4;
+      for (let x = 0; x < TILE; x++, o += 2, i += 4) {
+        data[o] = px[i];
+        data[o + 1] = px[i + 1];
+      }
+    }
+  });
+  const tex = new THREE.DataTexture(data, W, H, THREE.RGFormat, THREE.UnsignedByteType);
+  tex.minFilter = THREE.LinearFilter;
+  tex.magFilter = THREE.LinearFilter;
+  tex.wrapS = THREE.RepeatWrapping;
+  tex.needsUpdate = true;
+  return tex;
+}
+
 async function loadHeights(base) {
   const k = 2047 / Math.asinh(TOP / SCALE);
   const lut = new Uint16Array(4096);
@@ -147,6 +179,8 @@ export async function createPrithvi(canvas, options) {
 
   options.onReadout("Loading the Earth\nelevation and sea floor");
   const heightTex = await loadHeights(options.assets);
+  options.onReadout("Loading the Earth\nrivers");
+  const riverTex = await loadRivers(options.assets);
   options.onReadout("Loading the Earth\nsatellite colour");
   const colourTex = await loadColour(options.assets);
   options.onReadout("Loading the Earth\nnight lights");
@@ -162,6 +196,8 @@ export async function createPrithvi(canvas, options) {
   const uExag = uniform(20); // how much taller than life the terrain stands
   const uClouds = uniform(0.5);
   const uLights = uniform(1);
+  const uRivers = uniform(0.5); // how small a river is still drawn
+  const uAncient = uniform(0); // dry and ancient channels
   const uTime = uniform(0);
 
   /* ---------- the ground and the water ---------- */
@@ -196,7 +232,7 @@ export async function createPrithvi(canvas, options) {
   const cooling = clamp(uTemp.negate().div(6), 0, 1.6);
   const sheets = patch(60, -85, 17, 24)
     .mul(-15)
-    .add(patch(65, 20, 11, 14).mul(-12))
+    .add(patch(64, 22, 9, 12).mul(-11))
     .add(patch(66, 125, 14, 45).mul(8))
     .add(patch(64, -160, 9, 20).mul(8))
     .mul(cooling);
@@ -207,7 +243,7 @@ export async function createPrithvi(canvas, options) {
     .sub(max(ground.sub(uSea), 0).mul(0.0065));
   const tToday = zonal.sub(max(ground, 0).mul(0.0065));
   const ragged = mx_noise_float(positionLocal.mul(38)).mul(2.2);
-  const frozen = (t) => smoothstep(-9, -14, t.add(ragged));
+  const frozen = (t) => smoothstep(-10.5, -15.5, t.add(ragged));
   const chilly = (t) => smoothstep(4, -6, t.add(ragged));
   const iceGrown = max(frozen(tNow).sub(frozen(tToday)), 0);
   const iceLost = max(frozen(tToday).sub(frozen(tNow)), 0);
@@ -270,7 +306,35 @@ export async function createPrithvi(canvas, options) {
     seaIce.mul(0.92),
   );
 
-  const surface = mix(land, wet, water);
+  // Rivers: today's on any land above the water, so as the sea falls they run on across the
+  // drained shelves; and, if asked, the channels water would cut if it rained everywhere
+  // a river is one 5 km cell wide; looking from further away, gather it from a wider patch
+  // so it stays a line rather than breaking up
+  const reach = clamp(length(cameraPosition).sub(1).mul(2.6), 1, 4);
+  const ru = vec2(reach.div(W), 0);
+  const rv = vec2(0, reach.div(H));
+  const flow = max(
+    max(texture(riverTex, uvE), texture(riverTex, uvE.add(ru))),
+    max(
+      max(texture(riverTex, uvE.sub(ru)), texture(riverTex, uvE.add(rv))),
+      texture(riverTex, uvE.sub(rv)),
+    ),
+  );
+  const onLand = water
+    .oneMinus()
+    .mul(iceGrown.oneMinus())
+    .mul(float(1).sub(white.mul(iceLost.oneMinus())));
+  const cut = mix(float(0.56), float(0.24), uRivers);
+  const river = smoothstep(cut, cut.add(0.1), flow.r).mul(onLand);
+  const riverDepth = smoothstep(cut, float(0.95), flow.r);
+  const dryCut = mix(float(0.5), float(0.3), uRivers);
+  const ancient = smoothstep(dryCut, dryCut.add(0.08), flow.g)
+    .mul(float(1).sub(smoothstep(cut.sub(0.12), cut, flow.r)))
+    .mul(onLand)
+    .mul(uAncient);
+  const riverColour = mix(vec3(0.07, 0.19, 0.33), vec3(0.04, 0.12, 0.27), riverDepth);
+  const watered = mix(land, riverColour, river.mul(0.92));
+  const surface = mix(watered, wet, water);
 
   // light
   const view = normalize(cameraPosition.sub(positionWorld));
@@ -298,7 +362,9 @@ export async function createPrithvi(canvas, options) {
     .mul(water.oneMinus())
     .mul(iceGrown.oneMinus())
     .mul(uLights);
-  const colour = mix(sunlit.add(towns), vec3(0.3, 0.55, 1).mul(day), rim.mul(0.55));
+  // ancient channels glow faintly, as a traced overlay rather than water
+  const traced = vec3(0.25, 0.8, 0.85).mul(ancient).mul(day.mul(0.5).add(0.22));
+  const colour = mix(sunlit.add(towns).add(traced), vec3(0.3, 0.55, 1).mul(day), rim.mul(0.55));
 
   const globe = new THREE.Group();
   scene.add(globe);
@@ -612,6 +678,8 @@ export async function createPrithvi(canvas, options) {
         step: 1,
         value: 40,
       },
+      { type: "range", key: "rivers", label: "Rivers", min: 0, max: 1, step: 0.01, value: 0.5 },
+      { type: "toggle", key: "ancient", label: "Ancient and dry rivers", value: false },
       { type: "toggle", key: "lights", label: "City lights", value: true },
       { type: "toggle", key: "spin", label: "Turn slowly", value: true },
     ],
@@ -641,6 +709,8 @@ export async function createPrithvi(canvas, options) {
       } else if (key === "clouds") uClouds.value = value;
       else if (key === "exag") uExag.value = value;
       else if (key === "lights") uLights.value = value ? 1 : 0;
+      else if (key === "rivers") uRivers.value = value;
+      else if (key === "ancient") uAncient.value = value ? 1 : 0;
       else if (key in P) P[key] = value;
     },
     setSound,
@@ -655,6 +725,7 @@ export async function createPrithvi(canvas, options) {
       canvas.removeEventListener("keydown", onKey);
       if (audio.ctx) audio.ctx.close();
       heightTex.dispose();
+      riverTex.dispose();
       colourTex.dispose();
       nightTex.dispose();
       renderer.dispose();

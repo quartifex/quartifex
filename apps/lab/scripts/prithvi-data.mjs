@@ -363,6 +363,97 @@ async function halves(name, raw, channels, options) {
 
 // The height grid goes out as 2048-pixel tiles, so every file stays under the
 // 10 MB a single upload may be on the image host. Tile x-y counts from the north-west.
+// Rivers. Water is routed by flooding the terrain upwards from the deep ocean (a priority flood):
+// the order in which the flood reaches each cell gives it a downhill neighbour, even across
+// flats and filled hollows, and flow is summed back down that tree. The sea floor is included,
+// so when the sea falls the rivers run on across the drained shelves. It is done twice: once
+// with rain weighted by how green the land looks today (today's rivers), and once with rain
+// everywhere alike (where water would run in a wetter world: dry valleys in today's deserts).
+// Water that runs into a deep closed basin ends there.
+function rivers(h, rgb) {
+  const n = W * H;
+  const LOW = -11000;
+  const levels = 20001;
+  const headOf = new Int32Array(levels).fill(-1);
+  const tailOf = new Int32Array(levels).fill(-1);
+  const next = new Int32Array(n).fill(-1);
+  const filled = new Int16Array(n);
+  const parent = new Int32Array(n).fill(-1);
+  const order = new Int32Array(n);
+  const seen = new Uint8Array(n);
+  const push = (cell, level) => {
+    const b = level - LOW;
+    if (tailOf[b] < 0) headOf[b] = cell;
+    else next[tailOf[b]] = cell;
+    tailOf[b] = cell;
+  };
+  for (let p = 0; p < n; p++) {
+    if (h[p] <= -300) {
+      seen[p] = 1;
+      filled[p] = h[p];
+      push(p, h[p]);
+    }
+  }
+  let done = 0;
+  for (let b = 0; b < levels; b++) {
+    while (headOf[b] >= 0) {
+      const cur = headOf[b];
+      headOf[b] = next[cur];
+      if (headOf[b] < 0) tailOf[b] = -1;
+      order[done++] = cur;
+      const x = cur % W;
+      const y = (cur - x) / W;
+      for (let dy = -1; dy <= 1; dy++) {
+        const yy = y + dy;
+        if (yy < 0 || yy >= H) continue;
+        for (let dx = -1; dx <= 1; dx++) {
+          if (!dx && !dy) continue;
+          const nb = yy * W + ((x + dx + W) % W);
+          if (seen[nb]) continue;
+          seen[nb] = 1;
+          parent[nb] = cur;
+          const level = Math.max(h[nb], filled[cur]);
+          filled[nb] = level;
+          push(nb, level);
+        }
+      }
+    }
+  }
+  const wet = new Float32Array(n);
+  const any = new Float32Array(n);
+  for (let y = 0; y < H; y++) {
+    const area = Math.cos(((y + 0.5) / H - 0.5) * Math.PI);
+    for (let x = 0; x < W; x++) {
+      const p = y * W + x;
+      const r = rgb[p * 3];
+      const g = rgb[p * 3 + 1];
+      const bl = rgb[p * 3 + 2];
+      // green land is wet; sand and bare rock are dry; ice sheets drain nowhere useful
+      const white = Math.min(r, g, bl) > 175 ? 0.2 : 1;
+      const green = Math.min(1, Math.max(0.02, (g - r + 28) / 62));
+      wet[p] = area * green * white;
+      any[p] = area;
+    }
+  }
+  for (let k = done - 1; k >= 0; k--) {
+    const c = order[k];
+    const p = parent[c];
+    if (p < 0) continue;
+    if (filled[c] - h[c] > 40) continue; // a deep closed basin: the water stays
+    wet[p] += wet[c];
+    any[p] += any[c];
+  }
+  // 8-bit log scale: 0 below 16 cells (about 400 km²), 255 at a quarter of a million
+  const enc = (a) => (a < 16 ? 0 : Math.min(255, Math.round(((Math.log2(a) - 4) * 255) / 14)));
+  const out = Buffer.alloc(n * 3);
+  for (let p = 0; p < n; p++) {
+    out[p * 3] = enc(wet[p]);
+    out[p * 3 + 1] = enc(any[p]);
+  }
+  console.log("rivers: cells routed", done, "of", n);
+  return out;
+}
+
 const TILE = 2048;
 async function tiles(name, raw) {
   for (let ty = 0; ty < H / TILE; ty++) {
@@ -396,6 +487,8 @@ await tiles("height", packed);
 const rgb = await colour(h, e);
 console.log("colour");
 await halves("colour", rgb, 3, { format: "jpg", quality: 88 });
+console.log("rivers");
+await tiles("rivers", rivers(h, rgb));
 
 let night = false;
 for (const url of BLACK_MARBLE) {
