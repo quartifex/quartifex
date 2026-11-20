@@ -813,3 +813,19 @@ the Lab seeds or sit beside them?
   tails and a bridge.
 - Not done: only the default preset was looked at on screen; no phone, Safari or Firefox; sound
   not listened to.
+
+### 2026-11-20, Lab pieces: Udaan, a day of flights
+
+- New piece at `/pieces/udaan`, on WebGPU: 51,794 flights a day along their great circles over
+  a day-and-night Earth (sun position for today's date), with faint route lines. Controls for
+  the time (UTC), how fast it runs, where to look (world, India, Europe, North America, East
+  Asia, the Gulf), trail length, route brightness, day and night, brightness and glow.
+- Data: `node apps/lab/scripts/udaan-data.mjs` writes `flights.bin` (1.2 MB), `earth.jpg`
+  (2.2 MB) and `night.jpg` (1.1 MB) to `apps/lab/public/pieces/udaan`, git-ignored. Like
+  Prithvi's textures, they need hosting and `NEXT_PUBLIC_UDAAN_ASSETS` set before the piece works
+  when deployed.
+- Checks: `pnpm check` green. In Chromium on an RTX 4070, 3.4 ms a frame once its textures are
+  uploaded (the first second is slower). At 07:11 UTC the dawn line was over western Europe and
+  the morning flights fanned out of the hubs; at 16:30 UTC India's night lights and the Gulf
+  hubs showed.
+- Not done: no phone, Safari or Firefox; sound not listened to.

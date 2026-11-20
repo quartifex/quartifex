@@ -47,3 +47,6 @@ assets/fonts/
 
 .vercel
 .env*
+
+# Generated assets for the Lab pieces (built by apps/lab/scripts/*-data.mjs, hosted outside git)
+apps/lab/public/pieces/
