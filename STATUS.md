@@ -844,3 +844,20 @@ the Lab seeds or sit beside them?
 - Known limits: the Ghaggar-Hakra shows as a living river, because irrigated Punjab looks green
   in the imagery; at a distance diagonal channels look beaded; the ice-age ice still covers
   southern England.
+
+### 2026-11-20, Lab pieces: Varsha, the monsoon
+
+- New piece at `/pieces/varsha`, on WebGPU: South Asia through an average year, with wind
+  streaks, cloud where it rains, land that browns in the dry season, and an optional rainfall
+  map. Controls for the time of year, whether it runs and how fast, a weaker-or-stronger
+  monsoon dial, wind, cloud, rainfall map and greening.
+- Data: `node apps/lab/scripts/varsha-data.mjs` writes `climate.bin` (1.5 MB) and `earth.jpg`
+  to `apps/lab/public/pieces/varsha` (git-ignored); they need hosting, with
+  `NEXT_PUBLIC_VARSHA_ASSETS` set.
+- Checks: `pnpm check` green. The data was checked month by month: Mumbai dry until June and
+  15.8 mm a day in July; the north-east peaking in June; Chennai wettest in October and November;
+  the Arabian Sea wind north-easterly in winter and south-westerly from June to September. On
+  screen in Chromium on an RTX 4070, 3.3 ms a frame: in August the rain map lies along the
+  Western Ghats, the Bay of Bengal and the north-east, with cloud over India and none over the
+  Thar; in February India is brown and clear.
+- Not done: no phone, Safari or Firefox; sound not listened to.
