@@ -3,7 +3,7 @@
 import { type DragEvent, type ReactNode, useEffect, useRef, useState } from "react";
 import { ControlPanel } from "./ControlPanel";
 import styles from "./piece.module.css";
-import type { PieceHandle, PieceOptions } from "./types";
+import type { ControlValue, PieceHandle, PieceOptions } from "./types";
 
 type DropHandlers = {
   onDragOver?(event: DragEvent<HTMLElement>): void;
@@ -52,6 +52,7 @@ export function PieceShell<H extends PieceHandle>({
   const [status, setStatus] = useState<Status>("loading");
   const [readout, setReadout] = useState("");
   const [sound, setSound] = useState(false);
+  const [pushed, setPushed] = useState<Record<string, ControlValue>>();
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -60,7 +61,9 @@ export function PieceShell<H extends PieceHandle>({
     let running: H | null = null;
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     Promise.resolve()
-      .then(() => createRef.current(canvas, { reducedMotion, onReadout: setReadout }))
+      .then(() =>
+        createRef.current(canvas, { reducedMotion, onReadout: setReadout, onValues: setPushed }),
+      )
       .then((made) => {
         if (cancelled) {
           made.dispose();
@@ -127,6 +130,7 @@ export function PieceShell<H extends PieceHandle>({
         <ControlPanel
           title={title}
           controls={handle.controls}
+          pushed={pushed}
           onChange={(key, value) => handle.set(key, value)}
         />
       )}

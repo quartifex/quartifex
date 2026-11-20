@@ -19,6 +19,8 @@ export type PieceOptions = {
   reducedMotion: boolean;
   /** One or two short lines for the top-right corner; the piece calls it whenever they change. */
   onReadout(text: string): void;
+  /** For a piece that moves its own controls (a preset that sets two sliders, say). */
+  onValues?(values: Record<string, ControlValue>): void;
 };
 
 export type PieceHandle = {

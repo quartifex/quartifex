@@ -751,3 +751,24 @@ the Lab seeds or sit beside them?
 - Not done: dragging the window with a pointer was not tried; no Playwright tests; no catalog
   entries; the hub does not link to `/pieces`; not tried on a phone, in Safari or in Firefox;
   sound not listened to.
+
+### 2026-11-20, Lab pieces: Prithvi, the Earth with a moving sea
+
+- New piece at `/pieces/prithvi`, on WebGPU: a globe with real elevation and imagery, a sea
+  level from -200 m to +200 m, a climate offset, five presets (today, the last ice age, halfway
+  out of it, a warmer world, all the ice melted), cloud, terrain height, sun position, city
+  lights and slow turning. Drag or arrow keys turn it; scroll or + and - zoom.
+- Data: `node --max-old-space-size=6144 apps/lab/scripts/prithvi-data.mjs` (about a minute,
+  downloads cached in `.cache/prithvi`) writes the textures to `apps/lab/public/pieces/prithvi`.
+  They are git-ignored and need hosting before the piece works anywhere but locally; set
+  `NEXT_PUBLIC_PRITHVI_ASSETS` to the folder they are served from.
+- Shared: the controls window shows values a piece pushes, and its sliders now have names for
+  screen readers (this fixes the sliders in all six pieces).
+- Checks: `pnpm check` green. In Chromium on an RTX 4070: today, the last ice age (Sundaland,
+  Doggerland, the Scandinavian ice sheet, the Black Sea cut off) and all ice melted (the Indus
+  and Bengal deltas and Mesopotamia flooded) looked as expected; a frame took 3.9 ms median on
+  the GPU at 1618 x 978. The preset menu, the sea slider and Reset were driven through the real
+  controls.
+- Not done: textures not hosted, so the piece fails on a deployed preview; frame rate not
+  measured live (the pane was throttled at the time); no phone, Safari or Firefox; sound not
+  listened to; no Playwright tests.

@@ -14,6 +14,8 @@ import type { Control, ControlValue } from "./types";
 type Props = {
   title: string;
   controls: Control[];
+  /** Values the piece has set itself; they replace what the window shows. */
+  pushed?: Record<string, ControlValue> | undefined;
   onChange(key: string, value: ControlValue): void;
 };
 
@@ -33,13 +35,17 @@ function shown(value: number, step: number) {
 }
 
 /** A small window of controls that can be dragged anywhere on the piece and folded away. */
-export function ControlPanel({ title, controls, onChange }: Props) {
+export function ControlPanel({ title, controls, pushed, onChange }: Props) {
   const [open, setOpen] = useState(true);
   const [at, setAt] = useState<Point | null>(null);
   const [values, setValues] = useState(() => startValues(controls));
   const panelRef = useRef<HTMLElement>(null);
   const grab = useRef<Point | null>(null);
   const bodyId = useId();
+
+  useEffect(() => {
+    if (pushed) setValues((current) => ({ ...current, ...pushed }));
+  }, [pushed]);
 
   // Start folded on a phone, where the window would cover the piece.
   useEffect(() => {
@@ -154,8 +160,10 @@ export function ControlPanel({ title, controls, onChange }: Props) {
                   {control.label}
                   <output>{shown(number, control.step)}</output>
                 </span>
+                {/* The label would name the <output> above, so the slider names itself. */}
                 <input
                   type="range"
+                  aria-label={control.label}
                   min={control.min}
                   max={control.max}
                   step={control.step}
