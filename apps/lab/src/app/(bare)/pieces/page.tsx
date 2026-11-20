@@ -9,6 +9,11 @@ export const metadata: Metadata = {
 
 const pieces = [
   {
+    slug: "nadi",
+    title: "Nadī",
+    line: "Rain on new land, and the valleys, canyons and deltas it cuts.",
+  },
+  {
     slug: "shahar",
     title: "Shahar",
     line: "A real city in the real sun, from noon shadows to lit windows.",

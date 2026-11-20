@@ -877,3 +877,15 @@ the Lab seeds or sit beside them?
   north-east (sunset there is about 17:25); at 19:36 the windows were lit.
 - Not done: Mumbai, New York and London were not looked at on screen; no phone, Safari or
   Firefox; sound not listened to.
+
+### 2026-11-20, Lab pieces: Nadī, rain cutting new land
+
+- New piece at `/pieces/nadi`, on WebGPU: an invented island on a 512 × 512 grid, cut by tens of
+  thousands of raindrops a frame into valleys, river networks and fans. Controls for rain, rock
+  hardness, uplift, sea level, how many falls of rain a frame and height exaggeration; a
+  cloudburst, new land, and pointing sends rain to one place (Shift and drag pours a river).
+- Checks: `pnpm check` green. In Chromium on an RTX 4070, about 3 ms a frame at three falls of
+  8,000 drops. After about 70 million drops the island has branching valleys with rivers in
+  them running to the sea, snow on the peaks and fresh gravel where drops slowed.
+- Not done: pouring with the pointer was not tried by hand; no phone, Safari or Firefox; sound not
+  listened to.
