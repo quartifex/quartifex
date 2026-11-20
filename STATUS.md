@@ -785,3 +785,17 @@ the Lab seeds or sit beside them?
   looked right in shape; at 7, looking into the low sun, the glare outweighs the whitecaps.
 - Not done: live frame rate not measured (pane throttled); the falcon's effect on the flock was
   seen only in numbers and a few frames; no phone, Safari or Firefox; sound not listened to.
+
+### 2026-11-20, Lab pieces: Kṛṣṇavivar, a black hole
+
+- New piece at `/pieces/krishnavivar`, on WebGPU: a ray-traced black hole with its accretion
+  disk, photon ring and lensed sky. Controls for distance, viewing angle, disk temperature and
+  size, Doppler beaming, the disk's turning, exposure, glare, "Fall in" and "Back to the stars".
+  A visitor's photo (picker, drop or paste) is hung behind the hole and lensed; it never leaves
+  the browser.
+- Checks: `pnpm check` green. In Chromium on an RTX 4070: 3.2 ms a frame at 807 x 978; the
+  lensed far side of the disk, the photon ring and the beamed (bright) approaching side all
+  showed; a dropped test grid bent into rings with a mirrored second image at the shadow's edge;
+  "Fall in" ran (16 to 7.6 radii in 11 s, by the readout).
+- Not done: the last stage of the fall was not seen on screen (the pane stopped repainting); no
+  phone, Safari or Firefox; sound not listened to.
