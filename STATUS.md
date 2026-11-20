@@ -889,3 +889,13 @@ the Lab seeds or sit beside them?
   them running to the sea, snow on the peaks and fresh gravel where drops slowed.
 - Not done: pouring with the pointer was not tried by hand; no phone, Safari or Firefox; sound not
   listened to.
+
+### 2026-11-20, Lab pieces: Dhuān, smoke and ink in a glass box
+
+- New piece at `/pieces/dhuan`, on WebGPU: a 3D fluid of 2.1 million cells in a glass box, either
+  smoke rising from a turning vent or ink let fall into water in drops. Drag to stir, click for a
+  puff or a drop, Shift-drag or right-drag to turn the box. Controls for what is in the box,
+  plain or many colours, swirl, rise or fall, linger, a steady source and slow turning.
+- Checks: `pnpm check` green. In Chromium on an RTX 4070, about 3.5 ms a frame. A single ink drop
+  falls as a vortex ring trailing a tail; the smoke plume billows and glows warm at the vent.
+- Not done: stirring by hand was not tried; no phone, Safari or Firefox; sound not listened to.
