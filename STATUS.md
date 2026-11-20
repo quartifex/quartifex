@@ -772,3 +772,16 @@ the Lab seeds or sit beside them?
 - Not done: textures not hosted, so the piece fails on a deployed preview; frame rate not
   measured live (the pane was throttled at the time); no phone, Safari or Firefox; sound not
   listened to; no Playwright tests.
+
+### 2026-11-20, Lab pieces: Sandhyā, starlings over the sea at dusk
+
+- New piece at `/pieces/sandhya`, on WebGPU: a flock of 65,536 to 524,288 starlings over an open
+  sea at sunset. Controls for the sun's height, wind (Beaufort 0 to 9), swell and its direction,
+  cloud, flock size, how close they keep, a hunting falcon (follows the pointer; tap, space or
+  the button sends it in), standing height and glare. Drag or arrow keys look around.
+- Checks: `pnpm check` green. Stepped through 45 simulated seconds in Chromium on an RTX 4070:
+  the flock holds together as one body with shifting lobes and streamers; the falcon dives
+  through it and climbs out. 600 frames (simulation and drawing) took 0.77 s. Beaufort 3 and 7
+  looked right in shape; at 7, looking into the low sun, the glare outweighs the whitecaps.
+- Not done: live frame rate not measured (pane throttled); the falcon's effect on the flock was
+  seen only in numbers and a few frames; no phone, Safari or Firefox; sound not listened to.
