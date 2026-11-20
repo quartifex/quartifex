@@ -799,3 +799,17 @@ the Lab seeds or sit beside them?
   "Fall in" ran (16 to 7.6 radii in 11 s, by the readout).
 - Not done: the last stage of the fall was not seen on screen (the pane stopped repainting); no
   phone, Safari or Firefox; sound not listened to.
+
+### 2026-11-20, Lab pieces: Sangam, two galaxies merging
+
+- New piece at `/pieces/sangam`, on WebGPU: a million stars and 200,000 gas clouds in two disk
+  galaxies that fall together, pass, swing out and merge. Presets: Milky Way and Andromeda, the
+  Antennae, the Mice, a small galaxy falling in. Controls for the speed of time, closest
+  approach, the second galaxy's mass and tilt (changes start the encounter again), the gas glow,
+  brightness and glow, and "Start over".
+- Checks: `pnpm check` green. The cores' orbit was checked offline (first pass at 730 million
+  years at the planned distance, second at about 1.8 billion, then settling). In Chromium on an
+  RTX 4070, about 4 ms a frame; at 1.2 billion years the default encounter showed two long tidal
+  tails and a bridge.
+- Not done: only the default preset was looked at on screen; no phone, Safari or Firefox; sound
+  not listened to.
