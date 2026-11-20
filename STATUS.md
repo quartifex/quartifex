@@ -861,3 +861,19 @@ the Lab seeds or sit beside them?
   Western Ghats, the Bay of Bengal and the north-east, with cloud over India and none over the
   Thar; in February India is brown and clear.
 - Not done: no phone, Safari or Firefox; sound not listened to.
+
+### 2026-11-20, Lab pieces: Shahar, a city in the real sun
+
+- New piece at `/pieces/shahar`, on WebGPU: a white model of a real city centre lit by the sun
+  for the place, date and time, with shadows; windows and streets light up after dusk. Controls
+  for the city, time of day, whether it runs and how fast, day of the year, night lights and
+  exposure.
+- Data: `node apps/lab/scripts/shahar-data.mjs` (about 2.5 minutes, the Overpass server is slow)
+  writes `delhi.json` (3,130 buildings, 20 measured), `mumbai.json` (1,485, 8), `newyork.json`
+  (5,727, 5,138) and `london.json` (2,651, 72) to `apps/lab/public/pieces/shahar`, git-ignored;
+  they need hosting, with `NEXT_PUBLIC_SHAHAR_ASSETS` set.
+- Checks: `pnpm check` green. In Chromium on an RTX 4070, 3.3 ms a frame. Connaught Place on
+  20 November at 16:23: sun 11° up in the south-west, shadows 4.9 times as long, falling to the
+  north-east (sunset there is about 17:25); at 19:36 the windows were lit.
+- Not done: Mumbai, New York and London were not looked at on screen; no phone, Safari or
+  Firefox; sound not listened to.
