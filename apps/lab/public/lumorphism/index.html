@@ -381,6 +381,12 @@ Mat field(vec2 p){
   m.t *= iw; m.glow *= iw; m.rim *= iw; m.e *= iw; m.pig *= iw;
   return m;
 }
+float fieldD(vec2 p){
+  float d = 1e5;
+  for (int i = 0; i < MAXB; i++){ if (i >= uCount) break; float di = sdGel(p, i); d = i == 0 ? di : smin(d, di, K); }
+  for (int j = 0; j < MAXT; j++){ if (j >= uTCount) break; float di = sdText(p, j); d = (uCount == 0 && j == 0) ? di : smin(d, di, K); }
+  return d;
+}
 // ripples: rings that run out from a press, slower and shorter-lived in thicker gel
 float ripple(vec2 p){
   float h = 0., speed = mix(300., 70., uVisc), damp = mix(.9, 3.2, uVisc), wl = mix(20., 34., uVisc);
@@ -457,8 +463,7 @@ vec3 surface(vec2 p){
 // shadows and spilled glow on top of the surface
 vec3 table(vec2 p){
   vec3 base = surface(p);
-  Mat s = field(p - vec2(4., -7.));
-  base *= 1. - smoothstep(10., -6., s.d) * mix(.25, .6, s.t) * uAmb;
+  base *= 1. - smoothstep(10., -6., fieldD(p - vec2(4., -7.))) * .42 * uAmb;
   vec3 halo = vec3(0.);
   for (int i = 0; i < MAXB; i++){
     if (i >= uCount) break;
@@ -499,33 +504,39 @@ vec3 tone(vec3 c){
   return mix(o, vec3(mt), smoothstep(1.5, 9., m) * .45);
 }
 
+vec3 gel(vec2 p, Mat m){
+  float E = max(m.e, 4.), e = 1.;
+  float inside = smoothstep(0., E, -m.d);
+  float h = lift(m.d, E) + ripple(p) * inside;
+  float hx = lift(fieldD(p + vec2(e, 0.)), E) + ripple(p + vec2(e, 0.)) * inside;
+  float hy = lift(fieldD(p + vec2(0., e)), E) + ripple(p + vec2(0., e)) * inside;
+  vec3 n = normalize(vec3(-(hx - h) / e, -(hy - h) / e, 1.));
+  float L = clamp(h / (E * 1.15), 0., 1.4);
+  // pigment is never perfectly even: slow marbling inside every pour
+  float marble = fbm(p / 70. + vec2(uTime * .04, -uTime * .03) + fbm(p / 140. - uTime * .02) * 1.5);
+  float t = clamp(m.t + (marble - .5) * .22 * (4. * m.t * (1. - m.t) + .25), 0., 1.);
+  vec3 sg = mix(sigA(m.glow), m.pig, t), em = emitOf(m.glow, t) * (.82 + .36 * marble);
+  vec3 under = table(p - n.xy * h * 1.1);
+  vec3 body = glowOut(em, sg, L) + under * exp(-sg * L);
+  float F = .04 + .96 * pow(1. - n.z, 5.);
+  vec3 col = body * (1. - F) + env(reflect(vec3(0., 0., -1.), n)) * F;
+  float rim = 1. - clamp(-m.d / E, 0., 1.);
+  col += (em * .5 * exp(-sg * .25) + emitOf(m.glow, 0.) * m.rim * .35) * rim * rim;
+  col += (.5 + .5 * cos(6.283 * (rim * 1.6 + vec3(0., .33, .67)))) * F * .2 * uAmb;
+  // neighbours' glow: caught by the gloss and the rim, and scattered a little in dark gel
+  col += spill(p) * (F * 1.4 + rim * .45 + .1 * t) * (.35 + .65 * t);
+  return col;
+}
+
 void main(){
   vec2 p = gl_FragCoord.xy / uDpr;
   Mat m = field(p);
-  vec3 col;
-  if (m.d > 0.){
-    col = table(p) * (1. - .2 * exp(-m.d / 1.4) * uAmb);
-  } else {
-    float E = max(m.e, 4.), e = 1.25;
-    float h = lift(m.d, E) + ripple(p) * smoothstep(0., E, -m.d);
-    float hx = lift(field(p + vec2(e, 0.)).d, E) + ripple(p + vec2(e, 0.)) * smoothstep(0., E, -m.d);
-    float hy = lift(field(p + vec2(0., e)).d, E) + ripple(p + vec2(0., e)) * smoothstep(0., E, -m.d);
-    vec3 n = normalize(vec3(-(hx - h) / e, -(hy - h) / e, 1.));
-    float L = clamp(h / (E * 1.15), 0., 1.4);
-    // pigment is never perfectly even: slow marbling inside every pour
-    float marble = fbm(p / 70. + vec2(uTime * .04, -uTime * .03) + fbm(p / 140. - uTime * .02) * 1.5);
-    float t = clamp(m.t + (marble - .5) * .22 * (4. * m.t * (1. - m.t) + .25), 0., 1.);
-    vec3 sg = mix(sigA(m.glow), m.pig, t), em = emitOf(m.glow, t) * (.82 + .36 * marble);
-    vec3 under = table(p - n.xy * h * 1.1);
-    vec3 body = glowOut(em, sg, L) + under * exp(-sg * L);
-    float F = .04 + .96 * pow(1. - n.z, 5.);
-    col = body * (1. - F) + env(reflect(vec3(0., 0., -1.), n)) * F;
-    float rim = 1. - clamp(-m.d / E, 0., 1.);
-    col += (em * .5 * exp(-sg * .25) + emitOf(m.glow, 0.) * m.rim * .35) * rim * rim;
-    col += (.5 + .5 * cos(6.283 * (rim * 1.6 + vec3(0., .33, .67)))) * F * .2 * uAmb;
-    // neighbours' glow: caught by the gloss and the rim, and scattered a little in dark gel
-    col += spill(p) * (F * 1.4 + rim * .45 + .1 * t) * (.35 + .65 * t);
-  }
+  // edges are blended across one device pixel, so outlines come out smooth, not stepped
+  float aw = .75 / uDpr;
+  float cover = smoothstep(aw, -aw, m.d);
+  vec3 col = vec3(0.);
+  if (cover < 1.) col = table(p) * (1. - .2 * exp(-max(m.d, 0.) / 1.4) * uAmb);
+  if (cover > 0.) col = mix(col, gel(p, m), cover);
   o = vec4(pow(tone(col * 1.05), vec3(1. / 2.2)), 1.);
 }`;
 let U = {};
@@ -798,7 +809,7 @@ const TR = new Float32Array(MAXT * 4), TU = new Float32Array(MAXT * 4), TB = new
 const RP = new Float32Array(MAXR * 4), P = new Float32Array(MAXB * 3);
 let W = 0, Hh = 0, dpr = 1;
 function resize(keep) {
-  if (keep !== true) dpr = Math.min(devicePixelRatio || 1, 1.5);
+  if (keep !== true) dpr = Math.min(devicePixelRatio || 1, 2);
   W = innerWidth; Hh = innerHeight;
   cv.width = Math.round(W * dpr); cv.height = Math.round(Hh * dpr);
   if (gl) gl.viewport(0, 0, cv.width, cv.height);
@@ -816,11 +827,11 @@ function frame(now) {
   S.amb += (S.ambTo - S.amb) * (1 - Math.exp(-dt * 3));
   document.body.classList.toggle("dark", S.amb < 0.22);
   progress = (progress + dt * (reduced ? 0 : 0.12)) % 1.15;
-  // lamp follows with a lag set by the viscosity
+  // lamp keeps up with the pointer, with only a soft trail
   {
-    const kk = 160 * (1 - S.visc) + 18, cc = 2 * 0.9 * Math.sqrt(kk);
-    lampG.vx += (kk * (lampG.tx - lampG.x) - cc * lampG.vx) * dt; lampG.vy += (kk * (lampG.ty - lampG.y) - cc * lampG.vy) * dt;
-    lampG.x += lampG.vx * dt; lampG.y += lampG.vy * dt;
+    const f = 1 - Math.exp(-dt * 30), px = lampG.x, py = lampG.y;
+    lampG.x += (lampG.tx - lampG.x) * f; lampG.y += (lampG.ty - lampG.y) * f;
+    lampG.vx = (lampG.x - px) / Math.max(dt, 1e-3); lampG.vy = (lampG.y - py) / Math.max(dt, 1e-3);
     if (!S.lamp) lamp.style.display = "none";
     const sp = Math.min(1, Math.hypot(lampG.vx, lampG.vy) / 900);
     lamp.style.transform = `translate(${lampG.x - 13}px, ${lampG.y - 13}px) scale(${1 + sp * 0.5}, ${1 - sp * 0.25})`;
@@ -832,7 +843,7 @@ function frame(now) {
     d.style.left = 60 + Math.cos(ph) * rr - sz / 2 + "px"; d.style.top = 36 + Math.sin(ph) * rr * 0.7 - sz / 2 + "px";
   });
   // keep frames quick: step the resolution down if the device is struggling
-  ft.push(dt); if (ft.length > 40) { const avg = ft.reduce((a, b) => a + b) / ft.length; ft.length = 0; if (avg > 0.024 && dpr > 0.7) { dpr *= 0.85; resize(true); } }
+  ft.push(dt); if (ft.length > 40) { const avg = ft.reduce((a, b) => a + b) / ft.length; ft.length = 0; if (avg > 0.034 && dpr > 1.05) { dpr = Math.max(1, dpr * 0.85); resize(true); } }
   $("barfill").style.width = Math.min(100, progress * 100).toFixed(1) + "%";
   // springs set by viscosity: water snaps and rings, honey and tar ooze
   const k = 420 * (1 - v) ** 2 + 22, zeta = 0.28 + v * 1.1, c = 2 * zeta * Math.sqrt(k);
