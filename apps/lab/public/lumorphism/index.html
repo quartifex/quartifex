@@ -40,6 +40,13 @@ section{padding:clamp(48px,7vw,96px) 0}
 .row{display:flex;flex-wrap:wrap;gap:14px;align-items:center}
 .gel{background:transparent;border:0;color:var(--on-dark);font:600 15px/1 Inter,sans-serif;position:relative}
 .gel.lit-ink{color:var(--on-glow)}
+.gel.page-ink{color:var(--ink)}
+.mats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;margin-top:28px}
+.mat{display:flex;flex-direction:column;gap:12px}
+.mat .gel{height:120px;border-radius:30px;display:grid;place-items:center;font:700 17px Rubik,sans-serif}
+.mat p{color:var(--soft);font-size:14.5px;margin:0}
+@media(max-width:860px){.mats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:520px){.mats{grid-template-columns:1fr}}
 button.gel,a.gel{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 24px;cursor:pointer;text-decoration:none;border-radius:24px}
 button.gel:focus-visible,a.gel:focus-visible,input:focus-visible{outline:2px dashed currentColor;outline-offset:5px}
 button[disabled]{cursor:not-allowed}
@@ -142,7 +149,7 @@ footer{padding:40px 0 60px;color:var(--soft);font-size:13.5px}
 <canvas id="c" aria-hidden="true"></canvas>
 <header><div class="wrap">
  <div class="brand geltext" data-t=".2" data-glow="accent">Lumorphism</div>
- <nav><a href="#rules">Rules</a><a href="#components">Components</a><a href="#tokens">Tokens</a></nav>
+ <nav><a href="#rules">Rules</a><a href="#components">Components</a><a href="#materials">Materials</a><a href="#tokens">Tokens</a></nav>
  <button class="gel switch" id="room" role="switch" aria-checked="false" aria-label="Lights off" data-t=".86" data-glow="accent"><span class="knob gel" data-t=".7" data-z="1" data-glow="accent"></span></button>
 </div></header>
 <main>
@@ -179,6 +186,15 @@ footer{padding:40px 0 60px;color:var(--soft);font-size:13.5px}
     </div></div>
    <div><span class="lab" id="lampl">Carry a light</span>
     <button class="gel switch" id="lampsw" role="switch" aria-checked="true" aria-labelledby="lampl" data-t=".86" data-glow="accent"><span class="knob gel" data-t=".06" data-z="1" data-glow="accent"></span></button></div>
+   <div><span class="lab" id="matl">Material</span>
+    <div class="seg" id="mat" role="radiogroup" aria-labelledby="matl">
+     <button class="gel" role="radio" data-m="glow" data-t=".1" data-glow="accent" data-mat="glow">Glow</button>
+     <button class="gel" role="radio" data-m="liquid" data-t=".84" data-glow="accent" data-mat="glow">Liquid</button>
+     <button class="gel" role="radio" data-m="clear" data-t=".84" data-glow="accent" data-mat="glow">Clear</button>
+     <button class="gel" role="radio" data-m="syrup" data-t=".84" data-glow="accent" data-mat="glow">Syrup</button>
+     <button class="gel" role="radio" data-m="milk" data-t=".84" data-glow="accent" data-mat="glow">Milk</button>
+     <button class="gel" role="radio" data-m="mercury" data-t=".84" data-glow="accent" data-mat="glow">Mercury</button>
+    </div></div>
    <div><span class="lab">Each pour</span>
     <button class="gel" id="tunebtn" aria-pressed="false" data-t=".55" data-glow="accent">Tune a pour</button></div>
   </div>
@@ -287,6 +303,19 @@ footer{padding:40px 0 60px;color:var(--soft);font-size:13.5px}
  </div>
 </section>
 
+<section class="wrap" id="materials">
+ <h2 class="geltext" data-t=".5" data-glow="accent" data-mat="glow">One model, many liquids.</h2>
+ <p class="lede">Glow is only one dial. Turn it off and the gel is a liquid; thin the pigment and it turns clear; scatter the light and it turns to milk; mirror the room and it is mercury. Each pour below is the same material with different dials, whatever the page is set to.</p>
+ <div class="mats">
+  <div class="mat"><div class="gel" data-t=".1" data-glow="accent" data-mat="glow">Glow gel</div><p>Emits its own light, which spills onto everything near it.</p></div>
+  <div class="mat"><div class="gel" data-t=".12" data-glow="accent" data-mat="liquid">Liquid</div><p>Glow at zero: a coloured liquid that only shows the light it is given.</p></div>
+  <div class="mat"><div class="gel" data-t=".2" data-glow="accent" data-mat="clear">Clear water</div><p>Almost no pigment: it bends what is behind it and focuses light into its shadow.</p></div>
+  <div class="mat"><div class="gel" data-t=".3" data-glow="4" data-mat="syrup" data-pig="1">Tinted syrup</div><p>Thin colour, thick refraction, the warm look of honey or glass.</p></div>
+  <div class="mat"><div class="gel" data-t=".2" data-glow="accent" data-mat="milk">Milk</div><p>Light scatters inside it, so it is soft, bright and opaque.</p></div>
+  <div class="mat"><div class="gel" data-t=".5" data-glow="accent" data-mat="mercury">Mercury</div><p>A liquid mirror of the room and the surface around it.</p></div>
+ </div>
+</section>
+
 <section class="wrap" id="tokens">
  <h2 class="geltext" data-t=".5" data-glow="accent">Tokens.</h2>
  <p class="lede">Five charges, five hues, four pigments, two rooms, one viscosity. The charges below are a live mixing card: pick a hue and a second pigment.</p>
@@ -307,6 +336,12 @@ footer{padding:40px 0 60px;color:var(--soft);font-size:13.5px}
   <label id="l-reach">Spill reach <output id="o-reach"></output><input type="range" id="i-reach" min="30" max="300" step="1"></label>
   <label>Edge thickness <output id="o-e"></output><input type="range" id="i-e" min="3" max="40" step="0.5"></label>
   <label>Edge glow <output id="o-rim"></output><input type="range" id="i-rim" min="0" max="150" step="1"></label>
+  <div class="sub">Material</div>
+  <div class="opts" id="i-mats"></div>
+  <label>Clarity <output id="o-dens"></output><input type="range" id="i-dens" min="0" max="100" step="1"></label>
+  <label>Refraction <output id="o-refr"></output><input type="range" id="i-refr" min="0" max="500" step="1"></label>
+  <label>Metal <output id="o-metal"></output><input type="range" id="i-metal" min="0" max="100" step="1"></label>
+  <label>Milk <output id="o-milk"></output><input type="range" id="i-milk" min="0" max="100" step="1"></label>
   <div class="sub">Hue</div>
   <div class="opts" id="i-hues"></div>
   <label>Custom hue <output id="o-hue"></output><input type="range" id="i-hue" min="0" max="360" step="1"></label>
@@ -338,7 +373,16 @@ const sigOf = (c) => c.map((v) => -Math.log(Math.max(v, 0.004)) * 4.2);
 const CHARGE = [["Lit", 0.9], ["Warm", 0.7], ["Dim", 0.5], ["Low", 0.3], ["Off", 0.1]];
 const BGS = ["table", "gradient", "flow", "depth", "ripple"];
 const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-const S = { accent: 1, amb: 1, ambTo: 1, bg: 0, visc: 0.7, pig: 0, glow: 1, lamp: true };
+// one model, many liquids: each material is a set of dials on the same gel
+const MATS = {
+  glow:    { n: "Glow gel",     gain: 1, dens: 1,    refr: 1.1, metal: 0, milk: 0,    shade: 0.42, caus: 0,    ink: "glow" },
+  liquid:  { n: "Liquid",       gain: 0, dens: 1,    refr: 1.4, metal: 0, milk: 0,    shade: 0.42, caus: 0,    ink: "glow" },
+  clear:   { n: "Clear water",  gain: 0, dens: 0.03, refr: 3.4, metal: 0, milk: 0,    shade: 0.12, caus: 0.5,  ink: "page" },
+  syrup:   { n: "Tinted syrup", gain: 0, dens: 0.3,  refr: 2.4, metal: 0, milk: 0,    shade: 0.22, caus: 0.28, ink: "page" },
+  milk:    { n: "Milk",         gain: 0, dens: 0.6,  refr: 0.8, metal: 0, milk: 0.88, shade: 0.38, caus: 0,    ink: "milk" },
+  mercury: { n: "Mercury",      gain: 0, dens: 1,    refr: 0,   metal: 1, milk: 0,    shade: 0.5,  caus: 0,    ink: "page" },
+};
+const S = { accent: 1, amb: 1, ambTo: 1, bg: 0, visc: 0.7, pig: 0, glow: 1, lamp: true, mat: "glow" };
 const $ = (id) => document.getElementById(id);
 
 $("charge").innerHTML = CHARGE.map(([n, c]) => `<div><span class="gel" data-t="${(1 - c).toFixed(2)}" data-glow="accent" data-pig="mix"></span><b>${n}</b>${Math.round(c * 100)}% glow</div>`).join("");
@@ -353,6 +397,7 @@ function code() {
 ${CHARGE.map(([n, c]) => `--charge-${n.toLowerCase()}: ${c};`.padEnd(36) + `/* ${Math.round(c * 100)}% glow, ${Math.round((1 - c) * 100)}% ink */`).join("\n")}
 --viscosity: ${S.visc.toFixed(2)};               /* 0 water, 1 tar */
 --glow-strength: ${S.glow.toFixed(2)};
+--material: ${S.mat};${" ".repeat(Math.max(1, 19 - S.mat.length))}/* glow | liquid | clear | syrup | milk | mercury */
 --gel-meniscus: 14% of the short side, 5px to 36px;
 --gel-merge: 6px;                   /* gap under which shapes flow together */
 --spill-near: 9px; --spill-far: 30px;
@@ -377,6 +422,8 @@ uniform vec4 uC[MAXB]; // glow colour, edge boost
 uniform float uM[MAXB]; // meniscus width
 uniform vec3 uP[MAXB]; // second pigment, as absorption
 uniform vec2 uG[MAXB]; // glow strength, spill reach (per pour)
+uniform vec4 uQ[MAXB]; // material: pigment density, refraction, metal, milk (per pour)
+uniform vec4 uTQ[MAXT]; // the same, for headlines
 uniform sampler2D uAtlas;
 uniform vec4 uTR[MAXT]; // text: screen rect (x, y from bottom, w, h)
 uniform vec4 uTU[MAXT]; // text: atlas rect (u, v from top, w, h)
@@ -410,19 +457,19 @@ float sdText(vec2 p, int j){
 }
 float smin(float a, float b, float k){ float h = clamp(.5 + .5 * (b - a) / k, 0., 1.); return mix(b, a, h) - k * h * (1. - h); }
 
-struct Mat { float d; float t; vec3 glow; float rim; float e; vec3 pig; float gain; };
-void add(inout Mat m, inout float ws, float di, float t, float z, vec3 g, float rim, float e, vec3 pg, float gn, bool first){
+struct Mat { float d; float t; vec3 glow; float rim; float e; vec3 pig; float gain; vec4 q; };
+void add(inout Mat m, inout float ws, float di, float t, float z, vec3 g, float rim, float e, vec3 pg, float gn, vec4 q, bool first){
   m.d = first ? di : smin(m.d, di, K);
   float w = exp(z * 4.) / (1. + exp(di / 2.5));
-  ws += w; m.t += w * t; m.glow += w * g; m.rim += w * rim; m.e += w * e; m.pig += w * pg; m.gain += w * gn;
+  ws += w; m.t += w * t; m.glow += w * g; m.rim += w * rim; m.e += w * e; m.pig += w * pg; m.gain += w * gn; m.q += w * q;
 }
 Mat field(vec2 p){
-  Mat m; m.d = 1e5; m.t = 0.; m.glow = vec3(0.); m.rim = 0.; m.e = 0.; m.pig = vec3(0.); m.gain = 0.;
+  Mat m; m.d = 1e5; m.t = 0.; m.glow = vec3(0.); m.rim = 0.; m.e = 0.; m.pig = vec3(0.); m.gain = 0.; m.q = vec4(0.);
   float ws = 0.;
-  for (int i = 0; i < MAXB; i++){ if (i >= uCount) break; add(m, ws, sdGel(p, i), uB[i].y, uB[i].w, uC[i].rgb, uC[i].a, uM[i], uP[i], uG[i].x, i == 0); }
-  for (int j = 0; j < MAXT; j++){ if (j >= uTCount) break; add(m, ws, sdText(p, j), uTB[j].x, uTB[j].y, uTC[j].rgb, uTB[j].z, uTB[j].w, SIGB, uTC[j].a, uCount == 0 && j == 0); }
+  for (int i = 0; i < MAXB; i++){ if (i >= uCount) break; add(m, ws, sdGel(p, i), uB[i].y, uB[i].w, uC[i].rgb, uC[i].a, uM[i], uP[i], uG[i].x, uQ[i], i == 0); }
+  for (int j = 0; j < MAXT; j++){ if (j >= uTCount) break; add(m, ws, sdText(p, j), uTB[j].x, uTB[j].y, uTC[j].rgb, uTB[j].z, uTB[j].w, SIGB, uTC[j].a, uTQ[j], uCount == 0 && j == 0); }
   float iw = 1. / max(ws, 1e-6);
-  m.t *= iw; m.glow *= iw; m.rim *= iw; m.e *= iw; m.pig *= iw; m.gain *= iw;
+  m.t *= iw; m.glow *= iw; m.rim *= iw; m.e *= iw; m.pig *= iw; m.gain *= iw; m.q *= iw;
   return m;
 }
 float fieldD(vec2 p){
@@ -507,7 +554,13 @@ vec3 surface(vec2 p){
 // shadows and spilled glow on top of the surface
 vec3 table(vec2 p){
   vec3 base = surface(p);
-  base *= 1. - smoothstep(10., -6., fieldD(p - vec2(4., -7.))) * .42 * uAmb;
+  // each pour's own material sets its shadow: dense and metal ones block the light, clear ones
+  // let it through and focus it into a bright band inside the shadow
+  Mat s = field(p - vec2(4., -7.));
+  float dense = max(smoothstep(.04, .6, s.q.x), max(s.q.z, s.q.w * .8));
+  base *= 1. - smoothstep(10., -6., s.d) * mix(.1, .45, dense) * uAmb;
+  float caus = (1. - dense) * .55;
+  if (caus > .01) base += smoothstep(-1., -6., s.d) * smoothstep(-24., -8., s.d) * caus * uAmb * mix(vec3(.9, .95, 1.), s.glow, .35);
   vec3 halo = vec3(0.);
   for (int i = 0; i < MAXB; i++){
     if (i >= uCount) break;
@@ -561,11 +614,19 @@ vec3 gel(vec2 p, Mat m){
   // pigment is never perfectly even: slow marbling inside every pour
   float marble = fbm(p / 70. + vec2(uTime * .04, -uTime * .03) + fbm(p / 140. - uTime * .02) * 1.5);
   float t = clamp(m.t + (marble - .5) * .22 * (4. * m.t * (1. - m.t) + .25), 0., 1.);
-  vec3 sg = mix(sigA(m.glow), m.pig, t), em = emitOf(m.glow, t) * m.gain * (.82 + .36 * marble);
-  vec3 under = table(p - n.xy * h * 1.1);
+  vec4 q = m.q; // density, refraction, metal, milk
+  vec3 sg = mix(sigA(m.glow), m.pig, t) * q.x, em = emitOf(m.glow, t) * m.gain * (.82 + .36 * marble);
+  vec3 under = table(p - n.xy * h * 1.1 * q.y);
   vec3 body = glowOut(em, sg, L) + under * exp(-sg * L);
-  float F = .04 + .96 * pow(1. - n.z, 5.);
-  vec3 col = body * (1. - F) + env(reflect(vec3(0., 0., -1.), n)) * F;
+  // milk: light scatters inside and the body turns soft and opaque, lit by the room
+  vec3 lit = mix(vec3(.05, .055, .07), vec3(.96, .96, .95), uAmb) * (.62 + .38 * max(dot(n, normalize(vec3(-.4, .5, .77))), 0.));
+  body = mix(body, lit * mix(vec3(1.), m.glow, .22) * (1. - .45 * t * q.x) + em * .35, q.w);
+  float F = mix(.04, .02, q.w) + .96 * pow(1. - n.z, 5.);
+  vec3 r = reflect(vec3(0., 0., -1.), n);
+  vec3 col = body * (1. - F) + env(r) * F;
+  // metal: a mirror of the room and the surface around it
+  vec3 mirror = table(p + n.xy * (18. + h * 3.)) * vec3(.82, .85, .9) + env(r) * .9 + vec3(.04) * uAmb;
+  col = mix(col, mirror, q.z);
   float rim = 1. - clamp(-m.d / E, 0., 1.);
   col += (em * .5 * exp(-sg * .25) + emitOf(m.glow, 0.) * m.gain * m.rim * .35) * rim * rim;
   col += (.5 + .5 * cos(6.283 * (rim * 1.6 + vec3(0., .33, .67)))) * F * .2 * uAmb;
@@ -599,7 +660,7 @@ in vec2 a; void main(){ gl_Position = vec4(a, 0., 1.); }`));
   gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
   gl.enableVertexAttribArray(0); gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
-  for (const n of ["uG", "uP", "uGlow", "uRes", "uPtr", "uDpr", "uTime", "uAmb", "uVisc", "uCount", "uTCount", "uBg", "uAcc", "uA", "uB", "uC", "uM", "uAtlas", "uTR", "uTU", "uTB", "uTC", "uRip"]) U[n] = gl.getUniformLocation(pr, n);
+  for (const n of ["uQ", "uTQ", "uG", "uP", "uGlow", "uRes", "uPtr", "uDpr", "uTime", "uAmb", "uVisc", "uCount", "uTCount", "uBg", "uAcc", "uA", "uB", "uC", "uM", "uAtlas", "uTR", "uTU", "uTB", "uTC", "uRip"]) U[n] = gl.getUniformLocation(pr, n);
   gl.bindTexture(gl.TEXTURE_2D, atlasTex);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
@@ -701,7 +762,19 @@ function buildAtlas() {
 // data-hue (custom hue in degrees), data-pig (second pigment 0 to 3, or "mix")
 function readTune(el) {
   const d = el.dataset, num = (v) => (v === undefined || v === "" ? null : +v);
-  return { gain: num(d.gain), reach: num(d.reach), e: num(d.e), rim: num(d.rim), hue: num(d.hue) };
+  return { gain: num(d.gain), reach: num(d.reach), e: num(d.e), rim: num(d.rim), hue: num(d.hue), dens: num(d.dens), refr: num(d.refr), metal: num(d.metal), milk: num(d.milk) };
+}
+const matOf = (el) => MATS[el.dataset.mat] || MATS[S.mat];
+// a pour's dials: its own settings first, then its material's
+function dials(el, tu) {
+  const m = matOf(el);
+  return { gain: tu.gain ?? m.gain, dens: tu.dens ?? m.dens, refr: tu.refr ?? m.refr, metal: tu.metal ?? m.metal, milk: tu.milk ?? m.milk };
+}
+function inkFor(el, t, dl) {
+  const m = matOf(el);
+  if (dl.metal > 0.5 || (dl.gain < 0.05 && dl.dens < 0.5) || m.ink === "page") return "page";
+  if (dl.milk > 0.5) return "milk";
+  return t < 0.45 && dl.gain > 0.05 ? "glow" : t < 0.45 ? "page" : "dark";
 }
 function hueRGB(h) {
   const f = (n) => { const k = (n + h / 30) % 12; return 0.62 - 0.5 * Math.max(-1, Math.min(k - 3, 9 - k, 1)); };
@@ -861,6 +934,7 @@ let sel = null, tuning = false;
 const insp = $("insp"), tunebtn = $("tunebtn");
 for (const r of [...gels, ...texts]) r.orig = { ...r.el.dataset };
 $("i-hues").innerHTML = `<button class="acc" data-h="accent" aria-label="Page hue">Page hue</button>` + HUES.map((h, i) => `<button data-h="${i}" style="background:${`rgb(${h.c.map((v) => Math.round(v * 255)).join(",")})`}" aria-label="${h.n}" title="${h.n}"></button>`).join("");
+$("i-mats").innerHTML = Object.entries(MATS).map(([k, m]) => `<button class="acc" data-k="${k}">${m.n}</button>`).join("");
 $("i-pigs").innerHTML = PIGS.map((p, i) => `<button data-p="${i}" style="background:${p.show}" aria-label="${p.n}" title="${p.n}"></button>`).join("");
 function setTuning(on) {
   tuning = on; document.body.classList.toggle("tuning", on);
@@ -900,6 +974,14 @@ function fill() {
   set("e", e, e.toFixed(1) + " px" + (tu.e == null ? " (auto)" : ""));
   set("rim", Math.round((tu.rim ?? 0) * 100), Math.round((tu.rim ?? 0) * 100) + "%");
   set("hue", tu.hue ?? 200, tu.hue == null ? "off" : Math.round(tu.hue) + "°");
+  const dl = dials(r.el, tu);
+  // clarity is the inverse of pigment density, on a curve so the clear end has room
+  set("dens", Math.round((1 - Math.sqrt(Math.min(dl.dens, 1))) * 100), Math.round((1 - Math.sqrt(Math.min(dl.dens, 1))) * 100) + "%");
+  set("refr", Math.round(dl.refr * 100), Math.round(dl.refr * 100) + "%");
+  set("metal", Math.round(dl.metal * 100), Math.round(dl.metal * 100) + "%");
+  set("milk", Math.round(dl.milk * 100), Math.round(dl.milk * 100) + "%");
+  set("gain", Math.round(dl.gain * 100), Math.round(dl.gain * 100) + "%");
+  for (const b of $("i-mats").children) b.setAttribute("aria-pressed", b.dataset.k === (r.el.dataset.mat || "page"));
   const g = r.el.dataset.glow ?? "accent";
   for (const b of $("i-hues").children) b.setAttribute("aria-pressed", tu.hue == null && b.dataset.h === g);
   for (const b of $("i-pigs").children) b.setAttribute("aria-pressed", +b.dataset.p === pigOf(r.el) && r.el.dataset.pig !== "mix");
@@ -911,6 +993,11 @@ function fill() {
   if (tu.e != null) attrs.push(`data-e="${tu.e}"`);
   if (tu.rim != null) attrs.push(`data-rim="${tu.rim.toFixed(2)}"`);
   if (d.pig !== undefined) attrs.push(`data-pig="${d.pig}"`);
+  if (d.mat) attrs.push(`data-mat="${d.mat}"`);
+  if (tu.dens != null) attrs.push(`data-dens="${tu.dens.toFixed(3)}"`);
+  if (tu.refr != null) attrs.push(`data-refr="${tu.refr.toFixed(2)}"`);
+  if (tu.metal != null) attrs.push(`data-metal="${tu.metal.toFixed(2)}"`);
+  if (tu.milk != null) attrs.push(`data-milk="${tu.milk.toFixed(2)}"`);
   if (d.z) attrs.push(`data-z="${d.z}"`);
   $("iattr").textContent = attrs.join(" ");
 }
@@ -920,6 +1007,16 @@ bind("gain", (v) => { sel.tune.gain = v / 100; });
 bind("reach", (v) => { sel.tune.reach = v / 100; });
 bind("e", (v) => { sel.tune.e = v; });
 bind("rim", (v) => { sel.tune.rim = v / 100; });
+bind("dens", (v) => { sel.tune.dens = (1 - v / 100) ** 2; });
+bind("refr", (v) => { sel.tune.refr = v / 100; });
+bind("metal", (v) => { sel.tune.metal = v / 100; });
+bind("milk", (v) => { sel.tune.milk = v / 100; });
+$("i-mats").onclick = (e) => {
+  const b = e.target.closest("button"); if (!b || !sel) return;
+  sel.el.dataset.mat = b.dataset.k;
+  for (const k of ["gain", "dens", "refr", "metal", "milk"]) sel.tune[k] = null;
+  fill();
+};
 bind("hue", (v) => { sel.tune.hue = v; });
 $("i-hues").onclick = (e) => { const b = e.target.closest("button"); if (!b || !sel) return; sel.tune.hue = null; sel.el.dataset.glow = b.dataset.h; fill(); };
 $("i-pigs").onclick = (e) => { const b = e.target.closest("button"); if (!b || !sel) return; sel.el.dataset.pig = b.dataset.p; fill(); };
@@ -948,6 +1045,8 @@ document.addEventListener("click", (e) => {
   e.preventDefault(); e.stopPropagation();
   pick(rec || null);
 }, true);
+// the page's material
+segment($("mat"), (b) => { S.mat = b.dataset.m; code(); });
 const well = document.querySelector(".well");
 well.addEventListener("input", () => { byEl.get(well).flare = 1; });
 $("copy").onclick = async (e) => {
@@ -958,7 +1057,7 @@ $("copy").onclick = async (e) => {
 /* ---------- frame ---------- */
 const A = new Float32Array(MAXB * 4), B = new Float32Array(MAXB * 4), C = new Float32Array(MAXB * 4), M = new Float32Array(MAXB);
 const TR = new Float32Array(MAXT * 4), TU = new Float32Array(MAXT * 4), TB = new Float32Array(MAXT * 4), TC = new Float32Array(MAXT * 4);
-const RP = new Float32Array(MAXR * 4), P = new Float32Array(MAXB * 3), G = new Float32Array(MAXB * 2);
+const RP = new Float32Array(MAXR * 4), P = new Float32Array(MAXB * 3), G = new Float32Array(MAXB * 2), Q = new Float32Array(MAXB * 4), TQ = new Float32Array(MAXT * 4);
 let W = 0, Hh = 0, dpr = 1;
 function resize(keep) {
   if (keep !== true) dpr = Math.min(devicePixelRatio || 1, 2);
@@ -1015,7 +1114,9 @@ function frame(now) {
     const disabled = g.el.closest("button")?.disabled;
     const want = disabled ? g.base : Math.max(0, g.base - g.hover * 0.14 - g.press * 0.25 - g.focus * 0.08 - g.flare * 0.1 + pulse);
     g.t += (want - g.t) * (1 - Math.exp(-dt * (reduced ? 60 : rate)));
-    g.el.classList.toggle("lit-ink", g.t < 0.45);
+    const dl = dials(g.el, g.tune), ink = inkFor(g.el, g.t, dl);
+    g.el.classList.toggle("lit-ink", ink === "glow" || ink === "milk");
+    g.el.classList.toggle("page-ink", ink === "page");
     if (r.width < 1 || r.bottom < -80 || r.top > Hh + 80 || n >= MAXB || g.a < 0.02) continue;
     const spread = g.s * 4;
     const cs = getComputedStyle(g.el), rr = cs.borderTopLeftRadius;
@@ -1026,7 +1127,8 @@ function frame(now) {
     const tu = g.tune;
     C.set([...glowRGB(g.el, tu), g.focus * 0.8 + g.flare * 0.8 + (tu.rim ?? 0) + (g === sel ? 0.25 + 0.25 * Math.sin(clock * 5) : 0)], n * 4);
     P.set(sigOf(PIGS[pigOf(g.el)].c), n * 3);
-    G.set([tu.gain ?? 1, tu.reach ?? 1], n * 2);
+    G.set([dl.gain, tu.reach ?? 1], n * 2);
+    Q.set([dl.dens, dl.refr, dl.metal, dl.milk], n * 4);
     M[n] = (tu.e ?? Math.min(36, Math.max(5, Math.min(r.width, r.height) * 0.14))) * (1 - g.s * 0.25);
     n++;
   }
@@ -1040,7 +1142,9 @@ function frame(now) {
     TU.set(tx.uv, tn * 4);
     const tu = tx.tune;
     TB.set([tx.t, 0, tx.hover * 0.5 + (tu.rim ?? 0) + (tx === sel ? 0.25 + 0.25 * Math.sin(clock * 5) : 0), tu.e ?? tx.me], tn * 4);
-    TC.set([...glowRGB(tx.el, tu), tu.gain ?? 1], tn * 4);
+    const tdl = dials(tx.el, tu);
+    TC.set([...glowRGB(tx.el, tu), tdl.gain], tn * 4);
+    TQ.set([tdl.dens, tdl.refr, tdl.metal, tdl.milk], tn * 4);
     tn++;
   }
   RP.fill(0);
@@ -1049,7 +1153,7 @@ function frame(now) {
   if (gl) {
     gl.uniform2f(U.uRes, W, Hh); gl.uniform2f(U.uPtr, ptr.x, ptr.y);
     gl.uniform1f(U.uDpr, dpr); gl.uniform1f(U.uTime, clock); gl.uniform1f(U.uAmb, S.amb); gl.uniform1f(U.uVisc, v);
-    gl.uniform1f(U.uGlow, S.glow); gl.uniform3fv(U.uP, P); gl.uniform2fv(U.uG, G);
+    gl.uniform1f(U.uGlow, S.glow); gl.uniform3fv(U.uP, P); gl.uniform2fv(U.uG, G); gl.uniform4fv(U.uQ, Q); gl.uniform4fv(U.uTQ, TQ);
     gl.uniform1i(U.uCount, n); gl.uniform1i(U.uTCount, tn); gl.uniform1i(U.uBg, S.bg);
     gl.uniform3fv(U.uAcc, HUES[S.accent].c);
     gl.uniform4fv(U.uA, A); gl.uniform4fv(U.uB, B); gl.uniform4fv(U.uC, C); gl.uniform1fv(U.uM, M);
