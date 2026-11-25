@@ -106,6 +106,29 @@ footer{padding:40px 0 60px;color:var(--soft);font-size:13.5px}
 .pigs button{all:unset;cursor:pointer;width:38px;height:38px;border-radius:19px;box-shadow:inset 0 0 0 2px rgba(255,255,255,.25)}
 .pigs button[aria-pressed=true]{box-shadow:0 0 0 2px var(--ink)}
 .pigs span{font-size:13px;color:var(--soft);margin-right:6px}
+#insp{position:fixed;right:18px;bottom:18px;z-index:6;width:320px;max-height:min(86vh,720px);overflow:auto;background:rgba(10,14,21,.9);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);color:#eef2f7;border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:16px 18px;font-size:14px}
+#insp[hidden]{display:none}
+#insp .top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:6px}
+#insp .top b{font:700 16px Rubik,sans-serif;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#insp .x{all:unset;cursor:pointer;width:32px;height:32px;display:grid;place-items:center;border-radius:8px;font-size:20px;color:#a9b3bf}
+#insp .x:hover{background:rgba(255,255,255,.1)}
+#insp .hint{color:#9aa6b6;font-size:12.5px;margin:0 0 10px}
+#insp label{display:grid;grid-template-columns:1fr auto;gap:2px 10px;margin:10px 0;color:#d5dde7}
+#insp label output{color:#9aa6b6;font-variant-numeric:tabular-nums}
+#insp input[type=range]{grid-column:1/-1;width:100%;accent-color:#9fd8ff;height:24px;margin:0}
+#insp .opts{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:6px 0 4px}
+#insp .opts button{all:unset;cursor:pointer;width:30px;height:30px;border-radius:15px;box-shadow:inset 0 0 0 2px rgba(255,255,255,.2)}
+#insp .opts button[aria-pressed=true]{box-shadow:0 0 0 2px #fff}
+#insp .opts .acc{width:auto;padding:0 10px;border-radius:15px;font-size:12.5px;line-height:30px;color:#d5dde7}
+#insp .sub{color:#9aa6b6;font-size:12.5px;margin-top:12px}
+#insp code{display:block;background:rgba(255,255,255,.06);border-radius:10px;padding:10px;margin-top:8px;font:12.5px/1.5 ui-monospace,Menlo,monospace;color:#cfe1f2;white-space:pre-wrap;word-break:break-word}
+#insp .acts{display:flex;gap:8px;margin-top:12px}
+#insp .acts button{flex:1;cursor:pointer;background:rgba(255,255,255,.08);color:#eef2f7;border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:10px;font:500 13.5px Inter,sans-serif}
+#insp .acts button:hover{background:rgba(255,255,255,.14)}
+#insp button:focus-visible,#insp input:focus-visible{outline:2px dashed #9fd8ff;outline-offset:2px}
+.tuning .gel,.tuning .geltext{cursor:crosshair!important}
+.tuning .gel:hover,.tuning .geltext:hover{outline:1px dashed rgba(159,216,255,.7);outline-offset:6px}
+.tsel{outline:2px dashed #9fd8ff!important;outline-offset:6px}
 /* without WebGL the language falls back to flat CSS pours */
 .nogl #c{display:none}
 .nogl .gel{background:linear-gradient(#26303f,#141a24);box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 8px 18px rgba(0,0,0,.25)}
@@ -156,6 +179,8 @@ footer{padding:40px 0 60px;color:var(--soft);font-size:13.5px}
     </div></div>
    <div><span class="lab" id="lampl">Carry a light</span>
     <button class="gel switch" id="lampsw" role="switch" aria-checked="true" aria-labelledby="lampl" data-t=".86" data-glow="accent"><span class="knob gel" data-t=".06" data-z="1" data-glow="accent"></span></button></div>
+   <div><span class="lab">Each pour</span>
+    <button class="gel" id="tunebtn" aria-pressed="false" data-t=".55" data-glow="accent">Tune a pour</button></div>
   </div>
  </div>
  <div class="orbbox"><button class="gel" id="orb" data-t=".04" data-glow="accent" aria-label="Pour a new colour into the orb"></button></div>
@@ -273,6 +298,24 @@ footer{padding:40px 0 60px;color:var(--soft);font-size:13.5px}
 </section>
 </main>
 <div class="gel" id="toast" data-t=".88" data-glow="accent" role="status"></div>
+<aside id="insp" hidden aria-labelledby="iname">
+ <div class="top"><b id="iname">Pick a pour</b><button class="x" id="iclose" aria-label="Stop tuning">×</button></div>
+ <p class="hint" id="ihint">Click any control, drop or headline on the page to tune its glow. Esc stops.</p>
+ <div id="ibody" hidden>
+  <label>Charge <output id="o-charge"></output><input type="range" id="i-charge" min="0" max="100" step="1"></label>
+  <label>Glow strength <output id="o-gain"></output><input type="range" id="i-gain" min="0" max="300" step="1"></label>
+  <label id="l-reach">Spill reach <output id="o-reach"></output><input type="range" id="i-reach" min="30" max="300" step="1"></label>
+  <label>Edge thickness <output id="o-e"></output><input type="range" id="i-e" min="3" max="40" step="0.5"></label>
+  <label>Edge glow <output id="o-rim"></output><input type="range" id="i-rim" min="0" max="150" step="1"></label>
+  <div class="sub">Hue</div>
+  <div class="opts" id="i-hues"></div>
+  <label>Custom hue <output id="o-hue"></output><input type="range" id="i-hue" min="0" max="360" step="1"></label>
+  <div id="l-pig"><div class="sub">Second pigment</div><div class="opts" id="i-pigs"></div></div>
+  <div class="sub">Markup for this pour</div>
+  <code id="iattr"></code>
+  <div class="acts"><button id="icopy">Copy markup</button><button id="ireset">Reset this pour</button></div>
+ </div>
+</aside>
 <div class="gel" id="lamp" data-t="0" data-z="3" data-glow="accent"></div>
 <footer><div class="wrap">Lumorphism, a Quartifex Lab concept. Rendered live in WebGL 2: emission and absorption through the gel's thickness, refraction, softbox gloss, ripples and light spilled on the surface. Headlines are signed distance fields made from the page's own text.</div></footer>
 <script>
@@ -333,6 +376,7 @@ uniform vec4 uB[MAXB]; // corner radius, ink share, wobble, layer
 uniform vec4 uC[MAXB]; // glow colour, edge boost
 uniform float uM[MAXB]; // meniscus width
 uniform vec3 uP[MAXB]; // second pigment, as absorption
+uniform vec2 uG[MAXB]; // glow strength, spill reach (per pour)
 uniform sampler2D uAtlas;
 uniform vec4 uTR[MAXT]; // text: screen rect (x, y from bottom, w, h)
 uniform vec4 uTU[MAXT]; // text: atlas rect (u, v from top, w, h)
@@ -366,19 +410,19 @@ float sdText(vec2 p, int j){
 }
 float smin(float a, float b, float k){ float h = clamp(.5 + .5 * (b - a) / k, 0., 1.); return mix(b, a, h) - k * h * (1. - h); }
 
-struct Mat { float d; float t; vec3 glow; float rim; float e; vec3 pig; };
-void add(inout Mat m, inout float ws, float di, float t, float z, vec3 g, float rim, float e, vec3 pg, bool first){
+struct Mat { float d; float t; vec3 glow; float rim; float e; vec3 pig; float gain; };
+void add(inout Mat m, inout float ws, float di, float t, float z, vec3 g, float rim, float e, vec3 pg, float gn, bool first){
   m.d = first ? di : smin(m.d, di, K);
   float w = exp(z * 4.) / (1. + exp(di / 2.5));
-  ws += w; m.t += w * t; m.glow += w * g; m.rim += w * rim; m.e += w * e; m.pig += w * pg;
+  ws += w; m.t += w * t; m.glow += w * g; m.rim += w * rim; m.e += w * e; m.pig += w * pg; m.gain += w * gn;
 }
 Mat field(vec2 p){
-  Mat m; m.d = 1e5; m.t = 0.; m.glow = vec3(0.); m.rim = 0.; m.e = 0.; m.pig = vec3(0.);
+  Mat m; m.d = 1e5; m.t = 0.; m.glow = vec3(0.); m.rim = 0.; m.e = 0.; m.pig = vec3(0.); m.gain = 0.;
   float ws = 0.;
-  for (int i = 0; i < MAXB; i++){ if (i >= uCount) break; add(m, ws, sdGel(p, i), uB[i].y, uB[i].w, uC[i].rgb, uC[i].a, uM[i], uP[i], i == 0); }
-  for (int j = 0; j < MAXT; j++){ if (j >= uTCount) break; add(m, ws, sdText(p, j), uTB[j].x, uTB[j].y, uTC[j].rgb, uTB[j].z, uTB[j].w, SIGB, uCount == 0 && j == 0); }
+  for (int i = 0; i < MAXB; i++){ if (i >= uCount) break; add(m, ws, sdGel(p, i), uB[i].y, uB[i].w, uC[i].rgb, uC[i].a, uM[i], uP[i], uG[i].x, i == 0); }
+  for (int j = 0; j < MAXT; j++){ if (j >= uTCount) break; add(m, ws, sdText(p, j), uTB[j].x, uTB[j].y, uTC[j].rgb, uTB[j].z, uTB[j].w, SIGB, uTC[j].a, uCount == 0 && j == 0); }
   float iw = 1. / max(ws, 1e-6);
-  m.t *= iw; m.glow *= iw; m.rim *= iw; m.e *= iw; m.pig *= iw;
+  m.t *= iw; m.glow *= iw; m.rim *= iw; m.e *= iw; m.pig *= iw; m.gain *= iw;
   return m;
 }
 float fieldD(vec2 p){
@@ -469,14 +513,15 @@ vec3 table(vec2 p){
     if (i >= uCount) break;
     float di = max(sdGel(p, i), 0.);
     vec3 g = uC[i].rgb; float t = uB[i].y;
-    vec3 e = glowOut(emitOf(g, t), mix(sigA(g), uP[i], t), 1.) * (1. + uC[i].a);
-    halo += e * (exp(-di / 9.) * .42 + exp(-di / 30.) * .09) * smoothstep(260., 120., di);
+    vec3 e = glowOut(emitOf(g, t), mix(sigA(g), uP[i], t), 1.) * (1. + uC[i].a) * uG[i].x;
+    float rc = uG[i].y;
+    halo += e * (exp(-di / (9. * rc)) * .42 + exp(-di / (30. * rc)) * .09) * smoothstep(260. * rc, 120. * rc, di);
   }
   for (int j = 0; j < MAXT; j++){
     if (j >= uTCount) break;
     float di = max(sdText(p, j), 0.);
     vec3 g = uTC[j].rgb; float t = uTB[j].x;
-    vec3 e = glowOut(emitOf(g, t), mix(sigA(g), SIGB, t), 1.) * (1. + uTB[j].z);
+    vec3 e = glowOut(emitOf(g, t), mix(sigA(g), SIGB, t), 1.) * (1. + uTB[j].z) * uTC[j].a;
     // fades out well inside the field's padding, so no edge of the text's box ever shows
     halo += e * (exp(-di / 7.) * .25 + exp(-di / 18.) * .06) * smoothstep(${PAD - 4}., ${PAD / 2}., di);
   }
@@ -488,11 +533,12 @@ vec3 spill(vec2 p){
   for (int i = 0; i < MAXB; i++){
     if (i >= uCount) break;
     float sd = sdGel(p, i);
-    if (sd > 140.) continue;
+    if (sd > 140. * uG[i].y) continue;
     float out1 = smoothstep(-1., 6., sd), di = max(sd, 0.);
     vec3 g = uC[i].rgb; float t = uB[i].y;
-    vec3 e = glowOut(emitOf(g, t), mix(sigA(g), uP[i], t), 1.) * (1. + uC[i].a);
-    s += e * out1 * (exp(-di / 12.) * .55 + exp(-di / 38.) * .16) * smoothstep(140., 90., di);
+    vec3 e = glowOut(emitOf(g, t), mix(sigA(g), uP[i], t), 1.) * (1. + uC[i].a) * uG[i].x;
+    float rc = uG[i].y;
+    s += e * out1 * (exp(-di / (12. * rc)) * .55 + exp(-di / (38. * rc)) * .16) * smoothstep(140. * rc, 90. * rc, di);
   }
   return s;
 }
@@ -515,13 +561,13 @@ vec3 gel(vec2 p, Mat m){
   // pigment is never perfectly even: slow marbling inside every pour
   float marble = fbm(p / 70. + vec2(uTime * .04, -uTime * .03) + fbm(p / 140. - uTime * .02) * 1.5);
   float t = clamp(m.t + (marble - .5) * .22 * (4. * m.t * (1. - m.t) + .25), 0., 1.);
-  vec3 sg = mix(sigA(m.glow), m.pig, t), em = emitOf(m.glow, t) * (.82 + .36 * marble);
+  vec3 sg = mix(sigA(m.glow), m.pig, t), em = emitOf(m.glow, t) * m.gain * (.82 + .36 * marble);
   vec3 under = table(p - n.xy * h * 1.1);
   vec3 body = glowOut(em, sg, L) + under * exp(-sg * L);
   float F = .04 + .96 * pow(1. - n.z, 5.);
   vec3 col = body * (1. - F) + env(reflect(vec3(0., 0., -1.), n)) * F;
   float rim = 1. - clamp(-m.d / E, 0., 1.);
-  col += (em * .5 * exp(-sg * .25) + emitOf(m.glow, 0.) * m.rim * .35) * rim * rim;
+  col += (em * .5 * exp(-sg * .25) + emitOf(m.glow, 0.) * m.gain * m.rim * .35) * rim * rim;
   col += (.5 + .5 * cos(6.283 * (rim * 1.6 + vec3(0., .33, .67)))) * F * .2 * uAmb;
   // neighbours' glow: caught by the gloss and the rim, and scattered a little in dark gel
   col += spill(p) * (F * 1.4 + rim * .45 + .1 * t) * (.35 + .65 * t);
@@ -553,7 +599,7 @@ in vec2 a; void main(){ gl_Position = vec4(a, 0., 1.); }`));
   gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
   gl.enableVertexAttribArray(0); gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
-  for (const n of ["uP", "uGlow", "uRes", "uPtr", "uDpr", "uTime", "uAmb", "uVisc", "uCount", "uTCount", "uBg", "uAcc", "uA", "uB", "uC", "uM", "uAtlas", "uTR", "uTU", "uTB", "uTC", "uRip"]) U[n] = gl.getUniformLocation(pr, n);
+  for (const n of ["uG", "uP", "uGlow", "uRes", "uPtr", "uDpr", "uTime", "uAmb", "uVisc", "uCount", "uTCount", "uBg", "uAcc", "uA", "uB", "uC", "uM", "uAtlas", "uTR", "uTU", "uTB", "uTC", "uRip"]) U[n] = gl.getUniformLocation(pr, n);
   gl.bindTexture(gl.TEXTURE_2D, atlasTex);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
@@ -583,7 +629,7 @@ function edt(g, w, h) {
   for (let x = 0; x < w; x++) edt1d(g, x, w, h, f, v, z);
   for (let y = 0; y < h; y++) edt1d(g, y * w, 1, w, f, v, z);
 }
-const texts = [...document.querySelectorAll(".geltext")].map((el) => ({ el, base: +el.dataset.t, t: +el.dataset.t, hover: 0, flare: 0, uv: [0, 0, 0, 0], ok: false }));
+const texts = [...document.querySelectorAll(".geltext")].map((el) => ({ el, base: +el.dataset.t, t: +el.dataset.t, hover: 0, flare: 0, uv: [0, 0, 0, 0], ok: false, tune: readTune(el) }));
 for (const tx of texts) {
   tx.el.addEventListener("pointerenter", () => { tx.hover = 1; });
   tx.el.addEventListener("pointerleave", () => { tx.hover = 0; });
@@ -650,10 +696,24 @@ function buildAtlas() {
   gl.texImage2D(gl.TEXTURE_2D, 0, floatLinear ? gl.R32F : gl.R16F, AW, AH, 0, gl.RED, gl.FLOAT, sd);
 }
 
+/* ---------- per-pour glow settings ---------- */
+// data-gain (glow strength), data-reach (spill reach), data-e (edge thickness), data-rim (edge glow),
+// data-hue (custom hue in degrees), data-pig (second pigment 0 to 3, or "mix")
+function readTune(el) {
+  const d = el.dataset, num = (v) => (v === undefined || v === "" ? null : +v);
+  return { gain: num(d.gain), reach: num(d.reach), e: num(d.e), rim: num(d.rim), hue: num(d.hue) };
+}
+function hueRGB(h) {
+  const f = (n) => { const k = (n + h / 30) % 12; return 0.62 - 0.5 * Math.max(-1, Math.min(k - 3, 9 - k, 1)); };
+  return [f(0), f(8), f(4)].map((v) => Math.max(0, Math.min(1, (v - 0.12) / 0.88)));
+}
+const glowRGB = (el, tune) => (tune.hue != null ? hueRGB(tune.hue) : HUES[el.dataset.glow === "accent" || el.dataset.glow === undefined ? S.accent : +el.dataset.glow].c);
+const pigOf = (el) => (el.dataset.pig === "mix" ? S.pig : el.dataset.pig !== undefined ? +el.dataset.pig : 0);
+
 /* ---------- every .gel element becomes a pour ---------- */
 const gels = [...document.querySelectorAll(".gel")].map((el) => ({
   el, base: +el.dataset.t, t: 1, z: +(el.dataset.z || 0), hover: 0, press: 0, focus: 0, flare: 0,
-  s: 0, sv: 0, wob: 0, seen: false, a: reduced ? 1 : 0, av: 0, show: 1,
+  s: 0, sv: 0, wob: 0, seen: false, a: reduced ? 1 : 0, av: 0, show: 1, tune: readTune(el),
 }));
 // each pour arrives the first time it scrolls into view
 const io = new IntersectionObserver((es) => { for (const e of es) if (e.isIntersecting) { const g = byEl.get(e.target); if (g) g.seen = true; } }, { rootMargin: "60px" });
@@ -796,6 +856,98 @@ const lamp = $("lamp"), lampG = { x: innerWidth / 2, y: innerHeight / 2, vx: 0, 
 addEventListener("pointermove", (e) => { lampG.tx = e.clientX; lampG.ty = e.clientY; if (S.lamp && e.pointerType === "mouse") lamp.style.display = "block"; });
 document.addEventListener("pointerleave", () => { lamp.style.display = "none"; });
 const loaderDrops = [...document.querySelectorAll("#loader .gel")];
+/* ---------- tuning: pick any pour and set its glow by hand ---------- */
+let sel = null, tuning = false;
+const insp = $("insp"), tunebtn = $("tunebtn");
+for (const r of [...gels, ...texts]) r.orig = { ...r.el.dataset };
+$("i-hues").innerHTML = `<button class="acc" data-h="accent" aria-label="Page hue">Page hue</button>` + HUES.map((h, i) => `<button data-h="${i}" style="background:${`rgb(${h.c.map((v) => Math.round(v * 255)).join(",")})`}" aria-label="${h.n}" title="${h.n}"></button>`).join("");
+$("i-pigs").innerHTML = PIGS.map((p, i) => `<button data-p="${i}" style="background:${p.show}" aria-label="${p.n}" title="${p.n}"></button>`).join("");
+function setTuning(on) {
+  tuning = on; document.body.classList.toggle("tuning", on);
+  tunebtn.setAttribute("aria-pressed", on); tunebtn.textContent = on ? "Done tuning" : "Tune a pour";
+  byEl.get(tunebtn).base = on ? 0.08 : 0.55;
+  insp.hidden = !on;
+  if (!on) pick(null);
+}
+function nameOf(el) {
+  const txt = (el.getAttribute("aria-label") || el.textContent || el.placeholder || "").trim().replace(/\s+/g, " ");
+  const kind = el.classList.contains("geltext") ? "Headline" : el.classList.contains("knob") ? "Knob" : el.classList.contains("track") ? "Track" : el.classList.contains("fill") ? "Fill" : "Pour";
+  return txt ? `${kind}: ${txt.slice(0, 28)}` : kind;
+}
+function pick(rec) {
+  if (sel) sel.el.classList.remove("tsel");
+  sel = rec;
+  $("ibody").hidden = !rec; $("ihint").hidden = !!rec;
+  if (!rec) { $("iname").textContent = "Pick a pour"; return; }
+  rec.el.classList.add("tsel");
+  $("iname").textContent = nameOf(rec.el);
+  const isText = texts.includes(rec);
+  $("l-reach").hidden = isText; $("l-pig").hidden = isText;
+  fill();
+}
+function defaultE(rec) {
+  if (texts.includes(rec)) return rec.me;
+  const r = rec.el.getBoundingClientRect();
+  return Math.min(36, Math.max(5, Math.min(r.width, r.height) * 0.14));
+}
+function fill() {
+  const r = sel, tu = r.tune;
+  const set = (id, v, txt) => { $("i-" + id).value = v; $("o-" + id).value = txt; };
+  set("charge", Math.round((1 - r.base) * 100), Math.round((1 - r.base) * 100) + "% glow");
+  set("gain", Math.round((tu.gain ?? 1) * 100), Math.round((tu.gain ?? 1) * 100) + "%");
+  set("reach", Math.round((tu.reach ?? 1) * 100), Math.round((tu.reach ?? 1) * 100) + "%");
+  const e = tu.e ?? defaultE(r);
+  set("e", e, e.toFixed(1) + " px" + (tu.e == null ? " (auto)" : ""));
+  set("rim", Math.round((tu.rim ?? 0) * 100), Math.round((tu.rim ?? 0) * 100) + "%");
+  set("hue", tu.hue ?? 200, tu.hue == null ? "off" : Math.round(tu.hue) + "°");
+  const g = r.el.dataset.glow ?? "accent";
+  for (const b of $("i-hues").children) b.setAttribute("aria-pressed", tu.hue == null && b.dataset.h === g);
+  for (const b of $("i-pigs").children) b.setAttribute("aria-pressed", +b.dataset.p === pigOf(r.el) && r.el.dataset.pig !== "mix");
+  // the markup that reproduces this pour
+  const d = r.el.dataset, attrs = [`data-t="${(+r.base).toFixed(2)}"`, `data-glow="${g}"`];
+  if (tu.hue != null) attrs.push(`data-hue="${Math.round(tu.hue)}"`);
+  if (tu.gain != null) attrs.push(`data-gain="${tu.gain.toFixed(2)}"`);
+  if (tu.reach != null) attrs.push(`data-reach="${tu.reach.toFixed(2)}"`);
+  if (tu.e != null) attrs.push(`data-e="${tu.e}"`);
+  if (tu.rim != null) attrs.push(`data-rim="${tu.rim.toFixed(2)}"`);
+  if (d.pig !== undefined) attrs.push(`data-pig="${d.pig}"`);
+  if (d.z) attrs.push(`data-z="${d.z}"`);
+  $("iattr").textContent = attrs.join(" ");
+}
+const bind = (id, fn) => $("i-" + id).addEventListener("input", (e) => { if (sel) { fn(+e.target.value); sel.flare = 1; fill(); } });
+bind("charge", (v) => { sel.base = 1 - v / 100; });
+bind("gain", (v) => { sel.tune.gain = v / 100; });
+bind("reach", (v) => { sel.tune.reach = v / 100; });
+bind("e", (v) => { sel.tune.e = v; });
+bind("rim", (v) => { sel.tune.rim = v / 100; });
+bind("hue", (v) => { sel.tune.hue = v; });
+$("i-hues").onclick = (e) => { const b = e.target.closest("button"); if (!b || !sel) return; sel.tune.hue = null; sel.el.dataset.glow = b.dataset.h; fill(); };
+$("i-pigs").onclick = (e) => { const b = e.target.closest("button"); if (!b || !sel) return; sel.el.dataset.pig = b.dataset.p; fill(); };
+$("ireset").onclick = () => {
+  if (!sel) return;
+  for (const k of Object.keys(sel.el.dataset)) delete sel.el.dataset[k];
+  Object.assign(sel.el.dataset, sel.orig);
+  sel.tune = readTune(sel.el); sel.base = +sel.orig.t; fill();
+};
+$("icopy").onclick = async (e) => {
+  try { await navigator.clipboard.writeText($("iattr").textContent); e.target.textContent = "Copied"; }
+  catch { e.target.textContent = "Select the markup to copy"; }
+  setTimeout(() => { e.target.textContent = "Copy markup"; }, 1600);
+};
+$("iclose").onclick = () => setTuning(false);
+tunebtn.addEventListener("click", (e) => { e.stopPropagation(); setTuning(!tuning); });
+addEventListener("keydown", (e) => { if (e.key === "Escape" && tuning) setTuning(false); });
+// while tuning, a click picks a pour instead of pressing it (and sliders don't move)
+document.addEventListener("pointerdown", (e) => { if (tuning && !insp.contains(e.target) && e.target !== tunebtn && e.target.closest(".slider, input, .check")) e.preventDefault(); }, true);
+// while tuning, a click picks a pour instead of pressing it
+document.addEventListener("click", (e) => {
+  if (!tuning || insp.contains(e.target) || e.target === tunebtn) return;
+  let el = e.target.closest(".slider") ? e.target.closest(".slider").querySelector(".fill") : e.target.closest(".geltext, .gel");
+  if (el && el.classList.contains("switch") && e.target.closest(".knob")) el = e.target.closest(".knob");
+  const rec = el && (byEl.get(el) || texts.find((t) => t.el === el));
+  e.preventDefault(); e.stopPropagation();
+  pick(rec || null);
+}, true);
 const well = document.querySelector(".well");
 well.addEventListener("input", () => { byEl.get(well).flare = 1; });
 $("copy").onclick = async (e) => {
@@ -806,7 +958,7 @@ $("copy").onclick = async (e) => {
 /* ---------- frame ---------- */
 const A = new Float32Array(MAXB * 4), B = new Float32Array(MAXB * 4), C = new Float32Array(MAXB * 4), M = new Float32Array(MAXB);
 const TR = new Float32Array(MAXT * 4), TU = new Float32Array(MAXT * 4), TB = new Float32Array(MAXT * 4), TC = new Float32Array(MAXT * 4);
-const RP = new Float32Array(MAXR * 4), P = new Float32Array(MAXB * 3);
+const RP = new Float32Array(MAXR * 4), P = new Float32Array(MAXB * 3), G = new Float32Array(MAXB * 2);
 let W = 0, Hh = 0, dpr = 1;
 function resize(keep) {
   if (keep !== true) dpr = Math.min(devicePixelRatio || 1, 2);
@@ -868,13 +1020,14 @@ function frame(now) {
     const spread = g.s * 4;
     const cs = getComputedStyle(g.el), rr = cs.borderTopLeftRadius;
     const rad = rr.endsWith("%") ? (parseFloat(rr) / 100) * r.width : parseFloat(rr) || 0;
-    const hue = g.el.dataset.glow === "accent" ? S.accent : +g.el.dataset.glow;
     const sc = Math.max(0, g.a);
     A.set([r.left + r.width / 2, Hh - (r.top + r.height / 2), (r.width / 2) * sc + spread, (r.height / 2) * sc + spread * 0.5], n * 4);
     B.set([rad + spread * 0.5, g.t, g.wob, g.z], n * 4);
-    C.set([...HUES[hue].c, g.focus * 0.8 + g.flare * 0.8], n * 4);
-    P.set(sigOf(PIGS[g.el.dataset.pig === "mix" ? S.pig : 0].c), n * 3);
-    M[n] = Math.min(36, Math.max(5, Math.min(r.width, r.height) * 0.14)) * (1 - g.s * 0.25);
+    const tu = g.tune;
+    C.set([...glowRGB(g.el, tu), g.focus * 0.8 + g.flare * 0.8 + (tu.rim ?? 0) + (g === sel ? 0.25 + 0.25 * Math.sin(clock * 5) : 0)], n * 4);
+    P.set(sigOf(PIGS[pigOf(g.el)].c), n * 3);
+    G.set([tu.gain ?? 1, tu.reach ?? 1], n * 2);
+    M[n] = (tu.e ?? Math.min(36, Math.max(5, Math.min(r.width, r.height) * 0.14))) * (1 - g.s * 0.25);
     n++;
   }
   let tn = 0;
@@ -885,8 +1038,9 @@ function frame(now) {
     if (r.bottom < -40 || r.top > Hh + 40) continue;
     TR.set([r.left - PAD, Hh - r.bottom - PAD, r.width + PAD * 2, r.height + PAD * 2], tn * 4);
     TU.set(tx.uv, tn * 4);
-    TB.set([tx.t, 0, tx.hover * 0.5, tx.me], tn * 4);
-    TC.set([...HUES[S.accent].c, 0], tn * 4);
+    const tu = tx.tune;
+    TB.set([tx.t, 0, tx.hover * 0.5 + (tu.rim ?? 0) + (tx === sel ? 0.25 + 0.25 * Math.sin(clock * 5) : 0), tu.e ?? tx.me], tn * 4);
+    TC.set([...glowRGB(tx.el, tu), tu.gain ?? 1], tn * 4);
     tn++;
   }
   RP.fill(0);
@@ -895,7 +1049,7 @@ function frame(now) {
   if (gl) {
     gl.uniform2f(U.uRes, W, Hh); gl.uniform2f(U.uPtr, ptr.x, ptr.y);
     gl.uniform1f(U.uDpr, dpr); gl.uniform1f(U.uTime, clock); gl.uniform1f(U.uAmb, S.amb); gl.uniform1f(U.uVisc, v);
-    gl.uniform1f(U.uGlow, S.glow); gl.uniform3fv(U.uP, P);
+    gl.uniform1f(U.uGlow, S.glow); gl.uniform3fv(U.uP, P); gl.uniform2fv(U.uG, G);
     gl.uniform1i(U.uCount, n); gl.uniform1i(U.uTCount, tn); gl.uniform1i(U.uBg, S.bg);
     gl.uniform3fv(U.uAcc, HUES[S.accent].c);
     gl.uniform4fv(U.uA, A); gl.uniform4fv(U.uB, B); gl.uniform4fv(U.uC, C); gl.uniform1fv(U.uM, M);

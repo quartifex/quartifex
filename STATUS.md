@@ -912,3 +912,4 @@ the Lab seeds or sit beside them?
 - Not done: Gradient and Ripple surfaces, press ripples and the feel of the viscosity were not
   checked by eye; no phone, Safari or Firefox.
 - 2026-11-25: lumorphism edges are now blended across one device pixel, normals and shadows use a distance-only field (cheaper), the canvas runs at up to 2x device pixels and steps down only to 1x if frames pass 34 ms, and the lamp follows the pointer closely instead of at the gel's viscosity.
+- 2026-11-25: lumorphism gains per-pour glow tuning (strength, spill reach, edge thickness, edge glow, custom hue, second pigment, charge) with an inspector and copyable markup; v1 tagged `lumorphism-v1`. Seen working on the orb in the dark room; other pours, the lit room and pasting tuned markup back in were not tried.
