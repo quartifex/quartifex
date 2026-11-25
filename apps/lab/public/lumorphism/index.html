@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lumorphism</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@500;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* VOICE: a material spec from a lab that pours light, calm and exact, the material does the talking
+   IDEA: the craft-resin mixing card turned into an interface: every control and every headline is poured gel
+   PICTURE: one WebGL surface under the whole page; .gel elements and .geltext headings are drawn into it live
+   COLOUR and TYPE: the surface (five kinds, two rooms), glow as the only accent; Rubik + Inter
+   LAYOUT: hero with orb and a studio bar (surface, viscosity), then rules, the component board, tokens */
+:root{color-scheme:light dark;--ink:#121822;--soft:#4a5565;--line:rgba(18,24,34,.14);--on-glow:#0b1020;--on-dark:#eef2f7}
+.dark{--ink:#e9eef5;--soft:#9aa6b6;--line:rgba(255,255,255,.12)}
+*{box-sizing:border-box;min-width:0}
+html{scroll-padding-top:40px}
+body{margin:0;color:var(--ink);font:16px/1.55 Inter,system-ui,sans-serif;background:#cfd6de;overflow-x:clip;transition:color .6s}
+body.dark{background:#05070b}
+#c{position:fixed;inset:0;width:100%;height:100%;z-index:0;display:block;touch-action:pan-y}
+main,header,footer{position:relative;z-index:1}
+.wrap{max-width:1180px;margin:0 auto;padding:0 max(5vw,18px)}
+header .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-top:18px;padding-bottom:18px}
+.brand{font:800 22px/1 Rubik,sans-serif;letter-spacing:-.01em;padding:6px 0}
+nav{display:flex;gap:18px;flex-wrap:wrap;font-size:14px}
+nav a{color:var(--soft);text-decoration:none}nav a:hover{color:var(--ink)}
+h1{font:800 clamp(44px,8vw,92px)/1 Rubik,sans-serif;letter-spacing:-.02em;margin:0 0 18px;text-wrap:balance}
+h2{font:800 clamp(30px,4vw,46px)/1.08 Rubik,sans-serif;letter-spacing:-.01em;margin:0 0 12px;text-wrap:balance}
+/* gel headings keep their text for reading and selecting; the canvas draws their letters */
+.geltext{color:transparent!important;caret-color:var(--ink)}
+.geltext::selection{background:rgba(120,170,255,.35)}
+h3{font:700 18px/1.25 Rubik,sans-serif;margin:0 0 6px}
+p{margin:0 0 12px;max-width:62ch}
+.lede{font-size:19px;color:var(--soft);max-width:44ch}
+section{padding:clamp(48px,7vw,96px) 0}
+.hero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:40px;align-items:center;min-height:min(80vh,780px)}
+.orbbox{display:grid;place-items:center;min-height:360px}
+#orb.gel{width:min(300px,64vw);aspect-ratio:1;border-radius:50%;padding:0}
+.row{display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+.gel{background:transparent;border:0;color:var(--on-dark);font:600 15px/1 Inter,sans-serif;position:relative}
+.gel.lit-ink{color:var(--on-glow)}
+button.gel,a.gel{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 24px;cursor:pointer;text-decoration:none;border-radius:24px}
+button.gel:focus-visible,a.gel:focus-visible,input:focus-visible{outline:2px dashed currentColor;outline-offset:5px}
+button[disabled]{cursor:not-allowed}
+.studio{display:flex;flex-wrap:wrap;gap:18px 28px;align-items:flex-end;margin-top:34px;padding-top:22px;border-top:1px solid var(--line)}
+.studio label,.studio .lab{display:block;font-size:13px;color:var(--soft);margin-bottom:8px}
+.studio .slider{width:220px}
+.rules{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px 36px;margin-top:28px}
+.rules p{color:var(--soft);font-size:15.5px}
+.board{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px;margin-top:28px}
+.spec{padding:22px 0 26px;border-top:1px solid var(--line)}
+.spec h3{margin-bottom:16px}.spec small{display:block;color:var(--soft);font-size:13px;margin-top:14px}
+.switch{width:68px;height:38px;border-radius:19px;padding:0!important;min-height:0!important}
+.switch .knob{position:absolute;top:5px;left:5px;width:28px;height:28px;border-radius:14px;transition:transform .45s cubic-bezier(.3,1.3,.5,1)}
+.switch[aria-checked=true] .knob{transform:translateX(30px)}
+.seg{display:flex;flex-wrap:wrap}.seg .gel{border-radius:22px;min-height:44px;padding:0 18px;margin-right:-6px}
+.slider{position:relative;height:44px;max-width:420px}
+.slider .track{position:absolute;left:0;right:0;top:12px;height:20px;border-radius:10px}
+.slider .fill{position:absolute;left:0;top:12px;height:20px;border-radius:10px}
+.slider .knob{position:absolute;top:4px;width:36px;height:36px;border-radius:18px;margin-left:-18px}
+.slider input{position:absolute;inset:0;width:100%;opacity:0;cursor:pointer;margin:0}
+.well{display:block;width:100%;max-width:420px;height:52px;border-radius:16px;padding:0 18px;font:500 16px Inter,sans-serif;color:var(--on-dark);caret-color:#9fe3ff}
+.well::placeholder{color:rgba(238,242,247,.5)}
+.bar{position:relative;height:22px;max-width:420px}
+.bar .gel{position:absolute;top:0;height:22px;border-radius:11px}
+.chip{min-height:34px!important;padding:0 16px!important;border-radius:17px!important;font-size:14px!important}
+.card{border-radius:26px;padding:24px;max-width:420px}
+.card h3{color:#eef2f7}
+.card p{color:rgba(238,242,247,.72);font:400 15px/1.5 Inter,sans-serif;margin:10px 0 18px}
+.card .dot{display:inline-block;width:14px;height:14px;border-radius:7px;vertical-align:middle;margin-right:10px}
+.charge{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px;margin-top:24px}
+.charge div{text-align:center;font-size:13px;color:var(--soft)}
+.charge .gel{display:block;height:84px;border-radius:22px;margin-bottom:10px}
+.charge b{display:block;color:var(--ink);font:700 15px Rubik,sans-serif}
+.hues{display:flex;gap:14px;flex-wrap:wrap;margin-top:18px;align-items:center}
+.hues .gel{width:54px;height:54px;border-radius:27px;min-height:0;padding:0}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+pre{background:rgba(10,14,20,.86);color:#d6e2ee;border-radius:16px;padding:18px 20px;overflow-x:auto;font:13.5px/1.6 ui-monospace,Menlo,monospace;margin:18px 0 0}
+.copy{font-size:13px;color:var(--soft);background:none;border:1px solid var(--line);border-radius:10px;padding:8px 14px;cursor:pointer;margin-top:10px}
+footer{padding:40px 0 60px;color:var(--soft);font-size:13.5px}
+.checks{display:flex;flex-wrap:wrap;gap:12px 26px}
+.check{display:flex;align-items:center;gap:12px;cursor:pointer;font-size:15px;color:var(--ink)}
+.check .box{width:28px;height:28px;border-radius:9px;display:grid;place-items:center}
+.check .box svg{width:16px;height:16px;opacity:0;transition:opacity .25s}
+.check[aria-checked=true] .box svg{opacity:1}
+.check .ring{width:28px;height:28px;border-radius:14px;position:relative}
+.check .ring i{position:absolute;inset:8px;border-radius:6px;transform:scale(0);transition:transform .35s cubic-bezier(.3,1.4,.5,1)}
+.check[aria-checked=true] .ring i{transform:scale(1)}
+.check:focus-visible{outline:2px dashed currentColor;outline-offset:4px;border-radius:8px}
+.tabs{position:relative;display:flex;gap:4px;max-width:420px}
+.tabs button{all:unset;position:relative;z-index:1;padding:12px 16px;font:600 15px Inter,sans-serif;color:var(--soft);cursor:pointer;border-radius:20px}
+.tabs button[aria-selected=true]{color:var(--on-glow)}
+.tabs button:focus-visible{outline:2px dashed currentColor}
+.tabs .ind{position:absolute;top:2px;height:40px;border-radius:20px;transition:left .5s cubic-bezier(.3,1.25,.5,1),width .5s cubic-bezier(.3,1.25,.5,1)}
+.tabpanel{color:var(--soft);font-size:14.5px;margin-top:12px;min-height:44px}
+.stepper{display:flex;align-items:center}
+.stepper .gel{min-height:46px;border-radius:23px}
+.stepper .val{min-width:84px;margin:0 -8px;font-variant-numeric:tabular-nums;display:inline-flex;align-items:center;justify-content:center;height:46px}
+.loader{position:relative;width:120px;height:72px}
+.loader .gel{position:absolute;border-radius:50%}
+#toast{position:fixed;right:24px;bottom:24px;z-index:3;border-radius:20px;padding:16px 20px;max-width:320px;display:none;font:500 15px/1.4 Inter,sans-serif}
+#toast.show{display:block}
+#lamp{position:fixed;left:0;top:0;width:26px;height:26px;border-radius:13px;pointer-events:none;z-index:0;display:none}
+.pigs{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;align-items:center}
+.pigs button{all:unset;cursor:pointer;width:38px;height:38px;border-radius:19px;box-shadow:inset 0 0 0 2px rgba(255,255,255,.25)}
+.pigs button[aria-pressed=true]{box-shadow:0 0 0 2px var(--ink)}
+.pigs span{font-size:13px;color:var(--soft);margin-right:6px}
+/* without WebGL the language falls back to flat CSS pours */
+.nogl #c{display:none}
+.nogl .gel{background:linear-gradient(#26303f,#141a24);box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 8px 18px rgba(0,0,0,.25)}
+.nogl .gel.lit-ink{background:radial-gradient(circle at 40% 35%,#eaf6ff,#7cc8ff);box-shadow:0 0 26px rgba(124,200,255,.8),inset 0 1px 0 #fff}
+.nogl .geltext{color:var(--ink)!important}
+@media(max-width:860px){.hero{grid-template-columns:1fr;min-height:0;padding-top:24px}.orbbox{min-height:300px}.rules{grid-template-columns:1fr}.board{grid-template-columns:1fr}}
+@media(max-width:520px){nav{display:none}.charge{grid-template-columns:repeat(3,minmax(0,1fr))}.seg .gel{padding:0 12px}}
+</style>
+</head>
+<body>
+<canvas id="c" aria-hidden="true"></canvas>
+<header><div class="wrap">
+ <div class="brand geltext" data-t=".2" data-glow="accent">Lumorphism</div>
+ <nav><a href="#rules">Rules</a><a href="#components">Components</a><a href="#tokens">Tokens</a></nav>
+ <button class="gel switch" id="room" role="switch" aria-checked="false" aria-label="Lights off" data-t=".86" data-glow="accent"><span class="knob gel" data-t=".7" data-z="1" data-glow="accent"></span></button>
+</div></header>
+<main>
+<section class="wrap hero">
+ <div>
+  <h1 class="geltext" data-t=".32" data-glow="accent">Interfaces poured from light.</h1>
+  <p class="lede">Lumorphism is a design language where every surface, and every headline, is a glowing gel. A control's state is its mix: more glow pigment when it's live, more black when it rests.</p>
+  <div class="row" style="margin-top:26px">
+   <a class="gel" href="#components" data-t=".08" data-glow="accent">See it work</a>
+   <a class="gel" href="#rules" data-t=".62" data-glow="accent">Read the rules</a>
+  </div>
+  <div class="studio">
+   <div><span class="lab" id="bgl">Surface</span>
+    <div class="seg" id="bg" role="radiogroup" aria-labelledby="bgl">
+     <button class="gel" role="radio" data-bg="0" data-t=".1" data-glow="accent">Table</button>
+     <button class="gel" role="radio" data-bg="1" data-t=".84" data-glow="accent">Gradient</button>
+     <button class="gel" role="radio" data-bg="2" data-t=".84" data-glow="accent">Flow</button>
+     <button class="gel" role="radio" data-bg="3" data-t=".84" data-glow="accent">Depth</button>
+     <button class="gel" role="radio" data-bg="4" data-t=".84" data-glow="accent">Ripple</button>
+    </div></div>
+   <div><label for="visc">Viscosity: <span id="viscv">honey</span></label>
+    <div class="slider" data-key="visc">
+     <div class="gel track" data-t=".9" data-glow="accent"></div>
+     <div class="gel fill" data-t=".2" data-z="1" data-glow="accent"></div>
+     <div class="gel knob" data-t=".02" data-z="2" data-glow="accent"></div>
+     <input id="visc" type="range" min="0" max="100" value="70">
+    </div></div>
+   <div><label for="glowin">Glow: <span id="glowv">100%</span></label>
+    <div class="slider" data-key="glow">
+     <div class="gel track" data-t=".9" data-glow="accent"></div>
+     <div class="gel fill" data-t=".2" data-z="1" data-glow="accent"></div>
+     <div class="gel knob" data-t=".02" data-z="2" data-glow="accent"></div>
+     <input id="glowin" type="range" min="0" max="100" value="50">
+    </div></div>
+   <div><span class="lab" id="lampl">Carry a light</span>
+    <button class="gel switch" id="lampsw" role="switch" aria-checked="true" aria-labelledby="lampl" data-t=".86" data-glow="accent"><span class="knob gel" data-t=".06" data-z="1" data-glow="accent"></span></button></div>
+  </div>
+ </div>
+ <div class="orbbox"><button class="gel" id="orb" data-t=".04" data-glow="accent" aria-label="Pour a new colour into the orb"></button></div>
+</section>
+
+<section class="wrap" id="rules">
+ <h2 class="geltext" data-t=".5" data-glow="accent">Six rules for a material that glows.</h2>
+ <div class="rules">
+  <div><h3>Everything is poured</h3><p>Shapes are puddles with a raised, rounded edge and a flat top. No hairline borders, no flat fills: thickness and gloss say where a surface starts.</p></div>
+  <div><h3>State is the mix</h3><p>Never swap colours to show state. Live, hovered and pressed controls carry more glow pigment; resting ones less; disabled ones are nearly all black.</p></div>
+  <div><h3>Light spills</h3><p>A glowing control lights the surface around it, and its light lands on the controls beside it, catching their gloss and rims. Focus is a brighter spill, not a ring.</p></div>
+  <div><h3>Related things merge</h3><p>Grouped controls touch and flow into one body. A toggle's drop slides through its track; a slider's fill and handle are one pour.</p></div>
+  <div><h3>Two rooms, one material</h3><p>Light mode and dark mode are the room's lights, not two palettes. The gel is the same; in the dark the glow carries the interface.</p></div>
+  <div><h3>Gel is thick</h3><p>A press spreads the gel and sends a ripple across it; it settles at the speed its viscosity allows. Viscosity is a token, from water to honey.</p></div>
+ </div>
+</section>
+
+<section class="wrap" id="components">
+ <h2 class="geltext" data-t=".5" data-glow="accent">The components, live.</h2>
+ <p class="lede">Hover, press, tab through, drag. Everything below is the same material at different mixes.</p>
+ <div class="board">
+  <div class="spec"><h3>Buttons</h3>
+   <div class="row">
+    <button class="gel" data-t=".08" data-glow="accent">Primary</button>
+    <button class="gel" data-t=".55" data-glow="accent">Secondary</button>
+    <button class="gel" data-t=".9" data-glow="accent">Quiet</button>
+    <button class="gel" data-t=".97" data-glow="accent" disabled>Disabled</button>
+   </div>
+   <small>Charge 90%, 45%, 10%, 3%. Hover adds glow, pressing floods it.</small></div>
+  <div class="spec"><h3>Switches</h3>
+   <div class="row">
+    <button class="gel switch toggle" role="switch" aria-checked="true" aria-label="Notifications" data-t=".86" data-glow="accent"><span class="knob gel" data-t=".06" data-z="1" data-glow="accent"></span></button>
+    <button class="gel switch toggle" role="switch" aria-checked="false" aria-label="Location" data-t=".86" data-glow="accent"><span class="knob gel" data-t=".7" data-z="1" data-glow="accent"></span></button>
+   </div>
+   <small>The drop is charged when on and dims as it slides off.</small></div>
+  <div class="spec"><h3>Segmented control</h3>
+   <div class="seg" id="view" role="radiogroup" aria-label="View">
+    <button class="gel" role="radio" data-t=".1" data-glow="accent">Day</button>
+    <button class="gel" role="radio" data-t=".84" data-glow="accent">Week</button>
+    <button class="gel" role="radio" data-t=".84" data-glow="accent">Month</button>
+   </div>
+   <small>Three drops poured close enough to merge into one body.</small></div>
+  <div class="spec"><h3>Slider</h3>
+   <div class="slider" data-key="bright">
+    <div class="gel track" data-t=".9" data-glow="accent"></div>
+    <div class="gel fill" data-t=".1" data-z="1" data-glow="accent"></div>
+    <div class="gel knob" data-t=".02" data-z="2" data-glow="accent"></div>
+    <input type="range" min="0" max="100" value="62" aria-label="Brightness">
+   </div>
+   <small>The fill is glow poured into the track: <span id="brightv">62</span>%.</small></div>
+  <div class="spec"><h3>Text field</h3>
+   <input class="gel well" data-t=".93" data-glow="accent" placeholder="Your email" aria-label="Your email">
+   <small>A dark well; the edge lights up while you type.</small></div>
+  <div class="spec"><h3>Progress</h3>
+   <div class="bar"><div class="gel" style="left:0;right:0" data-t=".9" data-glow="accent"></div><div class="gel" id="barfill" style="left:0;width:40%" data-t=".06" data-z="1" data-glow="accent"></div></div>
+   <small>Charge rises with the work; the leading edge burns brightest.</small></div>
+  <div class="spec"><h3>Tags</h3>
+   <div class="row">
+    <button class="gel chip" data-t=".12" data-glow="0">Ice</button>
+    <button class="gel chip" data-t=".12" data-glow="2">Live</button>
+    <button class="gel chip" data-t=".12" data-glow="4">Review</button>
+    <button class="gel chip" data-t=".12" data-glow="3">Urgent</button>
+   </div>
+   <small>Hue carries meaning; charge carries importance.</small></div>
+  <div class="spec"><h3>Checks and radios</h3>
+   <div class="checks">
+    <div class="check" role="checkbox" tabindex="0" aria-checked="true"><span class="gel box" data-t=".85" data-glow="accent"><svg viewBox="0 0 16 16" fill="none" stroke="#0b1020" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5l3.2 3L13 4.5"/></svg></span>Autosave</div>
+    <div class="check" role="checkbox" tabindex="0" aria-checked="false"><span class="gel box" data-t=".85" data-glow="accent"><svg viewBox="0 0 16 16" fill="none" stroke="#0b1020" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5l3.2 3L13 4.5"/></svg></span>Sync</div>
+   </div>
+   <div class="checks" role="radiogroup" aria-label="Quality" style="margin-top:16px" id="radios">
+    <div class="check" role="radio" tabindex="0" aria-checked="true"><span class="gel ring" data-t=".88" data-glow="accent"><i class="gel" data-t=".04" data-z="1" data-glow="accent"></i></span>Draft</div>
+    <div class="check" role="radio" tabindex="-1" aria-checked="false"><span class="gel ring" data-t=".88" data-glow="accent"><i class="gel" data-t=".04" data-z="1" data-glow="accent"></i></span>Final</div>
+   </div>
+   <small>A checked box fills with glow; a chosen radio grows a charged drop.</small></div>
+  <div class="spec"><h3>Tabs</h3>
+   <div class="tabs" role="tablist" id="tabs">
+    <span class="gel ind" data-t=".06" data-glow="accent"></span>
+    <button role="tab" aria-selected="true">Overview</button><button role="tab" aria-selected="false">Specs</button><button role="tab" aria-selected="false">Notes</button>
+   </div>
+   <div class="tabpanel" id="tabp">A drop of glow slides under the open tab and stretches as it travels.</div>
+   <small>The marker is one pour that moves; the tabs themselves stay quiet.</small></div>
+  <div class="spec"><h3>Stepper</h3>
+   <div class="stepper">
+    <button class="gel" data-t=".55" data-glow="accent" id="dec" aria-label="Fewer">−</button>
+    <span class="gel val" data-t=".6" data-glow="accent" id="stepv" aria-live="polite">4</span>
+    <button class="gel" data-t=".55" data-glow="accent" id="inc" aria-label="More">+</button>
+   </div>
+   <small>The count's own charge rises with the number, from 0 to 10.</small></div>
+  <div class="spec"><h3>Loader</h3>
+   <div class="loader" id="loader" role="status" aria-label="Loading">
+    <span class="gel" data-t=".02" data-z="1" data-glow="accent"></span><span class="gel" data-t=".3" data-glow="accent"></span><span class="gel" data-t=".5" data-glow="accent"></span><span class="gel" data-t=".7" data-glow="accent"></span>
+   </div>
+   <small>Drops chase one another and merge as they pass.</small></div>
+  <div class="spec"><h3>Toast</h3>
+   <button class="gel" data-t=".55" data-glow="accent" id="toastbtn">Send a message</button>
+   <small>A notice pours in at the corner, glows while it matters, then drains away.</small></div>
+  <div class="spec"><h3>Card</h3>
+   <div class="gel card" data-t=".9" data-glow="accent">
+    <h3><span class="dot gel" data-t="0" data-z="1" data-glow="2" id="pulse"></span>Render finished</h3>
+    <p>Nadī, 70 million raindrops. The file is ready to open.</p>
+    <button class="gel chip" data-t=".1" data-z="1" data-glow="accent">Open</button>
+   </div>
+   <small>A slab of dark gel; only what wants attention glows.</small></div>
+ </div>
+</section>
+
+<section class="wrap" id="tokens">
+ <h2 class="geltext" data-t=".5" data-glow="accent">Tokens.</h2>
+ <p class="lede">Five charges, five hues, four pigments, two rooms, one viscosity. The charges below are a live mixing card: pick a hue and a second pigment.</p>
+ <div class="charge" id="charge"></div>
+ <div class="hues" id="hues"></div>
+ <div class="pigs" id="pigs"><span>Second pigment</span></div>
+ <pre id="code"></pre>
+ <button class="copy" id="copy">Copy tokens</button>
+</section>
+</main>
+<div class="gel" id="toast" data-t=".88" data-glow="accent" role="status"></div>
+<div class="gel" id="lamp" data-t="0" data-z="3" data-glow="accent"></div>
+<footer><div class="wrap">Lumorphism, a Quartifex Lab concept. Rendered live in WebGL 2: emission and absorption through the gel's thickness, refraction, softbox gloss, ripples and light spilled on the surface. Headlines are signed distance fields made from the page's own text.</div></footer>
+<script>
+{
+const MAXB = 48, MAXT = 6, MAXR = 10, PAD = 40;
+const HUES = [
+  { n: "Ice", c: [0.42, 0.6, 1.0] },
+  { n: "Neon", c: [0.1, 0.75, 1.0] },
+  { n: "Acid", c: [0.5, 1.0, 0.25] },
+  { n: "Rose", c: [1.0, 0.32, 0.62] },
+  { n: "Amber", c: [1.0, 0.58, 0.14] },
+];
+const PIGS = [
+  { n: "Jet black", c: [0.02, 0.02, 0.028], show: "#08090c" },
+  { n: "Ghost red", c: [0.78, 0.05, 0.16], show: "#7a0d22" },
+  { n: "Ink violet", c: [0.34, 0.08, 0.78], show: "#3c1a8a" },
+  { n: "Clear resin", c: [0.97, 0.98, 0.99], show: "#cfd8e0" },
+];
+const sigOf = (c) => c.map((v) => -Math.log(Math.max(v, 0.004)) * 4.2);
+const CHARGE = [["Lit", 0.9], ["Warm", 0.7], ["Dim", 0.5], ["Low", 0.3], ["Off", 0.1]];
+const BGS = ["table", "gradient", "flow", "depth", "ripple"];
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const S = { accent: 1, amb: 1, ambTo: 1, bg: 0, visc: 0.7, pig: 0, glow: 1, lamp: true };
+const $ = (id) => document.getElementById(id);
+
+$("charge").innerHTML = CHARGE.map(([n, c]) => `<div><span class="gel" data-t="${(1 - c).toFixed(2)}" data-glow="accent" data-pig="mix"></span><b>${n}</b>${Math.round(c * 100)}% glow</div>`).join("");
+$("hues").innerHTML = HUES.map((h, i) => `<button class="gel hue" data-t=".06" data-glow="${i}" aria-pressed="${i === S.accent}"><span class="sr">${h.n}</span></button>`).join("");
+$("pigs").insertAdjacentHTML("beforeend", PIGS.map((p, i) => `<button style="background:${p.show}" aria-pressed="${i === S.pig}" aria-label="${p.n}" title="${p.n}" data-p="${i}"></button>`).join(""));
+function code() {
+  const h = HUES[S.accent].c.map((v) => Math.round(v * 255));
+  $("code").textContent =
+`/* Lumorphism tokens */
+--glow-hue: rgb(${h.join(" ")});     /* ${HUES[S.accent].n} */
+--ink-pigment: ${PIGS[S.pig].n.toLowerCase()};/* the second pigment */
+${CHARGE.map(([n, c]) => `--charge-${n.toLowerCase()}: ${c};`.padEnd(36) + `/* ${Math.round(c * 100)}% glow, ${Math.round((1 - c) * 100)}% ink */`).join("\n")}
+--viscosity: ${S.visc.toFixed(2)};               /* 0 water, 1 tar */
+--glow-strength: ${S.glow.toFixed(2)};
+--gel-meniscus: 14% of the short side, 5px to 36px;
+--gel-merge: 6px;                   /* gap under which shapes flow together */
+--spill-near: 9px; --spill-far: 30px;
+--surface: ${BGS[S.bg]};${" ".repeat(Math.max(1, 20 - BGS[S.bg].length))}/* table | gradient | flow | depth | ripple */
+--room: ${S.ambTo > 0.5 ? "lights-on" : "lights-off"};`;
+}
+code();
+
+/* ---------- WebGL ---------- */
+const cv = $("c");
+const gl = cv.getContext("webgl2", { antialias: false });
+const fs = `#version 300 es
+precision highp float;
+#define MAXB ${MAXB}
+#define MAXT ${MAXT}
+#define MAXR ${MAXR}
+uniform vec2 uRes, uPtr; uniform float uDpr, uTime, uAmb, uVisc, uGlow; uniform int uCount, uTCount, uBg;
+uniform vec3 uAcc;
+uniform vec4 uA[MAXB]; // centre x, y, half width, half height
+uniform vec4 uB[MAXB]; // corner radius, ink share, wobble, layer
+uniform vec4 uC[MAXB]; // glow colour, edge boost
+uniform float uM[MAXB]; // meniscus width
+uniform vec3 uP[MAXB]; // second pigment, as absorption
+uniform sampler2D uAtlas;
+uniform vec4 uTR[MAXT]; // text: screen rect (x, y from bottom, w, h)
+uniform vec4 uTU[MAXT]; // text: atlas rect (u, v from top, w, h)
+uniform vec4 uTB[MAXT]; // text: ink share, layer, edge boost, meniscus
+uniform vec4 uTC[MAXT]; // text: glow colour
+uniform vec4 uRip[MAXR]; // ripples: x, y, age, strength
+out vec4 o;
+const float K = 6.;
+const vec3 SIGB = vec3(16.4); // jet black
+
+float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+float noise(vec2 p){ vec2 i = floor(p), f = fract(p); f = f * f * (3. - 2. * f);
+  return mix(mix(hash(i), hash(i + vec2(1, 0)), f.x), mix(hash(i + vec2(0, 1)), hash(i + vec2(1, 1)), f.x), f.y); }
+float fbm(vec2 p){ float s = 0., a = .5; for (int i = 0; i < 4; i++){ s += a * noise(p); p = p * 2.03 + 7.1; a *= .5; } return s; }
+
+float sdGel(vec2 p, int i){
+  vec4 a = uA[i], b = uB[i];
+  vec2 q = p - a.xy;
+  float r = min(b.x, min(a.z, a.w));
+  vec2 k = abs(q) - a.zw + r;
+  float d = length(max(k, 0.)) + min(max(k.x, k.y), 0.) - r;
+  if (b.z > .001){ float ang = atan(q.y, q.x); d += b.z * min(a.z, a.w) * (.05 * sin(3. * ang + uTime * 7.) + .03 * sin(5. * ang - uTime * 9.)); }
+  return d;
+}
+float sdText(vec2 p, int j){
+  vec4 r = uTR[j];
+  vec2 l = (p - r.xy) / r.zw;
+  if (l.x < 0. || l.y < 0. || l.x > 1. || l.y > 1.){ vec2 q = abs(p - r.xy - r.zw * .5) - r.zw * .5; return length(max(q, 0.)) + ${PAD}.; }
+  vec4 u = uTU[j];
+  return texture(uAtlas, vec2(u.x + l.x * u.z, u.y + (1. - l.y) * u.w)).r;
+}
+float smin(float a, float b, float k){ float h = clamp(.5 + .5 * (b - a) / k, 0., 1.); return mix(b, a, h) - k * h * (1. - h); }
+
+struct Mat { float d; float t; vec3 glow; float rim; float e; vec3 pig; };
+void add(inout Mat m, inout float ws, float di, float t, float z, vec3 g, float rim, float e, vec3 pg, bool first){
+  m.d = first ? di : smin(m.d, di, K);
+  float w = exp(z * 4.) / (1. + exp(di / 2.5));
+  ws += w; m.t += w * t; m.glow += w * g; m.rim += w * rim; m.e += w * e; m.pig += w * pg;
+}
+Mat field(vec2 p){
+  Mat m; m.d = 1e5; m.t = 0.; m.glow = vec3(0.); m.rim = 0.; m.e = 0.; m.pig = vec3(0.);
+  float ws = 0.;
+  for (int i = 0; i < MAXB; i++){ if (i >= uCount) break; add(m, ws, sdGel(p, i), uB[i].y, uB[i].w, uC[i].rgb, uC[i].a, uM[i], uP[i], i == 0); }
+  for (int j = 0; j < MAXT; j++){ if (j >= uTCount) break; add(m, ws, sdText(p, j), uTB[j].x, uTB[j].y, uTC[j].rgb, uTB[j].z, uTB[j].w, SIGB, uCount == 0 && j == 0); }
+  float iw = 1. / max(ws, 1e-6);
+  m.t *= iw; m.glow *= iw; m.rim *= iw; m.e *= iw; m.pig *= iw;
+  return m;
+}
+// ripples: rings that run out from a press, slower and shorter-lived in thicker gel
+float ripple(vec2 p){
+  float h = 0., speed = mix(300., 70., uVisc), damp = mix(.9, 3.2, uVisc), wl = mix(20., 34., uVisc);
+  for (int i = 0; i < MAXR; i++){
+    vec4 r = uRip[i];
+    if (r.w <= 0.) continue;
+    float d = length(p - r.xy), front = r.z * speed;
+    float env = exp(-pow((d - front) / (wl * 1.2), 2.)) * exp(-r.z * damp) / (1. + front * .01);
+    h += r.w * env * sin((d - front) / wl * 6.283);
+  }
+  return h;
+}
+float lift(float d, float E){ float s = clamp(-d / E, 0., 1.); return E * 1.15 * sqrt(max(0., 1. - (1. - s) * (1. - s))); }
+
+vec3 sigA(vec3 g){ return -log(max(1. - (1. - g) * .5, .004)) * 1.1; }
+vec3 emitOf(vec3 g, float t){ return (.04 + .96 * g * g) * 6.5 * uGlow * pow(1. - t, 1.4); }
+vec3 glowOut(vec3 e, vec3 sg, float L){ vec3 x = sg * L; return e * L * mix(vec3(1.), (1. - exp(-x)) / max(x, 1e-4), step(1e-4, x)); }
+
+vec3 env(vec3 r){
+  vec3 l1 = normalize(vec3(-.55, .62, .56)), l2 = normalize(vec3(.82, -.1, .56));
+  float a = smoothstep(.94, .965, dot(r, l1)) * 6. + smoothstep(.962, .978, dot(r, l2)) * 2.5;
+  float sh = pow(max(dot(r, l1), 0.), 10.) * .35 + pow(max(dot(r, l2), 0.), 14.) * .15;
+  // in the dark the gloss still catches a little of the room's glow
+  return vec3(a + sh) * mix(.1, 1., uAmb) + mix(uAcc * .05, vec3(.035, .04, .05), uAmb);
+}
+
+// the surface under everything: five kinds, each in a lit and a dark room
+vec3 surface(vec2 p){
+  vec2 uv = p / uRes;
+  float t = uTime;
+  vec3 day = mix(vec3(.74, .79, .84), vec3(.88, .91, .93), uv.y) * (1. - .22 * length(uv - vec2(.5, .6)));
+  vec3 night = vec3(.0028, .0034, .0052) * (1. - .3 * length(uv - .5));
+  vec3 base = mix(night, day, uAmb);
+  if (uBg == 1){
+    vec2 a = vec2(.3 + .15 * sin(t * .11), .7 + .1 * cos(t * .13)), b = vec2(.75 + .1 * cos(t * .09), .3 + .15 * sin(t * .07));
+    vec3 c1 = uAcc, c2 = uAcc.zxy * .8 + .2, c3 = vec3(1., .75, .55);
+    vec3 g = c1 * exp(-6. * dot(uv - a, uv - a)) + c2 * exp(-5. * dot(uv - b, uv - b)) + c3 * .4 * exp(-8. * dot(uv - vec2(.8, .9), uv - vec2(.8, .9)));
+    base = mix(night + g * .1, day * .82 + g * .28, uAmb);
+  } else if (uBg == 2){
+    vec2 q = p / 420.;
+    float w1 = fbm(q + vec2(t * .03, -t * .02));
+    float w2 = fbm(q * 1.4 + w1 * 2.2 + vec2(-t * .02, t * .025));
+    float vein = smoothstep(.02, 0., abs(w2 - .52));
+    vec3 tint = mix(day, day * mix(vec3(1.), uAcc, .35), w2);
+    base = mix(night * (.6 + w2) + uAcc * vein * .06, tint * (.88 + .18 * w2) + vein * .06, uAmb);
+  } else if (uBg == 3){
+    vec2 s = (p - uRes * .5) / uRes.y;
+    float hz = .2 + uPtr.y * .04;
+    float z = 1. / max(hz - s.y, .004);
+    vec2 g = vec2((s.x + uPtr.x * .06) * z * 1.6, z * .8 + t * .25);
+    vec2 f = abs(fract(g) - .5) / max(fwidth(g), vec2(1e-4));
+    if (s.y < hz){
+      float line = (1. - min(min(f.x, f.y), 1.)) * smoothstep(60., 8., z);
+      float fog = exp(-z * .22);
+      vec3 floorD = day * (.86 + .14 * fog) - line * .1 * fog;
+      vec3 floorN = night + uAcc * line * .25 * fog;
+      base = mix(floorN, floorD, uAmb);
+    } else {
+      float k = s.y - hz;
+      base = mix(night + uAcc * .08 * exp(-k * 14.), mix(vec3(.93, .95, .97), vec3(.8, .85, .9), k * 2.), uAmb);
+    }
+  } else if (uBg == 4){
+    float e = 1.5, h = ripple(p);
+    vec2 n = vec2(ripple(p + vec2(e, 0.)) - h, ripple(p + vec2(0., e)) - h) / e;
+    vec2 q = p + n * 18.;
+    vec2 g = abs(fract(q / 28.) - .5);
+    float dots = smoothstep(.12, .06, length(g));
+    base = base * (1. - .05 * dots * uAmb) + (uAcc * .04 * dots) * (1. - uAmb);
+    float glint = pow(max(0., n.x * -.5 + n.y * .6), 2.) * 2.;
+    base += glint * mix(uAcc * .35, vec3(.5), uAmb);
+  }
+  return base;
+}
+// shadows and spilled glow on top of the surface
+vec3 table(vec2 p){
+  vec3 base = surface(p);
+  Mat s = field(p - vec2(4., -7.));
+  base *= 1. - smoothstep(10., -6., s.d) * mix(.25, .6, s.t) * uAmb;
+  vec3 halo = vec3(0.);
+  for (int i = 0; i < MAXB; i++){
+    if (i >= uCount) break;
+    float di = max(sdGel(p, i), 0.);
+    vec3 g = uC[i].rgb; float t = uB[i].y;
+    vec3 e = glowOut(emitOf(g, t), mix(sigA(g), uP[i], t), 1.) * (1. + uC[i].a);
+    halo += e * (exp(-di / 9.) * .42 + exp(-di / 30.) * .09) * smoothstep(260., 120., di);
+  }
+  for (int j = 0; j < MAXT; j++){
+    if (j >= uTCount) break;
+    float di = max(sdText(p, j), 0.);
+    vec3 g = uTC[j].rgb; float t = uTB[j].x;
+    vec3 e = glowOut(emitOf(g, t), mix(sigA(g), SIGB, t), 1.) * (1. + uTB[j].z);
+    // fades out well inside the field's padding, so no edge of the text's box ever shows
+    halo += e * (exp(-di / 7.) * .25 + exp(-di / 18.) * .06) * smoothstep(${PAD - 4}., ${PAD / 2}., di);
+  }
+  return base + halo;
+}
+// light from every other glowing pour that lands on this one
+vec3 spill(vec2 p){
+  vec3 s = vec3(0.);
+  for (int i = 0; i < MAXB; i++){
+    if (i >= uCount) break;
+    float sd = sdGel(p, i);
+    if (sd > 140.) continue;
+    float out1 = smoothstep(-1., 6., sd), di = max(sd, 0.);
+    vec3 g = uC[i].rgb; float t = uB[i].y;
+    vec3 e = glowOut(emitOf(g, t), mix(sigA(g), uP[i], t), 1.) * (1. + uC[i].a);
+    s += e * out1 * (exp(-di / 12.) * .55 + exp(-di / 38.) * .16) * smoothstep(140., 90., di);
+  }
+  return s;
+}
+// keeps the hue of bright glow instead of washing it to white
+vec3 tone(vec3 c){
+  float m = max(max(c.r, c.g), c.b);
+  float mt = m < .72 ? m : .72 + .28 * (1. - exp(-(m - .72) / .28));
+  vec3 o = c * (mt / max(m, 1e-5));
+  return mix(o, vec3(mt), smoothstep(1.5, 9., m) * .45);
+}
+
+void main(){
+  vec2 p = gl_FragCoord.xy / uDpr;
+  Mat m = field(p);
+  vec3 col;
+  if (m.d > 0.){
+    col = table(p) * (1. - .2 * exp(-m.d / 1.4) * uAmb);
+  } else {
+    float E = max(m.e, 4.), e = 1.25;
+    float h = lift(m.d, E) + ripple(p) * smoothstep(0., E, -m.d);
+    float hx = lift(field(p + vec2(e, 0.)).d, E) + ripple(p + vec2(e, 0.)) * smoothstep(0., E, -m.d);
+    float hy = lift(field(p + vec2(0., e)).d, E) + ripple(p + vec2(0., e)) * smoothstep(0., E, -m.d);
+    vec3 n = normalize(vec3(-(hx - h) / e, -(hy - h) / e, 1.));
+    float L = clamp(h / (E * 1.15), 0., 1.4);
+    // pigment is never perfectly even: slow marbling inside every pour
+    float marble = fbm(p / 70. + vec2(uTime * .04, -uTime * .03) + fbm(p / 140. - uTime * .02) * 1.5);
+    float t = clamp(m.t + (marble - .5) * .22 * (4. * m.t * (1. - m.t) + .25), 0., 1.);
+    vec3 sg = mix(sigA(m.glow), m.pig, t), em = emitOf(m.glow, t) * (.82 + .36 * marble);
+    vec3 under = table(p - n.xy * h * 1.1);
+    vec3 body = glowOut(em, sg, L) + under * exp(-sg * L);
+    float F = .04 + .96 * pow(1. - n.z, 5.);
+    col = body * (1. - F) + env(reflect(vec3(0., 0., -1.), n)) * F;
+    float rim = 1. - clamp(-m.d / E, 0., 1.);
+    col += (em * .5 * exp(-sg * .25) + emitOf(m.glow, 0.) * m.rim * .35) * rim * rim;
+    col += (.5 + .5 * cos(6.283 * (rim * 1.6 + vec3(0., .33, .67)))) * F * .2 * uAmb;
+    // neighbours' glow: caught by the gloss and the rim, and scattered a little in dark gel
+    col += spill(p) * (F * 1.4 + rim * .45 + .1 * t) * (.35 + .65 * t);
+  }
+  o = vec4(pow(tone(col * 1.05), vec3(1. / 2.2)), 1.);
+}`;
+let U = {};
+const atlasTex = gl && gl.createTexture();
+const floatLinear = gl && !!gl.getExtension("OES_texture_float_linear");
+if (!gl) document.documentElement.classList.add("nogl");
+if (gl) {
+  const sh = (t, s) => { const x = gl.createShader(t); gl.shaderSource(x, s); gl.compileShader(x); if (!gl.getShaderParameter(x, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(x)); return x; };
+  const pr = gl.createProgram();
+  gl.attachShader(pr, sh(gl.VERTEX_SHADER, `#version 300 es
+in vec2 a; void main(){ gl_Position = vec4(a, 0., 1.); }`));
+  gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, fs));
+  gl.linkProgram(pr); gl.useProgram(pr);
+  gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+  gl.enableVertexAttribArray(0); gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
+  for (const n of ["uP", "uGlow", "uRes", "uPtr", "uDpr", "uTime", "uAmb", "uVisc", "uCount", "uTCount", "uBg", "uAcc", "uA", "uB", "uC", "uM", "uAtlas", "uTR", "uTU", "uTB", "uTC", "uRip"]) U[n] = gl.getUniformLocation(pr, n);
+  gl.bindTexture(gl.TEXTURE_2D, atlasTex);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  gl.uniform1i(U.uAtlas, 0);
+}
+
+/* ---------- headlines become distance fields (after Felzenszwalb and Huttenlocher, as in Mapbox's tiny-sdf) ---------- */
+const INF = 1e20;
+function edt1d(g, off, stride, len, f, v, z) {
+  v[0] = 0; z[0] = -INF; z[1] = INF; f[0] = g[off];
+  for (let q = 1, k = 0, s = 0; q < len; q++) {
+    f[q] = g[off + q * stride];
+    const q2 = q * q;
+    do { const r = v[k]; s = (f[q] - f[r] + q2 - r * r) / (q - r) / 2; } while (s <= z[k] && --k > -1);
+    k++; v[k] = q; z[k] = s; z[k + 1] = INF;
+  }
+  for (let q = 0, k = 0; q < len; q++) {
+    while (z[k + 1] < q) k++;
+    const r = v[k], qr = q - r;
+    g[off + q * stride] = f[r] + qr * qr;
+  }
+}
+function edt(g, w, h) {
+  const n = Math.max(w, h), f = new Float64Array(n), v = new Uint16Array(n), z = new Float64Array(n + 1);
+  for (let x = 0; x < w; x++) edt1d(g, x, w, h, f, v, z);
+  for (let y = 0; y < h; y++) edt1d(g, y * w, 1, w, f, v, z);
+}
+const texts = [...document.querySelectorAll(".geltext")].map((el) => ({ el, base: +el.dataset.t, t: +el.dataset.t, hover: 0, flare: 0, uv: [0, 0, 0, 0], ok: false }));
+for (const tx of texts) {
+  tx.el.addEventListener("pointerenter", () => { tx.hover = 1; });
+  tx.el.addEventListener("pointerleave", () => { tx.hover = 0; });
+}
+function buildAtlas() {
+  if (!gl) return;
+  // lay each heading's words out exactly where the browser put them
+  const blocks = texts.map((tx) => {
+    const r = tx.el.getBoundingClientRect();
+    return { tx, w: Math.ceil(r.width) + PAD * 2, h: Math.ceil(r.height) + PAD * 2, r };
+  });
+  // drawn at twice the size, so the letters' edges come out smooth rather than stepped
+  const cssW = Math.max(...blocks.map((b) => b.w)), cssH = blocks.reduce((s, b) => s + b.h, 0);
+  const SC = Math.max(1, Math.min(2, 4096 / cssW, 4096 / cssH));
+  const AW = Math.ceil(cssW * SC), AH = Math.ceil(cssH * SC);
+  const c = document.createElement("canvas"); c.width = AW; c.height = AH;
+  const x = c.getContext("2d");
+  x.scale(SC, SC);
+  x.fillStyle = "#fff"; x.textBaseline = "alphabetic";
+  let y0 = 0;
+  for (const b of blocks) {
+    const cs = getComputedStyle(b.tx.el);
+    x.font = `${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
+    if ("letterSpacing" in x) x.letterSpacing = cs.letterSpacing === "normal" ? "0px" : cs.letterSpacing;
+    const asc = x.measureText("Hg").fontBoundingBoxAscent;
+    const walker = document.createTreeWalker(b.tx.el, NodeFilter.SHOW_TEXT);
+    let node;
+    while ((node = walker.nextNode())) {
+      const re = /\S+/g; let mt;
+      while ((mt = re.exec(node.data))) {
+        const rg = document.createRange(); rg.setStart(node, mt.index); rg.setEnd(node, mt.index + mt[0].length);
+        const wr = rg.getBoundingClientRect();
+        x.fillText(mt[0], wr.left - b.r.left + PAD, y0 + wr.top - b.r.top + PAD + asc);
+      }
+    }
+    b.tx.uv = [0, (y0 * SC) / AH, (b.w * SC) / AW, (b.h * SC) / AH];
+    b.tx.pad = PAD; b.tx.ok = true;
+    b.tx.me = Math.max(4, Math.min(9.5, parseFloat(cs.fontSize) * 0.095));
+    y0 += b.h;
+  }
+  const img = x.getImageData(0, 0, AW, AH).data, N = AW * AH;
+  const out = new Float64Array(N), inn = new Float64Array(N);
+  for (let i = 0; i < N; i++) {
+    const a = img[i * 4 + 3] / 255;
+    out[i] = a === 1 ? 0 : a === 0 ? INF : Math.max(0, 0.5 - a) ** 2;
+    inn[i] = a === 1 ? INF : a === 0 ? 0 : Math.max(0, a - 0.5) ** 2;
+  }
+  edt(out, AW, AH); edt(inn, AW, AH);
+  const raw = new Float32Array(N), sd = new Float32Array(N);
+  for (let i = 0; i < N; i++) raw[i] = Math.max(-PAD, Math.min(PAD, (Math.sqrt(out[i]) - Math.sqrt(inn[i])) / SC));
+  // one light blur takes the last of the pixel steps out of the slopes
+  for (let yy = 0; yy < AH; yy++) for (let xx = 0; xx < AW; xx++) {
+    let sum = 0, cnt = 0;
+    for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) {
+      const X = xx + dx, Y = yy + dy;
+      if (X < 0 || Y < 0 || X >= AW || Y >= AH) continue;
+      const w = dx === 0 && dy === 0 ? 4 : dx === 0 || dy === 0 ? 2 : 1;
+      sum += raw[Y * AW + X] * w; cnt += w;
+    }
+    sd[yy * AW + xx] = sum / cnt;
+  }
+  gl.bindTexture(gl.TEXTURE_2D, atlasTex);
+  gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
+  gl.texImage2D(gl.TEXTURE_2D, 0, floatLinear ? gl.R32F : gl.R16F, AW, AH, 0, gl.RED, gl.FLOAT, sd);
+}
+
+/* ---------- every .gel element becomes a pour ---------- */
+const gels = [...document.querySelectorAll(".gel")].map((el) => ({
+  el, base: +el.dataset.t, t: 1, z: +(el.dataset.z || 0), hover: 0, press: 0, focus: 0, flare: 0,
+  s: 0, sv: 0, wob: 0, seen: false, a: reduced ? 1 : 0, av: 0, show: 1,
+}));
+// each pour arrives the first time it scrolls into view
+const io = new IntersectionObserver((es) => { for (const e of es) if (e.isIntersecting) { const g = byEl.get(e.target); if (g) g.seen = true; } }, { rootMargin: "60px" });
+const byEl = new Map(gels.map((g) => [g.el, g]));
+for (const g of gels) io.observe(g.el);
+for (const g of gels) {
+  const target = g.el.closest("button,a,input,.slider") || g.el;
+  target.addEventListener("pointerenter", () => { g.hover = 1; });
+  target.addEventListener("pointerleave", () => { g.hover = 0; g.press = 0; });
+  target.addEventListener("pointerdown", () => { g.press = 1; });
+  target.addEventListener("pointerup", () => { g.press = 0; });
+  target.addEventListener("focusin", () => { g.focus = 1; });
+  target.addEventListener("focusout", () => { g.focus = 0; });
+}
+
+/* ripples start wherever the pointer presses; on the Ripple surface, moving makes them too */
+const rips = [];
+let ptr = { x: 0, y: 0 }, lastRip = 0;
+function addRipple(x, y, a) { rips.push({ x, y: innerHeight - y, age: 0, a }); if (rips.length > MAXR) rips.shift(); }
+addEventListener("pointerdown", (e) => { addRipple(e.clientX, e.clientY, S.bg === 4 ? 7 : 4); });
+addEventListener("pointermove", (e) => {
+  ptr = { x: e.clientX / innerWidth * 2 - 1, y: -(e.clientY / innerHeight * 2 - 1) };
+  const now = performance.now();
+  if (S.bg === 4 && now - lastRip > 90) { lastRip = now; addRipple(e.clientX, e.clientY, 1.6); }
+});
+
+/* switches, segments, sliders, hues, orb */
+function setSwitch(btn, on) { btn.setAttribute("aria-checked", on); byEl.get(btn.querySelector(".knob")).base = on ? 0.06 : 0.7; }
+for (const b of document.querySelectorAll(".toggle")) b.onclick = () => setSwitch(b, b.getAttribute("aria-checked") !== "true");
+const room = $("room");
+room.onclick = () => {
+  const dark = room.getAttribute("aria-checked") !== "true";
+  setSwitch(room, dark); room.setAttribute("aria-label", dark ? "Lights on" : "Lights off");
+  S.ambTo = dark ? 0.02 : 1; code();
+};
+function segment(group, onPick) {
+  const items = [...group.querySelectorAll(".gel")];
+  const pick = (b) => {
+    for (const o of items) { const on = o === b; o.setAttribute("aria-checked", on); byEl.get(o).base = on ? 0.1 : 0.84; byEl.get(o).z = on ? 1 : 0; }
+    onPick?.(b);
+  };
+  items.forEach((b) => { b.onclick = () => pick(b); });
+  pick(items[0]);
+}
+segment($("view"));
+// #lights-off opens the page with the room already dark
+if (location.hash === "#lights-off") { S.amb = 0.02; room.click(); }
+segment($("bg"), (b) => { S.bg = +b.dataset.bg; code(); });
+const viscWord = (v) => (v < 0.2 ? "water" : v < 0.45 ? "syrup" : v < 0.75 ? "honey" : "tar");
+for (const sl of document.querySelectorAll(".slider")) {
+  const inp = sl.querySelector("input");
+  const sync = () => {
+    const v = +inp.value;
+    sl.querySelector(".fill").style.width = v + "%";
+    sl.querySelector(".knob").style.left = v + "%";
+    byEl.get(sl.querySelector(".fill")).base = 0.55 - v * 0.005;
+    if (sl.dataset.key === "visc") { S.visc = v / 100; $("viscv").textContent = viscWord(S.visc); code(); }
+    if (sl.dataset.key === "bright") $("brightv").textContent = v;
+    if (sl.dataset.key === "glow") { S.glow = v / 50; $("glowv").textContent = Math.round(S.glow * 100) + "%"; code(); }
+  };
+  inp.addEventListener("input", sync);
+  sync();
+}
+for (const b of document.querySelectorAll(".hue")) b.onclick = () => {
+  S.accent = +b.dataset.glow;
+  for (const o of document.querySelectorAll(".hue")) o.setAttribute("aria-pressed", o === b);
+  code();
+};
+$("orb").onclick = () => {
+  S.accent = (S.accent + 1) % HUES.length;
+  for (const o of document.querySelectorAll(".hue")) o.setAttribute("aria-pressed", +o.dataset.glow === S.accent);
+  code();
+};
+for (const b of document.querySelectorAll("#pigs button")) b.onclick = () => {
+  S.pig = +b.dataset.p;
+  for (const o of document.querySelectorAll("#pigs button")) o.setAttribute("aria-pressed", o === b);
+  code();
+};
+const lampsw = $("lampsw");
+lampsw.onclick = () => { S.lamp = lampsw.getAttribute("aria-checked") !== "true"; setSwitch(lampsw, S.lamp); };
+setSwitch(lampsw, !reduced); S.lamp = !reduced;
+// checkboxes and radios
+const radios = [...document.querySelectorAll("#radios .check")];
+function syncCheck(c) {
+  const on = c.getAttribute("aria-checked") === "true";
+  const box = c.querySelector(".box");
+  if (box) byEl.get(box).base = on ? 0.06 : 0.85;
+  const dot = c.querySelector(".ring i");
+  if (dot) byEl.get(dot).show = on ? 1 : 0;
+}
+for (const c of document.querySelectorAll(".check")) {
+  const act = () => {
+    if (c.getAttribute("role") === "radio") {
+      for (const r of radios) { r.setAttribute("aria-checked", r === c); r.tabIndex = r === c ? 0 : -1; syncCheck(r); }
+    } else { c.setAttribute("aria-checked", c.getAttribute("aria-checked") !== "true"); syncCheck(c); }
+    const g = byEl.get(c.querySelector(".gel")); if (g) g.flare = 1;
+  };
+  c.onclick = act;
+  c.onkeydown = (e) => {
+    if (e.key === " " || e.key === "Enter") { e.preventDefault(); act(); }
+    if (c.getAttribute("role") === "radio" && /Arrow/.test(e.key)) {
+      e.preventDefault();
+      const nx = radios[(radios.indexOf(c) + (/Right|Down/.test(e.key) ? 1 : radios.length - 1)) % radios.length];
+      nx.focus(); nx.click();
+    }
+  };
+  syncCheck(c);
+}
+// tabs with a sliding drop
+const TABTEXT = ["A drop of glow slides under the open tab and stretches as it travels.", "Charge 90% for the open tab's marker; tabs themselves carry no gel.", "Use arrow keys to move between tabs."];
+const tabBtns = [...document.querySelectorAll("#tabs button")], ind = document.querySelector("#tabs .ind");
+function openTab(b) {
+  tabBtns.forEach((o, i) => { const on = o === b; o.setAttribute("aria-selected", on); o.tabIndex = on ? 0 : -1; if (on) $("tabp").textContent = TABTEXT[i]; });
+  ind.style.left = b.offsetLeft + "px"; ind.style.width = b.offsetWidth + "px";
+  byEl.get(ind).wob = 1; byEl.get(ind).flare = 1;
+}
+tabBtns.forEach((b, i) => {
+  b.onclick = () => openTab(b);
+  b.onkeydown = (e) => { if (/Arrow(Left|Right)/.test(e.key)) { const nx = tabBtns[(i + (e.key === "ArrowRight" ? 1 : tabBtns.length - 1)) % tabBtns.length]; nx.focus(); openTab(nx); } };
+});
+document.fonts.ready.then(() => openTab(tabBtns[0]));
+addEventListener("resize", () => openTab(tabBtns.find((b) => b.getAttribute("aria-selected") === "true")));
+// stepper
+let count = 4;
+function step(d) { count = Math.max(0, Math.min(10, count + d)); $("stepv").textContent = count; byEl.get($("stepv")).base = 0.9 - count * 0.085; byEl.get($("stepv")).flare = 1; }
+$("dec").onclick = () => step(-1); $("inc").onclick = () => step(1); step(0);
+// toast
+const MSGS = ["Saved. Your changes are poured.", "Render finished: 70 million raindrops.", "Two pours merged into one.", "Lights adjusted for the room."];
+let toastTimer = 0, msgI = 0;
+$("toastbtn").onclick = () => {
+  const t = $("toast"); t.textContent = MSGS[msgI++ % MSGS.length];
+  t.classList.add("show"); const g = byEl.get(t); g.a = 0; g.av = 0; g.seen = true; g.show = 1; g.base = 0.08; g.flare = 1;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { g.base = 0.88; }, 1600);
+  setTimeout(() => { g.show = 0; }, 3600);
+  setTimeout(() => { if (!g.show) t.classList.remove("show"); }, 4600);
+};
+// the lamp: a charged drop that follows the pointer at the gel's own pace
+const lamp = $("lamp"), lampG = { x: innerWidth / 2, y: innerHeight / 2, vx: 0, vy: 0, tx: innerWidth / 2, ty: innerHeight / 2 };
+addEventListener("pointermove", (e) => { lampG.tx = e.clientX; lampG.ty = e.clientY; if (S.lamp && e.pointerType === "mouse") lamp.style.display = "block"; });
+document.addEventListener("pointerleave", () => { lamp.style.display = "none"; });
+const loaderDrops = [...document.querySelectorAll("#loader .gel")];
+const well = document.querySelector(".well");
+well.addEventListener("input", () => { byEl.get(well).flare = 1; });
+$("copy").onclick = async (e) => {
+  try { await navigator.clipboard.writeText($("code").textContent); e.target.textContent = "Copied"; }
+  catch { e.target.textContent = "Select the text above to copy"; }
+};
+
+/* ---------- frame ---------- */
+const A = new Float32Array(MAXB * 4), B = new Float32Array(MAXB * 4), C = new Float32Array(MAXB * 4), M = new Float32Array(MAXB);
+const TR = new Float32Array(MAXT * 4), TU = new Float32Array(MAXT * 4), TB = new Float32Array(MAXT * 4), TC = new Float32Array(MAXT * 4);
+const RP = new Float32Array(MAXR * 4), P = new Float32Array(MAXB * 3);
+let W = 0, Hh = 0, dpr = 1;
+function resize(keep) {
+  if (keep !== true) dpr = Math.min(devicePixelRatio || 1, 1.5);
+  W = innerWidth; Hh = innerHeight;
+  cv.width = Math.round(W * dpr); cv.height = Math.round(Hh * dpr);
+  if (gl) gl.viewport(0, 0, cv.width, cv.height);
+}
+let atlasW = 0;
+addEventListener("resize", () => { resize(); if (innerWidth !== atlasW) { atlasW = innerWidth; buildAtlas(); } });
+resize();
+document.fonts.ready.then(() => { atlasW = innerWidth; buildAtlas(); });
+
+let last = performance.now(), clock = 0, progress = 0; const ft = [];
+function frame(now) {
+  const dt = Math.min((now - last) / 1000, 0.05); last = now;
+  if (!reduced) clock += dt;
+  const v = S.visc;
+  S.amb += (S.ambTo - S.amb) * (1 - Math.exp(-dt * 3));
+  document.body.classList.toggle("dark", S.amb < 0.22);
+  progress = (progress + dt * (reduced ? 0 : 0.12)) % 1.15;
+  // lamp follows with a lag set by the viscosity
+  {
+    const kk = 160 * (1 - S.visc) + 18, cc = 2 * 0.9 * Math.sqrt(kk);
+    lampG.vx += (kk * (lampG.tx - lampG.x) - cc * lampG.vx) * dt; lampG.vy += (kk * (lampG.ty - lampG.y) - cc * lampG.vy) * dt;
+    lampG.x += lampG.vx * dt; lampG.y += lampG.vy * dt;
+    if (!S.lamp) lamp.style.display = "none";
+    const sp = Math.min(1, Math.hypot(lampG.vx, lampG.vy) / 900);
+    lamp.style.transform = `translate(${lampG.x - 13}px, ${lampG.y - 13}px) scale(${1 + sp * 0.5}, ${1 - sp * 0.25})`;
+  }
+  // loader: drops orbit and merge
+  loaderDrops.forEach((d, i) => {
+    const ph = clock * 2.6 - i * 0.55, rr = 22 - i * 1.5, sz = 26 - i * 4;
+    d.style.width = d.style.height = sz + "px";
+    d.style.left = 60 + Math.cos(ph) * rr - sz / 2 + "px"; d.style.top = 36 + Math.sin(ph) * rr * 0.7 - sz / 2 + "px";
+  });
+  // keep frames quick: step the resolution down if the device is struggling
+  ft.push(dt); if (ft.length > 40) { const avg = ft.reduce((a, b) => a + b) / ft.length; ft.length = 0; if (avg > 0.024 && dpr > 0.7) { dpr *= 0.85; resize(true); } }
+  $("barfill").style.width = Math.min(100, progress * 100).toFixed(1) + "%";
+  // springs set by viscosity: water snaps and rings, honey and tar ooze
+  const k = 420 * (1 - v) ** 2 + 22, zeta = 0.28 + v * 1.1, c = 2 * zeta * Math.sqrt(k);
+  const rate = 16 * (1 - v) ** 1.5 + 1.6;
+  let n = 0;
+  for (const g of gels) {
+    const r = g.el.getBoundingClientRect();
+    g.flare *= Math.exp(-dt * 3);
+    // pour in: grows from nothing to full size, oozing at the gel's viscosity
+    const aim = g.seen ? g.show : 0;
+    if (reduced) g.a = aim; else { g.av += (k * 0.6 * (aim - g.a) - c * 0.8 * g.av) * dt; g.a += g.av * dt; }
+    if (!reduced) {
+      g.sv += (k * (g.press - g.s) - c * g.sv) * dt; g.s += g.sv * dt;
+      g.wob = Math.min(1, Math.abs(g.sv) * 0.12 * (1.2 - v));
+    } else { g.s = 0; g.wob = 0; }
+    const pulse = g.el.id === "pulse" && !reduced ? 0.25 * (0.5 + 0.5 * Math.sin(clock * 3)) : 0;
+    const disabled = g.el.closest("button")?.disabled;
+    const want = disabled ? g.base : Math.max(0, g.base - g.hover * 0.14 - g.press * 0.25 - g.focus * 0.08 - g.flare * 0.1 + pulse);
+    g.t += (want - g.t) * (1 - Math.exp(-dt * (reduced ? 60 : rate)));
+    g.el.classList.toggle("lit-ink", g.t < 0.45);
+    if (r.width < 1 || r.bottom < -80 || r.top > Hh + 80 || n >= MAXB || g.a < 0.02) continue;
+    const spread = g.s * 4;
+    const cs = getComputedStyle(g.el), rr = cs.borderTopLeftRadius;
+    const rad = rr.endsWith("%") ? (parseFloat(rr) / 100) * r.width : parseFloat(rr) || 0;
+    const hue = g.el.dataset.glow === "accent" ? S.accent : +g.el.dataset.glow;
+    const sc = Math.max(0, g.a);
+    A.set([r.left + r.width / 2, Hh - (r.top + r.height / 2), (r.width / 2) * sc + spread, (r.height / 2) * sc + spread * 0.5], n * 4);
+    B.set([rad + spread * 0.5, g.t, g.wob, g.z], n * 4);
+    C.set([...HUES[hue].c, g.focus * 0.8 + g.flare * 0.8], n * 4);
+    P.set(sigOf(PIGS[g.el.dataset.pig === "mix" ? S.pig : 0].c), n * 3);
+    M[n] = Math.min(36, Math.max(5, Math.min(r.width, r.height) * 0.14)) * (1 - g.s * 0.25);
+    n++;
+  }
+  let tn = 0;
+  for (const tx of texts) {
+    tx.t += (tx.base - tx.hover * 0.2 - tx.t) * (1 - Math.exp(-dt * rate));
+    if (!tx.ok || tn >= MAXT) continue;
+    const r = tx.el.getBoundingClientRect();
+    if (r.bottom < -40 || r.top > Hh + 40) continue;
+    TR.set([r.left - PAD, Hh - r.bottom - PAD, r.width + PAD * 2, r.height + PAD * 2], tn * 4);
+    TU.set(tx.uv, tn * 4);
+    TB.set([tx.t, 0, tx.hover * 0.5, tx.me], tn * 4);
+    TC.set([...HUES[S.accent].c, 0], tn * 4);
+    tn++;
+  }
+  RP.fill(0);
+  for (let i = rips.length - 1; i >= 0; i--) { rips[i].age += dt; if (rips[i].age > 6) rips.splice(i, 1); }
+  if (!reduced) rips.forEach((r, i) => RP.set([r.x, r.y, r.age, r.a], i * 4));
+  if (gl) {
+    gl.uniform2f(U.uRes, W, Hh); gl.uniform2f(U.uPtr, ptr.x, ptr.y);
+    gl.uniform1f(U.uDpr, dpr); gl.uniform1f(U.uTime, clock); gl.uniform1f(U.uAmb, S.amb); gl.uniform1f(U.uVisc, v);
+    gl.uniform1f(U.uGlow, S.glow); gl.uniform3fv(U.uP, P);
+    gl.uniform1i(U.uCount, n); gl.uniform1i(U.uTCount, tn); gl.uniform1i(U.uBg, S.bg);
+    gl.uniform3fv(U.uAcc, HUES[S.accent].c);
+    gl.uniform4fv(U.uA, A); gl.uniform4fv(U.uB, B); gl.uniform4fv(U.uC, C); gl.uniform1fv(U.uM, M);
+    gl.uniform4fv(U.uTR, TR); gl.uniform4fv(U.uTU, TU); gl.uniform4fv(U.uTB, TB); gl.uniform4fv(U.uTC, TC);
+    gl.uniform4fv(U.uRip, RP);
+    gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, atlasTex);
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+  }
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+}
+</script>
+</body>
+</html>

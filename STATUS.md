@@ -899,3 +899,15 @@ the Lab seeds or sit beside them?
 - Checks: `pnpm check` green. In Chromium on an RTX 4070, about 3.5 ms a frame. A single ink drop
   falls as a vortex ring trailing a tail; the smoke plume billows and glows warm at the vent.
 - Not done: stirring by hand was not tried; no phone, Safari or Firefox; sound not listened to.
+
+### 2026-11-25, Lab pieces: Lumorphism, a design language of glowing gel
+
+- New piece at `/pieces/lumorphism`: a live spec for an interface language where controls and
+  headlines are poured gel that glows, merges, ripples and lights its neighbours. Rules, a board
+  of components (buttons, switches, segmented control, sliders, text field, progress, tags,
+  checks and radios, tabs, stepper, loader, toast, card), tokens with a live mixing card, five
+  surfaces, a lamp that follows the pointer, viscosity and glow settings, and a dark room
+  (`#lights-off` opens dark).
+- Checks: `pnpm check` green. Seen in Chromium in both rooms, including the Flow and Depth surfaces.
+- Not done: Gradient and Ripple surfaces, press ripples and the feel of the viscosity were not
+  checked by eye; no phone, Safari or Firefox.

@@ -11,6 +11,7 @@
       "!templates",
       "!apps/lab/src/styles/kit.css",
       "!apps/lab/src/lib/**/*.js",
+      "!apps/lab/public/lumorphism",
       "!**/pnpm-lock.yaml"
     ]
   },

@@ -9,6 +9,11 @@ export const metadata: Metadata = {
 
 const pieces = [
   {
+    slug: "lumorphism",
+    title: "Lumorphism",
+    line: "A design language of glowing gel: controls and headlines poured from light.",
+  },
+  {
     slug: "dhuan",
     title: "Dhuān",
     line: "Smoke and ink in a glass box, as a real 3D fluid you can stir.",
