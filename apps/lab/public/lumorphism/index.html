@@ -41,6 +41,11 @@ section{padding:clamp(48px,7vw,96px) 0}
 .gel{background:transparent;border:0;color:var(--on-dark);font:600 15px/1 Inter,sans-serif;position:relative}
 .gel.lit-ink{color:var(--on-glow)}
 .gel.page-ink{color:var(--ink)}
+.selwrap{display:inline-flex;align-items:center;height:44px;border-radius:22px;padding:0 6px 0 18px}
+.selwrap select{appearance:none;background:transparent;border:0;color:inherit;font:600 15px Inter,sans-serif;padding:0 34px 0 0;height:44px;cursor:pointer;background-image:linear-gradient(45deg,transparent 50%,currentColor 50%),linear-gradient(135deg,currentColor 50%,transparent 50%);background-position:calc(100% - 16px) 20px,calc(100% - 11px) 20px;background-size:5px 5px;background-repeat:no-repeat}
+.selwrap select option,.selwrap select optgroup{color:#111;background:#fff}
+.selwrap select:focus-visible{outline:2px dashed currentColor;outline-offset:6px}
+.mats h3{grid-column:1/-1;margin:18px 0 -6px;color:var(--soft);font:600 14px Inter,sans-serif}
 .stage{position:relative;height:clamp(380px,52vh,520px);margin-top:20px;border:1px solid var(--line);border-radius:28px;touch-action:none;overflow:hidden}
 .stage .drop{position:absolute;left:0;top:0;border-radius:50%;cursor:grab;touch-action:none}
 .stage .drop.held{cursor:grabbing}
@@ -194,14 +199,7 @@ footer{padding:40px 0 60px;color:var(--soft);font-size:13.5px}
    <div><span class="lab" id="lampl">Carry a light</span>
     <button class="gel switch" id="lampsw" role="switch" aria-checked="true" aria-labelledby="lampl" data-t=".86" data-glow="accent"><span class="knob gel" data-t=".06" data-z="1" data-glow="accent"></span></button></div>
    <div><span class="lab" id="matl">Material</span>
-    <div class="seg" id="mat" role="radiogroup" aria-labelledby="matl">
-     <button class="gel" role="radio" data-m="glow" data-t=".1" data-glow="accent" data-mat="glow">Glow</button>
-     <button class="gel" role="radio" data-m="liquid" data-t=".84" data-glow="accent" data-mat="glow">Liquid</button>
-     <button class="gel" role="radio" data-m="clear" data-t=".84" data-glow="accent" data-mat="glow">Clear</button>
-     <button class="gel" role="radio" data-m="syrup" data-t=".84" data-glow="accent" data-mat="glow">Syrup</button>
-     <button class="gel" role="radio" data-m="milk" data-t=".84" data-glow="accent" data-mat="glow">Milk</button>
-     <button class="gel" role="radio" data-m="mercury" data-t=".84" data-glow="accent" data-mat="glow">Mercury</button>
-    </div></div>
+    <span class="gel selwrap" data-t=".84" data-glow="accent" data-mat="glow"><select id="matsel" aria-labelledby="matl"></select></span></div>
    <div><span class="lab">Each pour</span>
     <button class="gel" id="tunebtn" aria-pressed="false" data-t=".55" data-glow="accent">Tune a pour</button></div>
   </div>
@@ -311,15 +309,27 @@ footer{padding:40px 0 60px;color:var(--soft);font-size:13.5px}
 </section>
 
 <section class="wrap" id="materials">
- <h2 class="geltext" data-t=".5" data-glow="accent" data-mat="glow">One model, many liquids.</h2>
- <p class="lede">Glow is only one dial. Turn it off and the gel is a liquid; thin the pigment and it turns clear; scatter the light and it turns to milk; mirror the room and it is mercury. Each pour below is the same material with different dials, whatever the page is set to.</p>
+ <h2 class="geltext" data-t=".5" data-glow="accent" data-mat="glow">One model, every material.</h2>
+ <p class="lede">Every material here is the same substance with different dials. State runs it from gas through liquid and gel to solid; glow, clarity, refraction, metal, milk, roughness, specular and tint do the rest. Each one below keeps its own dials, whatever the page is set to.</p>
  <div class="mats">
+  <h3>Gas</h3>
+  <div class="mat"><div class="gel" data-t=".3" data-glow="accent" data-mat="smoke">Smoke</div><p>A gas: no surface, a soft drifting edge, light passes through it.</p></div>
+  <div class="mat"><div class="gel" data-t=".1" data-glow="accent" data-mat="plasma">Neon gas</div><p>A glowing gas, like the light in a neon tube.</p></div>
+  <h3>Liquid</h3>
   <div class="mat"><div class="gel" data-t=".1" data-glow="accent" data-mat="glow">Glow gel</div><p>Emits its own light, which spills onto everything near it.</p></div>
   <div class="mat"><div class="gel" data-t=".12" data-glow="accent" data-mat="liquid">Liquid</div><p>Glow at zero: a coloured liquid that only shows the light it is given.</p></div>
   <div class="mat"><div class="gel" data-t=".2" data-glow="accent" data-mat="clear">Clear water</div><p>Almost no pigment: it bends what is behind it and focuses light into its shadow.</p></div>
-  <div class="mat"><div class="gel" data-t=".3" data-glow="4" data-mat="syrup" data-pig="1">Tinted syrup</div><p>Thin colour, thick refraction, the warm look of honey or glass.</p></div>
+  <div class="mat"><div class="gel" data-t=".3" data-glow="4" data-pig="1" data-mat="syrup">Tinted syrup</div><p>Thin colour, thick refraction, the warm look of honey.</p></div>
   <div class="mat"><div class="gel" data-t=".2" data-glow="accent" data-mat="milk">Milk</div><p>Light scatters inside it, so it is soft, bright and opaque.</p></div>
-  <div class="mat"><div class="gel" data-t=".5" data-glow="accent" data-mat="mercury">Mercury</div><p>A liquid mirror of the room and the surface around it.</p></div>
+  <div class="mat"><div class="gel" data-t=".5" data-glow="accent" data-mat="mercury">Mercury</div><p>An opaque liquid mirror of the room above it.</p></div>
+  <h3>Gel</h3>
+  <div class="mat"><div class="gel" data-t=".04" data-glow="accent" data-pig="3" data-mat="jelly">Jelly</div><p>Between liquid and solid: it holds its shape but still wobbles.</p></div>
+  <h3>Solid</h3>
+  <div class="mat"><div class="gel" data-t=".15" data-glow="accent" data-mat="glass">Glass</div><p>A clear solid: sharp gloss, strong bending, a little colour split at the edges.</p></div>
+  <div class="mat"><div class="gel" data-t=".15" data-glow="accent" data-hue="12" data-mat="plastic">Plastic</div><p>An opaque coloured solid with a soft sheen.</p></div>
+  <div class="mat"><div class="gel" data-t=".2" data-glow="accent" data-hue="150" data-mat="rubber">Rubber</div><p>A matte, deep-coloured solid that barely shines.</p></div>
+  <div class="mat"><div class="gel" data-t=".2" data-glow="accent" data-mat="ceramic">Ceramic</div><p>A white glazed solid with a crisp highlight.</p></div>
+  <div class="mat"><div class="gel" data-t=".5" data-glow="accent" data-mat="chrome">Chrome</div><p>A solid mirror, harder and sharper than mercury.</p></div>
  </div>
 </section>
 
@@ -380,6 +390,10 @@ footer{padding:40px 0 60px;color:var(--soft);font-size:13.5px}
   <label>Edge glow <output id="o-rim"></output><input type="range" id="i-rim" min="0" max="150" step="1"></label>
   <label>Overflow on touch <output id="o-over"></output><input type="range" id="i-over" min="0" max="30" step="0.5"></label>
   <label>Bounce <output id="o-bounce"></output><input type="range" id="i-bounce" min="0" max="100" step="1"></label>
+  <label>State <output id="o-state"></output><input type="range" id="i-state" min="0" max="100" step="1"></label>
+  <label>Roughness <output id="o-rough"></output><input type="range" id="i-rough" min="0" max="100" step="1"></label>
+  <label>Specular <output id="o-spec"></output><input type="range" id="i-spec" min="0" max="200" step="1"></label>
+  <label>Colour in body <output id="o-tint"></output><input type="range" id="i-tint" min="0" max="100" step="1"></label>
   <div class="sub">Material</div>
   <div class="opts" id="i-mats"></div>
   <label>Clarity <output id="o-dens"></output><input type="range" id="i-dens" min="0" max="100" step="1"></label>
@@ -418,14 +432,26 @@ const CHARGE = [["Lit", 0.9], ["Warm", 0.7], ["Dim", 0.5], ["Low", 0.3], ["Off",
 const BGS = ["table", "gradient", "flow", "depth", "ripple"];
 const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
 // one model, many liquids: each material is a set of dials on the same gel
+// one model, many materials: each is a set of dials on the same substance.
+// state runs from gas (0) through liquid (about .4) and gel (.65) to solid (1)
+const M0 = { gain: 0, dens: 1, refr: 1.2, metal: 0, milk: 0, state: 0.4, rough: 0, spec: 1, tint: 0.2 };
 const MATS = {
-  glow:    { n: "Glow gel",     gain: 1, dens: 1,    refr: 1.1, metal: 0, milk: 0,    shade: 0.42, caus: 0,    ink: "glow" },
-  liquid:  { n: "Liquid",       gain: 0, dens: 1,    refr: 1.4, metal: 0, milk: 0,    shade: 0.42, caus: 0,    ink: "glow" },
-  clear:   { n: "Clear water",  gain: 0, dens: 0.03, refr: 3.4, metal: 0, milk: 0,    shade: 0.12, caus: 0.5,  ink: "page" },
-  syrup:   { n: "Tinted syrup", gain: 0, dens: 0.3,  refr: 2.4, metal: 0, milk: 0,    shade: 0.22, caus: 0.28, ink: "page" },
-  milk:    { n: "Milk",         gain: 0, dens: 0.6,  refr: 0.8, metal: 0, milk: 0.88, shade: 0.38, caus: 0,    ink: "milk" },
-  mercury: { n: "Mercury",      gain: 0, dens: 1,    refr: 0,   metal: 1, milk: 0,    shade: 0.5,  caus: 0,    ink: "page" },
+  smoke:   { ...M0, n: "Smoke",        group: "Gas",    dens: 0.35, refr: 0, milk: 0.5, state: 0.04, rough: 1, spec: 0, tint: 0.05 },
+  plasma:  { ...M0, n: "Neon gas",     group: "Gas",    gain: 1.3, dens: 0.18, refr: 0, state: 0.08, rough: 1, spec: 0 },
+  glow:    { ...M0, n: "Glow gel",     group: "Liquid", gain: 1, refr: 1.1, state: 0.5 },
+  liquid:  { ...M0, n: "Liquid",       group: "Liquid", refr: 1.4 },
+  clear:   { ...M0, n: "Clear water",  group: "Liquid", dens: 0.03, refr: 3.4, state: 0.35 },
+  syrup:   { ...M0, n: "Tinted syrup", group: "Liquid", dens: 0.3, refr: 2.4, state: 0.55 },
+  milk:    { ...M0, n: "Milk",         group: "Liquid", dens: 0.6, refr: 0.8, milk: 0.88, state: 0.38, spec: 0.8, tint: 0.12 },
+  mercury: { ...M0, n: "Mercury",      group: "Liquid", refr: 0, metal: 1, state: 0.35 },
+  jelly:   { ...M0, n: "Jelly",        group: "Gel",    dens: 0.35, refr: 1.7, milk: 0.12, state: 0.66, rough: 0.12 },
+  glass:   { ...M0, n: "Glass",        group: "Solid",  dens: 0.02, refr: 3, state: 1, spec: 1.35 },
+  plastic: { ...M0, n: "Plastic",      group: "Solid",  refr: 0, milk: 1, state: 1, rough: 0.22, spec: 0.9, tint: 0.88 },
+  rubber:  { ...M0, n: "Rubber",       group: "Solid",  refr: 0, milk: 1, state: 0.95, rough: 0.85, spec: 0.25, tint: 0.75 },
+  ceramic: { ...M0, n: "Ceramic",      group: "Solid",  refr: 0, milk: 1, state: 1, rough: 0.06, spec: 1.1, tint: 0.08 },
+  chrome:  { ...M0, n: "Chrome",       group: "Solid",  refr: 0, metal: 1, state: 1, rough: 0, spec: 1, tint: 0 },
 };
+const STATE_WORD = (v) => (v < 0.2 ? "gas" : v < 0.5 ? "liquid" : v < 0.75 ? "gel" : v < 0.9 ? "soft solid" : "solid");
 const S = { accent: 1, amb: 1, ambTo: 1, bg: 0, visc: 0.7, pig: 0, glow: 1, lamp: true, mat: "glow", over: 7, bounce: 0.3, bounceAuto: true };
 const $ = (id) => document.getElementById(id);
 
@@ -441,7 +467,7 @@ function code() {
 ${CHARGE.map(([n, c]) => `--charge-${n.toLowerCase()}: ${c};`.padEnd(36) + `/* ${Math.round(c * 100)}% glow, ${Math.round((1 - c) * 100)}% ink */`).join("\n")}
 --viscosity: ${S.visc.toFixed(2)};               /* 0 water, 1 tar */
 --glow-strength: ${S.glow.toFixed(2)};
---material: ${S.mat};${" ".repeat(Math.max(1, 19 - S.mat.length))}/* glow | liquid | clear | syrup | milk | mercury */
+--material: ${S.mat};${" ".repeat(Math.max(1, 19 - S.mat.length))}/* ${Object.keys(MATS).join(" | ")} */
 --gel-meniscus: 14% of the short side, 5px to 36px;
 --gel-merge: 6px;                   /* gap under which shapes flow together */
 --spill-near: 9px; --spill-far: 30px;
@@ -469,6 +495,8 @@ uniform vec2 uG[MAXB]; // glow strength, spill reach (per pour)
 uniform vec4 uQ[MAXB]; // material: pigment density, refraction, metal, milk (per pour)
 uniform vec4 uTQ[MAXT]; // the same, for headlines
 uniform float uTS[MAXT]; // how far each headline has swelled
+uniform vec4 uF[MAXB]; // state (0 gas, .4 liquid, 1 solid), roughness, specular, tint (per pour)
+uniform vec4 uTF[MAXT]; // the same, for headlines
 uniform sampler2D uAtlas;
 uniform vec4 uTR[MAXT]; // text: screen rect (x, y from bottom, w, h)
 uniform vec4 uTU[MAXT]; // text: atlas rect (u, v from top, w, h)
@@ -491,6 +519,8 @@ float sdGel(vec2 p, int i){
   vec2 k = abs(q) - a.zw + r;
   float d = length(max(k, 0.)) + min(max(k.x, k.y), 0.) - r;
   if (b.z > .001){ float ang = atan(q.y, q.x); d += b.z * min(a.z, a.w) * (.05 * sin(3. * ang + uTime * 7.) + .03 * sin(5. * ang - uTime * 9.)); }
+  float gas = 1. - smoothstep(.05, .3, uF[i].x);
+  if (gas > .01){ vec2 w = p / 46. + vec2(uTime * .35, -uTime * .22) + float(i) * 7.3; d += (noise(w) + .5 * noise(w * 2.1) - .75) * gas * min(a.z, a.w) * .55; }
   return d;
 }
 float sdText(vec2 p, int j){
@@ -502,25 +532,27 @@ float sdText(vec2 p, int j){
 }
 float smin(float a, float b, float k){ float h = clamp(.5 + .5 * (b - a) / k, 0., 1.); return mix(b, a, h) - k * h * (1. - h); }
 
-struct Mat { float d; float t; vec3 glow; float rim; float e; vec3 pig; float gain; vec4 q; };
-void add(inout Mat m, inout float ws, float di, float t, float z, vec3 g, float rim, float e, vec3 pg, float gn, vec4 q, bool first){
-  m.d = first ? di : smin(m.d, di, K);
+struct Mat { float d; float t; vec3 glow; float rim; float e; vec3 pig; float gain; vec4 q; vec4 f; };
+// how readily a pour flows into its neighbours: gases and liquids merge, solids stay apart
+float mergeK(float st){ return mix(mix(18., 6., smoothstep(0., .35, st)), .35, smoothstep(.72, .92, st)); }
+void add(inout Mat m, inout float ws, float di, float t, float z, vec3 g, float rim, float e, vec3 pg, float gn, vec4 q, vec4 f, bool first){
+  m.d = first ? di : smin(m.d, di, mergeK(f.x));
   float w = exp(z * 4.) / (1. + exp(di / 2.5));
-  ws += w; m.t += w * t; m.glow += w * g; m.rim += w * rim; m.e += w * e; m.pig += w * pg; m.gain += w * gn; m.q += w * q;
+  ws += w; m.t += w * t; m.glow += w * g; m.rim += w * rim; m.e += w * e; m.pig += w * pg; m.gain += w * gn; m.q += w * q; m.f += w * f;
 }
 Mat field(vec2 p){
-  Mat m; m.d = 1e5; m.t = 0.; m.glow = vec3(0.); m.rim = 0.; m.e = 0.; m.pig = vec3(0.); m.gain = 0.; m.q = vec4(0.);
+  Mat m; m.d = 1e5; m.t = 0.; m.glow = vec3(0.); m.rim = 0.; m.e = 0.; m.pig = vec3(0.); m.gain = 0.; m.q = vec4(0.); m.f = vec4(0.);
   float ws = 0.;
-  for (int i = 0; i < MAXB; i++){ if (i >= uCount) break; add(m, ws, sdGel(p, i), uB[i].y, uB[i].w, uC[i].rgb, uC[i].a, uM[i], uP[i], uG[i].x, uQ[i], i == 0); }
-  for (int j = 0; j < MAXT; j++){ if (j >= uTCount) break; add(m, ws, sdText(p, j), uTB[j].x, uTB[j].y, uTC[j].rgb, uTB[j].z, uTB[j].w, SIGB, uTC[j].a, uTQ[j], uCount == 0 && j == 0); }
+  for (int i = 0; i < MAXB; i++){ if (i >= uCount) break; add(m, ws, sdGel(p, i), uB[i].y, uB[i].w, uC[i].rgb, uC[i].a, uM[i], uP[i], uG[i].x, uQ[i], uF[i], i == 0); }
+  for (int j = 0; j < MAXT; j++){ if (j >= uTCount) break; add(m, ws, sdText(p, j), uTB[j].x, uTB[j].y, uTC[j].rgb, uTB[j].z, uTB[j].w, SIGB, uTC[j].a, uTQ[j], uTF[j], uCount == 0 && j == 0); }
   float iw = 1. / max(ws, 1e-6);
-  m.t *= iw; m.glow *= iw; m.rim *= iw; m.e *= iw; m.pig *= iw; m.gain *= iw; m.q *= iw;
+  m.t *= iw; m.glow *= iw; m.rim *= iw; m.e *= iw; m.pig *= iw; m.gain *= iw; m.q *= iw; m.f *= iw;
   return m;
 }
 float fieldD(vec2 p){
   float d = 1e5;
-  for (int i = 0; i < MAXB; i++){ if (i >= uCount) break; float di = sdGel(p, i); d = i == 0 ? di : smin(d, di, K); }
-  for (int j = 0; j < MAXT; j++){ if (j >= uTCount) break; float di = sdText(p, j); d = (uCount == 0 && j == 0) ? di : smin(d, di, K); }
+  for (int i = 0; i < MAXB; i++){ if (i >= uCount) break; float di = sdGel(p, i); d = i == 0 ? di : smin(d, di, mergeK(uF[i].x)); }
+  for (int j = 0; j < MAXT; j++){ if (j >= uTCount) break; float di = sdText(p, j); d = (uCount == 0 && j == 0) ? di : smin(d, di, mergeK(uTF[j].x)); }
   return d;
 }
 // ripples: rings that run out from a press, slower and shorter-lived in thicker gel
@@ -541,9 +573,12 @@ vec3 sigA(vec3 g){ return -log(max(1. - (1. - g) * .5, .004)) * 1.1; }
 vec3 emitOf(vec3 g, float t){ return (.04 + .96 * g * g) * 6.5 * uGlow * pow(1. - t, 1.4); }
 vec3 glowOut(vec3 e, vec3 sg, float L){ vec3 x = sg * L; return e * L * mix(vec3(1.), (1. - exp(-x)) / max(x, 1e-4), step(1e-4, x)); }
 
-vec3 env(vec3 r){
+vec3 envR(vec3 r, float rough);
+vec3 env(vec3 r){ return envR(r, 0.); }
+vec3 envR(vec3 r, float rough){
   vec3 l1 = normalize(vec3(-.55, .62, .56)), l2 = normalize(vec3(.82, -.1, .56));
-  float a = smoothstep(.94, .965, dot(r, l1)) * 6. + smoothstep(.962, .978, dot(r, l2)) * 2.5;
+  float w = rough * .32, amp = 1. / (1. + rough * 7.);
+  float a = (smoothstep(.94 - w, .965, dot(r, l1)) * 6. + smoothstep(.962 - w, .978, dot(r, l2)) * 2.5) * amp;
   float sh = pow(max(dot(r, l1), 0.), 10.) * .35 + pow(max(dot(r, l2), 0.), 14.) * .15;
   // in the dark the gloss still catches a little of the room's glow
   return vec3(a + sh) * mix(.1, 1., uAmb) + mix(uAcc * .05, vec3(.035, .04, .05), uAmb);
@@ -602,7 +637,7 @@ vec3 table(vec2 p){
   // each pour's own material sets its shadow: dense and metal ones block the light, clear ones
   // let it through and focus it into a bright band inside the shadow
   Mat s = field(p - vec2(4., -7.));
-  float dense = max(smoothstep(.04, .6, s.q.x), max(s.q.z, s.q.w * .8));
+  float dense = max(smoothstep(.04, .6, s.q.x), max(s.q.z, s.q.w * .8)) * (1. - (1. - smoothstep(.05, .3, s.f.x)) * .85);
   base *= 1. - smoothstep(10., -6., s.d) * mix(.1, .45, dense) * uAmb;
   float caus = (1. - dense) * .55;
   if (caus > .01) base += smoothstep(-1., -6., s.d) * smoothstep(-24., -8., s.d) * caus * uAmb * mix(vec3(.9, .95, 1.), s.glow, .35);
@@ -624,6 +659,14 @@ vec3 table(vec2 p){
     halo += e * (exp(-di / 7.) * .25 + exp(-di / 18.) * .06) * smoothstep(${PAD - 4}., ${PAD / 2}., di);
   }
   return base + halo;
+}
+// what a mirror sees overhead: a soft studio dome with its two softboxes
+vec3 dome(vec3 r, float rough){
+  // a darker ceiling with a little structure, so a mirror reads as metal and not as a pale fill
+  vec2 dir = r.xy / max(r.z, .25);
+  float room = noise(dir * 2.2 + 3.1) * .5 + noise(dir * 5.3) * .25;
+  vec3 sky = mix(vec3(.02, .022, .03), mix(vec3(.16, .17, .2), vec3(.46, .48, .53), smoothstep(.55, 1., r.z) * (.75 + room * .5)), uAmb);
+  return sky + envR(r, rough) * .95;
 }
 // light from every other glowing pour that lands on this one
 vec3 spill(vec2 p){
@@ -649,43 +692,53 @@ vec3 tone(vec3 c){
 }
 
 vec3 gel(vec2 p, Mat m){
+  vec4 q = m.q, f = m.f; // q: density, refraction, metal, milk; f: state, roughness, specular, tint
+  float gas = 1. - smoothstep(.05, .3, f.x), solid = smoothstep(.72, .92, f.x);
   float E = max(m.e, 4.), e = 1.;
   float inside = smoothstep(0., E, -m.d);
-  float h = lift(m.d, E) + ripple(p) * inside;
-  float hx = lift(fieldD(p + vec2(e, 0.)), E) + ripple(p + vec2(e, 0.)) * inside;
-  float hy = lift(fieldD(p + vec2(0., e)), E) + ripple(p + vec2(0., e)) * inside;
+  float rip = (1. - solid) * (1. - gas);
+  float h = lift(m.d, E) + ripple(p) * inside * rip;
+  float hx = lift(fieldD(p + vec2(e, 0.)), E) + ripple(p + vec2(e, 0.)) * inside * rip;
+  float hy = lift(fieldD(p + vec2(0., e)), E) + ripple(p + vec2(0., e)) * inside * rip;
   vec3 n = normalize(vec3(-(hx - h) / e, -(hy - h) / e, 1.));
-  float L = clamp(h / (E * 1.15), 0., 1.4);
-  // pigment is never perfectly even: slow marbling inside every pour
-  float marble = fbm(p / 70. + vec2(uTime * .04, -uTime * .03) + fbm(p / 140. - uTime * .02) * 1.5);
+  n = normalize(mix(n, vec3(0., 0., 1.), gas));
+  // a gas has no surface: its depth is how far inside the cloud we are
+  float L = mix(clamp(h / (E * 1.15), 0., 1.4), smoothstep(0., 48., -m.d) * 1.2, gas);
+  // pigment is never perfectly even: slow marbling inside every pour (gases churn faster)
+  float marble = fbm(p / mix(70., 44., gas) + vec2(uTime * .04, -uTime * .03) * (1. + gas * 4.) + fbm(p / 140. - uTime * .02) * 1.5);
   float t = clamp(m.t + (marble - .5) * .22 * (4. * m.t * (1. - m.t) + .25), 0., 1.);
-  vec4 q = m.q; // density, refraction, metal, milk
-  vec3 sg = mix(sigA(m.glow), m.pig, t) * q.x, em = emitOf(m.glow, t) * m.gain * (.82 + .36 * marble);
-  vec3 under = table(p - n.xy * h * 1.1 * q.y);
+  vec3 sg = mix(sigA(m.glow), m.pig, t) * q.x * mix(1., .4 + marble * 1.2, gas), em = emitOf(m.glow, t) * m.gain * (.82 + .36 * marble);
+  vec2 off = n.xy * h * 1.1 * q.y * (1. - gas);
+  vec3 under = table(p - off);
+  // a solid clear body splits white light a little at its edges
+  if (solid > .5 && q.y > 2.) under = vec3(table(p - off * 1.05).r, under.g, table(p - off * .95).b);
   vec3 body = glowOut(em, sg, L) + under * exp(-sg * L);
-  // milk: light scatters inside and the body turns soft and opaque, lit by the room
-  vec3 lit = mix(vec3(.05, .055, .07), vec3(.96, .96, .95), uAmb) * (.62 + .38 * max(dot(n, normalize(vec3(-.4, .5, .77))), 0.));
-  body = mix(body, lit * mix(vec3(1.), m.glow, .22) * (1. - .45 * t * q.x) + em * .35, q.w);
-  float F = mix(.04, .02, q.w) + .96 * pow(1. - n.z, 5.);
+  // opaque bodies (milk, plastic, ceramic, rubber) keep their own colour in any room
+  float sh = .72 + .28 * max(dot(n, normalize(vec3(-.4, .5, .77))), 0.);
+  vec3 albedo = mix(vec3(.95, .95, .93), m.glow * .88 + .06, f.w);
+  vec3 opaque = albedo * sh * mix(.9, 1., uAmb) * (1. - .45 * t * q.x) + em * .35;
+  body = mix(body, opaque, q.w);
+  float F = (mix(.04, .025, q.w) + .96 * pow(1. - n.z, 5.)) * f.z * (1. - gas);
   vec3 r = reflect(vec3(0., 0., -1.), n);
-  vec3 col = body * (1. - F) + env(r) * F;
-  // metal: a mirror of the room and the surface around it
-  vec3 mirror = table(p + n.xy * (18. + h * 3.)) * vec3(.82, .85, .9) + env(r) * .9 + vec3(.04) * uAmb;
+  vec3 col = body * (1. - F) + envR(r, f.y) * F;
+  // metal is opaque: overhead it mirrors the studio dome, at the steep rim the surface around it
+  float graze = smoothstep(.15, .7, 1. - n.z);
+  vec3 tint = mix(vec3(.84, .86, .9), m.glow * .7 + .3, .25 * f.w);
+  vec3 mirror = mix(dome(r, f.y), table(p + n.xy * (14. + h * 2.)) * 1.1, graze) * tint;
   col = mix(col, mirror, q.z);
   float rim = 1. - clamp(-m.d / E, 0., 1.);
   col += (em * .5 * exp(-sg * .25) + emitOf(m.glow, 0.) * m.gain * m.rim * .35) * rim * rim;
-  col += (.5 + .5 * cos(6.283 * (rim * 1.6 + vec3(0., .33, .67)))) * F * .2 * uAmb;
+  col += (.5 + .5 * cos(6.283 * (rim * 1.6 + vec3(0., .33, .67)))) * F * .2 * uAmb * (1. - q.z);
   // neighbours' glow: caught by the gloss and the rim, and scattered a little in dark gel
-  col += spill(p) * (F * 1.4 + rim * .45 + .1 * t) * (.35 + .65 * t);
+  col += spill(p) * (F * 1.4 + rim * .45 + .1 * t + q.z * .6) * (.35 + .65 * t);
   return col;
 }
-
 void main(){
   vec2 p = gl_FragCoord.xy / uDpr;
   Mat m = field(p);
   // edges are blended across one device pixel, so outlines come out smooth, not stepped
-  float aw = .75 / uDpr;
-  float cover = smoothstep(aw, -aw, m.d);
+  float aw = .75 / uDpr, gas = 1. - smoothstep(.05, .3, m.f.x), gw = gas * 26.;
+  float cover = smoothstep(aw + gw * .3, -aw - gw, m.d);
   vec3 col = vec3(0.);
   if (cover < 1.) col = table(p) * (1. - .2 * exp(-max(m.d, 0.) / 1.4) * uAmb);
   if (cover > 0.) col = mix(col, gel(p, m), cover);
@@ -705,7 +758,7 @@ in vec2 a; void main(){ gl_Position = vec4(a, 0., 1.); }`));
   gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
   gl.enableVertexAttribArray(0); gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
-  for (const n of ["uTS", "uQ", "uTQ", "uG", "uP", "uGlow", "uRes", "uPtr", "uDpr", "uTime", "uAmb", "uVisc", "uCount", "uTCount", "uBg", "uAcc", "uA", "uB", "uC", "uM", "uAtlas", "uTR", "uTU", "uTB", "uTC", "uRip"]) U[n] = gl.getUniformLocation(pr, n);
+  for (const n of ["uF", "uTF", "uTS", "uQ", "uTQ", "uG", "uP", "uGlow", "uRes", "uPtr", "uDpr", "uTime", "uAmb", "uVisc", "uCount", "uTCount", "uBg", "uAcc", "uA", "uB", "uC", "uM", "uAtlas", "uTR", "uTU", "uTB", "uTC", "uRip"]) U[n] = gl.getUniformLocation(pr, n);
   gl.bindTexture(gl.TEXTURE_2D, atlasTex);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
@@ -807,17 +860,17 @@ function buildAtlas() {
 // data-hue (custom hue in degrees), data-pig (second pigment 0 to 3, or "mix")
 function readTune(el) {
   const d = el.dataset, num = (v) => (v === undefined || v === "" ? null : +v);
-  return { gain: num(d.gain), reach: num(d.reach), e: num(d.e), rim: num(d.rim), hue: num(d.hue), dens: num(d.dens), refr: num(d.refr), metal: num(d.metal), milk: num(d.milk), over: num(d.overflow), bounce: num(d.bounce), rgb: null };
+  return { gain: num(d.gain), reach: num(d.reach), e: num(d.e), rim: num(d.rim), hue: num(d.hue), dens: num(d.dens), refr: num(d.refr), metal: num(d.metal), milk: num(d.milk), over: num(d.overflow), bounce: num(d.bounce), state: num(d.state), rough: num(d.rough), spec: num(d.spec), tint: num(d.tint), rgb: null };
 }
 const matOf = (el) => MATS[el.dataset.mat] || MATS[S.mat];
 // a pour's dials: its own settings first, then its material's
 function dials(el, tu) {
   const m = matOf(el);
-  return { gain: tu.gain ?? m.gain, dens: tu.dens ?? m.dens, refr: tu.refr ?? m.refr, metal: tu.metal ?? m.metal, milk: tu.milk ?? m.milk };
+  return { gain: tu.gain ?? m.gain, dens: tu.dens ?? m.dens, refr: tu.refr ?? m.refr, metal: tu.metal ?? m.metal, milk: tu.milk ?? m.milk,
+    state: tu.state ?? m.state, rough: tu.rough ?? m.rough, spec: tu.spec ?? m.spec, tint: tu.tint ?? m.tint };
 }
 function inkFor(el, t, dl) {
-  const m = matOf(el);
-  if (dl.metal > 0.5 || (dl.gain < 0.05 && dl.dens < 0.5) || m.ink === "page") return "page";
+  if (dl.metal > 0.5 || (dl.gain < 0.05 && dl.dens < 0.5 && dl.milk < 0.5)) return "page";
   if (dl.milk > 0.5) return "milk";
   return t < 0.45 && dl.gain > 0.05 ? "glow" : t < 0.45 ? "page" : "dark";
 }
@@ -1029,6 +1082,10 @@ function fill() {
   set("refr", Math.round(dl.refr * 100), Math.round(dl.refr * 100) + "%");
   set("metal", Math.round(dl.metal * 100), Math.round(dl.metal * 100) + "%");
   set("milk", Math.round(dl.milk * 100), Math.round(dl.milk * 100) + "%");
+  set("state", Math.round(dl.state * 100), STATE_WORD(dl.state));
+  set("rough", Math.round(dl.rough * 100), Math.round(dl.rough * 100) + "%");
+  set("spec", Math.round(dl.spec * 100), Math.round(dl.spec * 100) + "%");
+  set("tint", Math.round(dl.tint * 100), Math.round(dl.tint * 100) + "%");
   set("over", tu.over ?? S.over, (tu.over ?? S.over) + " px" + (tu.over == null ? " (page)" : ""));
   set("bounce", Math.round((tu.bounce ?? S.bounce) * 100), Math.round((tu.bounce ?? S.bounce) * 100) + "%" + (tu.bounce == null ? " (page)" : ""));
   set("gain", Math.round(dl.gain * 100), Math.round(dl.gain * 100) + "%");
@@ -1050,6 +1107,7 @@ function fill() {
   if (tu.metal != null) attrs.push(`data-metal="${tu.metal.toFixed(2)}"`);
   if (tu.milk != null) attrs.push(`data-milk="${tu.milk.toFixed(2)}"`);
   if (tu.over != null) attrs.push(`data-overflow="${tu.over}"`);
+  for (const k of ["state", "rough", "spec", "tint"]) if (tu[k] != null) attrs.push(`data-${k}="${tu[k].toFixed(2)}"`);
   if (tu.bounce != null) attrs.push(`data-bounce="${tu.bounce.toFixed(2)}"`);
   if (d.z) attrs.push(`data-z="${d.z}"`);
   $("iattr").textContent = attrs.join(" ");
@@ -1064,12 +1122,16 @@ bind("dens", (v) => { sel.tune.dens = (1 - v / 100) ** 2; });
 bind("refr", (v) => { sel.tune.refr = v / 100; });
 bind("metal", (v) => { sel.tune.metal = v / 100; });
 bind("milk", (v) => { sel.tune.milk = v / 100; });
+bind("state", (v) => { sel.tune.state = v / 100; });
+bind("rough", (v) => { sel.tune.rough = v / 100; });
+bind("spec", (v) => { sel.tune.spec = v / 100; });
+bind("tint", (v) => { sel.tune.tint = v / 100; });
 bind("over", (v) => { sel.tune.over = v; sel.sv += 8; });
 bind("bounce", (v) => { sel.tune.bounce = v / 100; sel.sv += 8; });
 $("i-mats").onclick = (e) => {
   const b = e.target.closest("button"); if (!b || !sel) return;
   sel.el.dataset.mat = b.dataset.k;
-  for (const k of ["gain", "dens", "refr", "metal", "milk", "rgb"]) sel.tune[k] = null;
+  for (const k of ["gain", "dens", "refr", "metal", "milk", "rgb", "state", "rough", "spec", "tint"]) sel.tune[k] = null;
   fill();
 };
 bind("hue", (v) => { sel.tune.hue = v; });
@@ -1101,7 +1163,12 @@ document.addEventListener("click", (e) => {
   pick(rec || null);
 }, true);
 // the page's material
-segment($("mat"), (b) => { S.mat = b.dataset.m; code(); });
+{
+  const groups = {};
+  for (const [k, m] of Object.entries(MATS)) (groups[m.group] ||= []).push(`<option value="${k}"${k === S.mat ? " selected" : ""}>${m.n}</option>`);
+  $("matsel").innerHTML = Object.entries(groups).map(([g, o]) => `<optgroup label="${g}">${o.join("")}</optgroup>`).join("");
+  $("matsel").onchange = (e) => { S.mat = e.target.value; byEl.get($("matsel").parentElement).flare = 1; code(); };
+}
 
 /* ---------- how pours meet: a small physics stage ---------- */
 const stage = $("stage");
@@ -1149,7 +1216,7 @@ function blendInto(a, b, f) {
   const ca = glowRGB(ga.el, ga.tune), cb = glowRGB(gb.el, gb.tune);
   ga.tune.rgb = ca.map((v, i) => v + (cb[i] - v) * w);
   const da = dials(ga.el, ga.tune), db = dials(gb.el, gb.tune);
-  for (const key of ["gain", "dens", "refr", "metal", "milk"]) ga.tune[key] = da[key] + (db[key] - da[key]) * w;
+  for (const key of ["gain", "dens", "refr", "metal", "milk", "state", "rough", "spec", "tint"]) ga.tune[key] = da[key] + (db[key] - da[key]) * w;
 }
 function physics(dt) {
   if (!drops.length) return;
@@ -1223,7 +1290,7 @@ $("copy").onclick = async (e) => {
 /* ---------- frame ---------- */
 const A = new Float32Array(MAXB * 4), B = new Float32Array(MAXB * 4), C = new Float32Array(MAXB * 4), M = new Float32Array(MAXB);
 const TR = new Float32Array(MAXT * 4), TU = new Float32Array(MAXT * 4), TB = new Float32Array(MAXT * 4), TC = new Float32Array(MAXT * 4);
-const RP = new Float32Array(MAXR * 4), P = new Float32Array(MAXB * 3), G = new Float32Array(MAXB * 2), Q = new Float32Array(MAXB * 4), TQ = new Float32Array(MAXT * 4), TS = new Float32Array(MAXT);
+const RP = new Float32Array(MAXR * 4), P = new Float32Array(MAXB * 3), G = new Float32Array(MAXB * 2), Q = new Float32Array(MAXB * 4), TQ = new Float32Array(MAXT * 4), TS = new Float32Array(MAXT), FF = new Float32Array(MAXB * 4), TF = new Float32Array(MAXT * 4);
 let W = 0, Hh = 0, dpr = 1;
 function resize(keep) {
   if (keep !== true) dpr = Math.min(devicePixelRatio || 1, 2);
@@ -1291,7 +1358,10 @@ function frame(now) {
     g.el.classList.toggle("lit-ink", ink === "glow" || ink === "milk");
     g.el.classList.toggle("page-ink", ink === "page");
     if (r.width < 1 || r.bottom < -80 || r.top > Hh + 80 || n >= MAXB || g.a < 0.02) continue;
-    const spread = g.s * (g.tune.over ?? S.over);
+    // solids barely give; gases billow
+    const dlS = dials(g.el, g.tune).state, firm = Math.min(1, Math.max(0, (dlS - 0.7) / 0.25));
+    const spread = g.s * (g.tune.over ?? S.over) * (1 - firm * 0.85) * (dlS < 0.25 ? 1.8 : 1);
+    if (firm > 0.5) g.wob = 0;
     const cs = getComputedStyle(g.el), rr = cs.borderTopLeftRadius;
     const rad = rr.endsWith("%") ? (parseFloat(rr) / 100) * r.width : parseFloat(rr) || 0;
     const sc = Math.max(0, g.a);
@@ -1302,6 +1372,7 @@ function frame(now) {
     P.set(sigOf(PIGS[pigOf(g.el)].c), n * 3);
     G.set([dl.gain, tu.reach ?? 1], n * 2);
     Q.set([dl.dens, dl.refr, dl.metal, dl.milk], n * 4);
+    FF.set([dl.state, dl.rough, dl.spec, dl.tint], n * 4);
     M[n] = (tu.e ?? Math.min(36, Math.max(5, Math.min(r.width, r.height) * 0.14))) * (1 - Math.max(-0.3, Math.min(0.5, g.s * 0.25)));
     n++;
   }
@@ -1319,6 +1390,7 @@ function frame(now) {
     const tdl = dials(tx.el, tu);
     TC.set([...glowRGB(tx.el, tu), tdl.gain], tn * 4);
     TQ.set([tdl.dens, tdl.refr, tdl.metal, tdl.milk], tn * 4);
+    TF.set([tdl.state, tdl.rough, tdl.spec, tdl.tint], tn * 4);
     TS[tn] = (tx.s || 0) * (tu.over ?? S.over) * 0.35;
     tn++;
   }
@@ -1328,7 +1400,7 @@ function frame(now) {
   if (gl) {
     gl.uniform2f(U.uRes, W, Hh); gl.uniform2f(U.uPtr, ptr.x, ptr.y);
     gl.uniform1f(U.uDpr, dpr); gl.uniform1f(U.uTime, clock); gl.uniform1f(U.uAmb, S.amb); gl.uniform1f(U.uVisc, v);
-    gl.uniform1f(U.uGlow, S.glow); gl.uniform3fv(U.uP, P); gl.uniform2fv(U.uG, G); gl.uniform4fv(U.uQ, Q); gl.uniform4fv(U.uTQ, TQ); gl.uniform1fv(U.uTS, TS);
+    gl.uniform1f(U.uGlow, S.glow); gl.uniform3fv(U.uP, P); gl.uniform2fv(U.uG, G); gl.uniform4fv(U.uQ, Q); gl.uniform4fv(U.uTQ, TQ); gl.uniform1fv(U.uTS, TS); gl.uniform4fv(U.uF, FF); gl.uniform4fv(U.uTF, TF);
     gl.uniform1i(U.uCount, n); gl.uniform1i(U.uTCount, tn); gl.uniform1i(U.uBg, S.bg);
     gl.uniform3fv(U.uAcc, HUES[S.accent].c);
     gl.uniform4fv(U.uA, A); gl.uniform4fv(U.uB, B); gl.uniform4fv(U.uC, C); gl.uniform1fv(U.uM, M);
