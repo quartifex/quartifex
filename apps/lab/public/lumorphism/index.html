@@ -41,6 +41,13 @@ section{padding:clamp(48px,7vw,96px) 0}
 .gel{background:transparent;border:0;color:var(--on-dark);font:600 15px/1 Inter,sans-serif;position:relative}
 .gel.lit-ink{color:var(--on-glow)}
 .gel.page-ink{color:var(--ink)}
+.stage{position:relative;height:clamp(380px,52vh,520px);margin-top:20px;border:1px solid var(--line);border-radius:28px;touch-action:none;overflow:hidden}
+.stage .drop{position:absolute;left:0;top:0;border-radius:50%;cursor:grab;touch-action:none}
+.stage .drop.held{cursor:grabbing}
+.stage .tip{position:absolute;left:18px;bottom:14px;font-size:13px;color:var(--soft);pointer-events:none}
+.playbar{display:flex;flex-wrap:wrap;gap:18px 28px;align-items:flex-end;margin-top:22px}
+.playbar .lab{display:block;font-size:13px;color:var(--soft);margin-bottom:8px}
+.playbar .slider{width:200px}
 .mats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;margin-top:28px}
 .mat{display:flex;flex-direction:column;gap:12px}
 .mat .gel{height:120px;border-radius:30px;display:grid;place-items:center;font:700 17px Rubik,sans-serif}
@@ -149,7 +156,7 @@ footer{padding:40px 0 60px;color:var(--soft);font-size:13.5px}
 <canvas id="c" aria-hidden="true"></canvas>
 <header><div class="wrap">
  <div class="brand geltext" data-t=".2" data-glow="accent">Lumorphism</div>
- <nav><a href="#rules">Rules</a><a href="#components">Components</a><a href="#materials">Materials</a><a href="#tokens">Tokens</a></nav>
+ <nav><a href="#rules">Rules</a><a href="#components">Components</a><a href="#materials">Materials</a><a href="#play">Interactions</a><a href="#tokens">Tokens</a></nav>
  <button class="gel switch" id="room" role="switch" aria-checked="false" aria-label="Lights off" data-t=".86" data-glow="accent"><span class="knob gel" data-t=".7" data-z="1" data-glow="accent"></span></button>
 </div></header>
 <main>
@@ -316,6 +323,41 @@ footer{padding:40px 0 60px;color:var(--soft);font-size:13.5px}
  </div>
 </section>
 
+<section class="wrap" id="play">
+ <h2 class="geltext" data-t=".5" data-glow="accent" data-mat="glow">How pours meet.</h2>
+ <p class="lede">Drag a drop into another and fling it across. Merging drops pull together, join and mix their colour and material; bouncing ones push off each other at the page's bounce.</p>
+ <div class="playbar">
+  <div><span class="lab" id="pl">Scene</span>
+   <div class="seg" id="scene" role="radiogroup" aria-labelledby="pl">
+    <button class="gel" role="radio" data-sc="ink" data-t=".1" data-glow="accent" data-mat="glow">Glow meets ink</button>
+    <button class="gel" role="radio" data-sc="water" data-t=".84" data-glow="accent" data-mat="glow">Glow meets water</button>
+    <button class="gel" role="radio" data-sc="mercury" data-t=".84" data-glow="accent" data-mat="glow">Mercury</button>
+    <button class="gel" role="radio" data-sc="hues" data-t=".84" data-glow="accent" data-mat="glow">Many hues</button>
+    <button class="gel" role="radio" data-sc="bounce" data-t=".84" data-glow="accent" data-mat="glow">Bouncing</button>
+   </div></div>
+  <div><span class="lab" id="mgl">Merge</span>
+   <button class="gel switch" id="mergesw" role="switch" aria-checked="true" aria-labelledby="mgl" data-t=".86" data-glow="accent" data-mat="glow"><span class="knob gel" data-t=".06" data-z="1" data-glow="accent" data-mat="glow"></span></button></div>
+  <div><span class="lab" id="gvl">Gravity</span>
+   <button class="gel switch" id="gravsw" role="switch" aria-checked="false" aria-labelledby="gvl" data-t=".86" data-glow="accent" data-mat="glow"><span class="knob gel" data-t=".7" data-z="1" data-glow="accent" data-mat="glow"></span></button></div>
+  <div><label for="overin">Overflow on touch: <span id="overv">7 px</span></label>
+   <div class="slider" data-key="over">
+    <div class="gel track" data-t=".9" data-glow="accent" data-mat="glow"></div>
+    <div class="gel fill" data-t=".2" data-z="1" data-glow="accent" data-mat="glow"></div>
+    <div class="gel knob" data-t=".02" data-z="2" data-glow="accent" data-mat="glow"></div>
+    <input id="overin" type="range" min="0" max="100" value="23">
+   </div></div>
+  <div><label for="bouncein">Bounce: <span id="bouncev">auto</span></label>
+   <div class="slider" data-key="bounce">
+    <div class="gel track" data-t=".9" data-glow="accent" data-mat="glow"></div>
+    <div class="gel fill" data-t=".2" data-z="1" data-glow="accent" data-mat="glow"></div>
+    <div class="gel knob" data-t=".02" data-z="2" data-glow="accent" data-mat="glow"></div>
+    <input id="bouncein" type="range" min="0" max="100" value="20">
+   </div></div>
+  <div><span class="lab">&nbsp;</span><button class="gel" id="replay" data-t=".55" data-glow="accent" data-mat="glow">Pour again</button></div>
+ </div>
+ <div class="stage" id="stage"><span class="tip">Drag, fling, drop one into another.</span></div>
+</section>
+
 <section class="wrap" id="tokens">
  <h2 class="geltext" data-t=".5" data-glow="accent">Tokens.</h2>
  <p class="lede">Five charges, five hues, four pigments, two rooms, one viscosity. The charges below are a live mixing card: pick a hue and a second pigment.</p>
@@ -336,6 +378,8 @@ footer{padding:40px 0 60px;color:var(--soft);font-size:13.5px}
   <label id="l-reach">Spill reach <output id="o-reach"></output><input type="range" id="i-reach" min="30" max="300" step="1"></label>
   <label>Edge thickness <output id="o-e"></output><input type="range" id="i-e" min="3" max="40" step="0.5"></label>
   <label>Edge glow <output id="o-rim"></output><input type="range" id="i-rim" min="0" max="150" step="1"></label>
+  <label>Overflow on touch <output id="o-over"></output><input type="range" id="i-over" min="0" max="30" step="0.5"></label>
+  <label>Bounce <output id="o-bounce"></output><input type="range" id="i-bounce" min="0" max="100" step="1"></label>
   <div class="sub">Material</div>
   <div class="opts" id="i-mats"></div>
   <label>Clarity <output id="o-dens"></output><input type="range" id="i-dens" min="0" max="100" step="1"></label>
@@ -382,7 +426,7 @@ const MATS = {
   milk:    { n: "Milk",         gain: 0, dens: 0.6,  refr: 0.8, metal: 0, milk: 0.88, shade: 0.38, caus: 0,    ink: "milk" },
   mercury: { n: "Mercury",      gain: 0, dens: 1,    refr: 0,   metal: 1, milk: 0,    shade: 0.5,  caus: 0,    ink: "page" },
 };
-const S = { accent: 1, amb: 1, ambTo: 1, bg: 0, visc: 0.7, pig: 0, glow: 1, lamp: true, mat: "glow" };
+const S = { accent: 1, amb: 1, ambTo: 1, bg: 0, visc: 0.7, pig: 0, glow: 1, lamp: true, mat: "glow", over: 7, bounce: 0.3, bounceAuto: true };
 const $ = (id) => document.getElementById(id);
 
 $("charge").innerHTML = CHARGE.map(([n, c]) => `<div><span class="gel" data-t="${(1 - c).toFixed(2)}" data-glow="accent" data-pig="mix"></span><b>${n}</b>${Math.round(c * 100)}% glow</div>`).join("");
@@ -424,6 +468,7 @@ uniform vec3 uP[MAXB]; // second pigment, as absorption
 uniform vec2 uG[MAXB]; // glow strength, spill reach (per pour)
 uniform vec4 uQ[MAXB]; // material: pigment density, refraction, metal, milk (per pour)
 uniform vec4 uTQ[MAXT]; // the same, for headlines
+uniform float uTS[MAXT]; // how far each headline has swelled
 uniform sampler2D uAtlas;
 uniform vec4 uTR[MAXT]; // text: screen rect (x, y from bottom, w, h)
 uniform vec4 uTU[MAXT]; // text: atlas rect (u, v from top, w, h)
@@ -453,7 +498,7 @@ float sdText(vec2 p, int j){
   vec2 l = (p - r.xy) / r.zw;
   if (l.x < 0. || l.y < 0. || l.x > 1. || l.y > 1.){ vec2 q = abs(p - r.xy - r.zw * .5) - r.zw * .5; return length(max(q, 0.)) + ${PAD}.; }
   vec4 u = uTU[j];
-  return texture(uAtlas, vec2(u.x + l.x * u.z, u.y + (1. - l.y) * u.w)).r;
+  return texture(uAtlas, vec2(u.x + l.x * u.z, u.y + (1. - l.y) * u.w)).r - uTS[j];
 }
 float smin(float a, float b, float k){ float h = clamp(.5 + .5 * (b - a) / k, 0., 1.); return mix(b, a, h) - k * h * (1. - h); }
 
@@ -660,7 +705,7 @@ in vec2 a; void main(){ gl_Position = vec4(a, 0., 1.); }`));
   gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
   gl.enableVertexAttribArray(0); gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
-  for (const n of ["uQ", "uTQ", "uG", "uP", "uGlow", "uRes", "uPtr", "uDpr", "uTime", "uAmb", "uVisc", "uCount", "uTCount", "uBg", "uAcc", "uA", "uB", "uC", "uM", "uAtlas", "uTR", "uTU", "uTB", "uTC", "uRip"]) U[n] = gl.getUniformLocation(pr, n);
+  for (const n of ["uTS", "uQ", "uTQ", "uG", "uP", "uGlow", "uRes", "uPtr", "uDpr", "uTime", "uAmb", "uVisc", "uCount", "uTCount", "uBg", "uAcc", "uA", "uB", "uC", "uM", "uAtlas", "uTR", "uTU", "uTB", "uTC", "uRip"]) U[n] = gl.getUniformLocation(pr, n);
   gl.bindTexture(gl.TEXTURE_2D, atlasTex);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
@@ -762,7 +807,7 @@ function buildAtlas() {
 // data-hue (custom hue in degrees), data-pig (second pigment 0 to 3, or "mix")
 function readTune(el) {
   const d = el.dataset, num = (v) => (v === undefined || v === "" ? null : +v);
-  return { gain: num(d.gain), reach: num(d.reach), e: num(d.e), rim: num(d.rim), hue: num(d.hue), dens: num(d.dens), refr: num(d.refr), metal: num(d.metal), milk: num(d.milk) };
+  return { gain: num(d.gain), reach: num(d.reach), e: num(d.e), rim: num(d.rim), hue: num(d.hue), dens: num(d.dens), refr: num(d.refr), metal: num(d.metal), milk: num(d.milk), over: num(d.overflow), bounce: num(d.bounce), rgb: null };
 }
 const matOf = (el) => MATS[el.dataset.mat] || MATS[S.mat];
 // a pour's dials: its own settings first, then its material's
@@ -780,27 +825,29 @@ function hueRGB(h) {
   const f = (n) => { const k = (n + h / 30) % 12; return 0.62 - 0.5 * Math.max(-1, Math.min(k - 3, 9 - k, 1)); };
   return [f(0), f(8), f(4)].map((v) => Math.max(0, Math.min(1, (v - 0.12) / 0.88)));
 }
-const glowRGB = (el, tune) => (tune.hue != null ? hueRGB(tune.hue) : HUES[el.dataset.glow === "accent" || el.dataset.glow === undefined ? S.accent : +el.dataset.glow].c);
+const glowRGB = (el, tune) => tune.rgb || (tune.hue != null ? hueRGB(tune.hue) : HUES[el.dataset.glow === "accent" || el.dataset.glow === undefined ? S.accent : +el.dataset.glow].c);
 const pigOf = (el) => (el.dataset.pig === "mix" ? S.pig : el.dataset.pig !== undefined ? +el.dataset.pig : 0);
 
 /* ---------- every .gel element becomes a pour ---------- */
-const gels = [...document.querySelectorAll(".gel")].map((el) => ({
-  el, base: +el.dataset.t, t: 1, z: +(el.dataset.z || 0), hover: 0, press: 0, focus: 0, flare: 0,
-  s: 0, sv: 0, wob: 0, seen: false, a: reduced ? 1 : 0, av: 0, show: 1, tune: readTune(el),
-}));
+const gels = [], byEl = new Map();
 // each pour arrives the first time it scrolls into view
 const io = new IntersectionObserver((es) => { for (const e of es) if (e.isIntersecting) { const g = byEl.get(e.target); if (g) g.seen = true; } }, { rootMargin: "60px" });
-const byEl = new Map(gels.map((g) => [g.el, g]));
-for (const g of gels) io.observe(g.el);
-for (const g of gels) {
-  const target = g.el.closest("button,a,input,.slider") || g.el;
+function addGel(el) {
+  const g = { el, base: +el.dataset.t, t: 1, z: +(el.dataset.z || 0), hover: 0, press: 0, focus: 0, flare: 0,
+    s: 0, sv: 0, wob: 0, seen: false, a: reduced ? 1 : 0, av: 0, show: 1, tune: readTune(el), orig: { ...el.dataset } };
+  gels.push(g); byEl.set(el, g); io.observe(el);
+  const target = el.closest("button,a,input,.slider") || el;
   target.addEventListener("pointerenter", () => { g.hover = 1; });
   target.addEventListener("pointerleave", () => { g.hover = 0; g.press = 0; });
   target.addEventListener("pointerdown", () => { g.press = 1; });
-  target.addEventListener("pointerup", () => { g.press = 0; });
+  // a click overshoots: the pour swells past its rest and bounces back
+  target.addEventListener("pointerup", () => { g.press = 0; g.sv += 9; });
   target.addEventListener("focusin", () => { g.focus = 1; });
   target.addEventListener("focusout", () => { g.focus = 0; });
+  return g;
 }
+function removeGel(g) { gels.splice(gels.indexOf(g), 1); byEl.delete(g.el); io.unobserve(g.el); g.el.remove(); if (sel === g) pick(null); }
+for (const el of document.querySelectorAll(".gel")) addGel(el);
 
 /* ripples start wherever the pointer presses; on the Ripple surface, moving makes them too */
 const rips = [];
@@ -845,9 +892,11 @@ for (const sl of document.querySelectorAll(".slider")) {
     byEl.get(sl.querySelector(".fill")).base = 0.55 - v * 0.005;
     if (sl.dataset.key === "visc") { S.visc = v / 100; $("viscv").textContent = viscWord(S.visc); code(); }
     if (sl.dataset.key === "bright") $("brightv").textContent = v;
+    if (sl.dataset.key === "over") { S.over = Math.round(v * 0.3 * 2) / 2; $("overv").textContent = S.over + " px"; }
+    if (sl.dataset.key === "bounce" && inp.dataset.touched) { S.bounceAuto = false; S.bounce = v / 100; $("bouncev").textContent = v + "%"; }
     if (sl.dataset.key === "glow") { S.glow = v / 50; $("glowv").textContent = Math.round(S.glow * 100) + "%"; code(); }
   };
-  inp.addEventListener("input", sync);
+  inp.addEventListener("input", () => { inp.dataset.touched = "1"; sync(); });
   sync();
 }
 for (const b of document.querySelectorAll(".hue")) b.onclick = () => {
@@ -932,7 +981,7 @@ const loaderDrops = [...document.querySelectorAll("#loader .gel")];
 /* ---------- tuning: pick any pour and set its glow by hand ---------- */
 let sel = null, tuning = false;
 const insp = $("insp"), tunebtn = $("tunebtn");
-for (const r of [...gels, ...texts]) r.orig = { ...r.el.dataset };
+for (const r of texts) r.orig = { ...r.el.dataset };
 $("i-hues").innerHTML = `<button class="acc" data-h="accent" aria-label="Page hue">Page hue</button>` + HUES.map((h, i) => `<button data-h="${i}" style="background:${`rgb(${h.c.map((v) => Math.round(v * 255)).join(",")})`}" aria-label="${h.n}" title="${h.n}"></button>`).join("");
 $("i-mats").innerHTML = Object.entries(MATS).map(([k, m]) => `<button class="acc" data-k="${k}">${m.n}</button>`).join("");
 $("i-pigs").innerHTML = PIGS.map((p, i) => `<button data-p="${i}" style="background:${p.show}" aria-label="${p.n}" title="${p.n}"></button>`).join("");
@@ -980,6 +1029,8 @@ function fill() {
   set("refr", Math.round(dl.refr * 100), Math.round(dl.refr * 100) + "%");
   set("metal", Math.round(dl.metal * 100), Math.round(dl.metal * 100) + "%");
   set("milk", Math.round(dl.milk * 100), Math.round(dl.milk * 100) + "%");
+  set("over", tu.over ?? S.over, (tu.over ?? S.over) + " px" + (tu.over == null ? " (page)" : ""));
+  set("bounce", Math.round((tu.bounce ?? S.bounce) * 100), Math.round((tu.bounce ?? S.bounce) * 100) + "%" + (tu.bounce == null ? " (page)" : ""));
   set("gain", Math.round(dl.gain * 100), Math.round(dl.gain * 100) + "%");
   for (const b of $("i-mats").children) b.setAttribute("aria-pressed", b.dataset.k === (r.el.dataset.mat || "page"));
   const g = r.el.dataset.glow ?? "accent";
@@ -998,6 +1049,8 @@ function fill() {
   if (tu.refr != null) attrs.push(`data-refr="${tu.refr.toFixed(2)}"`);
   if (tu.metal != null) attrs.push(`data-metal="${tu.metal.toFixed(2)}"`);
   if (tu.milk != null) attrs.push(`data-milk="${tu.milk.toFixed(2)}"`);
+  if (tu.over != null) attrs.push(`data-overflow="${tu.over}"`);
+  if (tu.bounce != null) attrs.push(`data-bounce="${tu.bounce.toFixed(2)}"`);
   if (d.z) attrs.push(`data-z="${d.z}"`);
   $("iattr").textContent = attrs.join(" ");
 }
@@ -1011,10 +1064,12 @@ bind("dens", (v) => { sel.tune.dens = (1 - v / 100) ** 2; });
 bind("refr", (v) => { sel.tune.refr = v / 100; });
 bind("metal", (v) => { sel.tune.metal = v / 100; });
 bind("milk", (v) => { sel.tune.milk = v / 100; });
+bind("over", (v) => { sel.tune.over = v; sel.sv += 8; });
+bind("bounce", (v) => { sel.tune.bounce = v / 100; sel.sv += 8; });
 $("i-mats").onclick = (e) => {
   const b = e.target.closest("button"); if (!b || !sel) return;
   sel.el.dataset.mat = b.dataset.k;
-  for (const k of ["gain", "dens", "refr", "metal", "milk"]) sel.tune[k] = null;
+  for (const k of ["gain", "dens", "refr", "metal", "milk", "rgb"]) sel.tune[k] = null;
   fill();
 };
 bind("hue", (v) => { sel.tune.hue = v; });
@@ -1047,6 +1102,117 @@ document.addEventListener("click", (e) => {
 }, true);
 // the page's material
 segment($("mat"), (b) => { S.mat = b.dataset.m; code(); });
+
+/* ---------- how pours meet: a small physics stage ---------- */
+const stage = $("stage");
+let drops = [], scene = "ink";
+const PLAY = { merge: true, grav: false };
+const preset = (o) => ({ t: 0.05, hue: null, mat: "glow", pig: 0, ...o });
+const SCENES = {
+  ink: { merge: true, grav: false, d: [preset({ x: 0.3, y: 0.5, r: 74 }), preset({ x: 0.7, y: 0.5, r: 62, t: 0.97, mat: "liquid" })] },
+  water: { merge: true, grav: false, d: [preset({ x: 0.28, y: 0.5, r: 58, hue: 330 }), preset({ x: 0.68, y: 0.5, r: 92, t: 0.2, mat: "clear" })] },
+  mercury: { merge: false, grav: false, d: [preset({ x: 0.62, y: 0.5, r: 92, t: 0.5, mat: "mercury" }), preset({ x: 0.25, y: 0.35, r: 40, hue: 150 }), preset({ x: 0.22, y: 0.7, r: 32, hue: 30 })] },
+  hues: { merge: true, grav: false, d: [preset({ x: 0.2, y: 0.35, r: 52, hue: 200 }), preset({ x: 0.45, y: 0.65, r: 48, hue: 330 }), preset({ x: 0.7, y: 0.35, r: 50, hue: 90 }), preset({ x: 0.85, y: 0.68, r: 40, hue: 40 })] },
+  bounce: { merge: false, grav: true, d: [preset({ x: 0.2, y: 0.25, r: 44 }), preset({ x: 0.4, y: 0.15, r: 36, mat: "clear", t: 0.2 }), preset({ x: 0.6, y: 0.3, r: 50, mat: "mercury", t: 0.5 }), preset({ x: 0.8, y: 0.2, r: 38, mat: "milk", t: 0.2 }), preset({ x: 0.55, y: 0.1, r: 30, hue: 330 })] },
+};
+function setPlaySwitch(id, on) { setSwitch($(id), on); }
+function pour(name) {
+  scene = name;
+  for (const d of drops) removeGel(d.g);
+  drops = [];
+  const sc = SCENES[name], W0 = stage.clientWidth, H0 = stage.clientHeight;
+  PLAY.merge = sc.merge; PLAY.grav = sc.grav; setPlaySwitch("mergesw", sc.merge); setPlaySwitch("gravsw", sc.grav);
+  const scale = Math.min(1, W0 / 760);
+  for (const o of sc.d) {
+    const el = document.createElement("div");
+    el.className = "gel drop"; el.dataset.t = o.t; el.dataset.glow = "accent"; el.dataset.mat = o.mat; el.dataset.pig = o.pig;
+    el.setAttribute("aria-hidden", "true");
+    stage.appendChild(el);
+    const g = addGel(el);
+    if (o.hue != null) g.tune.hue = o.hue;
+    const r = o.r * scale;
+    const d = { g, el, x: o.x * W0, y: o.y * H0, vx: sc.grav ? (Math.random() - 0.5) * 300 : 0, vy: 0, r, held: false, tx: 0, ty: 0, hx: [], live: { ...dials(el, g.tune) } };
+    place(d);
+    el.addEventListener("pointerdown", (e) => { if (tuning) return; e.preventDefault(); el.setPointerCapture(e.pointerId); d.held = true; el.classList.add("held"); const b = stage.getBoundingClientRect(); d.ox = d.x - (e.clientX - b.left); d.oy = d.y - (e.clientY - b.top); d.tx = d.x; d.ty = d.y; d.hx = []; });
+    el.addEventListener("pointermove", (e) => { if (!d.held) return; const b = stage.getBoundingClientRect(); d.tx = e.clientX - b.left + d.ox; d.ty = e.clientY - b.top + d.oy; });
+    const drop = () => { if (!d.held) return; d.held = false; el.classList.remove("held"); g.sv += 6; };
+    el.addEventListener("pointerup", drop); el.addEventListener("pointercancel", drop);
+    drops.push(d);
+  }
+}
+function place(d) { d.el.style.width = d.el.style.height = d.r * 2 + "px"; d.el.style.transform = `translate(${d.x - d.r}px, ${d.y - d.r}px)`; }
+// mix two drops' colour, charge and material, weighted by area
+function blendInto(a, b, f) {
+  const wa = a.r * a.r, wb = b.r * b.r, w = wb / (wa + wb) * f;
+  const ga = a.g, gb = b.g;
+  ga.base += (gb.base - ga.base) * w;
+  const ca = glowRGB(ga.el, ga.tune), cb = glowRGB(gb.el, gb.tune);
+  ga.tune.rgb = ca.map((v, i) => v + (cb[i] - v) * w);
+  const da = dials(ga.el, ga.tune), db = dials(gb.el, gb.tune);
+  for (const key of ["gain", "dens", "refr", "metal", "milk"]) ga.tune[key] = da[key] + (db[key] - da[key]) * w;
+}
+function physics(dt) {
+  if (!drops.length) return;
+  const W0 = stage.clientWidth, H0 = stage.clientHeight, rest = 0.15 + S.bounce * 0.8, drag = 0.4 + S.visc * 2.6;
+  for (const d of drops) {
+    if (d.held) {
+      const nx = d.x + (d.tx - d.x) * Math.min(1, dt * 22), ny = d.y + (d.ty - d.y) * Math.min(1, dt * 22);
+      d.vx = (nx - d.x) / Math.max(dt, 1e-3); d.vy = (ny - d.y) / Math.max(dt, 1e-3);
+      d.x = nx; d.y = ny;
+    } else {
+      if (PLAY.grav) d.vy += 1400 * dt;
+      d.vx *= Math.exp(-dt * drag); d.vy *= Math.exp(-dt * drag * (PLAY.grav ? 0.15 : 1));
+      d.x += d.vx * dt; d.y += d.vy * dt;
+    }
+    // the stage's walls
+    const hit = (v) => { d.g.sv += Math.min(10, Math.abs(v) / 120) * S.bounce + 1; return -v * rest; };
+    if (d.x < d.r) { d.x = d.r; d.vx = hit(d.vx); } else if (d.x > W0 - d.r) { d.x = W0 - d.r; d.vx = hit(d.vx); }
+    if (d.y < d.r) { d.y = d.r; d.vy = hit(d.vy); } else if (d.y > H0 - d.r) { d.y = H0 - d.r; d.vy = Math.abs(d.vy) > 60 ? hit(d.vy) : 0; }
+  }
+  for (let i = 0; i < drops.length; i++) for (let j = i + 1; j < drops.length; j++) {
+    const a = drops[i], b = drops[j];
+    let dx = b.x - a.x, dy = b.y - a.y; const dist = Math.hypot(dx, dy) || 0.01; dx /= dist; dy /= dist;
+    const touch = a.r + b.r;
+    if (PLAY.merge) {
+      // surface tension: close drops pull together, then join into one
+      if (dist < touch + 26) {
+        const pull = (touch + 26 - dist) * 9 * dt;
+        if (!a.held) { a.vx += dx * pull * 60 * (b.r / touch); a.vy += dy * pull * 60 * (b.r / touch); }
+        if (!b.held) { b.vx -= dx * pull * 60 * (a.r / touch); b.vy -= dy * pull * 60 * (a.r / touch); }
+      }
+      if (dist < touch) { blendInto(a, b, Math.min(1, dt * 1.4)); blendInto(b, a, Math.min(1, dt * 1.4)); }
+      if (dist < Math.max(a.r, b.r) * 0.55) {
+        // the smaller drop is taken into the larger, which grows to hold both
+        const [big, small] = a.r >= b.r ? [a, b] : [b, a];
+        blendInto(big, small, 1);
+        const wb = big.r ** 2, ws = small.r ** 2;
+        big.x = (big.x * wb + small.x * ws) / (wb + ws); big.y = (big.y * wb + small.y * ws) / (wb + ws);
+        big.vx = (big.vx * wb + small.vx * ws) / (wb + ws); big.vy = (big.vy * wb + small.vy * ws) / (wb + ws);
+        big.r = Math.sqrt(wb + ws); big.g.sv += 10; big.held = big.held || small.held;
+        removeGel(small.g); drops.splice(drops.indexOf(small), 1);
+        return;
+      }
+    } else if (dist < touch) {
+      // soft collision: push apart, trade momentum, squash both
+      const over = touch - dist, ma = a.r * a.r, mb = b.r * b.r;
+      if (!a.held) { a.x -= dx * over * (mb / (ma + mb)); a.y -= dy * over * (mb / (ma + mb)); }
+      if (!b.held) { b.x += dx * over * (ma / (ma + mb)); b.y += dy * over * (ma / (ma + mb)); }
+      const rv = (b.vx - a.vx) * dx + (b.vy - a.vy) * dy;
+      if (rv < 0) {
+        const jimp = (-(1 + rest) * rv) / (1 / ma + 1 / mb);
+        if (!a.held) { a.vx -= (jimp / ma) * dx; a.vy -= (jimp / ma) * dy; }
+        if (!b.held) { b.vx += (jimp / mb) * dx; b.vy += (jimp / mb) * dy; }
+        const kick = Math.min(10, -rv / 90) * (0.4 + S.bounce);
+        a.g.sv += kick; b.g.sv += kick;
+      }
+    }
+  }
+  for (const d of drops) place(d);
+}
+$("mergesw").onclick = () => { PLAY.merge = !PLAY.merge; setSwitch($("mergesw"), PLAY.merge); };
+$("gravsw").onclick = () => { PLAY.grav = !PLAY.grav; setSwitch($("gravsw"), PLAY.grav); };
+segment($("scene"), (b) => pour(b.dataset.sc));
+$("replay").onclick = () => pour(scene);
 const well = document.querySelector(".well");
 well.addEventListener("input", () => { byEl.get(well).flare = 1; });
 $("copy").onclick = async (e) => {
@@ -1057,7 +1223,7 @@ $("copy").onclick = async (e) => {
 /* ---------- frame ---------- */
 const A = new Float32Array(MAXB * 4), B = new Float32Array(MAXB * 4), C = new Float32Array(MAXB * 4), M = new Float32Array(MAXB);
 const TR = new Float32Array(MAXT * 4), TU = new Float32Array(MAXT * 4), TB = new Float32Array(MAXT * 4), TC = new Float32Array(MAXT * 4);
-const RP = new Float32Array(MAXR * 4), P = new Float32Array(MAXB * 3), G = new Float32Array(MAXB * 2), Q = new Float32Array(MAXB * 4), TQ = new Float32Array(MAXT * 4);
+const RP = new Float32Array(MAXR * 4), P = new Float32Array(MAXB * 3), G = new Float32Array(MAXB * 2), Q = new Float32Array(MAXB * 4), TQ = new Float32Array(MAXT * 4), TS = new Float32Array(MAXT);
 let W = 0, Hh = 0, dpr = 1;
 function resize(keep) {
   if (keep !== true) dpr = Math.min(devicePixelRatio || 1, 2);
@@ -1097,8 +1263,12 @@ function frame(now) {
   ft.push(dt); if (ft.length > 40) { const avg = ft.reduce((a, b) => a + b) / ft.length; ft.length = 0; if (avg > 0.034 && dpr > 1.05) { dpr = Math.max(1, dpr * 0.85); resize(true); } }
   $("barfill").style.width = Math.min(100, progress * 100).toFixed(1) + "%";
   // springs set by viscosity: water snaps and rings, honey and tar ooze
-  const k = 420 * (1 - v) ** 2 + 22, zeta = 0.28 + v * 1.1, c = 2 * zeta * Math.sqrt(k);
+  // viscosity sets how fast the gel moves; bounce sets how far it overshoots
+  if (S.bounceAuto) S.bounce = Math.max(0, 1 - v * 1.15);
+  const k = 420 * (1 - v) ** 2 + 22;
+  const zetaOf = (b) => 1.25 - b * 1.13, c = 2 * zetaOf(S.bounce) * Math.sqrt(k);
   const rate = 16 * (1 - v) ** 1.5 + 1.6;
+  physics(dt);
   let n = 0;
   for (const g of gels) {
     const r = g.el.getBoundingClientRect();
@@ -1107,7 +1277,10 @@ function frame(now) {
     const aim = g.seen ? g.show : 0;
     if (reduced) g.a = aim; else { g.av += (k * 0.6 * (aim - g.a) - c * 0.8 * g.av) * dt; g.a += g.av * dt; }
     if (!reduced) {
-      g.sv += (k * (g.press - g.s) - c * g.sv) * dt; g.s += g.sv * dt;
+      // hovering swells the pour a little, pressing a little more; it springs back on release
+      const cg = g.tune.bounce != null ? 2 * zetaOf(g.tune.bounce) * Math.sqrt(k) : c;
+      const ds = Math.min(dt, 0.025);
+      for (let st = 0, steps = Math.ceil(dt / ds); st < steps; st++) { g.sv += (k * (g.hover * 0.45 + g.press - g.s) - cg * g.sv) * ds; g.s += g.sv * ds; }
       g.wob = Math.min(1, Math.abs(g.sv) * 0.12 * (1.2 - v));
     } else { g.s = 0; g.wob = 0; }
     const pulse = g.el.id === "pulse" && !reduced ? 0.25 * (0.5 + 0.5 * Math.sin(clock * 3)) : 0;
@@ -1118,7 +1291,7 @@ function frame(now) {
     g.el.classList.toggle("lit-ink", ink === "glow" || ink === "milk");
     g.el.classList.toggle("page-ink", ink === "page");
     if (r.width < 1 || r.bottom < -80 || r.top > Hh + 80 || n >= MAXB || g.a < 0.02) continue;
-    const spread = g.s * 4;
+    const spread = g.s * (g.tune.over ?? S.over);
     const cs = getComputedStyle(g.el), rr = cs.borderTopLeftRadius;
     const rad = rr.endsWith("%") ? (parseFloat(rr) / 100) * r.width : parseFloat(rr) || 0;
     const sc = Math.max(0, g.a);
@@ -1129,12 +1302,13 @@ function frame(now) {
     P.set(sigOf(PIGS[pigOf(g.el)].c), n * 3);
     G.set([dl.gain, tu.reach ?? 1], n * 2);
     Q.set([dl.dens, dl.refr, dl.metal, dl.milk], n * 4);
-    M[n] = (tu.e ?? Math.min(36, Math.max(5, Math.min(r.width, r.height) * 0.14))) * (1 - g.s * 0.25);
+    M[n] = (tu.e ?? Math.min(36, Math.max(5, Math.min(r.width, r.height) * 0.14))) * (1 - Math.max(-0.3, Math.min(0.5, g.s * 0.25)));
     n++;
   }
   let tn = 0;
   for (const tx of texts) {
     tx.t += (tx.base - tx.hover * 0.2 - tx.t) * (1 - Math.exp(-dt * rate));
+    if (!reduced) { tx.sv = (tx.sv || 0) + (k * (tx.hover * 0.6 - (tx.s || 0)) - c * (tx.sv || 0)) * Math.min(dt, 0.025); tx.s = (tx.s || 0) + tx.sv * Math.min(dt, 0.025); }
     if (!tx.ok || tn >= MAXT) continue;
     const r = tx.el.getBoundingClientRect();
     if (r.bottom < -40 || r.top > Hh + 40) continue;
@@ -1145,6 +1319,7 @@ function frame(now) {
     const tdl = dials(tx.el, tu);
     TC.set([...glowRGB(tx.el, tu), tdl.gain], tn * 4);
     TQ.set([tdl.dens, tdl.refr, tdl.metal, tdl.milk], tn * 4);
+    TS[tn] = (tx.s || 0) * (tu.over ?? S.over) * 0.35;
     tn++;
   }
   RP.fill(0);
@@ -1153,7 +1328,7 @@ function frame(now) {
   if (gl) {
     gl.uniform2f(U.uRes, W, Hh); gl.uniform2f(U.uPtr, ptr.x, ptr.y);
     gl.uniform1f(U.uDpr, dpr); gl.uniform1f(U.uTime, clock); gl.uniform1f(U.uAmb, S.amb); gl.uniform1f(U.uVisc, v);
-    gl.uniform1f(U.uGlow, S.glow); gl.uniform3fv(U.uP, P); gl.uniform2fv(U.uG, G); gl.uniform4fv(U.uQ, Q); gl.uniform4fv(U.uTQ, TQ);
+    gl.uniform1f(U.uGlow, S.glow); gl.uniform3fv(U.uP, P); gl.uniform2fv(U.uG, G); gl.uniform4fv(U.uQ, Q); gl.uniform4fv(U.uTQ, TQ); gl.uniform1fv(U.uTS, TS);
     gl.uniform1i(U.uCount, n); gl.uniform1i(U.uTCount, tn); gl.uniform1i(U.uBg, S.bg);
     gl.uniform3fv(U.uAcc, HUES[S.accent].c);
     gl.uniform4fv(U.uA, A); gl.uniform4fv(U.uB, B); gl.uniform4fv(U.uC, C); gl.uniform1fv(U.uM, M);
